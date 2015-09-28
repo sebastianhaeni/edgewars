@@ -67,6 +67,5 @@ public class Circle extends Shape {
 
         // Draw the triangle
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, 0, corners);
-
     }
 }

@@ -12,8 +12,6 @@ import java.util.ArrayList;
 
 import ch.bfh.edgewars.shapes.Circle;
 import ch.bfh.edgewars.shapes.Shape;
-import ch.bfh.edgewars.shapes.Square;
-import ch.bfh.edgewars.shapes.Triangle;
 
 /**
  * Provides drawing instructions for a GLSurfaceView object. This class
@@ -30,6 +28,8 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
     public static final int COORDS_PER_VERTEX = 3;
     public static final int vertexStride = COORDS_PER_VERTEX * 4; // 4 bytes per vertex
     private static final String TAG = "MyGLRenderer";
+    public static final int EYE_HEIGHT = 15;
+    public static final float CAMERA_FRICTION = .1f;
     private ArrayList<Shape> shapes = new ArrayList<>();
 
     // mMVPMatrix is an abbreviation for "Model View Projection Matrix"
@@ -37,6 +37,10 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
     private final float[] mProjectionMatrix = new float[16];
     private final float[] mViewMatrix = new float[16];
     private final float[] mRotationMatrix = new float[16];
+
+    private boolean mIsCameraOwned = true;
+    private float mCameraDx = 0;
+    private float mCameraDy = 0;
 
     private static final String vertexShaderCode =
             // This matrix member variable provides a hook to manipulate
@@ -58,7 +62,8 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
                     "}";
     private int mProgram;
     private int mPositionHandle;
-    private float mAngle;
+    private float mCameraX;
+    private float mCameraY;
     private int mMVPMatrixHandle;
 
     @Override
@@ -91,7 +96,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
 
         // Set the camera position (View matrix)
-        Matrix.setLookAtM(mViewMatrix, 0, 0, 0, -3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
+        Matrix.setLookAtM(mViewMatrix, 0, mCameraX, mCameraY, -EYE_HEIGHT, mCameraX, mCameraY, 0f, 0f, 1.0f, 0.0f);
 
         // Calculate the projection and view transformation
         Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
@@ -105,7 +110,8 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         // Enable a handle to the triangle vertices
         GLES20.glEnableVertexAttribArray(mPositionHandle);
 
-        Matrix.setRotateM(mRotationMatrix, 0, mAngle, 0, 0, 1.0f);
+        // Rotate
+        Matrix.setRotateM(mRotationMatrix, 0, 0, 0, 0, 1.0f);
 
         // Combine the rotation matrix with the projection and camera view
         // Note that the mMVPMatrix factor *must be first* in order
@@ -120,13 +126,30 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mMVPMatrix, 0);
         MyGLRenderer.checkGlError("glUniformMatrix4fv");
 
+        // Controls camera (i.e. speed, friction, etc.)
+        controlCamera();
+
         // Draw shapes
-        for(Shape s : shapes){
+        for (Shape s : shapes) {
             s.draw(mProgram, mPositionHandle, scratch);
         }
 
         // Disable vertex array
         GLES20.glDisableVertexAttribArray(mPositionHandle);
+    }
+
+    private void controlCamera() {
+        if (mIsCameraOwned && Math.abs(mCameraDx) < .0001 && Math.abs(mCameraDy) < .0001) {
+            return;
+        }
+
+        if (Math.abs(mCameraDx) > 0.0001) {
+            mCameraDx *= 1f - CAMERA_FRICTION;
+        }
+        if (Math.abs(mCameraDy) > 0.0001) {
+            mCameraDy *= 1f - CAMERA_FRICTION;
+        }
+        moveCamera(mCameraDx, mCameraDy);
     }
 
     @Override
@@ -139,7 +162,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 
         // this projection matrix is applied to object coordinates
         // in the onDrawFrame() method
-        Matrix.frustumM(mProjectionMatrix, 0, -ratio, ratio, -1, 1, 3, 7);
+        Matrix.frustumM(mProjectionMatrix, 0, -ratio, ratio, -1, 1, 3, EYE_HEIGHT);
 
     }
 
@@ -187,19 +210,24 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
     }
 
     /**
-     * Returns the rotation angle of the triangle shape (mTriangle).
+     * Updates the position of the camera with the delta value.
      *
-     * @return - A float representing the rotation angle.
+     * @param dx
+     * @param dy
      */
-    public float getAngle() {
-        return mAngle;
+    public void moveCamera(float dx, float dy) {
+        mCameraDx = dx;
+        mCameraDy = dy;
+        mCameraX -= dx;
+        mCameraY -= dy;
     }
 
-    /**
-     * Sets the rotation angle of the triangle shape (mTriangle).
-     */
-    public void setAngle(float angle) {
-        mAngle = angle;
+
+    public void freeCamera() {
+        mIsCameraOwned = false;
     }
 
+    public void takeCamera() {
+        mIsCameraOwned = true;
+    }
 }
