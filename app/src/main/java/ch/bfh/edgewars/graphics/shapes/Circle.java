@@ -1,4 +1,4 @@
-package ch.bfh.edgewars.shapes;
+package ch.bfh.edgewars.graphics.shapes;
 
 
 import android.opengl.GLES20;
@@ -6,9 +6,9 @@ import android.opengl.GLES20;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
-import java.util.Random;
 
-import ch.bfh.edgewars.MyGLRenderer;
+import ch.bfh.edgewars.graphics.GameRenderer;
+import ch.bfh.edgewars.util.Position;
 
 public class Circle extends Shape {
     private static final int corners = 364;
@@ -21,10 +21,10 @@ public class Circle extends Shape {
 
     /**
      * Sets up the drawing object data for use in an OpenGL ES context.
+     * @param position Position of the circle
      */
-    public Circle() {
-        Random r = new Random();
-        setPosition((r.nextFloat() * 3f) - 1.5f, (r.nextFloat() * 7f) - 3.5f);
+    public Circle(Position position) {
+        super(position);
 
         vertices[0] = 0;
         vertices[1] = 0;
@@ -53,12 +53,13 @@ public class Circle extends Shape {
     /**
      * Encapsulates the OpenGL ES instructions for drawing this shape.
      */
-    public void drawInternal(int program, int positionHandle) {
+    @Override
+    public void draw(int program, int positionHandle) {
         // Prepare the triangle coordinate data
         GLES20.glVertexAttribPointer(
-                positionHandle, MyGLRenderer.COORDS_PER_VERTEX,
+                positionHandle, GameRenderer.COORDS_PER_VERTEX,
                 GLES20.GL_FLOAT, false,
-                MyGLRenderer.vertexStride, vertexBuffer);
+                GameRenderer.vertexStride, vertexBuffer);
 
         // get handle to fragment shader's vColor member
         mColorHandle = GLES20.glGetUniformLocation(program, "vColor");
@@ -68,7 +69,5 @@ public class Circle extends Shape {
 
         // Draw the triangle
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, 0, corners);
-
-        GLES20.glDraw
     }
 }

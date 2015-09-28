@@ -19,7 +19,7 @@ public class GameActivity extends Activity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        mGLView = new MyGLSurfaceView(this);
+        mGLView = new GameSurfaceView(this);
         setContentView(mGLView);
     }
 

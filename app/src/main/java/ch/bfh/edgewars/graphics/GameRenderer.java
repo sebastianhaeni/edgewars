@@ -1,17 +1,16 @@
-package ch.bfh.edgewars;
-
-import javax.microedition.khronos.egl.EGLConfig;
-import javax.microedition.khronos.opengles.GL10;
+package ch.bfh.edgewars.graphics;
 
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
 import android.util.Log;
 
-import java.util.ArrayList;
+import javax.microedition.khronos.egl.EGLConfig;
+import javax.microedition.khronos.opengles.GL10;
 
-import ch.bfh.edgewars.shapes.Circle;
-import ch.bfh.edgewars.shapes.Shape;
+import ch.bfh.edgewars.graphics.shapes.Shape;
+import ch.bfh.edgewars.logic.GameState;
+import ch.bfh.edgewars.logic.GameThread;
 
 /**
  * Provides drawing instructions for a GLSurfaceView object. This class
@@ -22,25 +21,22 @@ import ch.bfh.edgewars.shapes.Shape;
  * <li>{@link android.opengl.GLSurfaceView.Renderer#onSurfaceChanged}</li>
  * </ul>
  */
-public class MyGLRenderer implements GLSurfaceView.Renderer {
+public class GameRenderer implements GLSurfaceView.Renderer {
 
     // number of coordinates per vertex in this array
     public static final int COORDS_PER_VERTEX = 3;
     public static final int vertexStride = COORDS_PER_VERTEX * 4; // 4 bytes per vertex
-    private static final String TAG = "MyGLRenderer";
-    public static final int EYE_HEIGHT = 15;
-    public static final float CAMERA_FRICTION = .1f;
-    private ArrayList<Shape> shapes = new ArrayList<>();
+    private static final String TAG = "GameRenderer";
+    private static final int EYE_HEIGHT = 15;
+
+    private final GameThread mThread;
+    private final GameState mGameState;
 
     // mMVPMatrix is an abbreviation for "Model View Projection Matrix"
     private final float[] mMVPMatrix = new float[16];
     private final float[] mProjectionMatrix = new float[16];
     private final float[] mViewMatrix = new float[16];
-    private final float[] mRotationMatrix = new float[16];
 
-    private boolean mIsCameraOwned = true;
-    private float mCameraDx = 0;
-    private float mCameraDy = 0;
 
     private static final String vertexShaderCode =
             // This matrix member variable provides a hook to manipulate
@@ -62,21 +58,23 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
                     "}";
     private int mProgram;
     private int mPositionHandle;
-    private float mCameraX;
-    private float mCameraY;
     private int mMVPMatrixHandle;
+
+    public GameRenderer(GameThread thread, GameState gameState) {
+        mThread = thread;
+        mGameState = gameState;
+    }
 
     @Override
     public void onSurfaceCreated(GL10 unused, EGLConfig config) {
-
         // Set the background frame color
         GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
         // prepare shaders and OpenGL program
-        int vertexShader = MyGLRenderer.loadShader(
+        int vertexShader = GameRenderer.loadShader(
                 GLES20.GL_VERTEX_SHADER,
                 vertexShaderCode);
-        int fragmentShader = MyGLRenderer.loadShader(
+        int fragmentShader = GameRenderer.loadShader(
                 GLES20.GL_FRAGMENT_SHADER,
                 fragmentShaderCode);
 
@@ -85,13 +83,9 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         GLES20.glAttachShader(mProgram, fragmentShader); // add the fragment shader to program
         GLES20.glLinkProgram(mProgram);                  // create OpenGL program executables
 
-        shapes.add(new Circle());
-        shapes.add(new Circle());
-        shapes.add(new Circle());
-        shapes.add(new Circle());
-        shapes.add(new Circle());
+        mThread.setRunning(true);
+        mThread.start();
     }
-
 
     @Override
     public void onDrawFrame(GL10 unused) {
@@ -109,22 +103,26 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 
         // get handle to shape's transformation matrix
         mMVPMatrixHandle = GLES20.glGetUniformLocation(mProgram, "uMVPMatrix");
-        MyGLRenderer.checkGlError("glGetUniformLocation");
+        GameRenderer.checkGlError("glGetUniformLocation");
 
-        // Controls camera (i.e. speed, friction, etc.)
-        controlCamera();
+        renderState();
 
+        // Disable vertex array
+        GLES20.glDisableVertexAttribArray(mPositionHandle);
+    }
+
+    private void renderState() {
         // Draw shapes
-        for (Shape s : shapes) {
+        for (Shape s : mGameState.getBoard().getShapes()) {
             // Set the camera position (View matrix)
             Matrix.setLookAtM(
                     mViewMatrix,
                     0,
-                    mCameraX + s.getPositionX(),
-                    mCameraY + s.getPositionY(),
+                    mGameState.getCamera().getX() + s.getPosition().getX(),
+                    mGameState.getCamera().getY() + s.getPosition().getY(),
                     -EYE_HEIGHT,
-                    mCameraX + s.getPositionX(),
-                    mCameraY + s.getPositionY(),
+                    mGameState.getCamera().getX() + s.getPosition().getX(),
+                    mGameState.getCamera().getY() + s.getPosition().getY(),
                     0f, 0f, 1.0f, 0.0f);
 
             // Calculate the projection and view transformation
@@ -132,27 +130,10 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 
             // Apply the projection and view transformation
             GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mMVPMatrix, 0);
-            MyGLRenderer.checkGlError("glUniformMatrix4fv");
+            GameRenderer.checkGlError("glUniformMatrix4fv");
 
             s.draw(mProgram, mPositionHandle);
         }
-
-        // Disable vertex array
-        GLES20.glDisableVertexAttribArray(mPositionHandle);
-    }
-
-    private void controlCamera() {
-        if (mIsCameraOwned && Math.abs(mCameraDx) < .0001 && Math.abs(mCameraDy) < .0001) {
-            return;
-        }
-
-        if (Math.abs(mCameraDx) > 0.0001) {
-            mCameraDx *= 1f - CAMERA_FRICTION;
-        }
-        if (Math.abs(mCameraDy) > 0.0001) {
-            mCameraDy *= 1f - CAMERA_FRICTION;
-        }
-        moveCamera(mCameraDx, mCameraDy);
     }
 
     @Override
@@ -166,7 +147,6 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         // this projection matrix is applied to object coordinates
         // in the onDrawFrame() method
         Matrix.frustumM(mProjectionMatrix, 0, -ratio, ratio, -1, 1, 3, EYE_HEIGHT);
-
     }
 
     /**
@@ -180,7 +160,6 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
      * @return - Returns an id for the shader.
      */
     public static int loadShader(int type, String shaderCode) {
-
         // create a vertex shader type (GLES20.GL_VERTEX_SHADER)
         // or a fragment shader type (GLES20.GL_FRAGMENT_SHADER)
         int shader = GLES20.glCreateShader(type);
@@ -198,7 +177,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
      * <p/>
      * <pre>
      * mColorHandle = GLES20.glGetUniformLocation(mProgram, "vColor");
-     * MyGLRenderer.checkGlError("glGetUniformLocation");</pre>
+     * GameRenderer.checkGlError("glGetUniformLocation");</pre>
      *
      * If the operation is not successful, the check throws an error.
      *
@@ -212,25 +191,5 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         }
     }
 
-    /**
-     * Updates the position of the camera with the delta value.
-     *
-     * @param dx
-     * @param dy
-     */
-    public void moveCamera(float dx, float dy) {
-        mCameraDx = dx;
-        mCameraDy = dy;
-        mCameraX -= dx;
-        mCameraY -= dy;
-    }
 
-
-    public void freeCamera() {
-        mIsCameraOwned = false;
-    }
-
-    public void takeCamera() {
-        mIsCameraOwned = true;
-    }
 }
