@@ -86,20 +86,17 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         GLES20.glLinkProgram(mProgram);                  // create OpenGL program executables
 
         shapes.add(new Circle());
+        shapes.add(new Circle());
+        shapes.add(new Circle());
+        shapes.add(new Circle());
+        shapes.add(new Circle());
     }
+
 
     @Override
     public void onDrawFrame(GL10 unused) {
-        float[] scratch = new float[16];
-
         // Draw background color
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
-
-        // Set the camera position (View matrix)
-        Matrix.setLookAtM(mViewMatrix, 0, mCameraX, mCameraY, -EYE_HEIGHT, mCameraX, mCameraY, 0f, 0f, 1.0f, 0.0f);
-
-        // Calculate the projection and view transformation
-        Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
 
         // Add program to OpenGL environment
         GLES20.glUseProgram(mProgram);
@@ -107,31 +104,37 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         // get handle to vertex shader's vPosition member
         mPositionHandle = GLES20.glGetAttribLocation(mProgram, "vPosition");
 
-        // Enable a handle to the triangle vertices
+        // Enable a handle to the vertices
         GLES20.glEnableVertexAttribArray(mPositionHandle);
-
-        // Rotate
-        Matrix.setRotateM(mRotationMatrix, 0, 0, 0, 0, 1.0f);
-
-        // Combine the rotation matrix with the projection and camera view
-        // Note that the mMVPMatrix factor *must be first* in order
-        // for the matrix multiplication product to be correct.
-        Matrix.multiplyMM(scratch, 0, mMVPMatrix, 0, mRotationMatrix, 0);
 
         // get handle to shape's transformation matrix
         mMVPMatrixHandle = GLES20.glGetUniformLocation(mProgram, "uMVPMatrix");
         MyGLRenderer.checkGlError("glGetUniformLocation");
-
-        // Apply the projection and view transformation
-        GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mMVPMatrix, 0);
-        MyGLRenderer.checkGlError("glUniformMatrix4fv");
 
         // Controls camera (i.e. speed, friction, etc.)
         controlCamera();
 
         // Draw shapes
         for (Shape s : shapes) {
-            s.draw(mProgram, mPositionHandle, scratch);
+            // Set the camera position (View matrix)
+            Matrix.setLookAtM(
+                    mViewMatrix,
+                    0,
+                    mCameraX + s.getPositionX(),
+                    mCameraY + s.getPositionY(),
+                    -EYE_HEIGHT,
+                    mCameraX + s.getPositionX(),
+                    mCameraY + s.getPositionY(),
+                    0f, 0f, 1.0f, 0.0f);
+
+            // Calculate the projection and view transformation
+            Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
+
+            // Apply the projection and view transformation
+            GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mMVPMatrix, 0);
+            MyGLRenderer.checkGlError("glUniformMatrix4fv");
+
+            s.draw(mProgram, mPositionHandle);
         }
 
         // Disable vertex array

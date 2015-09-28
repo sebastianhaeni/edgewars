@@ -6,6 +6,7 @@ import android.opengl.GLES20;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+import java.util.Random;
 
 import ch.bfh.edgewars.MyGLRenderer;
 
@@ -22,6 +23,9 @@ public class Circle extends Shape {
      * Sets up the drawing object data for use in an OpenGL ES context.
      */
     public Circle() {
+        Random r = new Random();
+        setPosition((r.nextFloat() * 3f) - 1.5f, (r.nextFloat() * 7f) - 3.5f);
+
         vertices[0] = 0;
         vertices[1] = 0;
         vertices[2] = 0;
@@ -48,11 +52,8 @@ public class Circle extends Shape {
 
     /**
      * Encapsulates the OpenGL ES instructions for drawing this shape.
-     *
-     * @param mvpMatrix - The Model View Project matrix in which to draw
-     *                  this shape.
      */
-    public void draw(int program, int positionHandle, float[] mvpMatrix) {
+    public void drawInternal(int program, int positionHandle) {
         // Prepare the triangle coordinate data
         GLES20.glVertexAttribPointer(
                 positionHandle, MyGLRenderer.COORDS_PER_VERTEX,
@@ -67,5 +68,7 @@ public class Circle extends Shape {
 
         // Draw the triangle
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, 0, corners);
+
+        GLES20.glDraw
     }
 }
