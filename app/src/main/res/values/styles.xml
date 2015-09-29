@@ -1,8 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme">
-        <!-- Customize your theme here. -->
+    <style name="AppTheme" parent="android:Theme.Black.NoTitleBar.Fullscreen">
     </style>
 
 </resources>

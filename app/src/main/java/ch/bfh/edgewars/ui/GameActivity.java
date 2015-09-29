@@ -1,4 +1,4 @@
-package ch.bfh.edgewars;
+package ch.bfh.edgewars.ui;
 
 import android.app.Activity;
 import android.opengl.GLSurfaceView;
@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+
+import ch.bfh.edgewars.GameSurfaceView;
 
 public class GameActivity extends Activity {
 
