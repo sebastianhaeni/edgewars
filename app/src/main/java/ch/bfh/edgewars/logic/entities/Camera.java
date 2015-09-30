@@ -10,8 +10,12 @@ public class Camera extends Entity {
     private float mCameraX;
     private float mCameraY;
 
+    public Camera() {
+        super(16);
+    }
+
     @Override
-    public void update(long millis) {
+    public void updateState(long millis) {
         if (!mIsPlayerControlled && Math.abs(mCameraDx) < .0001 && Math.abs(mCameraDy) < .0001) {
             return;
         }

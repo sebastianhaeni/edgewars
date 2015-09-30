@@ -7,5 +7,9 @@ import ch.bfh.edgewars.logic.entities.Entity;
 
 public abstract class BoardEntity extends Entity {
 
+    public BoardEntity(long interval) {
+        super(interval);
+    }
+
     public abstract ArrayList<Shape> getShapes();
 }

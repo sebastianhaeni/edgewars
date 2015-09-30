@@ -17,7 +17,7 @@ public class GameThread extends Thread {
         long delta = System.currentTimeMillis();
         long sleep;
         while (mRunning) {
-            // update game state
+            // updateState game state
             delta = System.currentTimeMillis() - delta;
 
             mGameState.update(delta);

@@ -1,10 +1,14 @@
 package ch.bfh.edgewars.logic.entities.board.units.state;
 
+import ch.bfh.edgewars.logic.entities.board.Node;
 import ch.bfh.edgewars.logic.entities.board.units.Unit;
 
 public class MovingState extends UnitState {
-    public MovingState(Unit unit) {
+    private final Node mNode;
+
+    public MovingState(Unit unit, Node node) {
         super(unit);
+        mNode = node;
     }
 
     @Override

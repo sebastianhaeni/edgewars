@@ -10,20 +10,15 @@ public abstract class Unit extends BoardEntity {
 
     private UnitState mState;
 
-    private int mLevel;
-
     private Edge mEdge;
     private Node mHomeNode;
     private Node mAttackNode;
     private Unit mOpponent;
     private float mTravelProgress;
 
-    public Unit(int level) {
-        if (level < 1 || level > 3) {
-            throw new IllegalArgumentException("Level has to be > 0 and < 4");
-        }
-
-        mLevel = level;
+    public Unit() {
+        super(-1);
+        setUpdateInterval(getSpeed());
         setState(new IdleState(this));
     }
 
@@ -35,11 +30,7 @@ public abstract class Unit extends BoardEntity {
 
     public abstract int getAccuracy();
 
-    public abstract int getSpeed();
-
-    public int getLevel() {
-        return mLevel;
-    }
+    public abstract long getSpeed();
 
     public UnitState getState() {
         return mState;

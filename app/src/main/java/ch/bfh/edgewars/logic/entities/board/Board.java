@@ -9,8 +9,12 @@ public class Board extends Entity {
     private ArrayList<BoardEntity> mEntities = new ArrayList<>();
     private ArrayList<Shape> mShapes = new ArrayList<>();
 
+    public Board() {
+        super(100);
+    }
+
     @Override
-    public void update(long millis) {
+    public void updateState(long millis) {
         for (Entity e : mEntities) {
             e.update(millis);
         }

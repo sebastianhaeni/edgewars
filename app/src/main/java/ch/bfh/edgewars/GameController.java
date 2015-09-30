@@ -6,7 +6,7 @@ import ch.bfh.edgewars.logic.GameState;
 
 public class GameController {
 
-    private final float TOUCH_SCALE_FACTOR = -.003f;
+    private static final float TOUCH_SCALE_FACTOR = -.003f;
     private final GameState mGameState;
     private float mPreviousX;
     private float mPreviousY;
@@ -15,11 +15,9 @@ public class GameController {
         mGameState = gameState;
     }
 
-
     public void onTouchEvent( MotionEvent e) {
         // MotionEvent reports input details from the touch screen
-        // and other input controls. In this case, you are only
-        // interested in events where the touch position changed.
+        // and other input controls.
 
         float x = e.getX();
         float y = e.getY();
