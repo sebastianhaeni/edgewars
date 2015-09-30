@@ -1,12 +1,14 @@
-package ch.bfh.edgewars.logic.entities.board;
+package ch.bfh.edgewars.logic.entities.board.node;
 
 import java.util.ArrayList;
 import java.util.Stack;
 
 import ch.bfh.edgewars.graphics.shapes.Circle;
 import ch.bfh.edgewars.graphics.shapes.Shape;
-import ch.bfh.edgewars.logic.commands.SendUnitCommand;
-import ch.bfh.edgewars.logic.entities.Player;
+import ch.bfh.edgewars.logic.commands.MoveUnitCommand;
+import ch.bfh.edgewars.logic.entities.board.BoardEntity;
+import ch.bfh.edgewars.logic.entities.board.node.state.NeutralState;
+import ch.bfh.edgewars.logic.entities.board.node.state.NodeState;
 import ch.bfh.edgewars.logic.entities.board.units.MeleeUnit;
 import ch.bfh.edgewars.logic.entities.board.units.SprinterUnit;
 import ch.bfh.edgewars.logic.entities.board.units.TankUnit;
@@ -14,7 +16,6 @@ import ch.bfh.edgewars.logic.entities.board.units.Unit;
 import ch.bfh.edgewars.util.Position;
 
 public class Node extends BoardEntity {
-    private Player mOwner;
     private ArrayList<MeleeUnit> mMeleeUnits = new ArrayList<>();
     private ArrayList<TankUnit> mTankUnits = new ArrayList<>();
     private ArrayList<SprinterUnit> mSprinterUnits = new ArrayList<>();
@@ -24,11 +25,12 @@ public class Node extends BoardEntity {
     private Position mPosition;
     private ArrayList<Shape> mShapes = new ArrayList<>();
 
-    private Stack<SendUnitCommand> mSendUnitCommands = new Stack<>();
+    private Stack<MoveUnitCommand> mMoveUnitCommands = new Stack<>();
+    private NodeState mState;
 
-    public Node(Player owner, Position position) {
+    public Node(Position position) {
         super(50);
-        mOwner = owner;
+        setState(new NeutralState(this));
         mPosition = position;
         mHealth = getMaxHealth();
 
@@ -37,10 +39,12 @@ public class Node extends BoardEntity {
 
     @Override
     protected void updateState(long millis) {
-        if (mSendUnitCommands.size() > 0) {
-            SendUnitCommand c = mSendUnitCommands.pop();
+        if (mMoveUnitCommands.size() > 0) {
+            MoveUnitCommand c = mMoveUnitCommands.pop();
             c.execute();
         }
+
+        mState.update(millis);
     }
 
     public Position getPosition() {
@@ -106,23 +110,36 @@ public class Node extends BoardEntity {
 
     public void sendMeleeUnits(Node node) {
         for (Unit u : mMeleeUnits) {
-            mSendUnitCommands.add(new SendUnitCommand(u, node));
+            mMoveUnitCommands.add(new MoveUnitCommand(u, node));
         }
         mMeleeUnits.clear();
     }
 
     public void sendTankUnits(Node node) {
         for (Unit u : mTankUnits) {
-            mSendUnitCommands.add(new SendUnitCommand(u, node));
+            mMoveUnitCommands.add(new MoveUnitCommand(u, node));
         }
         mMeleeUnits.clear();
     }
 
     public void sendSprinterUnits(Node node) {
         for (Unit u : mSprinterUnits) {
-            mSendUnitCommands.add(new SendUnitCommand(u, node));
+            mMoveUnitCommands.add(new MoveUnitCommand(u, node));
         }
         mMeleeUnits.clear();
     }
 
+    public void deductHealth(int attackDamage) {
+        int newHealth = mHealth - attackDamage;
+        if (newHealth <= 0) {
+            setState(new NeutralState(this));
+            mHealth = 0;
+            return;
+        }
+        mHealth = newHealth;
+    }
+
+    public void setState(NodeState state) {
+        mState = state;
+    }
 }

@@ -1,7 +1,7 @@
 package ch.bfh.edgewars.logic.entities.board.factories;
 
 import ch.bfh.edgewars.logic.entities.Entity;
-import ch.bfh.edgewars.logic.entities.board.Node;
+import ch.bfh.edgewars.logic.entities.board.node.Node;
 
 public abstract class Factory extends Entity {
 

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import ch.bfh.edgewars.graphics.shapes.Line;
 import ch.bfh.edgewars.graphics.shapes.Shape;
+import ch.bfh.edgewars.logic.entities.board.node.Node;
 
 public class Edge extends BoardEntity {
     private Node mNode1;

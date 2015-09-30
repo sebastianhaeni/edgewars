@@ -3,12 +3,17 @@ package ch.bfh.edgewars.logic.entities.board.units;
 import java.util.ArrayList;
 
 import ch.bfh.edgewars.graphics.shapes.Shape;
+import ch.bfh.edgewars.logic.entities.board.node.Node;
 
 public class MeleeUnit extends Unit {
     private static final int ATTACK_DAMAGE = 5;
     private static final int HEALTH = 5;
     private static final int ACCURACY = 5;
     private static final int SPEED = 5;
+
+    public MeleeUnit(Node node) {
+        super(node);
+    }
 
     @Override
     public String getName() {
@@ -21,7 +26,7 @@ public class MeleeUnit extends Unit {
     }
 
     @Override
-    public int getHealth() {
+    public int getMaxHealth() {
         return HEALTH;
     }
 
@@ -32,7 +37,7 @@ public class MeleeUnit extends Unit {
 
     @Override
     public long getSpeed() {
-                    return SPEED;
+        return SPEED;
     }
 
     @Override

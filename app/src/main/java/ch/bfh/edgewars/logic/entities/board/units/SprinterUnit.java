@@ -3,12 +3,17 @@ package ch.bfh.edgewars.logic.entities.board.units;
 import java.util.ArrayList;
 
 import ch.bfh.edgewars.graphics.shapes.Shape;
+import ch.bfh.edgewars.logic.entities.board.node.Node;
 
 public class SprinterUnit extends Unit {
     private static final int ATTACK_DAMAGE = 5;
     private static final int HEALTH = 5;
     private static final int ACCURACY = 5;
     private static final int SPEED = 5;
+
+    public SprinterUnit(Node node) {
+        super(node);
+    }
 
     @Override
     public String getName() {
@@ -21,7 +26,7 @@ public class SprinterUnit extends Unit {
     }
 
     @Override
-    public int getHealth() {
+    public int getMaxHealth() {
         return HEALTH;
     }
 

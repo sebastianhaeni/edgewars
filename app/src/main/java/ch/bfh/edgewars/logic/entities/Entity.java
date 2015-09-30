@@ -27,7 +27,7 @@ public abstract class Entity {
      *
      * @param interval milliseconds
      */
-    protected void setUpdateInterval(long interval) {
+    public void setUpdateInterval(long interval) {
         mInterval = interval;
     }
 

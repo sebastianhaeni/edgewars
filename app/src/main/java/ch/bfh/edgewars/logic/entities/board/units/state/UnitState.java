@@ -13,5 +13,5 @@ public abstract class UnitState {
         return mUnit;
     }
 
-    public abstract void update();
+    public abstract void update(long millis);
 }

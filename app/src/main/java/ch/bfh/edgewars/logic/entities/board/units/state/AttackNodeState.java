@@ -1,14 +1,19 @@
 package ch.bfh.edgewars.logic.entities.board.units.state;
 
+import ch.bfh.edgewars.logic.entities.board.node.Node;
 import ch.bfh.edgewars.logic.entities.board.units.Unit;
 
 public class AttackNodeState extends UnitState {
-    public AttackNodeState(Unit unit) {
+    private final Node mNode;
+
+    public AttackNodeState(Unit unit, Node node) {
         super(unit);
+        unit.setUpdateInterval(1000);
+        mNode = node;
     }
 
     @Override
-    public void update() {
-
+    public void update(long millis) {
+        mNode.deductHealth(getUnit().getAttackDamage());
     }
 }

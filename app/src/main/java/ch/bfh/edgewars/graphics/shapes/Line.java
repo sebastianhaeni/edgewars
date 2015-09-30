@@ -7,7 +7,6 @@ public class Line extends Shape {
         super(source);
     }
 
-
     @Override
     public void draw(int program, int positionHandle) {
 

@@ -15,20 +15,18 @@ public class GameThread extends Thread {
     @Override
     public void run() {
         long delta = System.currentTimeMillis();
-        long sleep;
         while (mRunning) {
             // updateState game state
             delta = System.currentTimeMillis() - delta;
 
             mGameState.update(delta);
+
             try {
-                sleep = 16 - delta;
-                if (sleep > 0) {
-                    Thread.sleep(sleep);
-                }
+                Thread.sleep(12);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+
         }
     }
 }

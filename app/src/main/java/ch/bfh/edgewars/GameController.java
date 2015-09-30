@@ -15,7 +15,7 @@ public class GameController {
         mGameState = gameState;
     }
 
-    public void onTouchEvent( MotionEvent e) {
+    public void onTouchEvent(MotionEvent e) {
         // MotionEvent reports input details from the touch screen
         // and other input controls.
 

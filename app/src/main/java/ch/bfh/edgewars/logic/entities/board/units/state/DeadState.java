@@ -2,16 +2,14 @@ package ch.bfh.edgewars.logic.entities.board.units.state;
 
 import ch.bfh.edgewars.logic.entities.board.units.Unit;
 
-public class FightUnitState extends UnitState {
-    private final Unit mFightingUnit;
-
-    public FightUnitState(Unit unit, Unit fightingUnit) {
+public class DeadState extends UnitState {
+    public DeadState(Unit unit) {
         super(unit);
-        mFightingUnit = fightingUnit;
+        unit.setUpdateInterval(-1);
     }
 
     @Override
     public void update(long millis) {
-
+        // no op
     }
 }

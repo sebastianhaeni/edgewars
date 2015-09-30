@@ -1,6 +1,5 @@
 package ch.bfh.edgewars.graphics.shapes;
 
-
 import android.opengl.GLES20;
 
 import java.nio.ByteBuffer;
@@ -21,6 +20,7 @@ public class Circle extends Shape {
 
     /**
      * Sets up the drawing object data for use in an OpenGL ES context.
+     *
      * @param position Position of the circle
      */
     public Circle(Position position) {

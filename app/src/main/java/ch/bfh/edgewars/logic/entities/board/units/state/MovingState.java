@@ -1,6 +1,6 @@
 package ch.bfh.edgewars.logic.entities.board.units.state;
 
-import ch.bfh.edgewars.logic.entities.board.Node;
+import ch.bfh.edgewars.logic.entities.board.node.Node;
 import ch.bfh.edgewars.logic.entities.board.units.Unit;
 
 public class MovingState extends UnitState {
@@ -12,7 +12,7 @@ public class MovingState extends UnitState {
     }
 
     @Override
-    public void update() {
+    public void update(long millis) {
 
     }
 }

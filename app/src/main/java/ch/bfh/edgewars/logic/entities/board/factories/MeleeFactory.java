@@ -1,6 +1,6 @@
 package ch.bfh.edgewars.logic.entities.board.factories;
 
-import ch.bfh.edgewars.logic.entities.board.Node;
+import ch.bfh.edgewars.logic.entities.board.node.Node;
 import ch.bfh.edgewars.logic.entities.board.units.MeleeUnit;
 
 public class MeleeFactory extends Factory {
@@ -9,7 +9,13 @@ public class MeleeFactory extends Factory {
     }
 
     @Override
+    protected void produceUnit() {
+        getNode().addUnit(new MeleeUnit(getNode()));
+    }
+
+    @Override
     public int getUpgradeCost() {
+        // TODO adjust values
         switch (getLevel()) {
             case 1:
                 return 50;
@@ -23,17 +29,14 @@ public class MeleeFactory extends Factory {
     }
 
     @Override
-    protected void produceUnit() {
-        getNode().addUnit(new MeleeUnit());
-    }
-
-    @Override
     public int getUnitCost() {
+        // TODO adjust values
         return 10;
     }
 
     @Override
     protected long getProducingDuration() {
+        // TODO adjust values
         switch (getLevel()) {
             case 1:
                 return 2000;

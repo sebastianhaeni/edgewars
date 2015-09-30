@@ -12,7 +12,7 @@
         android:id="@+id/textLevel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Level X"/>
+        android:text="Level X" />
 
     <LinearLayout
         android:layout_width="match_parent"
