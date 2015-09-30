@@ -4,15 +4,18 @@ import ch.bfh.edgewars.logic.ai.AI;
 
 public class Player extends Entity {
     private final AI mAi;
+    private final float[] mColor;
     private int mEnergy;
 
-    public Player() {
+    public Player(float[] color) {
         super(1000);
+        mColor = color;
         mAi = null;
     }
 
-    public Player(AI ai) {
+    public Player(float[] color, AI ai) {
         super(1000);
+        mColor = color;
         mAi = ai;
     }
 
@@ -29,5 +32,9 @@ public class Player extends Entity {
 
     public void addEnergy(int amount) {
         mEnergy += amount;
+    }
+
+    public float[] getColor() {
+        return mColor;
     }
 }

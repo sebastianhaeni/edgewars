@@ -10,13 +10,12 @@ import ch.bfh.edgewars.graphics.GameRenderer;
 import ch.bfh.edgewars.util.Position;
 
 public class Circle extends Shape {
-    private static final int corners = 364;
+    private static final int CORNERS = 364;
     private final FloatBuffer vertexBuffer;
+    @SuppressWarnings("FieldCanBeLocal")
     private int mColorHandle;
 
-    private static float vertices[] = new float[corners * 3];
-
-    float color[] = {0.63671875f, 0.16953125f, 0.22265625f, 0.0f};
+    private static float vertices[] = new float[CORNERS * 3];
 
     /**
      * Sets up the drawing object data for use in an OpenGL ES context.
@@ -29,7 +28,7 @@ public class Circle extends Shape {
         vertices[0] = 0;
         vertices[1] = 0;
         vertices[2] = 0;
-        for (int i = 1; i < corners; i++) {
+        for (int i = 1; i < CORNERS; i++) {
             vertices[(i * 3)] = (float) (0.5 * Math.cos((3.14 / 180) * (float) i));
             vertices[(i * 3) + 1] = (float) (0.5 * Math.sin((3.14 / 180) * (float) i));
             vertices[(i * 3) + 2] = 0;
@@ -65,9 +64,9 @@ public class Circle extends Shape {
         mColorHandle = GLES20.glGetUniformLocation(program, "vColor");
 
         // Set color for drawing the triangle
-        GLES20.glUniform4fv(mColorHandle, 1, color, 0);
+        GLES20.glUniform4fv(mColorHandle, 1, getColor(), 0);
 
         // Draw the triangle
-        GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, 0, corners);
+        GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, 0, CORNERS);
     }
 }

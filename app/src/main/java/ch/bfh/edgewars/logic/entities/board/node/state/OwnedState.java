@@ -9,12 +9,18 @@ public class OwnedState extends NodeState {
     public OwnedState(Node node, Player owner) {
         super(node);
         mOwner = owner;
+        node.setColor(owner.getColor());
     }
 
     @Override
     public void update(long millis) {
         // TODO adjust value
         mOwner.addEnergy(10);
+    }
+
+    @Override
+    public long getUpdateInterval() {
+        return 50;
     }
 
 }

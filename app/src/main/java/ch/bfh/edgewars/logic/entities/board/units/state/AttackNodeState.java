@@ -8,12 +8,16 @@ public class AttackNodeState extends UnitState {
 
     public AttackNodeState(Unit unit, Node node) {
         super(unit);
-        unit.setUpdateInterval(1000);
         mNode = node;
     }
 
     @Override
     public void update(long millis) {
         mNode.deductHealth(getUnit().getAttackDamage());
+    }
+
+    @Override
+    public long getUpdateInterval() {
+        return 1000;
     }
 }

@@ -39,6 +39,7 @@ public abstract class Unit extends BoardEntity {
     public void setState(UnitState state) {
         validateStateTransition(getState(), state);
         this.mState = state;
+        setUpdateInterval(state.getUpdateInterval());
     }
 
     @Override

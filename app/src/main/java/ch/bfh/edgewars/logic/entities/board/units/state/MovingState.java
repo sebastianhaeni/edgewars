@@ -13,6 +13,11 @@ public class MovingState extends UnitState {
 
     @Override
     public void update(long millis) {
+        // TODO
+    }
 
+    @Override
+    public long getUpdateInterval() {
+        return 10;
     }
 }

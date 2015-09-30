@@ -13,6 +13,11 @@ public class IdleState extends UnitState {
 
     @Override
     public void update(long millis) {
+        // no op
+    }
 
+    @Override
+    public long getUpdateInterval() {
+        return -1;
     }
 }

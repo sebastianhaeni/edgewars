@@ -16,6 +16,7 @@ import ch.bfh.edgewars.logic.entities.board.units.Unit;
 import ch.bfh.edgewars.util.Position;
 
 public class Node extends BoardEntity {
+
     private ArrayList<MeleeUnit> mMeleeUnits = new ArrayList<>();
     private ArrayList<TankUnit> mTankUnits = new ArrayList<>();
     private ArrayList<SprinterUnit> mSprinterUnits = new ArrayList<>();
@@ -141,5 +142,12 @@ public class Node extends BoardEntity {
 
     public void setState(NodeState state) {
         mState = state;
+        setUpdateInterval(state.getUpdateInterval());
+    }
+
+    public void setColor(float[] color) {
+        for (Shape s : getShapes()) {
+            s.setColor(color);
+        }
     }
 }

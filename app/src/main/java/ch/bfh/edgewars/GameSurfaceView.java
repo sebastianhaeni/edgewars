@@ -2,6 +2,7 @@ package ch.bfh.edgewars;
 
 import android.content.Context;
 import android.opengl.GLSurfaceView;
+import android.support.annotation.NonNull;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 
@@ -9,6 +10,7 @@ import ch.bfh.edgewars.graphics.GameRenderer;
 import ch.bfh.edgewars.logic.GameState;
 import ch.bfh.edgewars.logic.GameThread;
 import ch.bfh.edgewars.logic.LevelCreator;
+
 
 /**
  * A view container where OpenGL ES graphics can be drawn on screen.
@@ -55,7 +57,7 @@ public class GameSurfaceView extends GLSurfaceView {
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent e) {
+    public boolean onTouchEvent(@NonNull MotionEvent e) {
         mController.onTouchEvent(e);
         return true;
     }

@@ -7,12 +7,16 @@ public class DefendingState extends UnitState {
 
     public DefendingState(Unit unit, Unit attacker) {
         super(unit);
-        unit.setUpdateInterval(1000);
         mAttacker = attacker;
     }
 
     @Override
     public void update(long millis) {
         mAttacker.deductHealth(getUnit().getAttackDamage());
+    }
+
+    @Override
+    public long getUpdateInterval() {
+        return 1000;
     }
 }

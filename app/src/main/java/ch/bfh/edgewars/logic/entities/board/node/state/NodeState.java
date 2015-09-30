@@ -14,4 +14,6 @@ public abstract class NodeState {
     }
 
     public abstract void update(long millis);
+
+    public abstract long getUpdateInterval();
 }

@@ -148,7 +148,7 @@ public class GameRenderer implements GLSurfaceView.Renderer {
         Matrix.frustumM(mProjectionMatrix, 0, -ratio, ratio, -1, 1, 3, EYE_HEIGHT);
     }
 
-    /**
+     /**
      * Utility method for compiling a OpenGL shader.
      * <p/>
      * <p><strong>Note:</strong> When developing shaders, use the checkGlError()
@@ -184,6 +184,7 @@ public class GameRenderer implements GLSurfaceView.Renderer {
      */
     public static void checkGlError(String glOperation) {
         int error;
+        //noinspection LoopStatementThatDoesntLoop
         while ((error = GLES20.glGetError()) != GLES20.GL_NO_ERROR) {
             Log.e(TAG, glOperation + ": glError " + error);
             throw new RuntimeException(glOperation + ": glError " + error);

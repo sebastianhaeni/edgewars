@@ -12,6 +12,11 @@ public class FightUnitState extends UnitState {
 
     @Override
     public void update(long millis) {
+        mFightingUnit.deductHealth(getUnit().getAttackDamage());
+    }
 
+    @Override
+    public long getUpdateInterval() {
+        return 1000;
     }
 }
