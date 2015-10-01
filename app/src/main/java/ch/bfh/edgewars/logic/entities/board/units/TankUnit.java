@@ -6,6 +6,7 @@ import ch.bfh.edgewars.graphics.shapes.Shape;
 import ch.bfh.edgewars.logic.entities.board.node.Node;
 
 public class TankUnit extends Unit {
+    // TODO adjust values
     private static final int ATTACK_DAMAGE = 5;
     private static final int HEALTH = 5;
     private static final int ACCURACY = 5;

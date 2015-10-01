@@ -2,7 +2,8 @@ package ch.bfh.edgewars.logic.entities;
 
 public class Camera extends Entity {
     public static final float CAMERA_FRICTION = .1f;
-    private static final float TOUCH_SCALE_FACTOR = -.003f;
+    private static final float TOUCH_SCALE_FACTOR = -.006f;
+    private static final float CAMERA_PRECISION = .001f;
 
     private boolean mIsPlayerControlled = false;
 
@@ -19,18 +20,18 @@ public class Camera extends Entity {
 
     @Override
     public void updateState(long millis) {
-        if (!mIsPlayerControlled && Math.abs(mCameraDx) < .0001 && Math.abs(mCameraDy) < .0001) {
+        if (mIsPlayerControlled || (Math.abs(mCameraDx) < CAMERA_PRECISION && Math.abs(mCameraDy) < CAMERA_PRECISION)) {
             return;
         }
 
-        if (Math.abs(mCameraDx) > 0.0001) {
+        if (Math.abs(mCameraDx) > CAMERA_PRECISION) {
             mCameraDx *= 1f - CAMERA_FRICTION;
         }
-        if (Math.abs(mCameraDy) > 0.0001) {
+        if (Math.abs(mCameraDy) > CAMERA_PRECISION) {
             mCameraDy *= 1f - CAMERA_FRICTION;
         }
 
-        moveCamera(mCameraDx, mCameraDy);
+        moveCamera(mCameraDx / TOUCH_SCALE_FACTOR, mCameraDy / TOUCH_SCALE_FACTOR);
     }
 
     /**
@@ -59,11 +60,11 @@ public class Camera extends Entity {
     }
 
     public void freeCamera() {
-        mIsPlayerControlled = true;
+        mIsPlayerControlled = false;
     }
 
     public void takeCamera() {
-        mIsPlayerControlled = false;
+        mIsPlayerControlled = true;
     }
 
     public float getScreenX() {

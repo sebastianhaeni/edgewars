@@ -39,7 +39,7 @@ public class GameController {
             case MotionEvent.ACTION_DOWN:
                 mStartX = x;
                 mStartY = y;
-                mGameState.getCamera().freeCamera();
+                mGameState.getCamera().takeCamera();
                 break;
             case MotionEvent.ACTION_MOVE:
                 float dx = x - mPreviousX;
@@ -48,14 +48,13 @@ public class GameController {
                 mGameState.getCamera().moveCamera(dx, dy);
                 break;
             case MotionEvent.ACTION_UP:
-                mGameState.getCamera().takeCamera();
-
                 // detect single click (not moving the camera)
                 if (e.getEventTime() - e.getDownTime() < 200
                         && Math.abs(x - mStartX) < 5
                         && Math.abs(y - mStartY) < 5) {
                     clickNode(x, y);
                 }
+                mGameState.getCamera().freeCamera();
                 break;
         }
 
@@ -73,14 +72,13 @@ public class GameController {
         float cameraY = mGameState.getCamera().getScreenY() * .5f;
 
         // determine size of a node
-        float nodeSize = 90; // TODO calc this
+        float nodeSize = 90; // TODO calculate this
+        int scale = 141; // TODO calculate this
 
         // search through nodes if one lies at that coordinate
         for (Node node : mGameState.getBoard().getNodes()) {
-            float a = Math.abs((node.getPosition().getX() * 141) + cameraX - x);
-
-            if (Math.abs((node.getPosition().getX() * 141) + cameraX - x) < nodeSize
-                    && Math.abs((node.getPosition().getY() * 141) + cameraY - y) < nodeSize) {
+            if (Math.abs((node.getPosition().getX() * scale) + cameraX - x) < nodeSize
+                    && Math.abs((node.getPosition().getY() * scale) + cameraY - y) < nodeSize) {
                 showNodeDialog(node);
                 break;
             }
@@ -88,26 +86,25 @@ public class GameController {
     }
 
     private void showNodeDialog(Node node) {
-
         if (node.getState() instanceof NeutralState) {
             NeutralNodeDialog dialog = new NeutralNodeDialog(mContext, node);
             dialog.show();
             return;
         }
 
-        if (node.getState() instanceof OwnedState) {
-
-            OwnedState state = (OwnedState) node.getState();
-
-            if (state.getOwner().equals(mGameState.getHuman())) {
-                OwnedNodeDialog dialog = new OwnedNodeDialog(mContext, node);
-                dialog.show();
-                return;
-            }
-
-            OpponentNodeDialog dialog = new OpponentNodeDialog(mContext, node);
-            dialog.show();
+        if (!(node.getState() instanceof OwnedState)) {
+            return;
         }
 
+        OwnedState state = (OwnedState) node.getState();
+
+        if (state.getOwner().equals(mGameState.getHuman())) {
+            OwnedNodeDialog dialog = new OwnedNodeDialog(mContext, node);
+            dialog.show();
+            return;
+        }
+
+        OpponentNodeDialog dialog = new OpponentNodeDialog(mContext, node);
+        dialog.show();
     }
 }
