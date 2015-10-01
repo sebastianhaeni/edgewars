@@ -1,12 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:layout_margin="20dp"
               android:orientation="vertical">
 
     <TextView
+        style="@style/DialogTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Owned Node"/>
+
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="20dp"
+        android:useDefaultMargins="true">
+
+        <TextView
+            android:id="@+id/textDefense"
+            style="@style/DialogSubTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+            android:layout_columnSpan="2"
+            android:layout_marginBottom="10dp"
+            android:layout_row="0"
+            android:text="Defense:"/>
+
+        <TextView
+            android:id="@+id/textHealth"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_marginLeft="10dp"
+            android:layout_row="1"
+            android:text="Health:"/>
+
+        <TextView
+            android:id="@+id/textDamage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_marginLeft="10dp"
+            android:layout_row="2"
+            android:text="Damage:"/>
+
+        <TextView
+            android:id="@+id/textHealthLevel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="2"
+            android:layout_row="1"
+            android:text="Level 1"/>
+
+        <TextView
+            android:id="@+id/textDamageLevel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="2"
+            android:layout_row="2"
+            android:text="Level  1"/>
+
+        <Button
+            android:id="@+id/buttonUpgradeHealth"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="3"
+            android:layout_row="1"
+            android:text="Upgrade"/>
+
+        <Button
+            android:id="@+id/buttonUpgradeDamage"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="3"
+            android:layout_row="2"
+            android:text="Upgrade"/>
+
+        <TextView
+            android:id="@+id/textUpgradeHealthCost"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="4"
+            android:layout_row="1"
+            android:text="50B"/>
+
+        <TextView
+            android:id="@+id/textUpgradeDamageCost"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="4"
+            android:layout_row="2"
+            android:text="50B"/>
+
+        <TextView
+            android:id="@+id/textTroups"
+            style="@style/DialogSubTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+            android:layout_columnSpan="2"
+            android:layout_marginBottom="10dp"
+            android:layout_row="3"
+            android:text="Troups:"/>
+    </GridLayout>
 
 </LinearLayout>

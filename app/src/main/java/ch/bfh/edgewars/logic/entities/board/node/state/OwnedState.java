@@ -16,7 +16,6 @@ public class OwnedState extends NodeState {
 
     @Override
     public void update(long millis) {
-        // TODO adjust value
         mOwner.addEnergy(10);
     }
 

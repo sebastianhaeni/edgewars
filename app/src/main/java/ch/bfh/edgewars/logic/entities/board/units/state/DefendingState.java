@@ -1,9 +1,12 @@
 package ch.bfh.edgewars.logic.entities.board.units.state;
 
+import java.util.Random;
+
 import ch.bfh.edgewars.logic.entities.board.units.Unit;
 
 public class DefendingState extends UnitState {
     private final Unit mAttacker;
+    private final Random mRandom = new Random();
 
     public DefendingState(Unit unit, Unit attacker) {
         super(unit);
@@ -12,7 +15,9 @@ public class DefendingState extends UnitState {
 
     @Override
     public void update(long millis) {
-        mAttacker.deductHealth(getUnit().getAttackDamage());
+        if (mRandom.nextFloat() > getUnit().getAccuracy()) {
+            mAttacker.deductHealth(getUnit().getAttackDamage());
+        }
     }
 
     @Override

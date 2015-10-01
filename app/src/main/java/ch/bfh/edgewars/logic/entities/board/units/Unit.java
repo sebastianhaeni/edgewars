@@ -2,6 +2,7 @@ package ch.bfh.edgewars.logic.entities.board.units;
 
 import ch.bfh.edgewars.logic.entities.board.BoardEntity;
 import ch.bfh.edgewars.logic.entities.board.node.Node;
+import ch.bfh.edgewars.logic.entities.board.node.state.OwnedState;
 import ch.bfh.edgewars.logic.entities.board.units.state.AttackNodeState;
 import ch.bfh.edgewars.logic.entities.board.units.state.DeadState;
 import ch.bfh.edgewars.logic.entities.board.units.state.DefendingState;
@@ -28,7 +29,7 @@ public abstract class Unit extends BoardEntity {
 
     protected abstract int getMaxHealth();
 
-    public abstract int getAccuracy();
+    public abstract float getAccuracy();
 
     public abstract long getSpeed();
 
@@ -37,7 +38,6 @@ public abstract class Unit extends BoardEntity {
     }
 
     public void setState(UnitState state) {
-        validateStateTransition(getState(), state);
         this.mState = state;
         setUpdateInterval(state.getUpdateInterval());
     }
@@ -47,34 +47,13 @@ public abstract class Unit extends BoardEntity {
         getState().update(millis);
     }
 
-    protected void validateStateTransition(UnitState oldState, UnitState newState) {
-        // TODO implement state transition checks
-        // e.g. a unit cannot fight if it has been attacking
-    }
-
     /**
      * Sends the unit along the edge to the target node.
      *
      * @param node
      */
     public void move(Node node) {
-        setState(new MovingState(this, node));
-    }
-
-    public void attack(Node node) {
-        setState(new AttackNodeState(this, node));
-    }
-
-    public void defend(Unit attacker) {
-        setState(new DefendingState(this, attacker));
-    }
-
-    public void fight(Unit unit) {
-        setState(new FightUnitState(this, unit));
-    }
-
-    public void idle(Node node) {
-        setState(new IdleState(this, node));
+        setState(new MovingState(this, node, ((OwnedState) node.getState()).getOwner()));
     }
 
     public void deductHealth(int attackDamage) {

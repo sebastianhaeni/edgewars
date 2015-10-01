@@ -69,6 +69,20 @@ public class Node extends BoardEntity {
         mSprinterUnits.add(unit);
     }
 
+    public void addUnit(Unit unit) {
+        if (unit instanceof MeleeUnit) {
+            mMeleeUnits.add((MeleeUnit) unit);
+            return;
+        }
+        if (unit instanceof TankUnit) {
+            mTankUnits.add((TankUnit) unit);
+            return;
+        }
+        if (unit instanceof SprinterUnit) {
+            mSprinterUnits.add((SprinterUnit) unit);
+        }
+    }
+
     public void upgradeHealth() {
         if (mHealthLevel >= 3) {
             return;

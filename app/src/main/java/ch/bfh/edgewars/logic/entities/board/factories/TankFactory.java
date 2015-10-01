@@ -15,14 +15,13 @@ public class TankFactory extends Factory {
 
     @Override
     public int getUpgradeCost() {
-        // TODO adjust values
         switch (getLevel()) {
             case 1:
-                return 50;
+                return 90;
             case 2:
-                return 60;
+                return 130;
             case 3:
-                return 80;
+                return 150;
             default:
                 throw new IllegalStateException("Level is not 1, 2 or 3");
         }
@@ -30,22 +29,20 @@ public class TankFactory extends Factory {
 
     @Override
     public int getUnitCost() {
-        // TODO adjust values
-        return 10;
+        return 50;
     }
 
     @Override
     protected long getProducingDuration() {
-        // TODO adjust values
         switch (getLevel()) {
             case 1:
-                return 2000;
+                return 15000;
             case 2:
-                return 1000;
+                return 10000;
             case 3:
-                return 700;
+                return 5000;
             default:
-                return -1;
+                throw new IllegalStateException("Level is not 1, 2 or 3");
         }
     }
 }

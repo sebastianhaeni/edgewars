@@ -9,7 +9,7 @@ public class TankUnit extends Unit {
     // TODO adjust values
     private static final int ATTACK_DAMAGE = 5;
     private static final int HEALTH = 5;
-    private static final int ACCURACY = 5;
+    private static final float ACCURACY = .5f;
     private static final int SPEED = 5;
 
     public TankUnit(Node node) {
@@ -32,7 +32,7 @@ public class TankUnit extends Unit {
     }
 
     @Override
-    public int getAccuracy() {
+    public float getAccuracy() {
         return ACCURACY;
     }
 

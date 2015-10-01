@@ -15,7 +15,6 @@ public class MeleeFactory extends Factory {
 
     @Override
     public int getUpgradeCost() {
-        // TODO adjust values
         switch (getLevel()) {
             case 1:
                 return 50;
@@ -30,22 +29,20 @@ public class MeleeFactory extends Factory {
 
     @Override
     public int getUnitCost() {
-        // TODO adjust values
         return 10;
     }
 
     @Override
     protected long getProducingDuration() {
-        // TODO adjust values
         switch (getLevel()) {
             case 1:
                 return 2000;
             case 2:
                 return 1000;
             case 3:
-                return 700;
+                return 400;
             default:
-                return -1;
+                throw new IllegalStateException("Level is not 1, 2 or 3");
         }
     }
 
