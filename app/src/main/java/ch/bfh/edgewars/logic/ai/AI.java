@@ -1,5 +1,13 @@
 package ch.bfh.edgewars.logic.ai;
 
-public interface AI {
-    void update(long millis);
+import ch.bfh.edgewars.logic.GameState;
+
+public abstract class AI {
+    private final GameState mState;
+
+    public AI(GameState state) {
+        mState = state;
+    }
+
+    public abstract void update(long millis);
 }
