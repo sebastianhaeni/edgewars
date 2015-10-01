@@ -20,7 +20,7 @@ public class LevelCreator {
         ArrayList<Player> players = new ArrayList<>();
 
         Player human = new Player(Colors.BLUE);
-        Player computer = new Player(Colors.RED, new RuleBasedAI());
+        Player computer = new Player(Colors.RED);
 
         Node node1 = new Node(new Position(-5, 0));
         node1.setState(new OwnedState(node1, human));
@@ -41,6 +41,10 @@ public class LevelCreator {
         players.add(human);
         players.add(computer);
 
-        return new GameState(camera, board, players, human);
+        GameState state = new GameState(camera, board, players, human);
+
+        computer.setAI(new RuleBasedAI(state));
+
+        return state;
     }
 }

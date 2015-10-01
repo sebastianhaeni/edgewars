@@ -1,22 +1,16 @@
 package ch.bfh.edgewars.logic.entities;
 
 import ch.bfh.edgewars.logic.ai.AI;
+import ch.bfh.edgewars.logic.ai.RuleBasedAI;
 
 public class Player extends Entity {
-    private final AI mAi;
+    private AI mAi;
     private final float[] mColor;
     private int mEnergy;
 
     public Player(float[] color) {
         super(1000);
         mColor = color;
-        mAi = null;
-    }
-
-    public Player(float[] color, AI ai) {
-        super(1000);
-        mColor = color;
-        mAi = ai;
     }
 
     @Override
@@ -36,5 +30,9 @@ public class Player extends Entity {
 
     public float[] getColor() {
         return mColor;
+    }
+
+    public void setAI(RuleBasedAI AI) {
+        mAi = AI;
     }
 }
