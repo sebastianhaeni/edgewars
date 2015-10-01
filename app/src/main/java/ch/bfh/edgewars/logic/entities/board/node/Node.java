@@ -150,4 +150,16 @@ public class Node extends BoardEntity {
             s.setColor(color);
         }
     }
+
+    @Override
+    public String toString() {
+        return "Node ["
+                + "\n\tState: " + mState.toString()
+                + "\n\tPosition: " + mPosition.getX() + ", " + mPosition.getY()
+                + "\n]";
+    }
+
+    public NodeState getState() {
+        return mState;
+    }
 }

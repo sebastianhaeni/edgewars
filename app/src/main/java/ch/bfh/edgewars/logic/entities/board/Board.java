@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import ch.bfh.edgewars.graphics.shapes.Shape;
 import ch.bfh.edgewars.logic.entities.Entity;
+import ch.bfh.edgewars.logic.entities.board.node.Node;
 
 public class Board extends Entity {
     private ArrayList<BoardEntity> mEntities = new ArrayList<>();
@@ -36,5 +37,15 @@ public class Board extends Entity {
 
     public ArrayList<Shape> getShapes() {
         return mShapes;
+    }
+
+    public ArrayList<Node> getNodes() {
+        ArrayList<Node> nodes = new ArrayList<>();
+        for (BoardEntity e : mEntities) {
+            if (e instanceof Node) {
+                nodes.add((Node) e);
+            }
+        }
+        return nodes;
     }
 }

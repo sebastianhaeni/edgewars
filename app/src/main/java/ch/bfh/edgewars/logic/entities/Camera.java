@@ -2,6 +2,7 @@ package ch.bfh.edgewars.logic.entities;
 
 public class Camera extends Entity {
     public static final float CAMERA_FRICTION = .1f;
+    private static final float TOUCH_SCALE_FACTOR = -.003f;
 
     private boolean mIsPlayerControlled = false;
 
@@ -9,6 +10,8 @@ public class Camera extends Entity {
     private float mCameraDy;
     private float mCameraX;
     private float mCameraY;
+    private float mCameraScreenX;
+    private float mCameraScreenY;
 
     public Camera() {
         super(16);
@@ -37,6 +40,10 @@ public class Camera extends Entity {
      * @param dy
      */
     public void moveCamera(float dx, float dy) {
+        mCameraScreenX += dx;
+        mCameraScreenY += dy;
+        dx = dx * TOUCH_SCALE_FACTOR;
+        dy = dy * TOUCH_SCALE_FACTOR;
         mCameraDx = dx;
         mCameraDy = dy;
         mCameraX -= dx;
@@ -57,5 +64,13 @@ public class Camera extends Entity {
 
     public void takeCamera() {
         mIsPlayerControlled = false;
+    }
+
+    public float getScreenX() {
+        return mCameraScreenX;
+    }
+
+    public float getScreenY() {
+        return mCameraScreenY;
     }
 }

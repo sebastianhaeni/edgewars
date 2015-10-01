@@ -1,4 +1,4 @@
-package ch.bfh.edgewars.ui;
+package ch.bfh.edgewars.ui.activities;
 
 import android.app.Activity;
 import android.os.Bundle;

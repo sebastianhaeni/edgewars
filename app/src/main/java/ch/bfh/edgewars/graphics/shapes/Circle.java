@@ -11,11 +11,13 @@ import ch.bfh.edgewars.util.Position;
 
 public class Circle extends Shape {
     private static final int CORNERS = 364;
-    private final FloatBuffer vertexBuffer;
+    private static boolean verticesInitialized = false;
+    private static float vertices[] = new float[CORNERS * 3];
+
+    private final FloatBuffer mVertexBuffer;
+
     @SuppressWarnings("FieldCanBeLocal")
     private int mColorHandle;
-
-    private static float vertices[] = new float[CORNERS * 3];
 
     /**
      * Sets up the drawing object data for use in an OpenGL ES context.
@@ -25,13 +27,16 @@ public class Circle extends Shape {
     public Circle(Position position) {
         super(position);
 
-        vertices[0] = 0;
-        vertices[1] = 0;
-        vertices[2] = 0;
-        for (int i = 1; i < CORNERS; i++) {
-            vertices[(i * 3)] = (float) (0.5 * Math.cos((3.14 / 180) * (float) i));
-            vertices[(i * 3) + 1] = (float) (0.5 * Math.sin((3.14 / 180) * (float) i));
-            vertices[(i * 3) + 2] = 0;
+        if (!verticesInitialized) {
+            vertices[0] = 0;
+            vertices[1] = 0;
+            vertices[2] = 0;
+            for (int i = 1; i < CORNERS; i++) {
+                vertices[(i * 3)] = (float) (0.5 * Math.cos((3.14 / 180) * (float) i));
+                vertices[(i * 3) + 1] = (float) (0.5 * Math.sin((3.14 / 180) * (float) i));
+                vertices[(i * 3) + 2] = 0;
+            }
+            verticesInitialized = true;
         }
 
         // initialize vertex byte buffer for shape coordinates
@@ -42,11 +47,11 @@ public class Circle extends Shape {
         bb.order(ByteOrder.nativeOrder());
 
         // create a floating point buffer from the ByteBuffer
-        vertexBuffer = bb.asFloatBuffer();
+        mVertexBuffer = bb.asFloatBuffer();
         // add the coordinates to the FloatBuffer
-        vertexBuffer.put(vertices);
+        mVertexBuffer.put(vertices);
         // set the buffer to read the first coordinate
-        vertexBuffer.position(0);
+        mVertexBuffer.position(0);
     }
 
     /**
@@ -58,7 +63,7 @@ public class Circle extends Shape {
         GLES20.glVertexAttribPointer(
                 positionHandle, GameRenderer.COORDS_PER_VERTEX,
                 GLES20.GL_FLOAT, false,
-                GameRenderer.vertexStride, vertexBuffer);
+                GameRenderer.vertexStride, mVertexBuffer);
 
         // get handle to fragment shader's vColor member
         mColorHandle = GLES20.glGetUniformLocation(program, "vColor");

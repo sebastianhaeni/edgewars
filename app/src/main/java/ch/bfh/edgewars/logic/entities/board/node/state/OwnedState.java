@@ -1,5 +1,7 @@
 package ch.bfh.edgewars.logic.entities.board.node.state;
 
+import java.util.Arrays;
+
 import ch.bfh.edgewars.logic.entities.Player;
 import ch.bfh.edgewars.logic.entities.board.node.Node;
 
@@ -23,4 +25,12 @@ public class OwnedState extends NodeState {
         return 50;
     }
 
+    @Override
+    public String toString() {
+        return Arrays.toString(mOwner.getColor());
+    }
+
+    public Player getOwner() {
+        return mOwner;
+    }
 }

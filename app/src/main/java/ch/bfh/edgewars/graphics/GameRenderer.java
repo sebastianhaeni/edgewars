@@ -26,8 +26,8 @@ public class GameRenderer implements GLSurfaceView.Renderer {
     // number of coordinates per vertex in this array
     public static final int COORDS_PER_VERTEX = 3;
     public static final int vertexStride = COORDS_PER_VERTEX * 4; // 4 bytes per vertex
+    public static final int EYE_HEIGHT = 15;
     private static final String TAG = "GameRenderer";
-    private static final int EYE_HEIGHT = 15;
 
     private final GameThread mThread;
     private final GameState mGameState;
@@ -58,6 +58,8 @@ public class GameRenderer implements GLSurfaceView.Renderer {
     private int mProgram;
     private int mPositionHandle;
     private int mMVPMatrixHandle;
+    private int mScreenWidth;
+    private int mScreenHeight;
 
     public GameRenderer(GameThread thread, GameState gameState) {
         mThread = thread;
@@ -137,6 +139,8 @@ public class GameRenderer implements GLSurfaceView.Renderer {
 
     @Override
     public void onSurfaceChanged(GL10 unused, int width, int height) {
+        mScreenWidth = width;
+        mScreenHeight = height;
         // Adjust the viewport based on geometry changes,
         // such as screen rotation
         GLES20.glViewport(0, 0, width, height);
@@ -148,7 +152,7 @@ public class GameRenderer implements GLSurfaceView.Renderer {
         Matrix.frustumM(mProjectionMatrix, 0, -ratio, ratio, -1, 1, 3, EYE_HEIGHT);
     }
 
-     /**
+    /**
      * Utility method for compiling a OpenGL shader.
      * <p/>
      * <p><strong>Note:</strong> When developing shaders, use the checkGlError()
@@ -191,4 +195,11 @@ public class GameRenderer implements GLSurfaceView.Renderer {
         }
     }
 
+    public int getWidth() {
+        return mScreenWidth;
+    }
+
+    public int getHeight() {
+        return mScreenHeight;
+    }
 }

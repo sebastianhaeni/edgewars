@@ -1,18 +1,31 @@
 package ch.bfh.edgewars;
 
+import android.content.Context;
 import android.view.MotionEvent;
 
+import ch.bfh.edgewars.graphics.GameRenderer;
 import ch.bfh.edgewars.logic.GameState;
+import ch.bfh.edgewars.logic.entities.board.node.Node;
+import ch.bfh.edgewars.logic.entities.board.node.state.NeutralState;
+import ch.bfh.edgewars.logic.entities.board.node.state.OwnedState;
+import ch.bfh.edgewars.ui.dialogs.NeutralNodeDialog;
+import ch.bfh.edgewars.ui.dialogs.OpponentNodeDialog;
+import ch.bfh.edgewars.ui.dialogs.OwnedNodeDialog;
 
 public class GameController {
 
-    private static final float TOUCH_SCALE_FACTOR = -.003f;
     private final GameState mGameState;
+    private final GameRenderer mRenderer;
+    private final Context mContext;
     private float mPreviousX;
     private float mPreviousY;
+    private float mStartX;
+    private float mStartY;
 
-    public GameController(GameState gameState) {
+    public GameController(Context context, GameRenderer renderer, GameState gameState) {
+        mContext = context;
         mGameState = gameState;
+        mRenderer = renderer;
     }
 
     public void onTouchEvent(MotionEvent e) {
@@ -24,20 +37,77 @@ public class GameController {
 
         switch (e.getAction()) {
             case MotionEvent.ACTION_DOWN:
+                mStartX = x;
+                mStartY = y;
                 mGameState.getCamera().freeCamera();
                 break;
             case MotionEvent.ACTION_MOVE:
                 float dx = x - mPreviousX;
                 float dy = y - mPreviousY;
 
-                mGameState.getCamera().moveCamera(dx * TOUCH_SCALE_FACTOR, dy * TOUCH_SCALE_FACTOR);
+                mGameState.getCamera().moveCamera(dx, dy);
                 break;
             case MotionEvent.ACTION_UP:
                 mGameState.getCamera().takeCamera();
+
+                // detect single click (not moving the camera)
+                if (e.getEventTime() - e.getDownTime() < 200
+                        && Math.abs(x - mStartX) < 5
+                        && Math.abs(y - mStartY) < 5) {
+                    clickNode(x, y);
+                }
                 break;
         }
 
         mPreviousX = x;
         mPreviousY = y;
+    }
+
+    private void clickNode(float x, float y) {
+        // center x and y to middle point of screen
+        x = x - (mRenderer.getWidth() * .5f);
+        y = y - (mRenderer.getHeight() * .5f);
+
+        // get camera position
+        float cameraX = mGameState.getCamera().getScreenX() * .5f;
+        float cameraY = mGameState.getCamera().getScreenY() * .5f;
+
+        // determine size of a node
+        float nodeSize = 90; // TODO calc this
+
+        // search through nodes if one lies at that coordinate
+        for (Node node : mGameState.getBoard().getNodes()) {
+            float a = Math.abs((node.getPosition().getX() * 141) + cameraX - x);
+
+            if (Math.abs((node.getPosition().getX() * 141) + cameraX - x) < nodeSize
+                    && Math.abs((node.getPosition().getY() * 141) + cameraY - y) < nodeSize) {
+                showNodeDialog(node);
+                break;
+            }
+        }
+    }
+
+    private void showNodeDialog(Node node) {
+
+        if (node.getState() instanceof NeutralState) {
+            NeutralNodeDialog dialog = new NeutralNodeDialog(mContext, node);
+            dialog.show();
+            return;
+        }
+
+        if (node.getState() instanceof OwnedState) {
+
+            OwnedState state = (OwnedState) node.getState();
+
+            if (state.getOwner().equals(mGameState.getHuman())) {
+                OwnedNodeDialog dialog = new OwnedNodeDialog(mContext, node);
+                dialog.show();
+                return;
+            }
+
+            OpponentNodeDialog dialog = new OpponentNodeDialog(mContext, node);
+            dialog.show();
+        }
+
     }
 }

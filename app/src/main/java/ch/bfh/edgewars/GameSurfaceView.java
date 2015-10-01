@@ -11,7 +11,6 @@ import ch.bfh.edgewars.logic.GameState;
 import ch.bfh.edgewars.logic.GameThread;
 import ch.bfh.edgewars.logic.LevelCreator;
 
-
 /**
  * A view container where OpenGL ES graphics can be drawn on screen.
  * This view can also be used to capture touch events, such as a user
@@ -29,7 +28,8 @@ public class GameSurfaceView extends GLSurfaceView {
 
         GameState mGameState = creator.build();
         mThread = new GameThread(mGameState);
-        mController = new GameController(mGameState);
+        GameRenderer renderer = new GameRenderer(mThread, mGameState);
+        mController = new GameController(context, renderer, mGameState);
 
         // Create an OpenGL ES 2.0 context.
         setEGLContextClientVersion(2);
@@ -37,7 +37,7 @@ public class GameSurfaceView extends GLSurfaceView {
         super.setEGLConfigChooser(8, 8, 8, 8, 16, 0);
 
         // Set the Renderer for drawing on the GLSurfaceView
-        setRenderer(new GameRenderer(mThread, mGameState));
+        setRenderer(renderer);
 
         // Render the view continuously
         setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);

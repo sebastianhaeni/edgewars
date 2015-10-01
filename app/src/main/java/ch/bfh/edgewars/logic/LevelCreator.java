@@ -41,6 +41,6 @@ public class LevelCreator {
         players.add(human);
         players.add(computer);
 
-        return new GameState(camera, board, players);
+        return new GameState(camera, board, players, human);
     }
 }
