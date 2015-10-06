@@ -23,5 +23,5 @@ android:
     # if you need to run emulator(s) during your tests
     - sys-img-armeabi-v7a-android-23
 
-    # Android support library
-    - extra-android-support
+    # Android repository
+    - extra-android-m2repository
