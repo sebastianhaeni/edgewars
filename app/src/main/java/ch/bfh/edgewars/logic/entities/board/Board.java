@@ -11,14 +11,7 @@ public class Board extends Entity {
     private ArrayList<Shape> mShapes = new ArrayList<>();
 
     public Board() {
-        super(100);
-    }
-
-    @Override
-    public void updateState(long millis) {
-        for (Entity e : mEntities) {
-            e.update(millis);
-        }
+        super();
     }
 
     public void addEntity(BoardEntity e) {
@@ -47,5 +40,10 @@ public class Board extends Entity {
             }
         }
         return nodes;
+    }
+
+    @Override
+    public void update(long millis) {
+        // no op
     }
 }

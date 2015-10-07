@@ -17,7 +17,7 @@ public abstract class Factory extends Entity {
     private int mProducingStack;
 
     public Factory(Node node) {
-        super(-1);
+        super();
         setUpdateInterval(getProducingDuration());
         mNode = node;
     }
@@ -56,7 +56,7 @@ public abstract class Factory extends Entity {
     }
 
     @Override
-    public void updateState(long millis) {
+    public void update(long millis) {
         if (mProducingStack <= 0) {
             return;
         }

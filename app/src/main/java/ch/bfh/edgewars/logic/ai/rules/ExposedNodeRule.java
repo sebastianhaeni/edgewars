@@ -3,7 +3,6 @@ package ch.bfh.edgewars.logic.ai.rules;
 import java.util.ArrayList;
 
 import ch.bfh.edgewars.logic.GameState;
-import ch.bfh.edgewars.logic.ai.rules.Rule;
 import ch.bfh.edgewars.logic.commands.Command;
 
 public class ExposedNodeRule extends Rule {

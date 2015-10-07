@@ -13,7 +13,7 @@ public class Edge extends BoardEntity {
     private ArrayList<Shape> mShapes = new ArrayList<>();
 
     public Edge(Node node1, Node node2) {
-        super(-1); // an edge does not update
+        super(); // an edge does not update
         mNode1 = node1;
         mNode2 = node2;
 
@@ -39,5 +39,10 @@ public class Edge extends BoardEntity {
     @Override
     public ArrayList<Shape> getShapes() {
         return mShapes;
+    }
+
+    @Override
+    public void update(long millis) {
+        // no op
     }
 }

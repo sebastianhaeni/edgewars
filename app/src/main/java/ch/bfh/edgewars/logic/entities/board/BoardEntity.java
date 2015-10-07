@@ -11,5 +11,9 @@ public abstract class BoardEntity extends Entity {
         super(interval);
     }
 
+    public BoardEntity() {
+        super();
+    }
+
     public abstract ArrayList<Shape> getShapes();
 }

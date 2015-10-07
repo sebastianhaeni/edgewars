@@ -8,6 +8,7 @@ import java.util.Stack;
 import ch.bfh.edgewars.BR;
 import ch.bfh.edgewars.graphics.shapes.Circle;
 import ch.bfh.edgewars.graphics.shapes.Shape;
+import ch.bfh.edgewars.logic.Game;
 import ch.bfh.edgewars.logic.commands.MoveUnitCommand;
 import ch.bfh.edgewars.logic.entities.board.BoardEntity;
 import ch.bfh.edgewars.logic.entities.board.factories.MeleeFactory;
@@ -50,15 +51,11 @@ public class Node extends BoardEntity {
     }
 
     @Override
-    protected void updateState(long millis) {
+    public void update(long millis) {
         if (mMoveUnitCommands.size() > 0) {
             MoveUnitCommand c = mMoveUnitCommands.pop();
-            c.execute();
+            Game.getInstance().register(c);
         }
-
-        mMeleeFactory.update(millis);
-        mTankFactory.update(millis);
-        mSprinterFactory.update(millis);
 
         mState.update(millis);
     }

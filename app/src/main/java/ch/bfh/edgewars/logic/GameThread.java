@@ -1,12 +1,7 @@
 package ch.bfh.edgewars.logic;
 
 public class GameThread extends Thread {
-    private final GameState mGameState;
     private boolean mRunning;
-
-    public GameThread(GameState gameState) {
-        mGameState = gameState;
-    }
 
     public void setRunning(boolean running) {
         mRunning = running;
@@ -19,7 +14,7 @@ public class GameThread extends Thread {
             // updateState game state
             delta = System.currentTimeMillis() - delta;
 
-            mGameState.update(delta);
+            Game.getInstance().update(delta);
 
             try {
                 Thread.sleep(12);

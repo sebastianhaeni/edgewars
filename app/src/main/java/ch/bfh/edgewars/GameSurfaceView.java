@@ -27,7 +27,7 @@ public class GameSurfaceView extends GLSurfaceView {
         LevelCreator creator = new LevelCreator();
 
         GameState mGameState = creator.build();
-        mThread = new GameThread(mGameState);
+        mThread = new GameThread();
         GameRenderer renderer = new GameRenderer(mThread, mGameState);
         mController = new GameController(context, renderer, mGameState);
 

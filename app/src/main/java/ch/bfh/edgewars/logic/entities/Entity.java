@@ -2,27 +2,21 @@ package ch.bfh.edgewars.logic.entities;
 
 import android.databinding.BaseObservable;
 
-public abstract class Entity extends BaseObservable{
+import ch.bfh.edgewars.logic.Game;
+
+public abstract class Entity extends BaseObservable {
     private long mInterval;
-    private long mWaitingTime;
 
     public Entity(long interval) {
         mInterval = interval;
+        Game.getInstance().register(this);
     }
 
-    public void update(long millis) {
-        if (mInterval < 0) {
-            return;
-        }
-        mWaitingTime += millis;
-        if (mWaitingTime > mInterval) {
-            mWaitingTime = 0;
-            updateState(millis);
-        }
+    public Entity() {
+        // no op
     }
 
-    protected void updateState(long millis) {
-    }
+    public abstract void update(long millis);
 
     /**
      * Sets the interval this object wants to be updated in.
@@ -31,6 +25,10 @@ public abstract class Entity extends BaseObservable{
      */
     public void setUpdateInterval(long interval) {
         mInterval = interval;
+        Game.getInstance().register(this);
     }
 
+    public long getInterval() {
+        return mInterval;
+    }
 }

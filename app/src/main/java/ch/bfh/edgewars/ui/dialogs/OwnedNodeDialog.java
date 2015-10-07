@@ -7,6 +7,8 @@ import android.view.View;
 
 import ch.bfh.edgewars.R;
 import ch.bfh.edgewars.databinding.DialogOwnedNodeBinding;
+import ch.bfh.edgewars.logic.Game;
+import ch.bfh.edgewars.logic.commands.UpgradeNodeHealthCommand;
 import ch.bfh.edgewars.logic.entities.board.node.Node;
 
 public class OwnedNodeDialog extends Dialog {
@@ -24,11 +26,25 @@ public class OwnedNodeDialog extends Dialog {
         setContentView(mBinding.getRoot());
     }
 
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (hasFocus) {
+            mBinding.getRoot().setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+        }
+    }
+
     @SuppressWarnings("unused")
     public class Handlers {
 
         public void upgradeHealth(View view) {
-            mNode.upgradeHealth();
+            Game.getInstance().register(new UpgradeNodeHealthCommand(mNode));
             if (mNode.maxHealthLevelReached()) {
                 mBinding.buttonUpgradeHealth.setVisibility(View.INVISIBLE);
                 mBinding.textUpgradeHealthCost.setVisibility(View.INVISIBLE);

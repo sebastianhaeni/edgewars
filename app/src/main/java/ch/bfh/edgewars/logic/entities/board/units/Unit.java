@@ -3,10 +3,7 @@ package ch.bfh.edgewars.logic.entities.board.units;
 import ch.bfh.edgewars.logic.entities.board.BoardEntity;
 import ch.bfh.edgewars.logic.entities.board.node.Node;
 import ch.bfh.edgewars.logic.entities.board.node.state.OwnedState;
-import ch.bfh.edgewars.logic.entities.board.units.state.AttackNodeState;
 import ch.bfh.edgewars.logic.entities.board.units.state.DeadState;
-import ch.bfh.edgewars.logic.entities.board.units.state.DefendingState;
-import ch.bfh.edgewars.logic.entities.board.units.state.FightUnitState;
 import ch.bfh.edgewars.logic.entities.board.units.state.IdleState;
 import ch.bfh.edgewars.logic.entities.board.units.state.MovingState;
 import ch.bfh.edgewars.logic.entities.board.units.state.UnitState;
@@ -43,7 +40,7 @@ public abstract class Unit extends BoardEntity {
     }
 
     @Override
-    protected void updateState(long millis) {
+    public void update(long millis) {
         getState().update(millis);
     }
 

@@ -19,7 +19,7 @@ public class Camera extends Entity {
     }
 
     @Override
-    public void updateState(long millis) {
+    public void update(long millis) {
         if (mIsPlayerControlled || (Math.abs(mCameraDx) < CAMERA_PRECISION && Math.abs(mCameraDy) < CAMERA_PRECISION)) {
             return;
         }
