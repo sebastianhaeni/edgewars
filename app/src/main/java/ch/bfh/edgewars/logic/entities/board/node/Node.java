@@ -1,12 +1,18 @@
 package ch.bfh.edgewars.logic.entities.board.node;
 
+import android.databinding.Bindable;
+
 import java.util.ArrayList;
 import java.util.Stack;
 
+import ch.bfh.edgewars.BR;
 import ch.bfh.edgewars.graphics.shapes.Circle;
 import ch.bfh.edgewars.graphics.shapes.Shape;
 import ch.bfh.edgewars.logic.commands.MoveUnitCommand;
 import ch.bfh.edgewars.logic.entities.board.BoardEntity;
+import ch.bfh.edgewars.logic.entities.board.factories.MeleeFactory;
+import ch.bfh.edgewars.logic.entities.board.factories.SprinterFactory;
+import ch.bfh.edgewars.logic.entities.board.factories.TankFactory;
 import ch.bfh.edgewars.logic.entities.board.node.state.NeutralState;
 import ch.bfh.edgewars.logic.entities.board.node.state.NodeState;
 import ch.bfh.edgewars.logic.entities.board.units.MeleeUnit;
@@ -15,11 +21,17 @@ import ch.bfh.edgewars.logic.entities.board.units.TankUnit;
 import ch.bfh.edgewars.logic.entities.board.units.Unit;
 import ch.bfh.edgewars.util.Position;
 
+@SuppressWarnings("unused")
 public class Node extends BoardEntity {
 
     private ArrayList<MeleeUnit> mMeleeUnits = new ArrayList<>();
     private ArrayList<TankUnit> mTankUnits = new ArrayList<>();
     private ArrayList<SprinterUnit> mSprinterUnits = new ArrayList<>();
+
+    private MeleeFactory mMeleeFactory = new MeleeFactory(this);
+    private TankFactory mTankFactory = new TankFactory(this);
+    private SprinterFactory mSprinterFactory = new SprinterFactory(this);
+
     private int mHealth;
     private int mHealthLevel = 1;
     private int mDamageLevel = 1;
@@ -34,7 +46,6 @@ public class Node extends BoardEntity {
         setState(new NeutralState(this));
         mPosition = position;
         mHealth = getMaxHealth();
-
         mShapes.add(new Circle(mPosition));
     }
 
@@ -44,6 +55,10 @@ public class Node extends BoardEntity {
             MoveUnitCommand c = mMoveUnitCommands.pop();
             c.execute();
         }
+
+        mMeleeFactory.update(millis);
+        mTankFactory.update(millis);
+        mSprinterFactory.update(millis);
 
         mState.update(millis);
     }
@@ -59,14 +74,17 @@ public class Node extends BoardEntity {
 
     public void addUnit(MeleeUnit unit) {
         mMeleeUnits.add(unit);
+        notifyPropertyChanged(BR.meleeCount);
     }
 
     public void addUnit(TankUnit unit) {
         mTankUnits.add(unit);
+        notifyPropertyChanged(BR.tankCount);
     }
 
     public void addUnit(SprinterUnit unit) {
         mSprinterUnits.add(unit);
+        notifyPropertyChanged(BR.sprinterCount);
     }
 
     public void addUnit(Unit unit) {
@@ -89,6 +107,7 @@ public class Node extends BoardEntity {
         }
         mHealthLevel++;
         repair();
+        notifyPropertyChanged(BR.healthLevel);
     }
 
     public void upgradeDamage() {
@@ -96,20 +115,25 @@ public class Node extends BoardEntity {
             return;
         }
         mDamageLevel++;
+        notifyPropertyChanged(BR.damageLevel);
     }
 
     public void repair() {
         mHealth = getMaxHealth();
+        notifyPropertyChanged(BR.health);
     }
 
+    @Bindable
     public int getRepairCost() {
         return getMaxHealth() - getHealth() * 10;
     }
 
+    @Bindable
     public int getHealth() {
         return mHealth;
     }
 
+    @Bindable
     public int getMaxHealth() {
         switch (mHealthLevel) {
             case 1:
@@ -123,11 +147,49 @@ public class Node extends BoardEntity {
         }
     }
 
+    @Bindable
+    public int getHealthLevel() {
+        return mHealthLevel;
+    }
+
+    @Bindable
+    public int getDamageLevel() {
+        return mDamageLevel;
+    }
+
+    @Bindable
+    public int getMeleeCount() {
+        return mMeleeUnits.size();
+    }
+
+    @Bindable
+    public int getTankCount() {
+        return mTankUnits.size();
+    }
+
+    @Bindable
+    public int getSprinterCount() {
+        return mSprinterUnits.size();
+    }
+
+    public MeleeFactory getMeleeFactory() {
+        return mMeleeFactory;
+    }
+
+    public TankFactory getTankFactory() {
+        return mTankFactory;
+    }
+
+    public SprinterFactory getSprinterFactory() {
+        return mSprinterFactory;
+    }
+
     public void sendMeleeUnits(Node node) {
         for (Unit u : mMeleeUnits) {
             mMoveUnitCommands.add(new MoveUnitCommand(u, node));
         }
         mMeleeUnits.clear();
+        notifyPropertyChanged(BR.node);
     }
 
     public void sendTankUnits(Node node) {
@@ -135,6 +197,7 @@ public class Node extends BoardEntity {
             mMoveUnitCommands.add(new MoveUnitCommand(u, node));
         }
         mMeleeUnits.clear();
+        notifyPropertyChanged(BR.node);
     }
 
     public void sendSprinterUnits(Node node) {
@@ -142,6 +205,7 @@ public class Node extends BoardEntity {
             mMoveUnitCommands.add(new MoveUnitCommand(u, node));
         }
         mMeleeUnits.clear();
+        notifyPropertyChanged(BR.node);
     }
 
     public void deductHealth(int attackDamage) {
@@ -152,6 +216,9 @@ public class Node extends BoardEntity {
             return;
         }
         mHealth = newHealth;
+
+        notifyPropertyChanged(BR.health);
+        notifyPropertyChanged(BR.repairCost);
     }
 
     public void setState(NodeState state) {
@@ -175,5 +242,13 @@ public class Node extends BoardEntity {
 
     public NodeState getState() {
         return mState;
+    }
+
+    public boolean maxHealthLevelReached() {
+        return mHealthLevel >= 3;
+    }
+
+    public boolean maxDamageLevelReached() {
+        return mDamageLevel >= 3;
     }
 }

@@ -85,6 +85,11 @@ public class GameController {
         }
     }
 
+    /**
+     * Shows the appropriate dialog of a node. These are 'neutral', 'owned' or 'opponent'.
+     *
+     * @param node
+     */
     private void showNodeDialog(Node node) {
         if (node.getState() instanceof NeutralState) {
             NeutralNodeDialog dialog = new NeutralNodeDialog(mContext, node);

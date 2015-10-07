@@ -1,8 +1,12 @@
 package ch.bfh.edgewars.logic.entities.board.factories;
 
+import android.databinding.Bindable;
+
+import ch.bfh.edgewars.BR;
 import ch.bfh.edgewars.logic.entities.Entity;
 import ch.bfh.edgewars.logic.entities.board.node.Node;
 
+@SuppressWarnings("unused")
 public abstract class Factory extends Entity {
 
     private Node mNode;
@@ -38,6 +42,11 @@ public abstract class Factory extends Entity {
         return mIsBuilt;
     }
 
+    @Bindable
+    public int getStackSize() {
+        return mProducingStack;
+    }
+
     public void buildUnit() {
         mProducingStack++;
     }
@@ -53,6 +62,7 @@ public abstract class Factory extends Entity {
         }
         mProducingStack--;
         produceUnit();
+        notifyPropertyChanged(BR.stackSize);
     }
 
     protected abstract void produceUnit();

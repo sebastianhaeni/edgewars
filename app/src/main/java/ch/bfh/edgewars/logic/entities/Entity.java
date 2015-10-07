@@ -1,6 +1,8 @@
 package ch.bfh.edgewars.logic.entities;
 
-public abstract class Entity {
+import android.databinding.BaseObservable;
+
+public abstract class Entity extends BaseObservable{
     private long mInterval;
     private long mWaitingTime;
 
@@ -15,7 +17,7 @@ public abstract class Entity {
         mWaitingTime += millis;
         if (mWaitingTime > mInterval) {
             mWaitingTime = 0;
-            updateState(mWaitingTime);
+            updateState(millis);
         }
     }
 
