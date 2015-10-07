@@ -49,6 +49,7 @@ public abstract class Factory extends Entity {
 
     public void buildUnit() {
         mProducingStack++;
+        notifyPropertyChanged(BR.stackSize);
     }
 
     protected Node getNode() {

@@ -12,6 +12,8 @@ public class Game {
     private static Game mGame;
     private Stack<Command> mCommandStack = new Stack<>();
     private HashMap<Entity, Long> mEntities = new HashMap<>();
+    private boolean mUpdating;
+    private Stack<Entity> mEntitiesQueue = new Stack<>();
 
     /**
      * Privatised constructor. Because singleton.
@@ -38,6 +40,12 @@ public class Game {
         if (mEntities.containsKey(entity)) {
             return;
         }
+
+        if (mUpdating) {
+            mEntitiesQueue.push(entity);
+            return;
+        }
+
         mEntities.put(entity, 0L);
     }
 
@@ -48,7 +56,13 @@ public class Game {
             mCommandStack.pop().execute();
         }
 
-        // update entities
+        // Add entities in queue to entity list
+        while (mEntitiesQueue.size() > 0) {
+            mEntities.put(mEntitiesQueue.pop(), 0L);
+        }
+
+        // Update entities
+        mUpdating = true;
         for (Map.Entry<Entity, Long> pair : mEntities.entrySet()) {
             if (pair.getKey().getInterval() < 0) {
                 return;
@@ -60,6 +74,7 @@ public class Game {
                 pair.setValue(0L);
             }
         }
+        mUpdating = false;
     }
 }
 

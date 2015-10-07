@@ -1,5 +1,6 @@
 package ch.bfh.edgewars.logic.entities.board.factories;
 
+import ch.bfh.edgewars.BR;
 import ch.bfh.edgewars.logic.entities.board.node.Node;
 import ch.bfh.edgewars.logic.entities.board.units.MeleeUnit;
 
@@ -11,6 +12,7 @@ public class MeleeFactory extends Factory {
     @Override
     protected void produceUnit() {
         getNode().addUnit(new MeleeUnit(getNode()));
+        notifyPropertyChanged(BR.meleeCount);
     }
 
     @Override

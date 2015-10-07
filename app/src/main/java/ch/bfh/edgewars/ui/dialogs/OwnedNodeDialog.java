@@ -8,6 +8,14 @@ import android.view.View;
 import ch.bfh.edgewars.R;
 import ch.bfh.edgewars.databinding.DialogOwnedNodeBinding;
 import ch.bfh.edgewars.logic.Game;
+import ch.bfh.edgewars.logic.commands.BuildMeleeFactoryCommand;
+import ch.bfh.edgewars.logic.commands.BuildMeleeUnitCommand;
+import ch.bfh.edgewars.logic.commands.BuildSprinterFactoryCommand;
+import ch.bfh.edgewars.logic.commands.BuildSprinterUnitCommand;
+import ch.bfh.edgewars.logic.commands.BuildTankFactoryCommand;
+import ch.bfh.edgewars.logic.commands.BuildTankUnitCommand;
+import ch.bfh.edgewars.logic.commands.UpgradeFactoryCommand;
+import ch.bfh.edgewars.logic.commands.UpgradeNodeDamageCommand;
 import ch.bfh.edgewars.logic.commands.UpgradeNodeHealthCommand;
 import ch.bfh.edgewars.logic.entities.board.node.Node;
 
@@ -45,6 +53,7 @@ public class OwnedNodeDialog extends Dialog {
 
         public void upgradeHealth(View view) {
             Game.getInstance().register(new UpgradeNodeHealthCommand(mNode));
+
             if (mNode.maxHealthLevelReached()) {
                 mBinding.buttonUpgradeHealth.setVisibility(View.INVISIBLE);
                 mBinding.textUpgradeHealthCost.setVisibility(View.INVISIBLE);
@@ -52,7 +61,8 @@ public class OwnedNodeDialog extends Dialog {
         }
 
         public void upgradeDamage(View view) {
-            mNode.upgradeDamage();
+            Game.getInstance().register(new UpgradeNodeDamageCommand(mNode));
+
             if (mNode.maxDamageLevelReached()) {
                 mBinding.buttonUpgradeDamage.setVisibility(View.INVISIBLE);
                 mBinding.textUpgradeDamageCost.setVisibility(View.INVISIBLE);
@@ -60,39 +70,39 @@ public class OwnedNodeDialog extends Dialog {
         }
 
         public void buildMeleeFactory() {
-            mNode.getMeleeFactory().build();
+            Game.getInstance().register(new BuildMeleeFactoryCommand(mNode));
         }
 
         public void upgradeMeleeFactory() {
-            mNode.getMeleeFactory().upgrade();
+            Game.getInstance().register(new UpgradeFactoryCommand(mNode.getMeleeFactory()));
         }
 
         public void buildMeleeUnit(View view) {
-            mNode.getMeleeFactory().buildUnit();
+            Game.getInstance().register(new BuildMeleeUnitCommand(mNode.getMeleeFactory()));
         }
 
         public void buildTankFactory() {
-            mNode.getTankFactory().build();
+            Game.getInstance().register(new BuildTankFactoryCommand(mNode));
         }
 
         public void upgradeTankFactory() {
-            mNode.getTankFactory().upgrade();
+            Game.getInstance().register(new UpgradeFactoryCommand(mNode.getTankFactory()));
         }
 
         public void buildTankUnit(View view) {
-            mNode.getTankFactory().buildUnit();
+            Game.getInstance().register(new BuildTankUnitCommand(mNode.getTankFactory()));
         }
 
         public void buildSprinterFactory() {
-            mNode.getSprinterFactory().build();
+            Game.getInstance().register(new BuildSprinterFactoryCommand(mNode));
         }
 
         public void upgradeSprinterFactory() {
-            mNode.getSprinterFactory().upgrade();
+            Game.getInstance().register(new UpgradeFactoryCommand(mNode.getSprinterFactory()));
         }
 
         public void buildSprinterUnit(View view) {
-            mNode.getSprinterFactory().buildUnit();
+            Game.getInstance().register(new BuildSprinterUnitCommand(mNode.getSprinterFactory()));
         }
     }
 }

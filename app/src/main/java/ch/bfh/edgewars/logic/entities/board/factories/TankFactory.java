@@ -1,5 +1,6 @@
 package ch.bfh.edgewars.logic.entities.board.factories;
 
+import ch.bfh.edgewars.BR;
 import ch.bfh.edgewars.logic.entities.board.node.Node;
 import ch.bfh.edgewars.logic.entities.board.units.TankUnit;
 
@@ -11,6 +12,7 @@ public class TankFactory extends Factory {
     @Override
     public void produceUnit() {
         getNode().addUnit(new TankUnit(getNode()));
+        notifyPropertyChanged(BR.tankCount);
     }
 
     @Override
