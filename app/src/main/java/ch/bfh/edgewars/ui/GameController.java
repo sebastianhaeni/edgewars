@@ -1,4 +1,4 @@
-package ch.bfh.edgewars;
+package ch.bfh.edgewars.ui;
 
 import android.content.Context;
 import android.view.MotionEvent;

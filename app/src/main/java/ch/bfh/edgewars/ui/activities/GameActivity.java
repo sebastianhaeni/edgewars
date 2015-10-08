@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
-import ch.bfh.edgewars.GameSurfaceView;
+import ch.bfh.edgewars.graphics.GameSurfaceView;
 
 public class GameActivity extends Activity {
 
@@ -37,6 +37,18 @@ public class GameActivity extends Activity {
                             | View.SYSTEM_UI_FLAG_FULLSCREEN
                             | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mGLView.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mGLView.onPause();
     }
 
 }

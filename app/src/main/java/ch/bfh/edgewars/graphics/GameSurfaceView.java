@@ -1,4 +1,4 @@
-package ch.bfh.edgewars;
+package ch.bfh.edgewars.graphics;
 
 import android.content.Context;
 import android.opengl.GLSurfaceView;
@@ -10,6 +10,7 @@ import ch.bfh.edgewars.graphics.GameRenderer;
 import ch.bfh.edgewars.logic.GameState;
 import ch.bfh.edgewars.logic.GameThread;
 import ch.bfh.edgewars.logic.LevelCreator;
+import ch.bfh.edgewars.ui.GameController;
 
 /**
  * A view container where OpenGL ES graphics can be drawn on screen.
@@ -38,6 +39,7 @@ public class GameSurfaceView extends GLSurfaceView {
 
         // Set the Renderer for drawing on the GLSurfaceView
         setRenderer(renderer);
+        //setRenderer(new ParticleSystemRenderer(context));
 
         // Render the view continuously
         setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
