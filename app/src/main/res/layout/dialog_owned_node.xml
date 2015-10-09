@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+
+        <import type="android.view.View"/>
+
+        <variable
+            name="node"
+            type="ch.bfh.edgewars.logic.entities.board.node.Node"/>
+
+        <variable
+            name="handlers"
+            type="ch.bfh.edgewars.ui.dialogs.OwnedNodeDialog.Handlers"/>
+
+    </data>
+
+
+    <GridLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="20dp"
+        android:minHeight="300dp"
+        android:minWidth="520dp"
+        android:useDefaultMargins="true">
+
+        <TextView
+            android:id="@+id/textDefense"
+            style="@style/DialogSubTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+            android:layout_columnSpan="2"
+            android:layout_marginBottom="10dp"
+            android:layout_row="0"
+            android:text="Defense:"/>
+
+        <TextView
+            android:id="@+id/textHealth"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_marginLeft="10dp"
+            android:layout_row="1"
+            android:text="Health:"/>
+
+        <TextView
+            android:id="@+id/textDamage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_marginLeft="10dp"
+            android:layout_row="2"
+            android:text="Damage:"/>
+
+        <TextView
+            android:id="@+id/textHealthLevel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="2"
+            android:layout_row="1"
+            android:text="@{`Level ` + node.healthLevel}"/>
+
+        <TextView
+            android:id="@+id/textDamageLevel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="2"
+            android:layout_row="2"
+            android:text="@{`Level ` + node.damageLevel}"/>
+
+        <Button
+            android:id="@+id/buttonUpgradeHealth"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="3"
+            android:layout_row="1"
+            android:onClick="@{handlers.upgradeHealth}"
+            android:text="Upgrade"/>
+
+        <Button
+            android:id="@+id/buttonUpgradeDamage"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="3"
+            android:layout_row="2"
+            android:onClick="@{handlers.upgradeDamage}"
+            android:text="Upgrade"/>
+
+        <TextView
+            android:id="@+id/textUpgradeHealthCost"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="4"
+            android:layout_row="1"
+            android:text="50E"/>
+
+        <TextView
+            android:id="@+id/textUpgradeDamageCost"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="4"
+            android:layout_row="2"
+            android:text="50E"/>
+
+        <TextView
+            android:id="@+id/textTroups"
+            style="@style/DialogSubTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+            android:layout_columnSpan="2"
+            android:layout_marginBottom="10dp"
+            android:layout_row="3"
+            android:text="Troups:"/>
+
+        <TextView
+            android:id="@+id/textMelee"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_marginLeft="10dp"
+            android:layout_row="4"
+            android:text="Melee:"/>
+
+        <TextView
+            android:id="@+id/textMeleeCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="2"
+            android:layout_row="4"
+            android:text="@{`` + node.meleeCount}"/>
+
+        <TextView
+            android:id="@+id/textMeleeQueueSize"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="3"
+            android:layout_row="4"
+            android:text="@{`In queue: ` + node.meleeFactory.stackSize}"/>
+
+        <Button
+            android:id="@+id/buttonSendMelee"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="4"
+            android:layout_row="4"
+            android:text="Send"
+            />
+
+        <TextView
+            android:id="@+id/textTank"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_marginLeft="10dp"
+            android:layout_row="5"
+            android:text="Tank:"/>
+
+        <TextView
+            android:id="@+id/textTankCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="2"
+            android:layout_row="5"
+            android:text="@{`` + node.tankCount}"/>
+
+        <TextView
+            android:id="@+id/textTankQueueSize"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="3"
+            android:layout_row="5"
+            android:text="@{`In queue: ` + node.tankFactory.stackSize}"/>
+
+        <Button
+            android:id="@+id/buttonSendTank"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="4"
+            android:layout_row="5"
+            android:text="Send"
+            />
+
+        <TextView
+            android:id="@+id/textSprinter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_marginLeft="10dp"
+            android:layout_row="6"
+            android:text="Sprinter:"/>
+
+        <TextView
+            android:id="@+id/textSprinterCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="2"
+            android:layout_row="6"
+            android:text="@{`` + node.sprinterCount}"/>
+
+        <TextView
+            android:id="@+id/textSprinterQueueSize"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="3"
+            android:layout_row="6"
+            android:text="@{`In queue: ` + node.sprinterFactory.stackSize}"/>
+
+        <Button
+            android:id="@+id/buttonSendSprinter"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="4"
+            android:layout_row="6"
+            android:text="Send"
+            />
+
+
+        <TextView
+            android:id="@+id/textFactories"
+            style="@style/DialogSubTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="5"
+            android:layout_columnSpan="2"
+            android:layout_marginBottom="10dp"
+            android:layout_row="3"
+            android:text="Factories:"/>
+
+        <TextView
+            android:id="@+id/textMeleeFactory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="5"
+            android:layout_marginLeft="10dp"
+            android:layout_row="4"
+            android:text="Melee:"/>
+
+        <TextView
+            android:id="@+id/textMeleeFactoryLevel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="6"
+            android:layout_row="4"
+            android:text="@{`Level ` + node.meleeFactory.level}"/>
+
+        <Button
+            android:id="@+id/buttonBuildMelee"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="7"
+            android:layout_row="4"
+            android:onClick="@{handlers.buildMeleeUnit}"
+            android:text="Build unit"
+            />
+
+        <TextView
+            android:id="@+id/textTankFactory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="5"
+            android:layout_marginLeft="10dp"
+            android:layout_row="5"
+            android:text="Tank:"/>
+
+        <TextView
+            android:id="@+id/textTankFactoryLevel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="6"
+            android:layout_row="5"
+            android:text="@{`Level ` + node.tankFactory.level}"/>
+
+        <Button
+            android:id="@+id/buttonBuildTank"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="7"
+            android:layout_row="5"
+            android:onClick="@{handlers.buildTankUnit}"
+            android:text="Build unit"
+            />
+
+        <TextView
+            android:id="@+id/textSprinterFactory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="5"
+            android:layout_marginLeft="10dp"
+            android:layout_row="6"
+            android:text="Sprinter:"/>
+
+        <TextView
+            android:id="@+id/textSprinterFactoryLevel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="6"
+            android:layout_row="6"
+            android:text="@{`Level ` + node.sprinterFactory.level}"/>
+
+        <Button
+            android:id="@+id/buttonSprinterMelee"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="7"
+            android:layout_row="6"
+            android:onClick="@{handlers.buildSprinterUnit}"
+            android:text="Build unit"
+            />
+    </GridLayout>
+
+</layout>

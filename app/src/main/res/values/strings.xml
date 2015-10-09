@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Edge Wars</string>
+
+    <string name="title_about">About Edge Wars</string>
+    <string name="content_about">This game was developed by Sebastian Häni, Raphael Laubscher and Steven Cardini.\n\n© 2015
+    </string>
+
+
+</resources>
