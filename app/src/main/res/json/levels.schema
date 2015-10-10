@@ -1,37 +1,61 @@
+// http://www.utilities-online.info/xmltojson/
+// http://jsonschema.net/#/
+
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "id": "http://yourdomain.com/schemas/myschema.json",
-  "title": "Level",
-  "description": "A Level that can be loaded within the Edge Wars game for Android",
+  "id": "ch.bfh.edgewars.json.levels_schema",
   "type": "object",
-  "required": [
-    "nr"
-  ],
   "properties": {
-    "nr": {
-      "description": "The number of the level in order of appearance",
-      "type": "integer",
-      "minimum": 1
-    },
-    "node": {
-      "id": "integer",
-      "coordinateX": {
-        "type": "integer",
-        "minimum": -50,
-        "maximum": 50
-      },
-      "coordinateY": {
-        "type": "integer",
-        "minimum": -50,
-        "maximum": 50
-      },
-      "state": {
-        "enum": [
-          "neutral",
-          "ownedByEnemy",
-          "ownedByPlayer"
-        ],
-        "additionalItems": false
+    "levels": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "level_number": {
+            "type": "integer",
+            "min": 1
+          },
+          "nodes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "node_id": {
+                  "type": "integer",
+                  "min": 1
+                },
+                "coordinateX": {
+                  "type": "integer"
+                },
+                "coordinateY": {
+                  "type": "integer"
+                },
+                "state": {
+                  "type": "string",
+                  "enum": [
+                    "neutral",
+                    "ownedByEnemy",
+                    "ownedByPlayer"
+                  ]
+                }
+              }
+            }
+          },
+          "edges": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "node1_id": {
+                  "type": "integer"
+                },
+                "node2_id": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
       }
     }
   }
