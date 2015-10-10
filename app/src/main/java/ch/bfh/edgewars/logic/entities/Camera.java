@@ -37,8 +37,8 @@ public class Camera extends Entity {
     /**
      * Updates the position of the camera with the delta value.
      *
-     * @param dx
-     * @param dy
+     * @param dx delta x
+     * @param dy delta y
      */
     public void moveCamera(float dx, float dy) {
         mCameraScreenX += dx;

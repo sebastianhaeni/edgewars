@@ -1,5 +1,7 @@
 package ch.bfh.edgewars.logic;
 
+import android.util.Log;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
@@ -46,6 +48,7 @@ public class Game {
             return;
         }
 
+        Log.d("Game", "Registering entity: " + entity);
         mEntities.put(entity, 0L);
     }
 
@@ -65,7 +68,7 @@ public class Game {
         mUpdating = true;
         for (Map.Entry<Entity, Long> pair : mEntities.entrySet()) {
             if (pair.getKey().getInterval() < 0) {
-                return;
+                continue;
             }
             pair.setValue(pair.getValue() + millis);
 
