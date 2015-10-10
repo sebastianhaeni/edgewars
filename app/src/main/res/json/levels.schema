@@ -1,0 +1,38 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "id": "http://yourdomain.com/schemas/myschema.json",
+  "title": "Level",
+  "description": "A Level that can be loaded within the Edge Wars game for Android",
+  "type": "object",
+  "required": [
+    "nr"
+  ],
+  "properties": {
+    "nr": {
+      "description": "The number of the level in order of appearance",
+      "type": "integer",
+      "minimum": 1
+    },
+    "node": {
+      "id": "integer",
+      "coordinateX": {
+        "type": "integer",
+        "minimum": -50,
+        "maximum": 50
+      },
+      "coordinateY": {
+        "type": "integer",
+        "minimum": -50,
+        "maximum": 50
+      },
+      "state": {
+        "enum": [
+          "neutral",
+          "ownedByEnemy",
+          "ownedByPlayer"
+        ],
+        "additionalItems": false
+      }
+    }
+  }
+}
