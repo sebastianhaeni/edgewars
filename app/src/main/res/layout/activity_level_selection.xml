@@ -47,7 +47,7 @@
 
     <Button
         android:id="@+id/buttonLevelSelectionToMain"
-        android:text="Back"
+        android:text="@string/back"
         android:layout_width="wrap_content"
         android:layout_alignBottom="@id/layoutLevelButtons"
         android:layout_height="wrap_content"/>
