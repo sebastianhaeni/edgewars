@@ -1,5 +1,7 @@
 package ch.bfh.edgewars.logic;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 
 import ch.bfh.edgewars.logic.ai.RuleBasedAI;
@@ -14,6 +16,8 @@ import ch.bfh.edgewars.util.Position;
 
 public class LevelCreator {
     public GameState build() {
+        Log.d("LevelCreator", "Generating level");
+
         Camera camera = new Camera();
         Board board = new Board();
 
@@ -41,7 +45,7 @@ public class LevelCreator {
         players.add(human);
         players.add(computer);
 
-        GameState state = new GameState(camera, board, human);
+        GameState state = new GameState(camera, board, players,human);
 
         computer.setAI(new RuleBasedAI(state));
 

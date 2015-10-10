@@ -232,9 +232,9 @@ public class Node extends BoardEntity {
     @Override
     public String toString() {
         return "Node ["
-                + "\n\tState: " + mState.toString()
-                + "\n\tPosition: " + mPosition.getX() + ", " + mPosition.getY()
-                + "\n]";
+                + "State: " + (mState == null ? null : mState.toString())
+                + ", Position: " + (mPosition == null ? null : (mPosition.getX() + ", " + mPosition.getY()))
+                + "]";
     }
 
     public NodeState getState() {

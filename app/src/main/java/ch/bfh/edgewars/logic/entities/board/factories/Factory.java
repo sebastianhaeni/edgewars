@@ -15,6 +15,7 @@ public abstract class Factory extends Entity {
 
     private boolean mIsBuilt;
     private int mProducingStack;
+    private long mBuildStartTime;
 
     public Factory(Node node) {
         super();
@@ -48,6 +49,10 @@ public abstract class Factory extends Entity {
     }
 
     public void buildUnit() {
+        if (mProducingStack == 0) {
+            mBuildStartTime = System.currentTimeMillis();
+        }
+
         mProducingStack++;
         notifyPropertyChanged(BR.stackSize);
     }
@@ -58,9 +63,10 @@ public abstract class Factory extends Entity {
 
     @Override
     public void update(long millis) {
-        if (mProducingStack <= 0) {
+        if (mProducingStack <= 0 || mBuildStartTime + getProducingDuration() > System.currentTimeMillis()) {
             return;
         }
+        mBuildStartTime = System.currentTimeMillis();
         mProducingStack--;
         produceUnit();
         notifyPropertyChanged(BR.stackSize);
