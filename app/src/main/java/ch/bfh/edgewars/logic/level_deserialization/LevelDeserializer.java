@@ -1,4 +1,4 @@
-package ch.bfh.edgewars.logic.levels;
+package ch.bfh.edgewars.logic.level_deserialization;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
@@ -13,29 +13,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import ch.bfh.edgewars.logic.entities.Player;
+import ch.bfh.edgewars.logic.LevelLoader;
 import ch.bfh.edgewars.logic.entities.board.Edge;
 import ch.bfh.edgewars.logic.entities.board.node.Node;
 import ch.bfh.edgewars.logic.entities.board.node.state.NeutralState;
 import ch.bfh.edgewars.logic.entities.board.node.state.NodeState;
 import ch.bfh.edgewars.logic.entities.board.node.state.OwnedState;
-import ch.bfh.edgewars.util.Colors;
 import ch.bfh.edgewars.util.Position;
 
 
-public class LevelsDeserializer implements JsonDeserializer {
+public class LevelDeserializer implements JsonDeserializer {
 
     private Levels levels;
     private List<Level> levelList;
     private Map nodeMap;
 
-    private Player human, computer;
-
     @Override
     public Levels deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-
-        human = new Player(Colors.BLUE);
-        computer = new Player(Colors.RED);
 
         levels = new Levels();
         levelList = new ArrayList<Level>();
@@ -91,10 +85,10 @@ public class LevelsDeserializer implements JsonDeserializer {
             NodeState state;
             switch (stateString) {
                 case "ownedByPlayer":
-                    state = new OwnedState(node, human);
+                    state = new OwnedState(node, LevelLoader.humanPlayer);
                     break;
                 case "ownedByEnemy":
-                    state = new OwnedState(node, computer);
+                    state = new OwnedState(node, LevelLoader.computerPlayer);
                     break;
                 default:    // neutral
                     state = new NeutralState(node);

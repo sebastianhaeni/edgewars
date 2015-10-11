@@ -6,10 +6,13 @@ import java.util.Stack;
 
 import ch.bfh.edgewars.logic.commands.Command;
 import ch.bfh.edgewars.logic.entities.Entity;
+import ch.bfh.edgewars.logic.entities.Player;
+import ch.bfh.edgewars.util.Colors;
 
 public class Game {
 
     private static Game mGame;
+
     private Stack<Command> mCommandStack = new Stack<>();
     private HashMap<Entity, Long> mEntities = new HashMap<>();
     private boolean mUpdating;

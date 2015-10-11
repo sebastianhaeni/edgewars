@@ -6,10 +6,9 @@ import android.support.annotation.NonNull;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 
-import ch.bfh.edgewars.graphics.GameRenderer;
 import ch.bfh.edgewars.logic.GameState;
 import ch.bfh.edgewars.logic.GameThread;
-import ch.bfh.edgewars.logic.LevelCreator;
+import ch.bfh.edgewars.logic.LevelLoader;
 import ch.bfh.edgewars.ui.GameController;
 
 /**
@@ -25,9 +24,9 @@ public class GameSurfaceView extends GLSurfaceView {
     public GameSurfaceView(Context context) {
         super(context);
 
-        LevelCreator creator = new LevelCreator(context);
+        LevelLoader levelLoader = new LevelLoader(context);
+        GameState mGameState = levelLoader.build(1);
 
-        GameState mGameState = creator.build();
         mThread = new GameThread();
         GameRenderer renderer = new GameRenderer(mThread, mGameState);
         mController = new GameController(context, renderer, mGameState);

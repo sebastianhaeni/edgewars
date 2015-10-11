@@ -1,4 +1,4 @@
-package ch.bfh.edgewars.logic.levels;
+package ch.bfh.edgewars.logic.level_deserialization;
 
 import java.util.ArrayList;
 import java.util.List;
