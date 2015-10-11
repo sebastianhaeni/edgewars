@@ -2,6 +2,9 @@ package ch.bfh.edgewars.logic.entities.board.node;
 
 import android.databinding.Bindable;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 import java.util.Stack;
 
@@ -25,6 +28,16 @@ import ch.bfh.edgewars.util.Position;
 @SuppressWarnings("unused")
 public class Node extends BoardEntity {
 
+    @SerializedName("position")
+    @Expose
+    private Position mPosition;
+    private NodeState mState;
+
+    private int mHealth;
+    private int mHealthLevel = 1;
+    private int mDamageLevel = 1;
+    private ArrayList<Shape> mShapes = new ArrayList<>();
+
     private ArrayList<MeleeUnit> mMeleeUnits = new ArrayList<>();
     private ArrayList<TankUnit> mTankUnits = new ArrayList<>();
     private ArrayList<SprinterUnit> mSprinterUnits = new ArrayList<>();
@@ -33,20 +46,18 @@ public class Node extends BoardEntity {
     private TankFactory mTankFactory = new TankFactory(this);
     private SprinterFactory mSprinterFactory = new SprinterFactory(this);
 
-    private int mHealth;
-    private int mHealthLevel = 1;
-    private int mDamageLevel = 1;
-    private Position mPosition;
-    private ArrayList<Shape> mShapes = new ArrayList<>();
-
     private Stack<MoveUnitCommand> mMoveUnitCommands = new Stack<>();
-    private NodeState mState;
+
+
+    public Node() {
+        super(50);
+        mHealth = getMaxHealth();
+    }
 
     public Node(Position position) {
-        super(50);
+        this();
         setState(new NeutralState(this));
         mPosition = position;
-        mHealth = getMaxHealth();
         mShapes.add(new Circle(mPosition));
     }
 
@@ -62,6 +73,12 @@ public class Node extends BoardEntity {
 
     public Position getPosition() {
         return mPosition;
+    }
+
+    public void setPosition (Position position) {
+        mPosition = position;
+        mShapes.clear();
+        mShapes.add(new Circle(mPosition));
     }
 
     @Override

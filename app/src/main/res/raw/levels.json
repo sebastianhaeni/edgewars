@@ -1,0 +1,43 @@
+{
+  "levels": [
+    {
+      "level_number": 1,
+      "nodes": [
+        {
+          "node_id": 1,
+          "position": {
+            "coordinateX": -5,
+            "coordinateY": 0
+          },
+          "state": "ownedByPlayer"
+        },
+        {
+          "node_id": 2,
+          "position": {
+            "coordinateX": 0,
+            "coordinateY": -3
+          },
+          "state": "neutral"
+        },
+        {
+          "node_id": 3,
+          "position": {
+            "coordinateX": 5,
+            "coordinateY": 1
+          },
+          "state": "ownedByEnemy"
+        }
+      ],
+      "edges": [
+        {
+          "node1_id": 1,
+          "node2_id": 2
+        },
+        {
+          "node1_id": 2,
+          "node2_id": 3
+        }
+      ]
+    }
+  ]
+}

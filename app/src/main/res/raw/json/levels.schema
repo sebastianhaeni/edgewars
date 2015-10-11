@@ -1,6 +1,3 @@
-// http://www.utilities-online.info/xmltojson/
-// http://jsonschema.net/#/
-
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
   "id": "ch.bfh.edgewars.json.levels_schema",
