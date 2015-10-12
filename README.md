@@ -1,4 +1,4 @@
-# Edge Wars
+# Edge Wars [![Build Status](https://magnum.travis-ci.com/sebastianhaeni/edgewars.svg?token=qgj44e18REfhtFnW25Z2&branch=master)](https://magnum.travis-ci.com/sebastianhaeni/edgewars)
 
 An Android strategy game made by 3 students at Bern University of Applied Sciences.
 
