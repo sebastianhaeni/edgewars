@@ -7,11 +7,11 @@
 
         <variable
             name="node"
-            type="ch.bfh.edgewars.logic.entities.board.node.Node"/>
+            type="ch.sebastianhaeni.edgewars.logic.entities.board.node.Node"/>
 
         <variable
             name="handlers"
-            type="ch.bfh.edgewars.ui.dialogs.OwnedNodeDialog.Handlers"/>
+            type="ch.sebastianhaeni.edgewars.ui.dialogs.OwnedNodeDialog.Handlers"/>
 
     </data>
 
