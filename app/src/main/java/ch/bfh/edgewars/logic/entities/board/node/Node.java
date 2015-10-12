@@ -6,6 +6,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 
 import ch.bfh.edgewars.BR;
@@ -113,6 +114,18 @@ public class Node extends BoardEntity {
         if (unit instanceof SprinterUnit) {
             mSprinterUnits.add((SprinterUnit) unit);
         }
+    }
+
+    public void setMeleeUnits (ArrayList<MeleeUnit> meleeUnits) {
+        mMeleeUnits = meleeUnits;
+    }
+
+    public void setSprinterUnits (ArrayList<SprinterUnit> sprinterUnits) {
+        mSprinterUnits = sprinterUnits;
+    }
+
+    public void setTankUnits (ArrayList<TankUnit> tankUnits) {
+        mTankUnits = tankUnits;
     }
 
     public void upgradeHealth() {

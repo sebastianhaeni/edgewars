@@ -2,30 +2,56 @@
   "levels": [
     {
       "level_number": 1,
+      "players": [
+        {
+          "player_id": 1,
+          "nature": "human"
+        },
+        {
+          "player_id": 2,
+          "nature": "computer"
+        }
+      ],
       "nodes": [
         {
           "node_id": 1,
           "position": {
-            "coordinateX": -5,
-            "coordinateY": 0
+            "coordinate_x": -5,
+            "coordinate_y": 0
           },
-          "state": "ownedByPlayer"
+          "initial_state": "owned",
+          "owner_details": {
+            "owner_id": 1,
+            "unit_count": {
+              "melee": 10,
+              "sprinter": 10,
+              "tank": 10
+            }
+          }
         },
         {
           "node_id": 2,
           "position": {
-            "coordinateX": 0,
-            "coordinateY": -3
+            "coordinate_x": 0,
+            "coordinate_y": -3
           },
-          "state": "neutral"
+          "initial_state": "neutral"
         },
         {
           "node_id": 3,
           "position": {
-            "coordinateX": 5,
-            "coordinateY": 1
+            "coordinate_x": 5,
+            "coordinate_y": 1
           },
-          "state": "ownedByEnemy"
+          "initial_state": "owned",
+          "owner_details": {
+            "owner_id": 2,
+            "unit_count": {
+              "melee": 10,
+              "sprinter": 10,
+              "tank": 10
+            }
+          }
         }
       ],
       "edges": [

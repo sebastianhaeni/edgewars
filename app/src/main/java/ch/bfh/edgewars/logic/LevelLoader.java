@@ -1,6 +1,7 @@
 package ch.bfh.edgewars.logic;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -10,6 +11,7 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.ArrayList;
 import java.util.List;
 
 import ch.bfh.edgewars.R;
@@ -19,19 +21,25 @@ import ch.bfh.edgewars.logic.entities.Player;
 import ch.bfh.edgewars.logic.entities.board.Board;
 import ch.bfh.edgewars.logic.entities.board.Edge;
 import ch.bfh.edgewars.logic.entities.board.node.Node;
-import ch.bfh.edgewars.logic.level_deserialization.Level;
-import ch.bfh.edgewars.logic.level_deserialization.Levels;
-import ch.bfh.edgewars.logic.level_deserialization.LevelDeserializer;
+import ch.bfh.edgewars.logic.levels.Level;
+import ch.bfh.edgewars.logic.levels.Levels;
+import ch.bfh.edgewars.logic.levels.LevelDeserializer;
 import ch.bfh.edgewars.util.Colors;
 
 public class LevelLoader {
 
-    public static Player humanPlayer = new Player(Colors.BLUE);
-    public static Player computerPlayer = new Player(Colors.RED);
+    public static Player mHumanPlayer = new Player(Colors.BLUE);
+    public static ArrayList<Player> mComputerPlayers = new ArrayList<>();
 
     private JsonParser parser;
     private Gson gson;
     private Levels levels;
+
+    public static Player addComputerPlayer () {
+        Player newComputerPlayer = new Player(Colors.RED);
+        mComputerPlayers.add(newComputerPlayer);
+        return newComputerPlayer;
+    }
 
     public LevelLoader (Context context) {
 
@@ -56,6 +64,7 @@ public class LevelLoader {
         Board board = new Board();
         Camera camera = new Camera();
 
+        // TODO: do it better
         Level level = levels.getLevels().get(levelNumber-1);
 
         List<Node> nodes = level.getNodes();
@@ -71,8 +80,13 @@ public class LevelLoader {
             board.addEntity(node);
         }
 
-        GameState state = new GameState(camera, board, LevelLoader.humanPlayer);
-        LevelLoader.computerPlayer.setAI(new RuleBasedAI(state));
+        GameState state = new GameState(camera, board, LevelLoader.mHumanPlayer);
+
+        // add AI to computer players
+        for (Player computerPlayer : LevelLoader.mComputerPlayers) {
+            computerPlayer.setAI(new RuleBasedAI(state));
+        }
+
 
         return state;
     }

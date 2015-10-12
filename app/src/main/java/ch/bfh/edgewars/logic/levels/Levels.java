@@ -1,15 +1,11 @@
-package ch.bfh.edgewars.logic.level_deserialization;
+package ch.bfh.edgewars.logic.levels;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
 
 public class Levels {
 
-    @SerializedName("levels")
-    @Expose
-    private List<Level> levels = new ArrayList<Level>();
+    private List<Level> levels = new ArrayList<>();
 
     /**
      *
