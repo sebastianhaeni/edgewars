@@ -24,4 +24,4 @@ For every task a developer creates a branch with a dash-delimited name. Once the
 
 * Class member variables begin with `m`. Example: `mNodes`
 * Android Studio default settings are the standard we use.
-* All gradle lint warnings have to resolved before a pull request
+* All gradle lint warnings have to be resolved before a pull request
