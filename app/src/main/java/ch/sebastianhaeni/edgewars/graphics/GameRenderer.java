@@ -45,6 +45,13 @@ public class GameRenderer implements GLSurfaceView.Renderer {
     private ShapeProgram mShapeProgram;
     private ParticleProgram mParticleProgram;
 
+    /**
+     * Constructor
+     *
+     * @param context   app context
+     * @param thread    game update thread
+     * @param gameState game state containing all information about the game
+     */
     public GameRenderer(Context context, GameThread thread, GameState gameState) {
         mContext = context;
         mThread = thread;
@@ -71,6 +78,9 @@ public class GameRenderer implements GLSurfaceView.Renderer {
         renderState();
     }
 
+    /**
+     * Renders the game state to the surface.
+     */
     private void renderState() {
         // Draw drawables
         for (IDrawable s : mGameState.getBoard().getDrawables()) {
@@ -93,26 +103,44 @@ public class GameRenderer implements GLSurfaceView.Renderer {
         Matrix.frustumM(mProjectionMatrix, 0, -ratio, ratio, -1, 1, 3, EYE_HEIGHT);
     }
 
+    /**
+     * @return gets the screen width
+     */
     public int getWidth() {
         return mScreenWidth;
     }
 
+    /**
+     * @return gets the screen height
+     */
     public int getHeight() {
         return mScreenHeight;
     }
 
+    /**
+     * @return gets the view matrix
+     */
     public float[] getViewMatrix() {
         return mViewMatrix;
     }
 
+    /**
+     * @return gets the game statae
+     */
     public GameState getGameState() {
         return mGameState;
     }
 
+    /**
+     * @return gets the model view projection matrix
+     */
     public float[] getMVPMatrix() {
         return mMVPMatrix;
     }
 
+    /**
+     * @return gets the projection matrix
+     */
     public float[] getProjectionMatrix() {
         return mProjectionMatrix;
     }

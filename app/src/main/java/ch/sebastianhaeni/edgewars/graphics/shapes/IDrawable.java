@@ -21,5 +21,5 @@ public interface IDrawable {
     /**
      * @return the root shape of this sub system of decorated drawables
      */
-    Shape getRootShape();
+    Shape getShape();
 }

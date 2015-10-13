@@ -21,6 +21,11 @@ public class ParticleProgram extends ESProgram {
     private int mCenterPositionLoc;
     private int mSamplerLoc;
 
+    /**
+     * Constructor
+     *
+     * @param context app context
+     */
     public ParticleProgram(Context context) {
         super(context);
 

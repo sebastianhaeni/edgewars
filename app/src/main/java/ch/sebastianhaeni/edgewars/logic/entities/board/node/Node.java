@@ -229,7 +229,7 @@ public class Node extends BoardEntity {
 
     public void setColor(float[] color) {
         for (IDrawable s : getDrawables()) {
-            s.getRootShape().setColor(color);
+            s.getShape().setColor(color);
         }
     }
 

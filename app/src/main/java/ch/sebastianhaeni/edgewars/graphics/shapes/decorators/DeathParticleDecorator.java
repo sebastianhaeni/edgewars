@@ -190,7 +190,7 @@ public class DeathParticleDecorator extends DrawableDecorator {
             GLES20.glUniform3f(particleProgram.getCenterPositionLoc(), 1f, 0f, 0f); // TODO
 
             // set color
-            GLES20.glUniform4f(particleProgram.getColorLoc(), getRootShape().getColor()[0], getRootShape().getColor()[1], getRootShape().getColor()[2], .5f);
+            GLES20.glUniform4f(particleProgram.getColorLoc(), getShape().getColor()[0], getShape().getColor()[1], getShape().getColor()[2], .5f);
         }
 
         // Load uniform time variable

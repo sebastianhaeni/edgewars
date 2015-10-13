@@ -21,6 +21,11 @@ public class GameSurfaceView extends GLSurfaceView {
     private GameThread mThread;
     private GameController mController;
 
+    /**
+     * Constructor
+     *
+     * @param context app context
+     */
     public GameSurfaceView(Context context) {
         super(context);
 
