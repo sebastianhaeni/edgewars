@@ -1,4 +1,4 @@
-package ch.sebastianhaeni.edgewars.graphics;
+package ch.sebastianhaeni.edgewars.graphics.programs;
 
 import android.opengl.GLES20;
 import android.util.Log;

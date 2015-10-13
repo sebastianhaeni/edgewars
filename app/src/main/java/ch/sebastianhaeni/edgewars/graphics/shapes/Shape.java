@@ -3,7 +3,7 @@ package ch.sebastianhaeni.edgewars.graphics.shapes;
 import ch.sebastianhaeni.edgewars.util.Colors;
 import ch.sebastianhaeni.edgewars.util.Position;
 
-abstract public class Shape {
+abstract public class Shape implements IDrawable {
 
     private final Position mPosition;
     private float mColor[] = Colors.NEUTRAL;
@@ -11,8 +11,6 @@ abstract public class Shape {
     public Shape(Position position) {
         mPosition = position;
     }
-
-    public abstract void draw(int program, int positionHandle);
 
     public Position getPosition() {
         return mPosition;
@@ -24,5 +22,9 @@ abstract public class Shape {
 
     protected float[] getColor() {
         return mColor;
+    }
+
+    public Shape getRootShape() {
+        return this;
     }
 }

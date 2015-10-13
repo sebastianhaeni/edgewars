@@ -7,7 +7,9 @@ import java.util.Stack;
 
 import ch.sebastianhaeni.edgewars.BR;
 import ch.sebastianhaeni.edgewars.graphics.shapes.Circle;
+import ch.sebastianhaeni.edgewars.graphics.shapes.IDrawable;
 import ch.sebastianhaeni.edgewars.graphics.shapes.Shape;
+import ch.sebastianhaeni.edgewars.graphics.shapes.decorators.DeathParticleDecorator;
 import ch.sebastianhaeni.edgewars.logic.Game;
 import ch.sebastianhaeni.edgewars.logic.commands.MoveUnitCommand;
 import ch.sebastianhaeni.edgewars.logic.entities.board.BoardEntity;
@@ -22,7 +24,6 @@ import ch.sebastianhaeni.edgewars.logic.entities.board.units.TankUnit;
 import ch.sebastianhaeni.edgewars.logic.entities.board.units.Unit;
 import ch.sebastianhaeni.edgewars.util.Position;
 
-@SuppressWarnings("unused")
 public class Node extends BoardEntity {
 
     private ArrayList<MeleeUnit> mMeleeUnits = new ArrayList<>();
@@ -37,7 +38,7 @@ public class Node extends BoardEntity {
     private int mHealthLevel = 1;
     private int mDamageLevel = 1;
     private Position mPosition;
-    private ArrayList<Shape> mShapes = new ArrayList<>();
+    private ArrayList<IDrawable> mDrawables = new ArrayList<>();
 
     private Stack<MoveUnitCommand> mMoveUnitCommands = new Stack<>();
     private NodeState mState;
@@ -47,7 +48,11 @@ public class Node extends BoardEntity {
         setState(new NeutralState(this));
         mPosition = position;
         mHealth = getMaxHealth();
-        mShapes.add(new Circle(mPosition));
+
+        Shape circle = new Circle(mPosition);
+
+        mDrawables.add(circle);
+        mDrawables.add(new DeathParticleDecorator(circle));
     }
 
     @Override
@@ -65,8 +70,8 @@ public class Node extends BoardEntity {
     }
 
     @Override
-    public ArrayList<Shape> getShapes() {
-        return mShapes;
+    public ArrayList<IDrawable> getDrawables() {
+        return mDrawables;
     }
 
     public void addUnit(MeleeUnit unit) {
@@ -224,8 +229,8 @@ public class Node extends BoardEntity {
     }
 
     public void setColor(float[] color) {
-        for (Shape s : getShapes()) {
-            s.setColor(color);
+        for (IDrawable s : getDrawables()) {
+            s.getRootShape().setColor(color);
         }
     }
 

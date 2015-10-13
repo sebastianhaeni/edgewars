@@ -2,15 +2,15 @@ package ch.sebastianhaeni.edgewars.logic.entities.board;
 
 import java.util.ArrayList;
 
+import ch.sebastianhaeni.edgewars.graphics.shapes.IDrawable;
 import ch.sebastianhaeni.edgewars.graphics.shapes.Line;
-import ch.sebastianhaeni.edgewars.graphics.shapes.Shape;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
 
 public class Edge extends BoardEntity {
     private Node mNode1;
     private Node mNode2;
     private double mLength;
-    private ArrayList<Shape> mShapes = new ArrayList<>();
+    private ArrayList<IDrawable> mDrawables = new ArrayList<>();
 
     public Edge(Node node1, Node node2) {
         super(); // an edge does not update
@@ -19,7 +19,7 @@ public class Edge extends BoardEntity {
 
         calculateLength();
 
-        mShapes.add(new Line(node1.getPosition(), node2.getPosition()));
+        mDrawables.add(new Line(node1.getPosition(), node2.getPosition()));
     }
 
     public double getLength() {
@@ -37,8 +37,8 @@ public class Edge extends BoardEntity {
     }
 
     @Override
-    public ArrayList<Shape> getShapes() {
-        return mShapes;
+    public ArrayList<IDrawable> getDrawables() {
+        return mDrawables;
     }
 
     @Override

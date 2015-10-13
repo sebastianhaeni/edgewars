@@ -45,7 +45,7 @@ public class LevelCreator {
         players.add(human);
         players.add(computer);
 
-        GameState state = new GameState(camera, board, players,human);
+        GameState state = new GameState(camera, board, players, human);
 
         computer.setAI(new RuleBasedAI(state));
 

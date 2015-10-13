@@ -28,7 +28,7 @@ public class GameSurfaceView extends GLSurfaceView {
 
         GameState mGameState = creator.build();
         mThread = new GameThread();
-        GameRenderer renderer = new GameRenderer(mThread, mGameState);
+        GameRenderer renderer = new GameRenderer(context, mThread, mGameState);
         mController = new GameController(context, renderer, mGameState);
 
         // Create an OpenGL ES 2.0 context.
@@ -38,7 +38,6 @@ public class GameSurfaceView extends GLSurfaceView {
 
         // Set the Renderer for drawing on the GLSurfaceView
         setRenderer(renderer);
-        //setRenderer(new ParticleSystemRenderer(context));
 
         // Render the view continuously
         setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);

@@ -7,6 +7,8 @@ import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
 import ch.sebastianhaeni.edgewars.graphics.GameRenderer;
+import ch.sebastianhaeni.edgewars.graphics.programs.ParticleProgram;
+import ch.sebastianhaeni.edgewars.graphics.programs.ShapeProgram;
 import ch.sebastianhaeni.edgewars.util.Position;
 
 public class Circle extends Shape {
@@ -15,9 +17,6 @@ public class Circle extends Shape {
     private static float vertices[] = new float[CORNERS * 3];
 
     private final FloatBuffer mVertexBuffer;
-
-    @SuppressWarnings("FieldCanBeLocal")
-    private int mColorHandle;
 
     /**
      * Sets up the drawing object data for use in an OpenGL ES context.
@@ -58,20 +57,24 @@ public class Circle extends Shape {
      * Encapsulates the OpenGL ES instructions for drawing this shape.
      */
     @Override
-    public void draw(int program, int positionHandle) {
+    public void draw(ShapeProgram shapeProgram, ParticleProgram particleProgram) {
+        // Add program to OpenGL environment
+        GLES20.glUseProgram(shapeProgram.getProgramHandle());
+
+        // Enable a handle to the vertices
+        GLES20.glEnableVertexAttribArray(shapeProgram.getPositionHandle());
+
         // Prepare the triangle coordinate data
         GLES20.glVertexAttribPointer(
-                positionHandle, GameRenderer.COORDS_PER_VERTEX,
+                shapeProgram.getPositionHandle(), GameRenderer.COORDS_PER_VERTEX,
                 GLES20.GL_FLOAT, false,
                 GameRenderer.vertexStride, mVertexBuffer);
 
-        // get handle to fragment shader's vColor member
-        mColorHandle = GLES20.glGetUniformLocation(program, "vColor");
-
         // Set color for drawing the triangle
-        GLES20.glUniform4fv(mColorHandle, 1, getColor(), 0);
+        GLES20.glUniform4fv(shapeProgram.getColorHandle(), 1, getColor(), 0);
 
         // Draw the triangle
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, 0, CORNERS);
     }
+
 }

@@ -1,5 +1,6 @@
 package ch.sebastianhaeni.edgewars.graphics;
 
+import android.content.Context;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
@@ -7,7 +8,10 @@ import android.opengl.Matrix;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-import ch.sebastianhaeni.edgewars.graphics.shapes.Shape;
+import ch.sebastianhaeni.edgewars.graphics.programs.ESShader;
+import ch.sebastianhaeni.edgewars.graphics.programs.ParticleProgram;
+import ch.sebastianhaeni.edgewars.graphics.programs.ShapeProgram;
+import ch.sebastianhaeni.edgewars.graphics.shapes.IDrawable;
 import ch.sebastianhaeni.edgewars.logic.GameState;
 import ch.sebastianhaeni.edgewars.logic.GameThread;
 
@@ -35,31 +39,15 @@ public class GameRenderer implements GLSurfaceView.Renderer {
     private final float[] mProjectionMatrix = new float[16];
     private final float[] mViewMatrix = new float[16];
 
-    private static final String vertexShaderCode =
-            // This matrix member variable provides a hook to manipulate
-            // the coordinates of the objects that use this vertex shader
-            "uniform mat4 uMVPMatrix;" +
-                    "attribute vec4 vPosition;" +
-                    "void main() {" +
-                    // The matrix must be included as a modifier of gl_Position.
-                    // Note that the uMVPMatrix factor *must be first* in order
-                    // for the matrix multiplication product to be correct.
-                    "  gl_Position = uMVPMatrix * vPosition;" +
-                    "}";
+    private final Context mContext;
 
-    private static final String fragmentShaderCode =
-            "precision mediump float;" +
-                    "uniform vec4 vColor;" +
-                    "void main() {" +
-                    "  gl_FragColor = vColor;" +
-                    "}";
-    private int mProgram;
-    private int mPositionHandle;
-    private int mMVPMatrixHandle;
     private int mScreenWidth;
     private int mScreenHeight;
+    private ShapeProgram mShapeProgram;
+    private ParticleProgram mParticleProgram;
 
-    public GameRenderer(GameThread thread, GameState gameState) {
+    public GameRenderer(Context context, GameThread thread, GameState gameState) {
+        mContext = context;
         mThread = thread;
         mGameState = gameState;
     }
@@ -69,18 +57,8 @@ public class GameRenderer implements GLSurfaceView.Renderer {
         // Set the background frame color
         GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
-        // prepare shaders and OpenGL program
-        int vertexShader = ESShader.loadShader(
-                GLES20.GL_VERTEX_SHADER,
-                vertexShaderCode);
-        int fragmentShader = ESShader.loadShader(
-                GLES20.GL_FRAGMENT_SHADER,
-                fragmentShaderCode);
-
-        mProgram = GLES20.glCreateProgram();             // create empty OpenGL Program
-        GLES20.glAttachShader(mProgram, vertexShader);   // add the vertex shader to program
-        GLES20.glAttachShader(mProgram, fragmentShader); // add the fragment shader to program
-        GLES20.glLinkProgram(mProgram);                  // create OpenGL program executables
+        mShapeProgram = new ShapeProgram(mContext);
+        mParticleProgram = new ParticleProgram(mContext);
 
         mThread.setRunning(true);
         mThread.start();
@@ -91,47 +69,31 @@ public class GameRenderer implements GLSurfaceView.Renderer {
         // Draw background color
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
 
-        // Add program to OpenGL environment
-        GLES20.glUseProgram(mProgram);
-
-        // get handle to vertex shader's vPosition member
-        mPositionHandle = GLES20.glGetAttribLocation(mProgram, "vPosition");
-
-        // Enable a handle to the vertices
-        GLES20.glEnableVertexAttribArray(mPositionHandle);
-
-        // get handle to shape's transformation matrix
-        mMVPMatrixHandle = GLES20.glGetUniformLocation(mProgram, "uMVPMatrix");
-        ESShader.checkGlError("glGetUniformLocation");
-
         renderState();
-
-        // Disable vertex array
-        GLES20.glDisableVertexAttribArray(mPositionHandle);
     }
 
     private void renderState() {
         // Draw shapes
-        for (Shape s : mGameState.getBoard().getShapes()) {
+        for (IDrawable s : mGameState.getBoard().getDrawables()) {
             // Set the camera position (View matrix)
             Matrix.setLookAtM(
                     mViewMatrix,
                     0,
-                    mGameState.getCamera().getX() + s.getPosition().getX(),
-                    mGameState.getCamera().getY() + s.getPosition().getY(),
+                    mGameState.getCamera().getX() + s.getRootShape().getPosition().getX(),
+                    mGameState.getCamera().getY() + s.getRootShape().getPosition().getY(),
                     -EYE_HEIGHT,
-                    mGameState.getCamera().getX() + s.getPosition().getX(),
-                    mGameState.getCamera().getY() + s.getPosition().getY(),
+                    mGameState.getCamera().getX() + s.getRootShape().getPosition().getX(),
+                    mGameState.getCamera().getY() + s.getRootShape().getPosition().getY(),
                     0f, 0f, 1.0f, 0.0f);
 
             // Calculate the projection and view transformation
             Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
 
             // Apply the projection and view transformation
-            GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mMVPMatrix, 0);
+            GLES20.glUniformMatrix4fv(mShapeProgram.getMVPMatrixHandle(), 1, false, mMVPMatrix, 0);
             ESShader.checkGlError("glUniformMatrix4fv");
 
-            s.draw(mProgram, mPositionHandle);
+            s.draw(mShapeProgram, mParticleProgram);
         }
     }
 
