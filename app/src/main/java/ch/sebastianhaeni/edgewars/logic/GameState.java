@@ -7,10 +7,10 @@ import ch.sebastianhaeni.edgewars.logic.entities.Player;
 import ch.sebastianhaeni.edgewars.logic.entities.board.Board;
 
 public class GameState {
-    private final Camera mCamera;
-    private final Board mBoard;
-    private final ArrayList<Player> mPlayers;
-    private final Player mHuman;
+    private Camera mCamera;
+    private Board mBoard;
+    private ArrayList<Player> mPlayers;
+    private Player mHuman;
 
     public GameState(Camera camera, Board board, ArrayList<Player> players, Player human) {
         mCamera = camera;

@@ -13,6 +13,7 @@ import java.util.Random;
 
 import ch.sebastianhaeni.edgewars.GameApplication;
 import ch.sebastianhaeni.edgewars.R;
+import ch.sebastianhaeni.edgewars.graphics.GameRenderer;
 import ch.sebastianhaeni.edgewars.graphics.programs.ParticleProgram;
 import ch.sebastianhaeni.edgewars.graphics.programs.ShapeProgram;
 import ch.sebastianhaeni.edgewars.graphics.shapes.Shape;
@@ -29,7 +30,14 @@ public class DeathParticleDecorator extends DrawableDecorator {
     private long mLastTime;
 
     private FloatBuffer mParticles;
+    private boolean mTextureLoaded;
 
+    /**
+     * Initializes particle data. Texture is not loaded because that has
+     * to be loaded in the graphics thread. This constructor is called in the game update thread.
+     *
+     * @param shape The shape this decorator decorates
+     */
     public DeathParticleDecorator(Shape shape) {
         super(shape);
 
@@ -57,18 +65,14 @@ public class DeathParticleDecorator extends DrawableDecorator {
 
         // Initialize time to cause reset on first update
         mTime = 1.0f;
-
-        // Load particle texture
-        mTextureId = loadTexture(GameApplication.getAppContext().getResources().openRawResource(R.raw.smoke));
     }
 
     /**
-     * Load texture from resource.
+     * Load texture from resource in graphics thread.
      *
      * @param is stream of texture
-     * @return handle to the texture
      */
-    private int loadTexture(InputStream is) {
+    private void loadTexture(InputStream is) {
         int[] textureId = new int[1];
         Bitmap bitmap;
         bitmap = BitmapFactory.decodeStream(is);
@@ -97,15 +101,21 @@ public class DeathParticleDecorator extends DrawableDecorator {
         GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_CLAMP_TO_EDGE);
         GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_CLAMP_TO_EDGE);
 
-        return textureId[0];
+        mTextureId = textureId[0];
     }
 
     @Override
-    public void draw(ShapeProgram shapeProgram, ParticleProgram particleProgram) {
-        update(particleProgram);
+    public void draw(GameRenderer renderer, ShapeProgram shapeProgram, ParticleProgram particleProgram) {
+        if (!mTextureLoaded) {
+            loadTexture(GameApplication.getAppContext().getResources().openRawResource(R.raw.smoke));
+            mTextureLoaded = true;
+        }
 
         // Use the program object
         GLES20.glUseProgram(particleProgram.getProgramHandle());
+
+        // update particles
+        update(particleProgram);
 
         // Load the vertex attributes
         mParticles.position(0);
@@ -139,12 +149,25 @@ public class DeathParticleDecorator extends DrawableDecorator {
         // Set the sampler texture unit to 0
         GLES20.glUniform1i(particleProgram.getSamplerLoc(), 0);
 
+        // Drawing the actual points
         GLES20.glDrawArrays(GLES20.GL_POINTS, 0, NUM_PARTICLES);
+
+        // Disable texture
+        GLES20.glDisable(GLES20.GL_TEXTURE_2D);
+
+        // Disable blend particles
+        GLES20.glDisable(GLES20.GL_BLEND);
+
+        // Disable vertex array
+        GLES20.glDisableVertexAttribArray(particleProgram.getLifetimeLoc());
+        GLES20.glDisableVertexAttribArray(particleProgram.getEndPositionLoc());
+        GLES20.glDisableVertexAttribArray(particleProgram.getStartPositionLoc());
     }
 
     private void update(ParticleProgram particleProgram) {
-        if (mLastTime == 0)
+        if (mLastTime == 0) {
             mLastTime = SystemClock.uptimeMillis();
+        }
         long curTime = SystemClock.uptimeMillis();
         long elapsedTime = curTime - mLastTime;
         float deltaTime = elapsedTime / 1000.0f;
@@ -153,26 +176,13 @@ public class DeathParticleDecorator extends DrawableDecorator {
         mTime += deltaTime;
 
         if (mTime >= 1.0f) {
-            Random generator = new Random();
-            float[] centerPos = new float[3];
-            float[] color = new float[4];
-
             mTime = 0.0f;
 
-            // Pick a new start location and color
-            centerPos[0] = generator.nextFloat() * 1.0f - 0.5f;
-            centerPos[1] = generator.nextFloat() * 1.0f - 0.5f;
-            centerPos[2] = generator.nextFloat() * 1.0f - 0.5f;
+            // set position
+            GLES20.glUniform3f(particleProgram.getCenterPositionLoc(), 1f, 0f, 0f); // TODO
 
-            GLES20.glUniform3f(particleProgram.getCenterPositionLoc(), centerPos[0], centerPos[1], centerPos[2]);
-
-            // Random color
-            color[0] = generator.nextFloat() * 0.5f + 0.5f;
-            color[1] = generator.nextFloat() * 0.5f + 0.5f;
-            color[2] = generator.nextFloat() * 0.5f + 0.5f;
-            color[3] = 0.5f;
-
-            GLES20.glUniform4f(particleProgram.getColorLoc(), color[0], color[1], color[2], color[3]);
+            // set color
+            GLES20.glUniform4f(particleProgram.getColorLoc(), getRootShape().getColor()[0], getRootShape().getColor()[1], getRootShape().getColor()[2], .5f);
         }
 
         // Load uniform time variable

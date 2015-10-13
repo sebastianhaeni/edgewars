@@ -92,8 +92,9 @@ public class GameController {
      */
     private void showNodeDialog(Node node) {
         if (node.getState() instanceof NeutralState) {
-            NeutralNodeDialog dialog = new NeutralNodeDialog(mContext, node);
-            dialog.show();
+            //NeutralNodeDialog dialog = new NeutralNodeDialog(mContext, node);
+            //dialog.show();
+            node.die();
             return;
         }
 

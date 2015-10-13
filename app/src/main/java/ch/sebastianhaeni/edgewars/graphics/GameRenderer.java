@@ -8,7 +8,6 @@ import android.opengl.Matrix;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-import ch.sebastianhaeni.edgewars.graphics.programs.ESShader;
 import ch.sebastianhaeni.edgewars.graphics.programs.ParticleProgram;
 import ch.sebastianhaeni.edgewars.graphics.programs.ShapeProgram;
 import ch.sebastianhaeni.edgewars.graphics.shapes.IDrawable;
@@ -73,27 +72,9 @@ public class GameRenderer implements GLSurfaceView.Renderer {
     }
 
     private void renderState() {
-        // Draw shapes
+        // Draw drawables
         for (IDrawable s : mGameState.getBoard().getDrawables()) {
-            // Set the camera position (View matrix)
-            Matrix.setLookAtM(
-                    mViewMatrix,
-                    0,
-                    mGameState.getCamera().getX() + s.getRootShape().getPosition().getX(),
-                    mGameState.getCamera().getY() + s.getRootShape().getPosition().getY(),
-                    -EYE_HEIGHT,
-                    mGameState.getCamera().getX() + s.getRootShape().getPosition().getX(),
-                    mGameState.getCamera().getY() + s.getRootShape().getPosition().getY(),
-                    0f, 0f, 1.0f, 0.0f);
-
-            // Calculate the projection and view transformation
-            Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
-
-            // Apply the projection and view transformation
-            GLES20.glUniformMatrix4fv(mShapeProgram.getMVPMatrixHandle(), 1, false, mMVPMatrix, 0);
-            ESShader.checkGlError("glUniformMatrix4fv");
-
-            s.draw(mShapeProgram, mParticleProgram);
+            s.draw(this, mShapeProgram, mParticleProgram);
         }
     }
 
@@ -118,5 +99,21 @@ public class GameRenderer implements GLSurfaceView.Renderer {
 
     public int getHeight() {
         return mScreenHeight;
+    }
+
+    public float[] getViewMatrix() {
+        return mViewMatrix;
+    }
+
+    public GameState getGameState() {
+        return mGameState;
+    }
+
+    public float[] getMVPMatrix() {
+        return mMVPMatrix;
+    }
+
+    public float[] getProjectionMatrix() {
+        return mProjectionMatrix;
     }
 }

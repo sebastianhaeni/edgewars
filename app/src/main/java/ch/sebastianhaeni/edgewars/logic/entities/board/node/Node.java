@@ -8,7 +8,6 @@ import java.util.Stack;
 import ch.sebastianhaeni.edgewars.BR;
 import ch.sebastianhaeni.edgewars.graphics.shapes.Circle;
 import ch.sebastianhaeni.edgewars.graphics.shapes.IDrawable;
-import ch.sebastianhaeni.edgewars.graphics.shapes.Shape;
 import ch.sebastianhaeni.edgewars.graphics.shapes.decorators.DeathParticleDecorator;
 import ch.sebastianhaeni.edgewars.logic.Game;
 import ch.sebastianhaeni.edgewars.logic.commands.MoveUnitCommand;
@@ -26,6 +25,7 @@ import ch.sebastianhaeni.edgewars.util.Position;
 
 public class Node extends BoardEntity {
 
+    private final Circle mCircle;
     private ArrayList<MeleeUnit> mMeleeUnits = new ArrayList<>();
     private ArrayList<TankUnit> mTankUnits = new ArrayList<>();
     private ArrayList<SprinterUnit> mSprinterUnits = new ArrayList<>();
@@ -49,10 +49,9 @@ public class Node extends BoardEntity {
         mPosition = position;
         mHealth = getMaxHealth();
 
-        Shape circle = new Circle(mPosition);
+        mCircle = new Circle(mPosition);
 
-        mDrawables.add(circle);
-        mDrawables.add(new DeathParticleDecorator(circle));
+        mDrawables.add(mCircle);
     }
 
     @Override
@@ -252,5 +251,9 @@ public class Node extends BoardEntity {
 
     public boolean maxDamageLevelReached() {
         return mDamageLevel >= 3;
+    }
+
+    public void die() {
+        mDrawables.add(new DeathParticleDecorator(mCircle));
     }
 }

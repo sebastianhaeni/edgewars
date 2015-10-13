@@ -26,10 +26,11 @@ public class GameSurfaceView extends GLSurfaceView {
 
         LevelCreator creator = new LevelCreator();
 
-        GameState mGameState = creator.build();
+        GameState gameState = creator.build();
         mThread = new GameThread();
-        GameRenderer renderer = new GameRenderer(context, mThread, mGameState);
-        mController = new GameController(context, renderer, mGameState);
+        mThread = new GameThread();
+        GameRenderer renderer = new GameRenderer(context, mThread, gameState);
+        mController = new GameController(context, renderer, gameState);
 
         // Create an OpenGL ES 2.0 context.
         setEGLContextClientVersion(2);

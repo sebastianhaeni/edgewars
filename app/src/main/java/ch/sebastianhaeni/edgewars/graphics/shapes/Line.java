@@ -1,12 +1,14 @@
 package ch.sebastianhaeni.edgewars.graphics.shapes;
 
 import android.opengl.GLES20;
+import android.opengl.Matrix;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
 import ch.sebastianhaeni.edgewars.graphics.GameRenderer;
+import ch.sebastianhaeni.edgewars.graphics.programs.ESShader;
 import ch.sebastianhaeni.edgewars.graphics.programs.ParticleProgram;
 import ch.sebastianhaeni.edgewars.graphics.programs.ShapeProgram;
 import ch.sebastianhaeni.edgewars.util.Position;
@@ -35,9 +37,9 @@ public class Line extends Shape {
         ByteBuffer bb = ByteBuffer.allocateDirect(
                 // (number of coordinate values * 4 bytes per float)
                 mCoordinates.length * 4);
+
         // use the device hardware's native byte order
         bb.order(ByteOrder.nativeOrder());
-
         // create a floating point buffer from the ByteBuffer
         vertexBuffer = bb.asFloatBuffer();
         // add the coordinates to the FloatBuffer
@@ -47,9 +49,27 @@ public class Line extends Shape {
     }
 
     @Override
-    public void draw(ShapeProgram shapeProgram, ParticleProgram particleProgram) {
+    public void draw(GameRenderer renderer, ShapeProgram shapeProgram, ParticleProgram particleProgram) {
         // Add program to OpenGL environment
         GLES20.glUseProgram(shapeProgram.getProgramHandle());
+
+        // Set the camera position (View matrix)
+        Matrix.setLookAtM(
+                renderer.getViewMatrix(),
+                0,
+                renderer.getGameState().getCamera().getX() + getPosition().getX(),
+                renderer.getGameState().getCamera().getY() + getPosition().getY(),
+                -GameRenderer.EYE_HEIGHT,
+                renderer.getGameState().getCamera().getX() + getPosition().getX(),
+                renderer.getGameState().getCamera().getY() + getPosition().getY(),
+                0f, 0f, 1.0f, 0.0f);
+
+        // Calculate the projection and view transformation
+        Matrix.multiplyMM(renderer.getMVPMatrix(), 0, renderer.getProjectionMatrix(), 0, renderer.getViewMatrix(), 0);
+
+        // Apply the projection and view transformation
+        GLES20.glUniformMatrix4fv(shapeProgram.getMVPMatrixHandle(), 1, false, renderer.getMVPMatrix(), 0);
+        ESShader.checkGlError("glUniformMatrix4fv");
 
         // Enable a handle to the vertices
         GLES20.glEnableVertexAttribArray(shapeProgram.getPositionHandle());
@@ -65,6 +85,9 @@ public class Line extends Shape {
 
         // Draw the triangle
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, 0, vertexCount);
+
+        // Disable vertex array
+        GLES20.glDisableVertexAttribArray(shapeProgram.getPositionHandle());
     }
 
 }

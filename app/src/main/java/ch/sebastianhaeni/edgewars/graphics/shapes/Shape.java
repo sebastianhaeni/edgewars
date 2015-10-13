@@ -20,7 +20,7 @@ abstract public class Shape implements IDrawable {
         mColor = color;
     }
 
-    protected float[] getColor() {
+    public float[] getColor() {
         return mColor;
     }
 
