@@ -1,7 +1,5 @@
 package ch.bfh.edgewars.logic.levels;
 
-import android.util.Log;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -127,12 +125,15 @@ public class LevelDeserializer implements JsonDeserializer {
             int coordinateY = position.get("coordinate_y").getAsInt();
             node.setPosition(new Position(coordinateX, coordinateY));
 
+            // get initial values of Node
+            JsonObject initialValuesObject = nodeObject.get("initial_values").getAsJsonObject();
+
             // set initial state of Node
-            String stateString = nodeObject.get("initial_state").getAsString();
+            String stateString = initialValuesObject.get("state").getAsString();
 
             switch (stateString) {
                 case "owned":
-                    this.addInitialState(nodeObject, node);
+                    this.addInitialState(initialValuesObject, node);
                     break;
                 default: // neutral node
                     NodeState state = new NeutralState(node);
@@ -169,11 +170,10 @@ public class LevelDeserializer implements JsonDeserializer {
         return levelEdgesList;
     }
 
-    private void addInitialState (JsonObject nodeObject, Node node) {
-        JsonObject ownerDetails = nodeObject.get("owner_details").getAsJsonObject();
+    private void addInitialState (JsonObject initialValuesObject, Node node) {
 
         // get owner player id
-        int ownerId = ownerDetails.get("owner_id").getAsInt();
+        int ownerId = initialValuesObject.get("owner_id").getAsInt();
         Player owner = (Player) mPlayerMap.get(ownerId);
 
         // create owned state and add it to the node
@@ -181,12 +181,10 @@ public class LevelDeserializer implements JsonDeserializer {
         node.setState(state);
 
         // get initial node units
-        JsonObject unitCount = ownerDetails.get("unit_count").getAsJsonObject();
-        int meleeCount = unitCount.get("melee").getAsInt();
-        int sprinterCount = unitCount.get("sprinter").getAsInt();
-        int tankCount = unitCount.get("tank").getAsInt();
-
-        Log.i("test", meleeCount+" meleeUnits, "+sprinterCount+" sprinterUnits, "+tankCount+" tank units for player "+ownerId);
+        JsonObject units = initialValuesObject.get("units").getAsJsonObject();
+        int meleeCount = units.get("melee_count").getAsInt();
+        int sprinterCount = units.get("sprinter_count").getAsInt();
+        int tankCount = units.get("tank_count").getAsInt();
 
         // create initial units
         ArrayList<MeleeUnit> meleeUnits = new ArrayList<>();
@@ -202,6 +200,15 @@ public class LevelDeserializer implements JsonDeserializer {
 
         for (int i=0; i<tankCount; i++)
             tankUnits.add(new TankUnit(node));
+
+        // get initial node factories
+        JsonObject factories = initialValuesObject.get("factories").getAsJsonObject();
+        int meleeLevel = factories.get("melee_level").getAsInt();
+        int sprinterLevel = factories.get("sprinter_level").getAsInt();
+        int tankLevel = factories.get("tank_level").getAsInt();
+
+
+        // TODO: set initial factory levels of node
 
     }
 }
