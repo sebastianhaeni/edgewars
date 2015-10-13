@@ -4,15 +4,20 @@ import android.opengl.GLES20;
 import android.util.Log;
 
 public class ESShader {
-    //
-    ///
-    /// \brief Load a shader, check for compile errors, print error messages to
-    /// output log
-    /// \param type Type of shader (GL_VERTEX_SHADER or GL_FRAGMENT_SHADER)
-    /// \param shaderSrc Shader source string
-    /// \return A new shader object on success, 0 on failure
-    //
-    public static int loadShader(int type, String shaderSrc) {
+
+    private static final String TAG = "ESShader";
+
+    /**
+     * Utility method for compiling a OpenGL shader.
+     * <p/>
+     * <p><strong>Note:</strong> When developing shaders, use the checkGlError()
+     * method to debug shader coding errors.</p>
+     *
+     * @param type       - Vertex or fragment shader type.
+     * @param shaderCode - String containing the shader code.
+     * @return - Returns an id for the shader.
+     */
+    public static int loadShader(int type, String shaderCode) {
         int shader;
         int[] compiled = new int[1];
 
@@ -23,7 +28,7 @@ public class ESShader {
             return 0;
 
         // Load the shader source
-        GLES20.glShaderSource(shader, shaderSrc);
+        GLES20.glShaderSource(shader, shaderCode);
 
         // Compile the shader
         GLES20.glCompileShader(shader);
@@ -32,23 +37,41 @@ public class ESShader {
         GLES20.glGetShaderiv(shader, GLES20.GL_COMPILE_STATUS, compiled, 0);
 
         if (compiled[0] == 0) {
-            Log.e("ESShader", GLES20.glGetShaderInfoLog(shader));
+            Log.e(TAG, GLES20.glGetShaderInfoLog(shader));
             GLES20.glDeleteShader(shader);
             return 0;
         }
         return shader;
     }
 
-    //
-    ///
-    /// \brief Load a vertex and fragment shader, create a program object, link
-    ///      program.
-    /// Errors output to log.
-    /// \param vertShaderSrc Vertex shader source code
-    /// \param fragShaderSrc Fragment shader source code
-    /// \return A new program object linked with the vertex/fragment shader
-    ///      pair, 0 on failure
-    //
+    /**
+     * Utility method for debugging OpenGL calls. Provide the name of the call
+     * just after making it:
+     * <p/>
+     * <pre>
+     * mColorHandle = GLES20.glGetUniformLocation(mProgram, "vColor");
+     * GameRenderer.checkGlError("glGetUniformLocation");</pre>
+     *
+     * If the operation is not successful, the check throws an error.
+     *
+     * @param glOperation - Name of the OpenGL call to check.
+     */
+    public static void checkGlError(String glOperation) {
+        int error;
+        //noinspection LoopStatementThatDoesntLoop
+        while ((error = GLES20.glGetError()) != GLES20.GL_NO_ERROR) {
+            Log.e(TAG, glOperation + ": glError " + error);
+            throw new RuntimeException(glOperation + ": glError " + error);
+        }
+    }
+
+    /**
+     * Load a vertex and fragment shader, create a program object, link program.
+     *
+     * @param vertShaderSrc Vertex shader source code
+     * @param fragShaderSrc Fragment shader source code
+     * @return handle for the program
+     */
     public static int loadProgram(String vertShaderSrc, String fragShaderSrc) {
         int vertexShader;
         int fragmentShader;
@@ -82,8 +105,8 @@ public class ESShader {
         GLES20.glGetProgramiv(programObject, GLES20.GL_LINK_STATUS, linked, 0);
 
         if (linked[0] == 0) {
-            Log.e("ESShader", "Error linking program:");
-            Log.e("ESShader", GLES20.glGetProgramInfoLog(programObject));
+            Log.e(TAG, "Error linking program:");
+            Log.e(TAG, GLES20.glGetProgramInfoLog(programObject));
             GLES20.glDeleteProgram(programObject);
             return 0;
         }

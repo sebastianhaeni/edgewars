@@ -3,7 +3,6 @@ package ch.sebastianhaeni.edgewars.graphics;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
-import android.util.Log;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -27,7 +26,6 @@ public class GameRenderer implements GLSurfaceView.Renderer {
     public static final int COORDS_PER_VERTEX = 3;
     public static final int vertexStride = COORDS_PER_VERTEX * 4; // 4 bytes per vertex
     public static final int EYE_HEIGHT = 15;
-    private static final String TAG = "GameRenderer";
 
     private final GameThread mThread;
     private final GameState mGameState;
@@ -72,10 +70,10 @@ public class GameRenderer implements GLSurfaceView.Renderer {
         GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
         // prepare shaders and OpenGL program
-        int vertexShader = GameRenderer.loadShader(
+        int vertexShader = ESShader.loadShader(
                 GLES20.GL_VERTEX_SHADER,
                 vertexShaderCode);
-        int fragmentShader = GameRenderer.loadShader(
+        int fragmentShader = ESShader.loadShader(
                 GLES20.GL_FRAGMENT_SHADER,
                 fragmentShaderCode);
 
@@ -104,7 +102,7 @@ public class GameRenderer implements GLSurfaceView.Renderer {
 
         // get handle to shape's transformation matrix
         mMVPMatrixHandle = GLES20.glGetUniformLocation(mProgram, "uMVPMatrix");
-        GameRenderer.checkGlError("glGetUniformLocation");
+        ESShader.checkGlError("glGetUniformLocation");
 
         renderState();
 
@@ -131,7 +129,7 @@ public class GameRenderer implements GLSurfaceView.Renderer {
 
             // Apply the projection and view transformation
             GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mMVPMatrix, 0);
-            GameRenderer.checkGlError("glUniformMatrix4fv");
+            ESShader.checkGlError("glUniformMatrix4fv");
 
             s.draw(mProgram, mPositionHandle);
         }
@@ -150,49 +148,6 @@ public class GameRenderer implements GLSurfaceView.Renderer {
         // this projection matrix is applied to object coordinates
         // in the onDrawFrame() method
         Matrix.frustumM(mProjectionMatrix, 0, -ratio, ratio, -1, 1, 3, EYE_HEIGHT);
-    }
-
-    /**
-     * Utility method for compiling a OpenGL shader.
-     * <p/>
-     * <p><strong>Note:</strong> When developing shaders, use the checkGlError()
-     * method to debug shader coding errors.</p>
-     *
-     * @param type       - Vertex or fragment shader type.
-     * @param shaderCode - String containing the shader code.
-     * @return - Returns an id for the shader.
-     */
-    public static int loadShader(int type, String shaderCode) {
-        // create a vertex shader type (GLES20.GL_VERTEX_SHADER)
-        // or a fragment shader type (GLES20.GL_FRAGMENT_SHADER)
-        int shader = GLES20.glCreateShader(type);
-
-        // add the source code to the shader and compile it
-        GLES20.glShaderSource(shader, shaderCode);
-        GLES20.glCompileShader(shader);
-
-        return shader;
-    }
-
-    /**
-     * Utility method for debugging OpenGL calls. Provide the name of the call
-     * just after making it:
-     * <p/>
-     * <pre>
-     * mColorHandle = GLES20.glGetUniformLocation(mProgram, "vColor");
-     * GameRenderer.checkGlError("glGetUniformLocation");</pre>
-     *
-     * If the operation is not successful, the check throws an error.
-     *
-     * @param glOperation - Name of the OpenGL call to check.
-     */
-    public static void checkGlError(String glOperation) {
-        int error;
-        //noinspection LoopStatementThatDoesntLoop
-        while ((error = GLES20.glGetError()) != GLES20.GL_NO_ERROR) {
-            Log.e(TAG, glOperation + ": glError " + error);
-            throw new RuntimeException(glOperation + ": glError " + error);
-        }
     }
 
     public int getWidth() {
