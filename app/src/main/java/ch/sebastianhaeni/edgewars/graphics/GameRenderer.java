@@ -27,7 +27,7 @@ public class GameRenderer implements GLSurfaceView.Renderer {
 
     // number of coordinates per vertex in this array
     public static final int COORDS_PER_VERTEX = 3;
-    public static final int vertexStride = COORDS_PER_VERTEX * 4; // 4 bytes per vertex
+    public static final int VERTEX_STRIDE = COORDS_PER_VERTEX * 4; // 4 bytes per vertex
     public static final int EYE_HEIGHT = 15;
 
     private final GameThread mThread;
@@ -84,6 +84,21 @@ public class GameRenderer implements GLSurfaceView.Renderer {
     private void renderState() {
         // Draw drawables
         for (IDrawable s : mGameState.getBoard().getDrawables()) {
+
+            // Set the camera position (View matrix)
+            Matrix.setLookAtM(
+                    mViewMatrix,
+                    0,
+                    mGameState.getCamera().getX() + s.getShape().getPosition().getX(),
+                    mGameState.getCamera().getY() + s.getShape().getPosition().getY(),
+                    -EYE_HEIGHT,
+                    mGameState.getCamera().getX() + s.getShape().getPosition().getX(),
+                    mGameState.getCamera().getY() + s.getShape().getPosition().getY(),
+                    0f, 0f, 1.0f, 0.0f);
+
+            // Calculate the projection and view transformation
+            Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
+
             s.draw(this, mShapeProgram, mParticleProgram);
         }
     }
@@ -118,30 +133,10 @@ public class GameRenderer implements GLSurfaceView.Renderer {
     }
 
     /**
-     * @return gets the view matrix
-     */
-    public float[] getViewMatrix() {
-        return mViewMatrix;
-    }
-
-    /**
-     * @return gets the game statae
-     */
-    public GameState getGameState() {
-        return mGameState;
-    }
-
-    /**
      * @return gets the model view projection matrix
      */
     public float[] getMVPMatrix() {
         return mMVPMatrix;
     }
 
-    /**
-     * @return gets the projection matrix
-     */
-    public float[] getProjectionMatrix() {
-        return mProjectionMatrix;
-    }
 }

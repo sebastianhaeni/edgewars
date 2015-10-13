@@ -2,6 +2,7 @@ package ch.sebastianhaeni.edgewars.graphics.programs;
 
 import android.content.Context;
 import android.opengl.GLES20;
+import android.util.Log;
 
 import ch.sebastianhaeni.edgewars.R;
 
@@ -11,15 +12,14 @@ import ch.sebastianhaeni.edgewars.R;
 public class ParticleProgram extends ESProgram {
 
     // Attribute locations
+    private final int mMVPMatrixHandle;
     private int mLifetimeLoc;
     private int mStartPositionLoc;
     private int mEndPositionLoc;
 
     // Uniform location
     private int mTimeLoc;
-    private int mColorLoc;
-    private int mCenterPositionLoc;
-    private int mSamplerLoc;
+    private int mColorHandle;
 
     /**
      * Constructor
@@ -34,11 +34,12 @@ public class ParticleProgram extends ESProgram {
         mStartPositionLoc = GLES20.glGetAttribLocation(getProgramHandle(), "a_startPosition");
         mEndPositionLoc = GLES20.glGetAttribLocation(getProgramHandle(), "a_endPosition");
 
+
+
         // Get the uniform locations
         mTimeLoc = GLES20.glGetUniformLocation(getProgramHandle(), "u_time");
-        mCenterPositionLoc = GLES20.glGetUniformLocation(getProgramHandle(), "u_centerPosition");
-        mColorLoc = GLES20.glGetUniformLocation(getProgramHandle(), "u_color");
-        mSamplerLoc = GLES20.glGetUniformLocation(getProgramHandle(), "s_texture");
+        mMVPMatrixHandle = GLES20.glGetUniformLocation(getProgramHandle(), "u_MVPMatrix");
+        mColorHandle = GLES20.glGetUniformLocation(getProgramHandle(), "u_color");
     }
 
     @Override
@@ -54,49 +55,39 @@ public class ParticleProgram extends ESProgram {
     /**
      * @return gets the handle to the particle life time
      */
-    public int getLifetimeLoc() {
+    public int getLifetimeHandle() {
         return mLifetimeLoc;
     }
 
     /**
      * @return gets the handle to the position
      */
-    public int getEndPositionLoc() {
+    public int getEndPositionHandle() {
         return mEndPositionLoc;
     }
 
     /**
      * @return gets the handle to the start position
      */
-    public int getStartPositionLoc() {
+    public int getStartPositionHandle() {
         return mStartPositionLoc;
-    }
-
-    /**
-     * @return gets the handle to the sampler
-     */
-    public int getSamplerLoc() {
-        return mSamplerLoc;
-    }
-
-    /**
-     * @return gets the handle to the center position
-     */
-    public int getCenterPositionLoc() {
-        return mCenterPositionLoc;
     }
 
     /**
      * @return gets the handle to the color
      */
-    public int getColorLoc() {
-        return mColorLoc;
+    public int getColorHandle() {
+        return mColorHandle;
     }
 
     /**
      * @return gets the handle to the time
      */
-    public int getTimeLoc() {
+    public int getTimeHandle() {
         return mTimeLoc;
+    }
+
+    public int getMVPMatrixHandle() {
+        return mMVPMatrixHandle;
     }
 }

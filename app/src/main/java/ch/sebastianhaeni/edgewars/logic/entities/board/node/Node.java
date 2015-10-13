@@ -253,8 +253,4 @@ public class Node extends BoardEntity {
         return mDamageLevel >= 3;
     }
 
-    public void die() {
-        mDrawables.add(new DeathParticleDecorator(mCircle));
-        // TODO
-    }
 }

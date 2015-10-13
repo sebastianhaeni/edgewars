@@ -1,16 +1,17 @@
 uniform   float u_time;
-uniform   vec3  u_centerPosition;
+uniform   mat4  u_MVPMatrix;
+
 attribute float a_lifetime;
-attribute vec3  a_startPosition;
-attribute vec3  a_endPosition;
+attribute vec4  a_startPosition;
+attribute vec4  a_endPosition;
+
 varying   float v_lifetime;
 
 void main() {
     if (u_time <= a_lifetime) {
-        gl_Position.xyz = a_startPosition + (u_time * a_endPosition);
-        gl_Position.xyz += u_centerPosition;
-        gl_Position.w = 1.0;
+        gl_Position = u_MVPMatrix * (a_startPosition + (u_time * a_endPosition));
     } else {
+        // dead, render it off the screen
         gl_Position = vec4(-1000, -1000, 0, 0);
     }
 

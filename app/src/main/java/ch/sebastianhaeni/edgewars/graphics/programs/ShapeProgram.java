@@ -2,6 +2,7 @@ package ch.sebastianhaeni.edgewars.graphics.programs;
 
 import android.content.Context;
 import android.opengl.GLES20;
+import android.util.Log;
 
 import ch.sebastianhaeni.edgewars.R;
 
@@ -23,13 +24,13 @@ public class ShapeProgram extends ESProgram {
         super(context);
 
         // get handle to vertex shader's vPosition member
-        mPositionHandle = GLES20.glGetAttribLocation(getProgramHandle(), "vPosition");
+        mPositionHandle = GLES20.glGetAttribLocation(getProgramHandle(), "a_position");
 
         // get handle to shape's transformation matrix
-        mMVPMatrixHandle = GLES20.glGetUniformLocation(getProgramHandle(), "uMVPMatrix");
+        mMVPMatrixHandle = GLES20.glGetUniformLocation(getProgramHandle(), "u_MVPMatrix");
 
         // get handle to shape's color
-        mColorHandle = GLES20.glGetUniformLocation(getProgramHandle(), "vColor");
+        mColorHandle = GLES20.glGetUniformLocation(getProgramHandle(), "u_color");
     }
 
     @Override
