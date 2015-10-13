@@ -18,6 +18,9 @@ import ch.sebastianhaeni.edgewars.graphics.programs.ParticleProgram;
 import ch.sebastianhaeni.edgewars.graphics.programs.ShapeProgram;
 import ch.sebastianhaeni.edgewars.graphics.shapes.Shape;
 
+/**
+ * Decorates a shape with death particles. Duration of animation is 1s.
+ */
 public class DeathParticleDecorator extends DrawableDecorator {
     private final int PARTICLE_SIZE = 7;
     private final int NUM_PARTICLES = 1000;
@@ -164,6 +167,11 @@ public class DeathParticleDecorator extends DrawableDecorator {
         GLES20.glDisableVertexAttribArray(particleProgram.getStartPositionLoc());
     }
 
+    /**
+     * Updates the time and position attributes of the particle system.
+     *
+     * @param particleProgram GL Program for particles
+     */
     private void update(ParticleProgram particleProgram) {
         if (mLastTime == 0) {
             mLastTime = SystemClock.uptimeMillis();

@@ -3,6 +3,16 @@ package ch.sebastianhaeni.edgewars.graphics.programs;
 import android.opengl.GLES20;
 import android.util.Log;
 
+import com.google.repacked.apache.commons.io.IOUtils;
+
+import java.io.IOException;
+import java.nio.charset.Charset;
+
+import ch.sebastianhaeni.edgewars.GameApplication;
+
+/**
+ * Helper utility class for loading and compiling OpenGL ES shaders and programs.
+ */
 public class ESShader {
 
     private static final String TAG = "ESShader";
@@ -13,9 +23,9 @@ public class ESShader {
      * <p><strong>Note:</strong> When developing shaders, use the checkGlError()
      * method to debug shader coding errors.</p>
      *
-     * @param type       - Vertex or fragment shader type.
-     * @param shaderCode - String containing the shader code.
-     * @return - Returns an id for the shader.
+     * @param type       Vertex or fragment shader type.
+     * @param shaderCode String containing the shader code.
+     * @return Returns an id for the shader.
      */
     public static int loadShader(int type, String shaderCode) {
         int shader;
@@ -47,14 +57,13 @@ public class ESShader {
     /**
      * Utility method for debugging OpenGL calls. Provide the name of the call
      * just after making it:
-     * <p/>
      * <pre>
      * mColorHandle = GLES20.glGetUniformLocation(mProgram, "vColor");
      * GameRenderer.checkGlError("glGetUniformLocation");</pre>
      *
      * If the operation is not successful, the check throws an error.
      *
-     * @param glOperation - Name of the OpenGL call to check.
+     * @param glOperation Name of the OpenGL call to check.
      */
     public static void checkGlError(String glOperation) {
         int error;
@@ -72,18 +81,18 @@ public class ESShader {
      * @param fragShaderSrc Fragment shader source code
      * @return handle for the program
      */
-    public static int loadProgram(String vertShaderSrc, String fragShaderSrc) {
+    public static int loadProgram(int vertShaderSrc, int fragShaderSrc) {
         int vertexShader;
         int fragmentShader;
         int programObject;
         int[] linked = new int[1];
 
         // Load the vertex/fragment shaders
-        vertexShader = loadShader(GLES20.GL_VERTEX_SHADER, vertShaderSrc);
+        vertexShader = loadShader(GLES20.GL_VERTEX_SHADER, getCode(vertShaderSrc));
         if (vertexShader == 0)
             return 0;
 
-        fragmentShader = loadShader(GLES20.GL_FRAGMENT_SHADER, fragShaderSrc);
+        fragmentShader = loadShader(GLES20.GL_FRAGMENT_SHADER, getCode(fragShaderSrc));
         if (fragmentShader == 0) {
             GLES20.glDeleteShader(vertexShader);
             return 0;
@@ -116,6 +125,21 @@ public class ESShader {
         GLES20.glDeleteShader(fragmentShader);
 
         return programObject;
+    }
+
+    /**
+     * Resolves the resource ID with the string from the file.
+     *
+     * @param resId resource ID
+     * @return string of the shader code
+     */
+    private static String getCode(int resId) {
+        try {
+            return IOUtils.toString(GameApplication.getAppContext().getResources().openRawResource(resId), Charset.forName("ASCII"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }

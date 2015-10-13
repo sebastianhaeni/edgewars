@@ -13,6 +13,9 @@ import ch.sebastianhaeni.edgewars.graphics.programs.ParticleProgram;
 import ch.sebastianhaeni.edgewars.graphics.programs.ShapeProgram;
 import ch.sebastianhaeni.edgewars.util.Position;
 
+/**
+ * Draws a line between a source and a destination. The color and width are fixed.
+ */
 public class Line extends Shape {
 
     private static final float WIDTH = 0.2f;
@@ -20,6 +23,13 @@ public class Line extends Shape {
     private FloatBuffer vertexBuffer;
     private int vertexCount;
 
+    /**
+     * Initializes the line with a source and destination rectangle that's really thin. The corners
+     * are not rounded.
+     *
+     * @param source      where the line starts
+     * @param destination where the line ends
+     */
     public Line(Position source, Position destination) {
         super(source);
 

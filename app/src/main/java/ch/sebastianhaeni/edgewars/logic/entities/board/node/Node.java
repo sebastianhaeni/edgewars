@@ -255,5 +255,6 @@ public class Node extends BoardEntity {
 
     public void die() {
         mDrawables.add(new DeathParticleDecorator(mCircle));
+        // TODO
     }
 }

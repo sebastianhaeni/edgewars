@@ -3,26 +3,9 @@ package ch.sebastianhaeni.edgewars.graphics.programs;
 import android.content.Context;
 import android.opengl.GLES20;
 
+import ch.sebastianhaeni.edgewars.R;
+
 public class ShapeProgram extends ESProgram {
-
-    private static final String VERTEX_SHADER_SRC =
-            // This matrix member variable provides a hook to manipulate
-            // the coordinates of the objects that use this vertex shader
-            "uniform mat4 uMVPMatrix;" +
-                    "attribute vec4 vPosition;" +
-                    "void main() {" +
-                    // The matrix must be included as a modifier of gl_Position.
-                    // Note that the uMVPMatrix factor *must be first* in order
-                    // for the matrix multiplication product to be correct.
-                    "  gl_Position = uMVPMatrix * vPosition;" +
-                    "}";
-
-    private static final String FRAGMENT_SHADER_SRC =
-            "precision mediump float;" +
-                    "uniform vec4 vColor;" +
-                    "void main() {" +
-                    "  gl_FragColor = vColor;" +
-                    "}";
 
     private int mPositionHandle;
     private int mMVPMatrixHandle;
@@ -42,13 +25,13 @@ public class ShapeProgram extends ESProgram {
     }
 
     @Override
-    protected String getVertexShaderSource() {
-        return VERTEX_SHADER_SRC;
+    protected int getVertexShaderSource() {
+        return R.raw.shader_shape_vert;
     }
 
     @Override
-    protected String getFragmentShaderSource() {
-        return FRAGMENT_SHADER_SRC;
+    protected int getFragmentShaderSource() {
+        return R.raw.shader_shape_frag;
     }
 
     public int getPositionHandle() {

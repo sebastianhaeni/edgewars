@@ -13,6 +13,9 @@ import ch.sebastianhaeni.edgewars.graphics.programs.ParticleProgram;
 import ch.sebastianhaeni.edgewars.graphics.programs.ShapeProgram;
 import ch.sebastianhaeni.edgewars.util.Position;
 
+/**
+ * Draws a circle with a uniform color at a certain position.
+ */
 public class Circle extends Shape {
     private static final int CORNERS = 364;
     private static boolean verticesInitialized = false;
