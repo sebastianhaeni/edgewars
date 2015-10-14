@@ -9,6 +9,9 @@ import java.util.Stack;
 import ch.sebastianhaeni.edgewars.logic.commands.Command;
 import ch.sebastianhaeni.edgewars.logic.entities.Entity;
 
+/**
+ * This class controls the game.
+ */
 public class Game {
 
     private static Game mGame;
@@ -23,6 +26,9 @@ public class Game {
     private Game() {
     }
 
+    /**
+     * @return gets the singleton instance
+     */
     public static Game getInstance() {
         if (mGame == null) {
             mGame = new Game();
@@ -30,14 +36,27 @@ public class Game {
         return mGame;
     }
 
+    /**
+     * Resets the singelton and thus a new game is born.
+     */
     public void reset() {
         mGame = null;
     }
 
+    /**
+     * Registers a new command to be executed in the game loop.
+     *
+     * @param command the command to be executed
+     */
     public void register(Command command) {
         mCommandStack.push(command);
     }
 
+    /**
+     * Registers a new entity  to be updated in the game loop.
+     *
+     * @param entity the entity to be updated
+     */
     public void register(Entity entity) {
         if (mEntities.containsKey(entity)) {
             return;
@@ -52,6 +71,11 @@ public class Game {
         mEntities.put(entity, 0L);
     }
 
+    /**
+     * Executes commands (but not too many at once) and updates entities.
+     *
+     * @param millis time passed since last update
+     */
     public void update(long millis) {
         // Executing commands, but not more than 5 per cycle
         int commandCount = mCommandStack.size();

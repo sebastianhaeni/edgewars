@@ -9,7 +9,7 @@ import ch.sebastianhaeni.edgewars.util.Position;
 abstract public class Shape implements IDrawable {
 
     private final Position mPosition;
-    private float mColor[] = Colors.NEUTRAL;
+    private float mColor[] = Colors.NODE_NEUTRAL;
 
     /**
      * Construcotr

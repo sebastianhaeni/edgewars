@@ -4,7 +4,16 @@ import ch.sebastianhaeni.edgewars.BR;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
 import ch.sebastianhaeni.edgewars.logic.entities.board.units.TankUnit;
 
+/**
+ * A concrete factory that builds melee units.
+ */
 public class TankFactory extends Factory {
+
+    /**
+     * Constructor
+     *
+     * @param node the node this factory is at
+     */
     public TankFactory(Node node) {
         super(node);
     }

@@ -4,7 +4,16 @@ import ch.sebastianhaeni.edgewars.BR;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
 import ch.sebastianhaeni.edgewars.logic.entities.board.units.MeleeUnit;
 
+/**
+ * A concrete factory that builds melee units.
+ */
 public class MeleeFactory extends Factory {
+
+    /**
+     * Constructor
+     *
+     * @param node the node this factory is at
+     */
     public MeleeFactory(Node node) {
         super(node);
     }
