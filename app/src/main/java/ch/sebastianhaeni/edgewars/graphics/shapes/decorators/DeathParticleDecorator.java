@@ -10,8 +10,6 @@ import java.util.Random;
 
 import ch.sebastianhaeni.edgewars.graphics.GameRenderer;
 import ch.sebastianhaeni.edgewars.graphics.programs.ESShader;
-import ch.sebastianhaeni.edgewars.graphics.programs.ParticleProgram;
-import ch.sebastianhaeni.edgewars.graphics.programs.ShapeProgram;
 import ch.sebastianhaeni.edgewars.graphics.shapes.Shape;
 
 /**
@@ -63,30 +61,39 @@ public class DeathParticleDecorator extends DrawableDecorator {
     }
 
     @Override
-    public void draw(GameRenderer renderer, ShapeProgram shapeProgram, ParticleProgram particleProgram) {
+    public void draw(GameRenderer renderer) {
         update();
 
         // Use the program object
-        GLES20.glUseProgram(particleProgram.getProgramHandle());
+        GLES20.glUseProgram(renderer.getParticleProgram().getProgramHandle());
         ESShader.checkGlError("glUseProgram");
 
         // Apply the projection and view transformation
-        GLES20.glUniformMatrix4fv(particleProgram.getMVPMatrixHandle(), 1, false, renderer.getMVPMatrix(), 0);
+        GLES20.glUniformMatrix4fv(
+                renderer.getParticleProgram().getMVPMatrixHandle(),
+                1,
+                false,
+                renderer.getMVPMatrix(),
+                0);
         ESShader.checkGlError("glUniformMatrix4fv");
 
         // Load uniform time variable
-        GLES20.glUniform1f(particleProgram.getTimeHandle(), mTime);
+        GLES20.glUniform1f(renderer.getParticleProgram().getTimeHandle(), mTime);
         ESShader.checkGlError("glUniform1f");
 
         // set color of base shape
-        //GLES20.glUniform4fv(particleProgram.getColorHandle(), 1, getShape().getColor(), 0);
-        GLES20.glUniform4f(particleProgram.getColorHandle(), getShape().getColor()[0], getShape().getColor()[1], getShape().getColor()[2], .5f);
+        GLES20.glUniform4f(
+                renderer.getParticleProgram().getColorHandle(),
+                getShape().getColor()[0],
+                getShape().getColor()[1],
+                getShape().getColor()[2],
+                .5f);
         ESShader.checkGlError("glUniform4f");
 
         // Load the vertex attributes
         mParticles.position(0);
         GLES20.glVertexAttribPointer(
-                particleProgram.getLifetimeHandle(),
+                renderer.getParticleProgram().getLifetimeHandle(),
                 1,
                 GLES20.GL_FLOAT,
                 false,
@@ -96,7 +103,7 @@ public class DeathParticleDecorator extends DrawableDecorator {
 
         mParticles.position(1);
         GLES20.glVertexAttribPointer(
-                particleProgram.getEndPositionHandle(),
+                renderer.getParticleProgram().getEndPositionHandle(),
                 3,
                 GLES20.GL_FLOAT,
                 false,
@@ -106,7 +113,7 @@ public class DeathParticleDecorator extends DrawableDecorator {
 
         mParticles.position(4);
         GLES20.glVertexAttribPointer(
-                particleProgram.getStartPositionHandle(),
+                renderer.getParticleProgram().getStartPositionHandle(),
                 3,
                 GLES20.GL_FLOAT,
                 false,
@@ -114,26 +121,24 @@ public class DeathParticleDecorator extends DrawableDecorator {
                 mParticles);
         ESShader.checkGlError("glVertexAttribPointer");
 
-        GLES20.glEnableVertexAttribArray(particleProgram.getLifetimeHandle());
-        GLES20.glEnableVertexAttribArray(particleProgram.getEndPositionHandle());
-        GLES20.glEnableVertexAttribArray(particleProgram.getStartPositionHandle());
+        GLES20.glEnableVertexAttribArray(renderer.getParticleProgram().getLifetimeHandle());
+        GLES20.glEnableVertexAttribArray(renderer.getParticleProgram().getEndPositionHandle());
+        GLES20.glEnableVertexAttribArray(renderer.getParticleProgram().getStartPositionHandle());
 
         // Blend particles
         GLES20.glEnable(GLES20.GL_BLEND);
         GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE);
 
         // Drawing the actual points
-        //GLES20.glDrawArrays(GLES20.GL_POINTS, 0, NUM_PARTICLES);
         GLES20.glDrawArrays(GLES20.GL_POINTS, 0, NUM_PARTICLES);
 
         // Disable blend particles
         GLES20.glDisable(GLES20.GL_BLEND);
 
         // Disable vertex array
-        GLES20.glDisableVertexAttribArray(particleProgram.getLifetimeHandle());
-        GLES20.glDisableVertexAttribArray(particleProgram.getEndPositionHandle());
-        GLES20.glDisableVertexAttribArray(particleProgram.getStartPositionHandle());
-
+        GLES20.glDisableVertexAttribArray(renderer.getParticleProgram().getLifetimeHandle());
+        GLES20.glDisableVertexAttribArray(renderer.getParticleProgram().getEndPositionHandle());
+        GLES20.glDisableVertexAttribArray(renderer.getParticleProgram().getStartPositionHandle());
     }
 
     /**

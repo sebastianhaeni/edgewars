@@ -8,6 +8,7 @@ import android.opengl.Matrix;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
+import ch.sebastianhaeni.edgewars.graphics.programs.ESProgram;
 import ch.sebastianhaeni.edgewars.graphics.programs.ParticleProgram;
 import ch.sebastianhaeni.edgewars.graphics.programs.ShapeProgram;
 import ch.sebastianhaeni.edgewars.graphics.shapes.IDrawable;
@@ -99,7 +100,7 @@ public class GameRenderer implements GLSurfaceView.Renderer {
             // Calculate the projection and view transformation
             Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
 
-            s.draw(this, mShapeProgram, mParticleProgram);
+            s.draw(this);
         }
     }
 
@@ -139,4 +140,11 @@ public class GameRenderer implements GLSurfaceView.Renderer {
         return mMVPMatrix;
     }
 
+    public ShapeProgram getShapeProgram() {
+        return mShapeProgram;
+    }
+
+    public ParticleProgram getParticleProgram() {
+        return mParticleProgram;
+    }
 }

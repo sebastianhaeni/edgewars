@@ -8,8 +8,6 @@ import java.nio.FloatBuffer;
 
 import ch.sebastianhaeni.edgewars.graphics.GameRenderer;
 import ch.sebastianhaeni.edgewars.graphics.programs.ESShader;
-import ch.sebastianhaeni.edgewars.graphics.programs.ParticleProgram;
-import ch.sebastianhaeni.edgewars.graphics.programs.ShapeProgram;
 import ch.sebastianhaeni.edgewars.util.Position;
 
 /**
@@ -61,22 +59,27 @@ public class Circle extends Shape {
      * Encapsulates the OpenGL ES instructions for drawing this shape.
      */
     @Override
-    public void draw(GameRenderer renderer, ShapeProgram shapeProgram, ParticleProgram particleProgram) {
+    public void draw(GameRenderer renderer) {
         // Add program to OpenGL environment
-        GLES20.glUseProgram(shapeProgram.getProgramHandle());
+        GLES20.glUseProgram(renderer.getShapeProgram().getProgramHandle());
         ESShader.checkGlError("glUseProgram");
 
         // Apply the projection and view transformation
-        GLES20.glUniformMatrix4fv(shapeProgram.getMVPMatrixHandle(), 1, false, renderer.getMVPMatrix(), 0);
+        GLES20.glUniformMatrix4fv(
+                renderer.getShapeProgram().getMVPMatrixHandle(),
+                1,
+                false,
+                renderer.getMVPMatrix(),
+                0);
         ESShader.checkGlError("glUniformMatrix4fv");
 
         // Enable a handle to the vertices
-        GLES20.glEnableVertexAttribArray(shapeProgram.getPositionHandle());
+        GLES20.glEnableVertexAttribArray(renderer.getShapeProgram().getPositionHandle());
         ESShader.checkGlError("glEnableVertexAttribArray");
 
         // Prepare the triangle coordinate data
         GLES20.glVertexAttribPointer(
-                shapeProgram.getPositionHandle(),
+                renderer.getShapeProgram().getPositionHandle(),
                 GameRenderer.COORDS_PER_VERTEX,
                 GLES20.GL_FLOAT,
                 false,
@@ -85,7 +88,7 @@ public class Circle extends Shape {
         ESShader.checkGlError("glVertexAttribPointer");
 
         // Set color for drawing the triangle
-        GLES20.glUniform4fv(shapeProgram.getColorHandle(), 1, getColor(), 0);
+        GLES20.glUniform4fv(renderer.getShapeProgram().getColorHandle(), 1, getColor(), 0);
         ESShader.checkGlError("glUniform4fv");
 
         // Draw the triangle
@@ -93,7 +96,7 @@ public class Circle extends Shape {
         ESShader.checkGlError("glDrawArrays");
 
         // Disable vertex array
-        GLES20.glDisableVertexAttribArray(shapeProgram.getPositionHandle());
+        GLES20.glDisableVertexAttribArray(renderer.getShapeProgram().getPositionHandle());
         ESShader.checkGlError("glDisableVertexAttribArray");
 
     }

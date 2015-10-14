@@ -84,15 +84,29 @@ public class ESShader {
     private static String getErrorText(int glErrorCode) {
         switch (glErrorCode) {
             case GLES20.GL_INVALID_ENUM:
-                return "GL_INVALID_ENUM\nGiven when an enumeration parameter is not a legal enumeration for that function. This is given only for local problems; if the spec allows the enumeration in certain circumstances, where other parameters or state dictate those circumstances, then GL_INVALID_OPERATION is the result instead.";
+                return "GL_INVALID_ENUM\nGiven when an enumeration parameter is not a legal enume" +
+                        "ration for that function. This is given only for local problems; if the " +
+                        "spec allows the enumeration in certain circumstances, where other parame" +
+                        "ters or state dictate those circumstances, then GL_INVALID_OPERATION is " +
+                        "the result instead.";
             case GLES20.GL_INVALID_VALUE:
-                return "GL_INVALID_VALUE\nGiven when a value parameter is not a legal value for that function. This is only given for local problems; if the spec allows the value in certain circumstances, where other parameters or state dictate those circumstances, then GL_INVALID_OPERATION is the result instead.";
+                return "GL_INVALID_VALUE\nGiven when a value parameter is not a legal value for t" +
+                        "hat function. This is only given for local problems; if the spec allows " +
+                        "the value in certain circumstances, where other parameters or state dict" +
+                        "ate those circumstances, then GL_INVALID_OPERATION is the result instead.";
             case GLES20.GL_INVALID_OPERATION:
-                return "GL_INVALID_OPERATION\nGiven when the set of state for a command is not legal for the parameters given to that command. It is also given for commands where combinations of parameters define what the legal parameters are.";
+                return "GL_INVALID_OPERATION\nGiven when the set of state for a command is not le" +
+                        "gal for the parameters given to that command. It is also given for comma" +
+                        "nds where combinations of parameters define what the legal parameters ar" +
+                        "e.";
             case GLES20.GL_OUT_OF_MEMORY:
-                return "GL_OUT_OF_MEMORY\nGiven when performing an operation that can allocate memory, and the memory cannot be allocated. The results of OpenGL functions that return this error are undefined; it is allowable for partial operations to happen.";
+                return "GL_OUT_OF_MEMORY\nGiven when performing an operation that can allocate me" +
+                        "mory, and the memory cannot be allocated. The results of OpenGL function" +
+                        "s that return this error are undefined; it is allowable for partial oper" +
+                        "ations to happen.";
             case GLES20.GL_INVALID_FRAMEBUFFER_OPERATION:
-                return "GL_INVALID_FRAMEBUFFER_OPERATION\nGiven when doing anything that would attempt to read from or write/render to a framebuffer that is not complete.";
+                return "GL_INVALID_FRAMEBUFFER_OPERATION\nGiven when doing anything that would at" +
+                        "tempt to read from or write/render to a framebuffer that is not complete.";
             default:
                 return "Unknown error";
         }
@@ -140,7 +154,8 @@ public class ESShader {
         GLES20.glGetProgramiv(programObject, GLES20.GL_LINK_STATUS, linked, 0);
 
         if (linked[0] == 0) {
-            throw new RuntimeException("Error linking program: " + GLES20.glGetProgramInfoLog(programObject));
+            throw new RuntimeException("Error linking program: "
+                    + GLES20.glGetProgramInfoLog(programObject));
         }
 
         // Free up no longer needed shader resources

@@ -12,12 +12,12 @@ public class ParticleProgram extends ESProgram {
 
     // Attribute locations
     private final int mMVPMatrixHandle;
-    private int mLifetimeLoc;
-    private int mStartPositionLoc;
-    private int mEndPositionLoc;
+    private int mLifetimeHandle;
+    private int mStartPositionHandle;
+    private int mEndPositionHandle;
 
     // Uniform location
-    private int mTimeLoc;
+    private int mTimeHandle;
     private int mColorHandle;
 
     /**
@@ -29,12 +29,12 @@ public class ParticleProgram extends ESProgram {
         super(context);
 
         // Get the attribute locations
-        mLifetimeLoc = GLES20.glGetAttribLocation(getProgramHandle(), "a_lifetime");
-        mStartPositionLoc = GLES20.glGetAttribLocation(getProgramHandle(), "a_startPosition");
-        mEndPositionLoc = GLES20.glGetAttribLocation(getProgramHandle(), "a_endPosition");
+        mLifetimeHandle = GLES20.glGetAttribLocation(getProgramHandle(), "a_lifetime");
+        mStartPositionHandle = GLES20.glGetAttribLocation(getProgramHandle(), "a_startPosition");
+        mEndPositionHandle = GLES20.glGetAttribLocation(getProgramHandle(), "a_endPosition");
 
         // Get the uniform locations
-        mTimeLoc = GLES20.glGetUniformLocation(getProgramHandle(), "u_time");
+        mTimeHandle = GLES20.glGetUniformLocation(getProgramHandle(), "u_time");
         mMVPMatrixHandle = GLES20.glGetUniformLocation(getProgramHandle(), "u_MVPMatrix");
         mColorHandle = GLES20.glGetUniformLocation(getProgramHandle(), "u_color");
     }
@@ -53,21 +53,21 @@ public class ParticleProgram extends ESProgram {
      * @return gets the handle to the particle life time
      */
     public int getLifetimeHandle() {
-        return mLifetimeLoc;
+        return mLifetimeHandle;
     }
 
     /**
      * @return gets the handle to the position
      */
     public int getEndPositionHandle() {
-        return mEndPositionLoc;
+        return mEndPositionHandle;
     }
 
     /**
      * @return gets the handle to the start position
      */
     public int getStartPositionHandle() {
-        return mStartPositionLoc;
+        return mStartPositionHandle;
     }
 
     /**
@@ -81,9 +81,12 @@ public class ParticleProgram extends ESProgram {
      * @return gets the handle to the time
      */
     public int getTimeHandle() {
-        return mTimeLoc;
+        return mTimeHandle;
     }
 
+    /**
+     * @return gets the handel to the mvp matrix
+     */
     public int getMVPMatrixHandle() {
         return mMVPMatrixHandle;
     }
