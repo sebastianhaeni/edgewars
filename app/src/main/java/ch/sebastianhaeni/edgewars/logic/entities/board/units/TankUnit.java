@@ -2,7 +2,7 @@ package ch.sebastianhaeni.edgewars.logic.entities.board.units;
 
 import java.util.ArrayList;
 
-import ch.sebastianhaeni.edgewars.graphics.shapes.Shape;
+import ch.sebastianhaeni.edgewars.graphics.shapes.IDrawable;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
 
 public class TankUnit extends Unit {
@@ -42,7 +42,7 @@ public class TankUnit extends Unit {
     }
 
     @Override
-    public ArrayList<Shape> getShapes() {
+    public ArrayList<IDrawable> getDrawables() {
         return null;
     }
 }

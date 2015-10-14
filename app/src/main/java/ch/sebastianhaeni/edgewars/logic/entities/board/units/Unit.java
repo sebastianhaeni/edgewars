@@ -61,4 +61,5 @@ public abstract class Unit extends BoardEntity {
         }
         mHealth = newHealth;
     }
+
 }

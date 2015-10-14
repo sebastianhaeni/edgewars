@@ -3,26 +3,50 @@ package ch.sebastianhaeni.edgewars.graphics.shapes;
 import ch.sebastianhaeni.edgewars.util.Colors;
 import ch.sebastianhaeni.edgewars.util.Position;
 
-abstract public class Shape {
+/**
+ * A basic shape with a position and a uni color.
+ */
+abstract public class Shape implements IDrawable {
 
     private final Position mPosition;
     private float mColor[] = Colors.NEUTRAL;
 
+    /**
+     * Construcotr
+     *
+     * @param position the position this shape has it's starting point
+     */
     public Shape(Position position) {
         mPosition = position;
     }
 
-    public abstract void draw(int program, int positionHandle);
-
+    /**
+     * @return gets the position
+     */
     public Position getPosition() {
         return mPosition;
     }
 
+    /**
+     * Sets the color.
+     *
+     * @param color new rgb color
+     */
     public void setColor(float[] color) {
         mColor = color;
     }
 
-    protected float[] getColor() {
+    /**
+     * @return gets the color
+     */
+    public float[] getColor() {
         return mColor;
+    }
+
+    /**
+     * @return gets the shape
+     */
+    public Shape getShape() {
+        return this;
     }
 }
