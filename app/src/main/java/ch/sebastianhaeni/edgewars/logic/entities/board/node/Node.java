@@ -8,6 +8,7 @@ import java.util.Stack;
 import ch.sebastianhaeni.edgewars.BR;
 import ch.sebastianhaeni.edgewars.graphics.shapes.Circle;
 import ch.sebastianhaeni.edgewars.graphics.shapes.IDrawable;
+import ch.sebastianhaeni.edgewars.graphics.shapes.decorators.DeathParticleDecorator;
 import ch.sebastianhaeni.edgewars.logic.Game;
 import ch.sebastianhaeni.edgewars.logic.commands.MoveUnitCommand;
 import ch.sebastianhaeni.edgewars.logic.entities.board.BoardEntity;
@@ -70,6 +71,7 @@ public class Node extends BoardEntity {
         mCircle = new Circle(mPosition);
 
         mDrawables.add(mCircle);
+       // mDrawables.add(new DeathParticleDecorator(mCircle));
     }
 
     @Override

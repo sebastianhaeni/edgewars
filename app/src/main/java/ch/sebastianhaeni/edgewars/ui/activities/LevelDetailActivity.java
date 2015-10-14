@@ -2,10 +2,13 @@ package ch.sebastianhaeni.edgewars.ui.activities;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.view.View;
 
 import ch.sebastianhaeni.edgewars.R;
+import ch.sebastianhaeni.edgewars.databinding.ActivityAboutBinding;
+import ch.sebastianhaeni.edgewars.databinding.ActivityLevelDetailBinding;
 
 public class LevelDetailActivity extends Activity {
 
@@ -15,9 +18,15 @@ public class LevelDetailActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_level_detail);
-
         mLevel = getIntent().getExtras().getInt(LEVEL_ID);
+
+        ActivityLevelDetailBinding binding = DataBindingUtil.inflate(
+                getLayoutInflater(),
+                R.layout.activity_level_detail,
+                null,
+                false);
+        binding.setActivity(this);
+        setContentView(binding.getRoot());
     }
 
     public void startLevel(View view) {
