@@ -13,7 +13,6 @@ public class AboutActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_about);
 
         ActivityAboutBinding binding = DataBindingUtil.inflate(
                 getLayoutInflater(),
@@ -21,6 +20,7 @@ public class AboutActivity extends Activity {
                 null,
                 false);
         binding.setActivity(this);
+        setContentView(binding.getRoot());
     }
 
     public void back(View view) {
