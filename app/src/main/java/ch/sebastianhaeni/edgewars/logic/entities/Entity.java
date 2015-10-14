@@ -31,4 +31,5 @@ public abstract class Entity extends BaseObservable {
     public long getInterval() {
         return mInterval;
     }
+
 }

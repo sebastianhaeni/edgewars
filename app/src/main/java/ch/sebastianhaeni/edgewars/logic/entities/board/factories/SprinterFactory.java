@@ -4,7 +4,16 @@ import ch.sebastianhaeni.edgewars.BR;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
 import ch.sebastianhaeni.edgewars.logic.entities.board.units.SprinterUnit;
 
+/**
+ * A concrete factory that builds melee units.
+ */
 public class SprinterFactory extends Factory {
+
+    /**
+     * Constructor
+     *
+     * @param node the node this factory is at
+     */
     public SprinterFactory(Node node) {
         super(node);
     }

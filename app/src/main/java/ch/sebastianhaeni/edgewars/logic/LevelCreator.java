@@ -23,8 +23,8 @@ public class LevelCreator {
 
         ArrayList<Player> players = new ArrayList<>();
 
-        Player human = new Player(Colors.BLUE);
-        Player computer = new Player(Colors.RED);
+        Player human = new Player(Colors.NODE_MINE);
+        Player computer = new Player(Colors.NODE_OPPONENT);
 
         Node node1 = new Node(new Position(-5, 0));
         node1.setState(new OwnedState(node1, human));

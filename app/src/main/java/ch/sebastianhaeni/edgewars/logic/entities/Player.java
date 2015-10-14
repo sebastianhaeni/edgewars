@@ -35,4 +35,12 @@ public class Player extends Entity {
     public void setAI(RuleBasedAI AI) {
         mAi = AI;
     }
+
+    public void removeEnergy(int cost) {
+        if (mEnergy - cost >= 0) {
+            mEnergy -= cost;
+        } else {
+            throw new RuntimeException("Player energy is lower than 0, this should have been checked before calling this");
+        }
+    }
 }

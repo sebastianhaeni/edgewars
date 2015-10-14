@@ -5,9 +5,18 @@ import java.util.Arrays;
 import ch.sebastianhaeni.edgewars.logic.entities.Player;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
 
+/**
+ * The state a node is in when it is owned by a player.
+ */
 public class OwnedState extends NodeState {
     private final Player mOwner;
 
+    /**
+     * Constructor
+     *
+     * @param node  the node that has this state
+     * @param owner the player that owns the node
+     */
     public OwnedState(Node node, Player owner) {
         super(node);
         mOwner = owner;
