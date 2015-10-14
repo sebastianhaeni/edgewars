@@ -43,8 +43,9 @@ public class DeathParticleDecorator extends DrawableDecorator {
             particleData[i * 7] = generator.nextFloat();
 
             // End position of particle
-            particleData[i * 7 + 1] = generator.nextFloat() * 8.0f - 4.0f;
-            particleData[i * 7 + 2] = generator.nextFloat() * 8.0f - 4.0f;
+            double angle = (Math.random() * Math.PI * 2);
+            particleData[i * 7 + 1] = (float) ((generator.nextFloat() * 8.0f - 4.0f) * Math.cos(angle));
+            particleData[i * 7 + 2] = (float) ((generator.nextFloat() * 8.0f - 4.0f) * Math.sin(angle));
             particleData[i * 7 + 3] = generator.nextFloat() * 8.0f - 4.0f;
 
             // Start position of particle
