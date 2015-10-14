@@ -6,18 +6,33 @@ import ch.sebastianhaeni.edgewars.graphics.shapes.IDrawable;
 import ch.sebastianhaeni.edgewars.logic.entities.Entity;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
 
+/**
+ * The board is the controller of everything visible on the game board. It has board entities and
+ * drawables.
+ */
 public class Board extends Entity {
     private ArrayList<BoardEntity> mEntities = new ArrayList<>();
     private ArrayList<IDrawable> mDrawables = new ArrayList<>();
 
+    /**
+     * Constructor
+     */
     public Board() {
         super();
     }
 
+    /**
+     * Adds a board entity to the board.
+     *
+     * @param e new board entity
+     */
     public void addEntity(BoardEntity e) {
         mEntities.add(e);
     }
 
+    /**
+     * @return gets the drawables on the board
+     */
     public ArrayList<IDrawable> getDrawables() {
         mDrawables.clear();
         for (BoardEntity e : mEntities) {
@@ -28,6 +43,9 @@ public class Board extends Entity {
         return mDrawables;
     }
 
+    /**
+     * @return gets the nodes on the board
+     */
     public ArrayList<Node> getNodes() {
         ArrayList<Node> nodes = new ArrayList<>();
         for (BoardEntity e : mEntities) {

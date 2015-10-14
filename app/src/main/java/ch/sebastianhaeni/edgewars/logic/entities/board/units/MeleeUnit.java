@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import ch.sebastianhaeni.edgewars.graphics.shapes.IDrawable;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
 
+/**
+ * A melee unit.
+ */
 public class MeleeUnit extends Unit {
     // TODO adjust values
     private static final int ATTACK_DAMAGE = 5;
@@ -12,6 +15,11 @@ public class MeleeUnit extends Unit {
     private static final float ACCURACY = 1;
     private static final int SPEED = 5;
 
+    /**
+     * Constructor
+     *
+     * @param node the node this unit was produced
+     */
     public MeleeUnit(Node node) {
         super(node);
     }

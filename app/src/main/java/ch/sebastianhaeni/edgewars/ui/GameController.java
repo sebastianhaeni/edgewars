@@ -12,6 +12,9 @@ import ch.sebastianhaeni.edgewars.ui.dialogs.NeutralNodeDialog;
 import ch.sebastianhaeni.edgewars.ui.dialogs.OpponentNodeDialog;
 import ch.sebastianhaeni.edgewars.ui.dialogs.OwnedNodeDialog;
 
+/**
+ * The game controller handles inputs from the user and delegates them to the according action.
+ */
 public class GameController {
 
     private final GameState mGameState;
@@ -22,12 +25,24 @@ public class GameController {
     private float mStartX;
     private float mStartY;
 
+    /**
+     * Constructor
+     *
+     * @param context   app context
+     * @param renderer  game renderer
+     * @param gameState game state
+     */
     public GameController(Context context, GameRenderer renderer, GameState gameState) {
         mContext = context;
         mGameState = gameState;
         mRenderer = renderer;
     }
 
+    /**
+     * Handles touch events on the OpenGL ES surface.
+     *
+     * @param e the motion event
+     */
     public void onTouchEvent(MotionEvent e) {
         // MotionEvent reports input details from the touch screen
         // and other input controls.
@@ -62,6 +77,12 @@ public class GameController {
         mPreviousY = y;
     }
 
+    /**
+     * Figures out if a node is clicked at that coordinate and what to do after.
+     *
+     * @param x x coordinate
+     * @param y y coordinate
+     */
     private void clickNode(float x, float y) {
         // center x and y to middle point of screen
         x = x - (mRenderer.getWidth() * .5f);

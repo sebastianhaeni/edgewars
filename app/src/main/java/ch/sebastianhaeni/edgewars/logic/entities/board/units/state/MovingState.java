@@ -6,10 +6,19 @@ import ch.sebastianhaeni.edgewars.logic.entities.board.node.state.NeutralState;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.state.OwnedState;
 import ch.sebastianhaeni.edgewars.logic.entities.board.units.Unit;
 
+/**
+ * The state of a unit moving along an edge.
+ */
 public class MovingState extends UnitState {
     private final Node mNode;
     private final Player mPlayer;
 
+    /**
+     * Constructor
+     * @param unit the unit having this state
+     * @param node the target node it's moving towards
+     * @param player the owner of the unit
+     */
     public MovingState(Unit unit, Node node, Player player) {
         super(unit);
         mNode = node;

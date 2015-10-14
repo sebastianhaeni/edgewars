@@ -5,15 +5,29 @@ import java.util.ArrayList;
 import ch.sebastianhaeni.edgewars.graphics.shapes.IDrawable;
 import ch.sebastianhaeni.edgewars.logic.entities.Entity;
 
+/**
+ * A board entity is an entity that's visible on the game board.
+ */
 public abstract class BoardEntity extends Entity {
 
+    /**
+     * Constructor for updating entities.
+     *
+     * @param interval the interval time this entity wants to be updated
+     */
     public BoardEntity(long interval) {
         super(interval);
     }
 
+    /**
+     * Constructor for entities that don't want to be updated.
+     */
     public BoardEntity() {
         super();
     }
 
+    /**
+     * @return gets the drawables
+     */
     public abstract ArrayList<IDrawable> getDrawables();
 }

@@ -5,10 +5,19 @@ import java.util.Random;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
 import ch.sebastianhaeni.edgewars.logic.entities.board.units.Unit;
 
+/**
+ * State of a unit attacking a node.
+ */
 public class AttackNodeState extends UnitState {
     private final Node mNode;
     private final Random mRandom = new Random();
 
+    /**
+     * Constructor
+     *
+     * @param unit the unit having this state
+     * @param node the node attacked
+     */
     public AttackNodeState(Unit unit, Node node) {
         super(unit);
         mNode = node;

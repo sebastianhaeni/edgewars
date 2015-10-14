@@ -1,5 +1,8 @@
 package ch.sebastianhaeni.edgewars.logic.entities;
 
+/**
+ * The camera entity updates the view that the human player sees.
+ */
 public class Camera extends Entity {
     public static final float CAMERA_FRICTION = .1f;
     private static final float TOUCH_SCALE_FACTOR = -.006f;
@@ -14,6 +17,9 @@ public class Camera extends Entity {
     private float mCameraScreenX;
     private float mCameraScreenY;
 
+    /**
+     * Constructor
+     */
     public Camera() {
         super(16);
     }
@@ -51,26 +57,46 @@ public class Camera extends Entity {
         mCameraY -= dy;
     }
 
+    /**
+     * @return gets x coordinate of camera
+     */
     public float getX() {
         return mCameraX;
     }
 
+    /**
+     * @return gets y coordinate of camera
+     */
     public float getY() {
         return mCameraY;
     }
 
+    /**
+     * When the player is not moving the camera himself, this method is called to let the
+     * entity figure out friction and momentum to make it a smoother experience.
+     */
     public void freeCamera() {
         mIsPlayerControlled = false;
     }
 
+    /**
+     * As soon as the human player wants to move the camera, he takes control. The camera entity
+     * no longer tries to figure out friction and momentum and let's the human do what he wants.
+     */
     public void takeCamera() {
         mIsPlayerControlled = true;
     }
 
+    /**
+     * @return gets the x offset of the camera to the screen
+     */
     public float getScreenX() {
         return mCameraScreenX;
     }
 
+    /**
+     * @return gets the y offset of the camera to the screen
+     */
     public float getScreenY() {
         return mCameraScreenY;
     }

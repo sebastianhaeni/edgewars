@@ -6,12 +6,23 @@ import ch.sebastianhaeni.edgewars.logic.entities.Player;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
 import ch.sebastianhaeni.edgewars.logic.entities.board.units.Unit;
 
+/**
+ * The state of a unit fighting another unit at an opponent node.
+ */
 public class FightUnitState extends UnitState {
     private final Unit mFightingUnit;
     private final Random mRandom = new Random();
     private final Player mPlayer;
     private Node mTargetNode;
 
+    /**
+     * Constructor
+     *
+     * @param unit         the unit having this state
+     * @param fightingUnit the opponent unit to be fought by this unit
+     * @param node         the node the fight happens
+     * @param player       the player this unit belongs to
+     */
     public FightUnitState(Unit unit, Unit fightingUnit, Node node, Player player) {
         super(unit);
         mFightingUnit = fightingUnit;
