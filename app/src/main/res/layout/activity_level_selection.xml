@@ -1,54 +1,73 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:paddingTop="@dimen/activity_vertical_margin"
-                android:paddingBottom="@dimen/activity_vertical_margin"
-                tools:context="ch.sebastianhaeni.edgewars.ui.activities.LevelSelectionActivity">
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        tools:context="ch.sebastianhaeni.edgewars.ui.activities.LevelSelectionActivity">
 
-    <LinearLayout
-        android:id="@+id/layoutLevelButtons"
+    <data>
+
+        <variable
+            name="activity"
+            type="ch.sebastianhaeni.edgewars.ui.activities.LevelSelectionActivity"/>
+
+    </data>
+
+    <RelativeLayout
+
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin">
+
+        <LinearLayout
+            android:id="@+id/layoutLevelButtons"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <Button
+                android:id="@+id/buttonLevel1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="@{activity.selectLevel}"
+                android:text="Level 1"/>
+
+            <Button
+                android:id="@+id/buttonLevel2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="@{activity.selectLevel}"
+                android:text="Level 2"/>
+
+            <Button
+                android:id="@+id/buttonLevel3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="@{activity.selectLevel}"
+                android:text="Level 3"/>
+
+            <Button
+                android:id="@+id/buttonLevel4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="@{activity.selectLevel}"
+                android:text="Level 4"/>
+
+            <Button
+                android:id="@+id/buttonLevel5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="@{activity.selectLevel}"
+                android:text="Level 5"/>
+
+        </LinearLayout>
 
         <Button
-            android:id="@+id/buttonLevel1"
-            android:text="Level 1"
+            android:id="@+id/buttonLevelSelectionToMain"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <Button
-            android:id="@+id/buttonLevel2"
-            android:text="Level 2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <Button
-            android:id="@+id/buttonLevel3"
-            android:text="Level 3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <Button
-            android:id="@+id/buttonLevel4"
-            android:text="Level 4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <Button
-            android:id="@+id/buttonLevel5"
-            android:text="Level 5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-    </LinearLayout>
-
-    <Button
-        android:id="@+id/buttonLevelSelectionToMain"
-        android:text="@string/back"
-        android:layout_width="wrap_content"
-        android:layout_alignBottom="@id/layoutLevelButtons"
-        android:layout_height="wrap_content"/>
-</RelativeLayout>
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/layoutLevelButtons"
+            android:onClick="@{activity.back}"
+            android:text="@string/back"/>
+    </RelativeLayout>
+</layout>
