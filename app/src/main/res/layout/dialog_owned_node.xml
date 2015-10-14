@@ -10,11 +10,10 @@
             type="ch.sebastianhaeni.edgewars.logic.entities.board.node.Node"/>
 
         <variable
-            name="handlers"
-            type="ch.sebastianhaeni.edgewars.ui.dialogs.OwnedNodeDialog.Handlers"/>
+            name="dialog"
+            type="ch.sebastianhaeni.edgewars.ui.dialogs.OwnedNodeDialog"/>
 
     </data>
-
 
     <GridLayout
         android:layout_width="match_parent"
@@ -76,7 +75,7 @@
             android:layout_height="wrap_content"
             android:layout_column="3"
             android:layout_row="1"
-            android:onClick="@{handlers.upgradeHealth}"
+            android:onClick="@{dialog.upgradeHealth}"
             android:text="Upgrade"/>
 
         <Button
@@ -86,7 +85,7 @@
             android:layout_height="wrap_content"
             android:layout_column="3"
             android:layout_row="2"
-            android:onClick="@{handlers.upgradeDamage}"
+            android:onClick="@{dialog.upgradeDamage}"
             android:text="Upgrade"/>
 
         <TextView
@@ -257,7 +256,7 @@
             android:layout_height="wrap_content"
             android:layout_column="7"
             android:layout_row="4"
-            android:onClick="@{handlers.buildMeleeUnit}"
+            android:onClick="@{dialog.buildMeleeUnit}"
             android:text="Build unit"
             />
 
@@ -285,7 +284,7 @@
             android:layout_height="wrap_content"
             android:layout_column="7"
             android:layout_row="5"
-            android:onClick="@{handlers.buildTankUnit}"
+            android:onClick="@{dialog.buildTankUnit}"
             android:text="Build unit"
             />
 
@@ -313,7 +312,7 @@
             android:layout_height="wrap_content"
             android:layout_column="7"
             android:layout_row="6"
-            android:onClick="@{handlers.buildSprinterUnit}"
+            android:onClick="@{dialog.buildSprinterUnit}"
             android:text="Build unit"
             />
     </GridLayout>

@@ -30,7 +30,7 @@ public class OwnedNodeDialog extends Dialog {
         mNode = node;
         mBinding = DataBindingUtil.inflate(getLayoutInflater(), R.layout.dialog_owned_node, null, false);
         mBinding.setNode(mNode);
-        mBinding.setHandlers(new Handlers());
+        mBinding.setDialog(this);
         setContentView(mBinding.getRoot());
     }
 
@@ -48,61 +48,57 @@ public class OwnedNodeDialog extends Dialog {
         }
     }
 
-    @SuppressWarnings("unused")
-    public class Handlers {
+    public void upgradeHealth(View view) {
+        Game.getInstance().register(new UpgradeNodeHealthCommand(mNode));
 
-        public void upgradeHealth(View view) {
-            Game.getInstance().register(new UpgradeNodeHealthCommand(mNode));
-
-            if (mNode.maxHealthLevelReached()) {
-                mBinding.buttonUpgradeHealth.setVisibility(View.INVISIBLE);
-                mBinding.textUpgradeHealthCost.setVisibility(View.INVISIBLE);
-            }
+        if (mNode.maxHealthLevelReached()) {
+            mBinding.buttonUpgradeHealth.setVisibility(View.INVISIBLE);
+            mBinding.textUpgradeHealthCost.setVisibility(View.INVISIBLE);
         }
+    }
 
-        public void upgradeDamage(View view) {
-            Game.getInstance().register(new UpgradeNodeDamageCommand(mNode));
+    public void upgradeDamage(View view) {
+        Game.getInstance().register(new UpgradeNodeDamageCommand(mNode));
 
-            if (mNode.maxDamageLevelReached()) {
-                mBinding.buttonUpgradeDamage.setVisibility(View.INVISIBLE);
-                mBinding.textUpgradeDamageCost.setVisibility(View.INVISIBLE);
-            }
+        if (mNode.maxDamageLevelReached()) {
+            mBinding.buttonUpgradeDamage.setVisibility(View.INVISIBLE);
+            mBinding.textUpgradeDamageCost.setVisibility(View.INVISIBLE);
         }
+    }
 
-        public void buildMeleeFactory() {
-            Game.getInstance().register(new BuildMeleeFactoryCommand(mNode));
-        }
+    public void buildMeleeFactory() {
+        Game.getInstance().register(new BuildMeleeFactoryCommand(mNode));
+    }
 
-        public void upgradeMeleeFactory() {
-            Game.getInstance().register(new UpgradeFactoryCommand(mNode.getMeleeFactory()));
-        }
+    public void upgradeMeleeFactory() {
+        Game.getInstance().register(new UpgradeFactoryCommand(mNode.getMeleeFactory()));
+    }
 
-        public void buildMeleeUnit(View view) {
-            Game.getInstance().register(new BuildMeleeUnitCommand(mNode.getMeleeFactory()));
-        }
+    public void buildMeleeUnit(View view) {
+        Game.getInstance().register(new BuildMeleeUnitCommand(mNode.getMeleeFactory()));
+    }
 
-        public void buildTankFactory() {
-            Game.getInstance().register(new BuildTankFactoryCommand(mNode));
-        }
+    public void buildTankFactory() {
+        Game.getInstance().register(new BuildTankFactoryCommand(mNode));
+    }
 
-        public void upgradeTankFactory() {
-            Game.getInstance().register(new UpgradeFactoryCommand(mNode.getTankFactory()));
-        }
+    public void upgradeTankFactory() {
+        Game.getInstance().register(new UpgradeFactoryCommand(mNode.getTankFactory()));
+    }
 
-        public void buildTankUnit(View view) {
-            Game.getInstance().register(new BuildTankUnitCommand(mNode.getTankFactory()));
-        }
+    public void buildTankUnit(View view) {
+        Game.getInstance().register(new BuildTankUnitCommand(mNode.getTankFactory()));
+    }
 
-        public void buildSprinterFactory() {
-            Game.getInstance().register(new BuildSprinterFactoryCommand(mNode));
-        }
+    public void buildSprinterFactory() {
+        Game.getInstance().register(new BuildSprinterFactoryCommand(mNode));
+    }
 
-        public void upgradeSprinterFactory() {
-            Game.getInstance().register(new UpgradeFactoryCommand(mNode.getSprinterFactory()));
-        }
+    public void upgradeSprinterFactory() {
+        Game.getInstance().register(new UpgradeFactoryCommand(mNode.getSprinterFactory()));
+    }
 
-        public void buildSprinterUnit(View view) {
-            Game.getInstance().register(new BuildSprinterUnitCommand(mNode.getSprinterFactory()));
-        }
+    public void buildSprinterUnit(View view) {
+        Game.getInstance().register(new BuildSprinterUnitCommand(mNode.getSprinterFactory()));
     }
 }
