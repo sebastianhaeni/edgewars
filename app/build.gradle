@@ -25,4 +25,5 @@ dependencies {
     compile 'com.android.support:support-annotations:23.0.1'
     compile 'com.google.guava:guava:18.0'
     compile 'com.google.code.gson:gson:2.4'
+    compile 'com.github.satyan:sugar:1.3'
 }
