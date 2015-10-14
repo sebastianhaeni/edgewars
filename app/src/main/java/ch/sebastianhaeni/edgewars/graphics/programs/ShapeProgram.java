@@ -2,7 +2,6 @@ package ch.sebastianhaeni.edgewars.graphics.programs;
 
 import android.content.Context;
 import android.opengl.GLES20;
-import android.util.Log;
 
 import ch.sebastianhaeni.edgewars.R;
 

@@ -2,7 +2,6 @@ package ch.sebastianhaeni.edgewars.graphics.programs;
 
 import android.content.Context;
 import android.opengl.GLES20;
-import android.util.Log;
 
 import ch.sebastianhaeni.edgewars.R;
 
@@ -33,8 +32,6 @@ public class ParticleProgram extends ESProgram {
         mLifetimeLoc = GLES20.glGetAttribLocation(getProgramHandle(), "a_lifetime");
         mStartPositionLoc = GLES20.glGetAttribLocation(getProgramHandle(), "a_startPosition");
         mEndPositionLoc = GLES20.glGetAttribLocation(getProgramHandle(), "a_endPosition");
-
-
 
         // Get the uniform locations
         mTimeLoc = GLES20.glGetUniformLocation(getProgramHandle(), "u_time");

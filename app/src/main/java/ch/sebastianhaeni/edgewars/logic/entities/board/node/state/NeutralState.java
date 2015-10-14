@@ -1,6 +1,5 @@
 package ch.sebastianhaeni.edgewars.logic.entities.board.node.state;
 
-import ch.sebastianhaeni.edgewars.graphics.shapes.decorators.DeathParticleDecorator;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
 import ch.sebastianhaeni.edgewars.util.Colors;
 
