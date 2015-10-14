@@ -1,6 +1,7 @@
 package ch.sebastianhaeni.edgewars.ui;
 
 import android.content.Context;
+import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 
 import ch.sebastianhaeni.edgewars.graphics.GameRenderer;
@@ -92,9 +93,11 @@ public class GameController {
         float cameraX = mGameState.getCamera().getScreenX() * .5f;
         float cameraY = mGameState.getCamera().getScreenY() * .5f;
 
+        DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
+
         // determine size of a node
         float nodeSize = 90; // TODO calculate this
-        int scale = 141; // TODO calculate this
+        float scale = metrics.densityDpi * .25f;
 
         // search through nodes if one lies at that coordinate
         for (Node node : mGameState.getBoard().getNodes()) {
