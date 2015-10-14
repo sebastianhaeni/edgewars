@@ -11,7 +11,7 @@ Authors:
 
 1. Install [Android Studio](http://developer.android.com/sdk)
 2. `git clone https://github.com/sebastianhaeni/edgewars.git`
-3. Start Android Studio and select "Import project from gradle" and point the this repo
+3. Start Android Studio and select "Import project from gradle" and point to this repo
 4. Start the game with "Run \`app\`" and select an emulator or a connected device
 
 ## Contributing
