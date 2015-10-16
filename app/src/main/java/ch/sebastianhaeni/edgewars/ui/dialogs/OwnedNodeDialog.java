@@ -66,6 +66,18 @@ public class OwnedNodeDialog extends Dialog {
         }
     }
 
+    public void sendMelee(View view) {
+        mNode.sendMeleeUnits(null);
+    }
+
+    public void sendTank(View view) {
+        mNode.sendTankUnits(null);
+    }
+
+    public void sendSprinter(View view) {
+        mNode.sendSprinterUnits(null);
+    }
+
     public void buildMeleeFactory() {
         Game.getInstance().register(new BuildMeleeFactoryCommand(mNode));
     }
