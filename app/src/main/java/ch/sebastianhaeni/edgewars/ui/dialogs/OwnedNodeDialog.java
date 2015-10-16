@@ -70,7 +70,7 @@ public class OwnedNodeDialog extends Dialog {
         Game.getInstance().register(new BuildMeleeFactoryCommand(mNode));
     }
 
-    public void upgradeMeleeFactory() {
+    public void upgradeMeleeFactory(View view) {
         Game.getInstance().register(new UpgradeFactoryCommand(mNode.getMeleeFactory()));
     }
 
@@ -82,7 +82,7 @@ public class OwnedNodeDialog extends Dialog {
         Game.getInstance().register(new BuildTankFactoryCommand(mNode));
     }
 
-    public void upgradeTankFactory() {
+    public void upgradeTankFactory(View view) {
         Game.getInstance().register(new UpgradeFactoryCommand(mNode.getTankFactory()));
     }
 
@@ -94,7 +94,7 @@ public class OwnedNodeDialog extends Dialog {
         Game.getInstance().register(new BuildSprinterFactoryCommand(mNode));
     }
 
-    public void upgradeSprinterFactory() {
+    public void upgradeSprinterFactory(View view) {
         Game.getInstance().register(new UpgradeFactoryCommand(mNode.getSprinterFactory()));
     }
 

@@ -50,6 +50,8 @@ public abstract class Factory extends Entity {
         }
         mLevel++;
         setUpdateInterval(getProducingDuration());
+        // TODO handle in child class
+        notifyPropertyChanged(BR._all);
     }
 
     /**
