@@ -147,6 +147,7 @@
             android:layout_height="wrap_content"
             android:layout_column="4"
             android:layout_row="4"
+            android:onClick="@{dialog.sendMelee}"
             android:text="Send"
             />
 
@@ -182,6 +183,7 @@
             android:layout_height="wrap_content"
             android:layout_column="4"
             android:layout_row="5"
+            android:onClick="@{dialog.sendTank}"
             android:text="Send"
             />
 
@@ -217,6 +219,7 @@
             android:layout_height="wrap_content"
             android:layout_column="4"
             android:layout_row="6"
+            android:onClick="@{dialog.sendSprinter}"
             android:text="Send"
             />
 
