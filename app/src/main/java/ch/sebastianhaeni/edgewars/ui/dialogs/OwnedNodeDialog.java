@@ -14,6 +14,7 @@ import ch.sebastianhaeni.edgewars.logic.commands.BuildSprinterFactoryCommand;
 import ch.sebastianhaeni.edgewars.logic.commands.BuildSprinterUnitCommand;
 import ch.sebastianhaeni.edgewars.logic.commands.BuildTankFactoryCommand;
 import ch.sebastianhaeni.edgewars.logic.commands.BuildTankUnitCommand;
+import ch.sebastianhaeni.edgewars.logic.commands.RepairNodeCommand;
 import ch.sebastianhaeni.edgewars.logic.commands.UpgradeFactoryCommand;
 import ch.sebastianhaeni.edgewars.logic.commands.UpgradeNodeDamageCommand;
 import ch.sebastianhaeni.edgewars.logic.commands.UpgradeNodeHealthCommand;
@@ -72,6 +73,10 @@ public class OwnedNodeDialog extends Dialog {
 
     public void upgradeMeleeFactory(View view) {
         Game.getInstance().register(new UpgradeFactoryCommand(mNode.getMeleeFactory()));
+
+        if(mNode.getMeleeFactory().maxLevelReached()) {
+            mBinding.buttonMeleeLevel.setVisibility(View.INVISIBLE);
+        }
     }
 
     public void buildMeleeUnit(View view) {
@@ -84,6 +89,10 @@ public class OwnedNodeDialog extends Dialog {
 
     public void upgradeTankFactory(View view) {
         Game.getInstance().register(new UpgradeFactoryCommand(mNode.getTankFactory()));
+
+        if(mNode.getTankFactory().maxLevelReached()) {
+            mBinding.buttonTankLevel.setVisibility(View.INVISIBLE);
+        }
     }
 
     public void buildTankUnit(View view) {
@@ -96,9 +105,17 @@ public class OwnedNodeDialog extends Dialog {
 
     public void upgradeSprinterFactory(View view) {
         Game.getInstance().register(new UpgradeFactoryCommand(mNode.getSprinterFactory()));
+
+        if(mNode.getSprinterFactory().maxLevelReached()) {
+            mBinding.buttonSprinterLevel.setVisibility(View.INVISIBLE);
+        }
     }
 
     public void buildSprinterUnit(View view) {
         Game.getInstance().register(new BuildSprinterUnitCommand(mNode.getSprinterFactory()));
+    }
+
+    public void repairNode(View view) {
+        Game.getInstance().register(new RepairNodeCommand(mNode));
     }
 }

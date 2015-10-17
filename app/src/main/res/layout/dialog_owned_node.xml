@@ -104,6 +104,24 @@
             android:layout_row="2"
             android:text="50E"/>
 
+        <Button
+            android:id="@+id/buttonRepair"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="8"
+            android:layout_row="1"
+            android:onClick="@{dialog.repairNode}"
+            android:text="Repair"/>
+
+        <TextView
+            android:id="@+id/textRepairCost"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="9"
+            android:layout_row="1"
+            android:text="50E"/>
+
         <TextView
             android:id="@+id/textTroups"
             style="@style/DialogSubTitle"
