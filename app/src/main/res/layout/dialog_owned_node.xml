@@ -104,6 +104,24 @@
             android:layout_row="2"
             android:text="50E"/>
 
+        <Button
+            android:id="@+id/buttonRepair"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="8"
+            android:layout_row="1"
+            android:onClick="@{dialog.repairNode}"
+            android:text="Repair"/>
+
+        <TextView
+            android:id="@+id/textRepairCost"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="9"
+            android:layout_row="1"
+            android:text="50E"/>
+
         <TextView
             android:id="@+id/textTroups"
             style="@style/DialogSubTitle"
@@ -263,6 +281,17 @@
             android:text="Build unit"
             />
 
+        <Button
+            android:id="@+id/buttonMeleeLevel"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="8"
+            android:layout_row="4"
+            android:onClick="@{dialog.upgradeMeleeFactory}"
+            android:text="Upgrade"
+            />
+
         <TextView
             android:id="@+id/textTankFactory"
             android:layout_width="wrap_content"
@@ -291,6 +320,17 @@
             android:text="Build unit"
             />
 
+        <Button
+            android:id="@+id/buttonTankLevel"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="8"
+            android:layout_row="5"
+            android:onClick="@{dialog.upgradeTankFactory}"
+            android:text="Upgrade"
+            />
+
         <TextView
             android:id="@+id/textSprinterFactory"
             android:layout_width="wrap_content"
@@ -309,7 +349,7 @@
             android:text="@{`Level ` + node.sprinterFactory.level}"/>
 
         <Button
-            android:id="@+id/buttonSprinterMelee"
+            android:id="@+id/buttonSprinter"
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -317,6 +357,17 @@
             android:layout_row="6"
             android:onClick="@{dialog.buildSprinterUnit}"
             android:text="Build unit"
+            />
+
+        <Button
+            android:id="@+id/buttonSprinterLevel"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="8"
+            android:layout_row="6"
+            android:onClick="@{dialog.upgradeSprinterFactory}"
+            android:text="Upgrade"
             />
     </GridLayout>
 

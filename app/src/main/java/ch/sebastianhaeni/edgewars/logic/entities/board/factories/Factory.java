@@ -50,6 +50,8 @@ public abstract class Factory extends Entity {
         }
         mLevel++;
         setUpdateInterval(getProducingDuration());
+        // TODO handle in child class
+        notifyPropertyChanged(BR._all);
     }
 
     /**
@@ -125,4 +127,7 @@ public abstract class Factory extends Entity {
      */
     protected abstract long getProducingDuration();
 
+    public boolean maxLevelReached() {
+        return mLevel == this.MAX_LEVEL;
+    }
 }
