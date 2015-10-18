@@ -14,6 +14,7 @@ public class SprinterUnit extends Unit {
     private static final int HEALTH = 5;
     private static final float ACCURACY = .85f;
     private static final int SPEED = 5;
+
     /**
      * Constructor
      *

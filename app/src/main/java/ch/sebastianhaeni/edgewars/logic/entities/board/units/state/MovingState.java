@@ -15,8 +15,9 @@ public class MovingState extends UnitState {
 
     /**
      * Constructor
-     * @param unit the unit having this state
-     * @param node the target node it's moving towards
+     *
+     * @param unit   the unit having this state
+     * @param node   the target node it's moving towards
      * @param player the owner of the unit
      */
     public MovingState(Unit unit, Node node, Player player) {

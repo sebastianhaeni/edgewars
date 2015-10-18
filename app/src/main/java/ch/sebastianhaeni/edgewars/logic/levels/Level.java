@@ -6,7 +6,6 @@ import ch.sebastianhaeni.edgewars.logic.entities.Player;
 import ch.sebastianhaeni.edgewars.logic.entities.board.Edge;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
 
-
 public class Level {
 
     private int mLevelNumber;
@@ -60,7 +59,7 @@ public class Level {
     /**
      * @param edges The edges
      */
-    public void setmEdges(ArrayList<Edge> edges) {
+    public void setEdges(ArrayList<Edge> edges) {
         this.mEdges = edges;
     }
 

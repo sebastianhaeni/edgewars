@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.view.View;
 
 import ch.sebastianhaeni.edgewars.R;
-import ch.sebastianhaeni.edgewars.databinding.ActivityAboutBinding;
 import ch.sebastianhaeni.edgewars.databinding.ActivityLevelSelectionBinding;
 
 public class LevelSelectionActivity extends Activity {

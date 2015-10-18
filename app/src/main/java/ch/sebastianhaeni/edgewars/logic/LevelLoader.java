@@ -1,7 +1,6 @@
 package ch.sebastianhaeni.edgewars.logic;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -29,9 +28,6 @@ public class LevelLoader {
     public static Player humanPlayer = new Player(Colors.NODE_MINE);
     public static ArrayList<Player> computerPlayers = new ArrayList<>();
 
-    private final int LEVELS_RESOURCE_FILE = R.raw.levels;
-    private final int SCHEMA_RESOURCE_FILE = R.raw.levels_schema;
-
     private Context mContext;
     private Levels mLevels;
 
@@ -53,17 +49,13 @@ public class LevelLoader {
 
     }
 
-    public int getNumberOfLevels() {
-        return mLevels.getmLevels().size();
-    }
-
     public GameState build(int levelNumber) {
 
         Board board = new Board();
         Camera camera = new Camera();
 
         // TODO: do it better?
-        Level level = mLevels.getmLevels().get(levelNumber - 1);
+        Level level = mLevels.getLevels().get(levelNumber - 1);
 
         ArrayList<Node> nodes = level.getNodes();
         ArrayList<Edge> edges = level.getEdges();
@@ -87,31 +79,22 @@ public class LevelLoader {
             computerPlayer.setAI(new RuleBasedAI(state));
         }
 
-
         return state;
     }
 
-    private void validateJsonFile() {
-
-
-    }
+    //private void validateJsonFile() {
+    //}
 
     private void loadLevelsFromJsonFile() {
-
         // initialize Gson
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(Levels.class, new LevelDeserializer());
         Gson gson = gsonBuilder.create();
 
-        InputStream is = mContext.getApplicationContext().getResources().openRawResource(LEVELS_RESOURCE_FILE);
+        InputStream is = mContext.getApplicationContext().getResources().openRawResource(R.raw.levels);
         Reader r = new BufferedReader(new InputStreamReader(is));
 
-        try {
-            mLevels = gson.fromJson(r, Levels.class);
-        } catch (Exception e) {
-            Log.e("debugging", "error parsing json file");
-        }
-
+        mLevels = gson.fromJson(r, Levels.class);
     }
 
 }

@@ -5,7 +5,6 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 
 import ch.sebastianhaeni.edgewars.R;
-import ch.sebastianhaeni.edgewars.databinding.ActivityAboutBinding;
 import ch.sebastianhaeni.edgewars.databinding.ActivityLoseBinding;
 
 public class LoseActivity extends Activity {

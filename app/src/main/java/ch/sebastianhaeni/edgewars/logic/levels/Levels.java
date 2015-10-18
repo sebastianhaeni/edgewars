@@ -7,16 +7,16 @@ public class Levels {
     private ArrayList<Level> mLevels = new ArrayList<>();
 
     /**
-     * @return The mLevels
+     * @return gets levels
      */
-    public ArrayList<Level> getmLevels() {
+    public ArrayList<Level> getLevels() {
         return mLevels;
     }
 
     /**
-     * @param mLevels The mLevels
+     * @param mLevels levels
      */
-    public void setmLevels(ArrayList<Level> mLevels) {
+    public void setLevels(ArrayList<Level> mLevels) {
         this.mLevels = mLevels;
     }
 
