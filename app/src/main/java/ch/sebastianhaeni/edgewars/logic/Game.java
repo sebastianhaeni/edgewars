@@ -15,6 +15,7 @@ import ch.sebastianhaeni.edgewars.logic.entities.Entity;
 public class Game {
 
     private static Game mGame;
+
     private Stack<Command> mCommandStack = new Stack<>();
     private HashMap<Entity, Long> mEntities = new HashMap<>();
     private boolean mUpdating;

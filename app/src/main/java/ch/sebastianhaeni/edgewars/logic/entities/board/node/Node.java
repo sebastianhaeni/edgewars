@@ -38,7 +38,7 @@ import ch.sebastianhaeni.edgewars.util.Position;
  */
 public class Node extends BoardEntity {
 
-    private final Circle mCircle;
+    private Circle mCircle;
     private ArrayList<MeleeUnit> mMeleeUnits = new ArrayList<>();
     private ArrayList<TankUnit> mTankUnits = new ArrayList<>();
     private ArrayList<SprinterUnit> mSprinterUnits = new ArrayList<>();
@@ -56,19 +56,21 @@ public class Node extends BoardEntity {
     private Stack<MoveUnitCommand> mMoveUnitCommands = new Stack<>();
     private NodeState mState;
 
+    public Node() {
+        super(50);
+        mHealth = getMaxHealth();
+    }
+
     /**
      * Constructor
      *
      * @param position the position this node is at
      */
     public Node(Position position) {
-        super(50);
+        this();
         setState(new NeutralState(this));
         mPosition = position;
-        mHealth = getMaxHealth();
-
         mCircle = new Circle(mPosition);
-
         mDrawables.add(mCircle);
        // mDrawables.add(new DeathParticleDecorator(mCircle));
     }
@@ -88,6 +90,12 @@ public class Node extends BoardEntity {
      */
     public Position getPosition() {
         return mPosition;
+    }
+
+    public void setPosition(Position position) {
+        mPosition = position;
+        mDrawables.clear();
+        mDrawables.add(new Circle(mPosition));
     }
 
     @Override
@@ -142,6 +150,18 @@ public class Node extends BoardEntity {
         if (unit instanceof SprinterUnit) {
             mSprinterUnits.add((SprinterUnit) unit);
         }
+    }
+
+    public void setMeleeUnits(ArrayList<MeleeUnit> meleeUnits) {
+        mMeleeUnits = meleeUnits;
+    }
+
+    public void setSprinterUnits(ArrayList<SprinterUnit> sprinterUnits) {
+        mSprinterUnits = sprinterUnits;
+    }
+
+    public void setTankUnits(ArrayList<TankUnit> tankUnits) {
+        mTankUnits = tankUnits;
     }
 
     /**

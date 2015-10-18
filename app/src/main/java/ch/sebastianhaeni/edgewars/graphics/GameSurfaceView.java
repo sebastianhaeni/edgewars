@@ -8,7 +8,7 @@ import android.view.SurfaceHolder;
 
 import ch.sebastianhaeni.edgewars.logic.GameState;
 import ch.sebastianhaeni.edgewars.logic.GameThread;
-import ch.sebastianhaeni.edgewars.logic.LevelCreator;
+import ch.sebastianhaeni.edgewars.logic.LevelLoader;
 import ch.sebastianhaeni.edgewars.ui.GameController;
 
 /**
@@ -29,10 +29,11 @@ public class GameSurfaceView extends GLSurfaceView {
     public GameSurfaceView(Context context) {
         super(context);
 
-        LevelCreator creator = new LevelCreator();
+        LevelLoader levelLoader = new LevelLoader(context);
 
-        GameState gameState = creator.build();
-        mThread = new GameThread();
+        // load game state and level number
+        GameState gameState = levelLoader.build(5);
+
         mThread = new GameThread();
         GameRenderer renderer = new GameRenderer(context, mThread, gameState);
         mController = new GameController(context, renderer, gameState);

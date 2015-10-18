@@ -6,7 +6,7 @@ android {
     buildToolsVersion "23.0.1"
 
     defaultConfig {
-        applicationId "ch.sebastianhaeni.edgewars"
+        applicationId "ch.bfh.edgewars"
         minSdkVersion 21
         targetSdkVersion 23
         versionCode 1
@@ -24,4 +24,5 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:support-annotations:23.0.1'
     compile 'com.google.guava:guava:18.0'
+    compile 'com.google.code.gson:gson:2.4'
 }

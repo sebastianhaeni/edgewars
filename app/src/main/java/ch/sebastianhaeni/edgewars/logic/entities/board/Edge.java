@@ -15,6 +15,10 @@ public class Edge extends BoardEntity {
     private double mLength;
     private ArrayList<IDrawable> mDrawables = new ArrayList<>();
 
+    public Edge() {
+        super(); // an edge does not update
+    }
+    
     /**
      * Constructor
      *
@@ -22,12 +26,17 @@ public class Edge extends BoardEntity {
      * @param node2 target edge
      */
     public Edge(Node node1, Node node2) {
-        super(); // an edge does not update
+        this();
+        this.setNodes(node1, node2);
+    }
+
+    public void setNodes(Node node1, Node node2) {
         mNode1 = node1;
         mNode2 = node2;
 
         calculateLength();
-
+        
+        mDrawables.clear();
         mDrawables.add(new Line(node1.getPosition(), node2.getPosition()));
     }
 
