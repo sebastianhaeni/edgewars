@@ -1,11 +1,15 @@
 package ch.bfh.edgewars.logic.levels;
 
+import android.util.Log;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+
+import org.json.JSONException;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -16,6 +20,7 @@ import java.util.Map;
 import ch.bfh.edgewars.logic.LevelLoader;
 import ch.bfh.edgewars.logic.entities.Player;
 import ch.bfh.edgewars.logic.entities.board.Edge;
+import ch.bfh.edgewars.logic.entities.board.factories.Factory;
 import ch.bfh.edgewars.logic.entities.board.node.Node;
 import ch.bfh.edgewars.logic.entities.board.node.state.NeutralState;
 import ch.bfh.edgewars.logic.entities.board.node.state.NodeState;
@@ -41,6 +46,7 @@ public class LevelDeserializer implements JsonDeserializer {
         mPlayerMap = new HashMap();
         mNodeMap = new HashMap();
 
+
         JsonObject jsonObject = json.getAsJsonObject();
         JsonArray levelsArray = jsonObject.get("levels").getAsJsonArray();
 
@@ -65,7 +71,7 @@ public class LevelDeserializer implements JsonDeserializer {
 
             // add edges to level
             JsonArray edgesArray = levelObject.get("edges").getAsJsonArray();
-            List<Edge> edgesList = createEdges(edgesArray);
+            List<Edge> edgesList = this.createEdges(edgesArray);
             level.setmEdges(edgesList);
 
             mLevelList.add(level);
@@ -75,7 +81,7 @@ public class LevelDeserializer implements JsonDeserializer {
         return mLevels;
     }
 
-    private List<Player> createPlayers (JsonArray playersArray) {
+    private List<Player> createPlayers (JsonArray playersArray) throws JsonParseException {
 
         List<Player> levelPlayersList = new ArrayList<>();
 
@@ -89,7 +95,7 @@ public class LevelDeserializer implements JsonDeserializer {
 
             switch (playerNature) {
                 case "human":
-                    player = LevelLoader.mHumanPlayer;
+                    player = LevelLoader.humanPlayer;
                     break;
                 default: // computer player
                     player = LevelLoader.addComputerPlayer();
@@ -106,7 +112,7 @@ public class LevelDeserializer implements JsonDeserializer {
         return levelPlayersList;
     }
 
-    private List<Node> createNodes (JsonArray nodesArray) {
+    private List<Node> createNodes (JsonArray nodesArray) throws JsonParseException {
 
         List<Node> levelNodesList = new ArrayList<>();
 
@@ -147,7 +153,7 @@ public class LevelDeserializer implements JsonDeserializer {
         return levelNodesList;
     }
 
-    private List<Edge> createEdges (JsonArray edgesArray) {
+    private List<Edge> createEdges (JsonArray edgesArray) throws JsonParseException{
 
         List<Edge> levelEdgesList = new ArrayList<>();
 
@@ -170,7 +176,7 @@ public class LevelDeserializer implements JsonDeserializer {
         return levelEdgesList;
     }
 
-    private void addInitialState (JsonObject initialValuesObject, Node node) {
+    private void addInitialState (JsonObject initialValuesObject, Node node) throws JsonParseException {
 
         // get owner player id
         int ownerId = initialValuesObject.get("owner_id").getAsInt();
@@ -203,12 +209,45 @@ public class LevelDeserializer implements JsonDeserializer {
 
         // get initial node factories
         JsonObject factories = initialValuesObject.get("factories").getAsJsonObject();
-        int meleeLevel = factories.get("melee_level").getAsInt();
-        int sprinterLevel = factories.get("sprinter_level").getAsInt();
-        int tankLevel = factories.get("tank_level").getAsInt();
+        JsonObject meleeFactoryObj = factories.get("melee_factory").getAsJsonObject();
+        JsonObject sprinterFactoryObj = factories.get("sprinter_factory").getAsJsonObject();
+        JsonObject tankFactoryObj = factories.get("tank_factory").getAsJsonObject();
 
+        // check if factories are built
+        boolean meleeFactoryBuilt = meleeFactoryObj.get("is_built").getAsBoolean();
+        boolean sprinterFactoryBuilt = sprinterFactoryObj.get("is_built").getAsBoolean();
+        boolean tankFactoryBuilt = tankFactoryObj.get("is_built").getAsBoolean();
 
-        // TODO: set initial factory levels of node
+        // get reference to node factories
+        Factory meleeFactory = node.getMeleeFactory();
+        Factory sprinterFactory = node.getSprinterFactory();
+        Factory tankFactory = node.getTankFactory();
+
+        // build factories and set levels_schema, if present
+        if (meleeFactoryBuilt) {
+            meleeFactory.build();
+            int level = meleeFactoryObj.get("level").getAsInt();
+            while (meleeFactory.getLevel() < level) {
+                meleeFactory.upgrade();
+            }
+        }
+
+        if (sprinterFactoryBuilt) {
+            sprinterFactory.build();
+            int level = sprinterFactoryObj.get("level").getAsInt();
+            while (sprinterFactory.getLevel() < level) {
+                sprinterFactory.upgrade();
+            }
+        }
+
+        if (tankFactoryBuilt) {
+            tankFactory.build();
+            int level = tankFactoryObj.get("level").getAsInt();
+            while (tankFactory.getLevel() < level) {
+                tankFactory.upgrade();
+            }
+        }
+
 
     }
 }

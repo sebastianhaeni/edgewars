@@ -2,11 +2,7 @@ package ch.bfh.edgewars.logic.entities.board.node;
 
 import android.databinding.Bindable;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
-
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Stack;
 
 import ch.bfh.edgewars.BR;
@@ -29,8 +25,6 @@ import ch.bfh.edgewars.util.Position;
 @SuppressWarnings("unused")
 public class Node extends BoardEntity {
 
-    @SerializedName("position")
-    @Expose
     private Position mPosition;
     private NodeState mState;
 

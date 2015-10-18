@@ -28,9 +28,18 @@
               "tank_count": 10
             },
             "factories": {
-              "melee_level": 2,
-              "sprinter_level": 1,
-              "tank_level": 1
+              "melee_factory": {
+                "is_built": true,
+                "level": 1
+              },
+              "sprinter_factory": {
+                "is_built": true,
+                "level": 1
+              },
+              "tank_factory": {
+                "is_built": true,
+                "level": 1
+              }
             }
           }
         },
@@ -59,9 +68,18 @@
               "tank_count": 10
             },
             "factories": {
-              "melee_level": 1,
-              "sprinter_level": 2,
-              "tank_level": 1
+              "melee_factory": {
+                "is_built": true,
+                "level": 1
+              },
+              "sprinter_factory": {
+                "is_built": true,
+                "level": 1
+              },
+              "tank_factory": {
+                "is_built": true,
+                "level": 1
+              }
             }
           }
         }

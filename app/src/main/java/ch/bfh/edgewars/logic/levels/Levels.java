@@ -10,7 +10,7 @@ public class Levels {
     /**
      *
      * @return
-     * The levels
+     * The levels_schema
      */
     public List<Level> getLevels() {
         return levels;
@@ -19,7 +19,7 @@ public class Levels {
     /**
      *
      * @param levels
-     * The levels
+     * The levels_schema
      */
     public void setLevels(List<Level> levels) {
         this.levels = levels;

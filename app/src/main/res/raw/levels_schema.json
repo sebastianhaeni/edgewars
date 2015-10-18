@@ -1,0 +1,215 @@
+{
+  "$schema": "http://edgewars.sebastianhaeni.ch/json/schema_levels",
+  "id": "ch.sebastianhaeni.ch/json/schema_levels",
+  "type": "object",
+  "properties": {
+    "levels": {
+      "id": "levels",
+      "type": "array",
+      "items": {
+        "id": "levelsArray",
+        "type": "object",
+        "properties": {
+          "level_number": {
+            "id": "level_number",
+            "type": "number",
+            "multipleOf": 1.0,
+            "minimum": 1
+          },
+          "players": {
+            "id": "players",
+            "type": "array",
+            "items": {
+              "id": "playersArray",
+              "type": "object",
+              "properties": {
+                "player_id": {
+                  "id": "player_id",
+                  "type": "number",
+                  "multipleOf": 1.0,
+                  "minimum": 1
+                },
+                "nature": {
+                  "id": "nature",
+                  "type": "string",
+                  "enum": [
+                    "human",
+                    "computer"
+                  ]
+                }
+              }
+            },
+            "minItems": 2,
+            "uniqueItems": true
+          },
+          "nodes": {
+            "id": "nodes",
+            "type": "array",
+            "items": {
+              "id": "nodesArray",
+              "type": "object",
+              "properties": {
+                "node_id": {
+                  "id": "node_id",
+                  "type": "number",
+                  "multipleOf": 1.0,
+                  "minimum": 1
+                },
+                "position": {
+                  "id": "position",
+                  "type": "object",
+                  "properties": {
+                    "coordinate_x": {
+                      "id": "coordinate_x",
+                      "type": "number"
+                    },
+                    "coordinate_y": {
+                      "id": "coordinate_y",
+                      "type": "number"
+                    }
+                  }
+                },
+                "initial_values": {
+                  "id": "initial_values",
+                  "type": "object",
+                  "properties": {
+                    "state": {
+                      "id": "state",
+                      "type": "string",
+                      "enum": [
+                        "neutral",
+                        "owned"
+                      ]
+                    },
+                    "owner_id": {
+                      "id": "owner_id",
+                      "type": "number",
+                      "multipleOf": 1.0,
+                      "minimum": 1
+                    },
+                    "units": {
+                      "id": "units",
+                      "type": "object",
+                      "properties": {
+                        "melee_count": {
+                          "id": "melee_count",
+                          "type": "number",
+                          "multipleOf": 1.0,
+                          "minimum": 0
+                        },
+                        "sprinter_count": {
+                          "id": "sprinter_count",
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        "tank_count": {
+                          "id": "tank_count",
+                          "type": "number",
+                          "multipleOf": 1.0,
+                          "minimum": 0
+                        }
+                      }
+                    },
+                    "factories": {
+                      "id": "factories",
+                      "type": "object",
+                      "properties": {
+                        "melee_factory": {
+                          "id": "melee_factory",
+                          "type": "object",
+                          "properties": {
+                            "is_built": {
+                              "id": "is_built",
+                              "type": "boolean"
+                            },
+                            "level": {
+                              "id": "level",
+                              "type": "number",
+                              "multipleOf": 1.0,
+                              "minimum": 1,
+                              "maximum": 3
+                            }
+                          }
+                        },
+                        "sprinter_factory": {
+                          "id": "sprinter_factory",
+                          "type": "object",
+                          "properties": {
+                            "is_built": {
+                              "id": "is_built",
+                              "type": "boolean"
+                            },
+                            "level": {
+                              "id": "level",
+                              "type": "number",
+                              "multipleOf": 1.0,
+                              "minimum": 1,
+                              "maximum": 3
+                            }
+                          }
+                        },
+                        "tank_factory": {
+                          "id": "tank_factory",
+                          "type": "object",
+                          "properties": {
+                            "is_built": {
+                              "id": "is_built",
+                              "type": "boolean"
+                            },
+                            "level": {
+                              "id": "level",
+                              "type": "number",
+                              "multipleOf": 1.0,
+                              "minimum": 1,
+                              "maximum": 3
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "edges": {
+            "id": "edges",
+            "type": "array",
+            "items": {
+              "id": "edgesArray",
+              "type": "object",
+              "properties": {
+                "node1_id": {
+                  "id": "node1_id",
+                  "type": "number",
+                  "multipleOf": 1.0,
+                  "minimum": 1
+                },
+                "node2_id": {
+                  "id": "node2_id",
+                  "type": "number",
+                  "multipleOf": 1.0,
+                  "minimum": 1
+                }
+              }
+            }
+          }
+        },
+        "required": [
+          "level_number",
+          "players",
+          "nodes",
+          "edges"
+        ]
+      },
+      "minItems": 1,
+      "uniqueItems": true,
+      "required": [
+        "levelsArray"
+      ]
+    }
+  },
+  "required": [
+    "levels"
+  ]
+}
