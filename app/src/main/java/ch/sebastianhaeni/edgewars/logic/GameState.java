@@ -18,10 +18,11 @@ public class GameState {
 
     /**
      * Constructor
-     * @param camera camera entity
-     * @param board board entity
+     *
+     * @param camera  camera entity
+     * @param board   board entity
      * @param players list of players
-     * @param human the human player (also contained in <code>players</code>)
+     * @param human   the human player (also contained in <code>players</code>)
      */
     public GameState(Camera camera, Board board, ArrayList<Player> players, Player human) {
         mCamera = camera;

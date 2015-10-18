@@ -25,22 +25,18 @@ import ch.sebastianhaeni.edgewars.logic.entities.board.units.SprinterUnit;
 import ch.sebastianhaeni.edgewars.logic.entities.board.units.TankUnit;
 import ch.sebastianhaeni.edgewars.util.Position;
 
-
 public class LevelDeserializer implements JsonDeserializer {
 
-    private Levels mLevels;
-    private ArrayList<Level> mLevelList;
-    private Map mPlayerMap;
-    private Map mNodeMap;
+    private Map<Integer, Player> mPlayerMap;
+    private Map<Integer, Node> mNodeMap;
 
     @Override
     public Levels deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
 
-        mLevels = new Levels();
-        mLevelList = new ArrayList<>();
-        mPlayerMap = new HashMap();
-        mNodeMap = new HashMap();
-
+        Levels levels = new Levels();
+        ArrayList<Level> levelList = new ArrayList<>();
+        mPlayerMap = new HashMap<>();
+        mNodeMap = new HashMap<>();
 
         JsonObject jsonObject = json.getAsJsonObject();
         JsonArray levelsArray = jsonObject.get("levels").getAsJsonArray();
@@ -67,13 +63,13 @@ public class LevelDeserializer implements JsonDeserializer {
             // add edges to level
             JsonArray edgesArray = levelObject.get("edges").getAsJsonArray();
             ArrayList<Edge> edgesList = this.createEdges(edgesArray);
-            level.setmEdges(edgesList);
+            level.setEdges(edgesList);
 
-            mLevelList.add(level);
+            levelList.add(level);
         }
 
-        mLevels.setmLevels(mLevelList);
-        return mLevels;
+        levels.setLevels(levelList);
+        return levels;
     }
 
     private ArrayList<Player> createPlayers(JsonArray playersArray) throws JsonParseException {
@@ -114,17 +110,16 @@ public class LevelDeserializer implements JsonDeserializer {
         for (int i = 0; i < nodesArray.size(); i++) {
             JsonObject nodeObject = nodesArray.get(i).getAsJsonObject();
 
-            Node node = new Node();
-
-            // add node to hash map (in order to match with edges below)
-            int nodeId = nodeObject.get("node_id").getAsInt();
-            mNodeMap.put(nodeId, node);
-
             // set position of Node
             JsonObject position = nodeObject.get("position").getAsJsonObject();
             int coordinateX = position.get("coordinate_x").getAsInt();
             int coordinateY = position.get("coordinate_y").getAsInt();
-            node.setPosition(new Position(coordinateX, coordinateY));
+
+            Node node = new Node(new Position(coordinateX, coordinateY));
+
+            // add node to hash map (in order to match with edges below)
+            int nodeId = nodeObject.get("node_id").getAsInt();
+            mNodeMap.put(nodeId, node);
 
             // get initial values of Node
             JsonObject initialValuesObject = nodeObject.get("initial_values").getAsJsonObject();
@@ -155,15 +150,13 @@ public class LevelDeserializer implements JsonDeserializer {
         for (int i = 0; i < edgesArray.size(); i++) {
             JsonObject edgeObject = edgesArray.get(i).getAsJsonObject();
 
-            Edge edge = new Edge();
-
             int node1_id = edgeObject.get("node1_id").getAsInt();
-            Node node1 = (Node) mNodeMap.get(node1_id);
+            Node node1 = mNodeMap.get(node1_id);
 
             int node2_id = edgeObject.get("node2_id").getAsInt();
-            Node node2 = (Node) mNodeMap.get(node2_id);
+            Node node2 = mNodeMap.get(node2_id);
 
-            edge.setNodes(node1, node2);
+            Edge edge = new Edge(node1, node2);
 
             levelEdgesList.add(edge);
         }
@@ -175,7 +168,7 @@ public class LevelDeserializer implements JsonDeserializer {
 
         // get owner player id
         int ownerId = initialValuesObject.get("owner_id").getAsInt();
-        Player owner = (Player) mPlayerMap.get(ownerId);
+        Player owner = mPlayerMap.get(ownerId);
 
         // create owned state and add it to the node
         NodeState state = new OwnedState(node, owner);
@@ -187,20 +180,18 @@ public class LevelDeserializer implements JsonDeserializer {
         int sprinterCount = units.get("sprinter_count").getAsInt();
         int tankCount = units.get("tank_count").getAsInt();
 
-        // create initial units
-        ArrayList<MeleeUnit> meleeUnits = new ArrayList<>();
-        ArrayList<SprinterUnit> sprinterUnits = new ArrayList<>();
-        ArrayList<TankUnit> tankUnits = new ArrayList<>();
-
         // add units to node
-        for (int i = 0; i < meleeCount; i++)
-            meleeUnits.add(new MeleeUnit(node));
+        for (int i = 0; i < meleeCount; i++) {
+            node.addUnit(new MeleeUnit(node));
+        }
 
-        for (int i = 0; i < sprinterCount; i++)
-            sprinterUnits.add(new SprinterUnit(node));
+        for (int i = 0; i < sprinterCount; i++) {
+            node.addUnit(new SprinterUnit(node));
+        }
 
-        for (int i = 0; i < tankCount; i++)
-            tankUnits.add(new TankUnit(node));
+        for (int i = 0; i < tankCount; i++) {
+            node.addUnit(new TankUnit(node));
+        }
 
         // get initial node factories
         JsonObject factories = initialValuesObject.get("factories").getAsJsonObject();
@@ -242,7 +233,6 @@ public class LevelDeserializer implements JsonDeserializer {
                 tankFactory.upgrade();
             }
         }
-
 
     }
 }

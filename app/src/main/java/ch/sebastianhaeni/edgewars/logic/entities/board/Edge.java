@@ -10,15 +10,11 @@ import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
  * An edge connects two nodes and has no functionality.
  */
 public class Edge extends BoardEntity {
-    private Node mNode1;
-    private Node mNode2;
+    private final Node mNode1;
+    private final Node mNode2;
     private double mLength;
     private ArrayList<IDrawable> mDrawables = new ArrayList<>();
 
-    public Edge() {
-        super(); // an edge does not update
-    }
-    
     /**
      * Constructor
      *
@@ -26,16 +22,11 @@ public class Edge extends BoardEntity {
      * @param node2 target edge
      */
     public Edge(Node node1, Node node2) {
-        this();
-        this.setNodes(node1, node2);
-    }
-
-    public void setNodes(Node node1, Node node2) {
         mNode1 = node1;
         mNode2 = node2;
 
         calculateLength();
-        
+
         mDrawables.clear();
         mDrawables.add(new Line(node1.getPosition(), node2.getPosition()));
     }

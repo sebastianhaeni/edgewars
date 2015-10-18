@@ -86,7 +86,7 @@ public class OwnedNodeDialog extends Dialog {
     public void upgradeMeleeFactory(View view) {
         Game.getInstance().register(new UpgradeFactoryCommand(mNode.getMeleeFactory()));
 
-        if(mNode.getMeleeFactory().maxLevelReached()) {
+        if (mNode.getMeleeFactory().maxLevelReached()) {
             mBinding.buttonMeleeLevel.setVisibility(View.INVISIBLE);
         }
     }
@@ -102,7 +102,7 @@ public class OwnedNodeDialog extends Dialog {
     public void upgradeTankFactory(View view) {
         Game.getInstance().register(new UpgradeFactoryCommand(mNode.getTankFactory()));
 
-        if(mNode.getTankFactory().maxLevelReached()) {
+        if (mNode.getTankFactory().maxLevelReached()) {
             mBinding.buttonTankLevel.setVisibility(View.INVISIBLE);
         }
     }
@@ -118,7 +118,7 @@ public class OwnedNodeDialog extends Dialog {
     public void upgradeSprinterFactory(View view) {
         Game.getInstance().register(new UpgradeFactoryCommand(mNode.getSprinterFactory()));
 
-        if(mNode.getSprinterFactory().maxLevelReached()) {
+        if (mNode.getSprinterFactory().maxLevelReached()) {
             mBinding.buttonSprinterLevel.setVisibility(View.INVISIBLE);
         }
     }

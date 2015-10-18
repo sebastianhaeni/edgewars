@@ -56,23 +56,16 @@ public class Node extends BoardEntity {
     private Stack<MoveUnitCommand> mMoveUnitCommands = new Stack<>();
     private NodeState mState;
 
-    public Node() {
-        super(50);
-        mHealth = getMaxHealth();
-    }
-
     /**
      * Constructor
      *
      * @param position the position this node is at
      */
     public Node(Position position) {
-        this();
         setState(new NeutralState(this));
         mPosition = position;
         mCircle = new Circle(mPosition);
         mDrawables.add(mCircle);
-       // mDrawables.add(new DeathParticleDecorator(mCircle));
     }
 
     @Override
@@ -90,12 +83,6 @@ public class Node extends BoardEntity {
      */
     public Position getPosition() {
         return mPosition;
-    }
-
-    public void setPosition(Position position) {
-        mPosition = position;
-        mDrawables.clear();
-        mDrawables.add(new Circle(mPosition));
     }
 
     @Override
@@ -150,18 +137,6 @@ public class Node extends BoardEntity {
         if (unit instanceof SprinterUnit) {
             mSprinterUnits.add((SprinterUnit) unit);
         }
-    }
-
-    public void setMeleeUnits(ArrayList<MeleeUnit> meleeUnits) {
-        mMeleeUnits = meleeUnits;
-    }
-
-    public void setSprinterUnits(ArrayList<SprinterUnit> sprinterUnits) {
-        mSprinterUnits = sprinterUnits;
-    }
-
-    public void setTankUnits(ArrayList<TankUnit> tankUnits) {
-        mTankUnits = tankUnits;
     }
 
     /**
@@ -349,6 +324,7 @@ public class Node extends BoardEntity {
 
     /**
      * Sets the new state of this node.
+     *
      * @param state new state
      */
     public void setState(NodeState state) {
@@ -358,6 +334,7 @@ public class Node extends BoardEntity {
 
     /**
      * Sets the color of this node.
+     *
      * @param color new color
      */
     public void setColor(float[] color) {
