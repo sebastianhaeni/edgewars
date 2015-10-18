@@ -1,12 +1,13 @@
 package ch.sebastianhaeni.edgewars;
 
-import android.app.Application;
 import android.content.Context;
+
+import com.orm.SugarApp;
 
 /**
  * This class is used to get the app context without passing it through every method.
  */
-public class GameApplication extends Application {
+public class GameApplication extends SugarApp {
     private static Context mContext;
 
     @Override

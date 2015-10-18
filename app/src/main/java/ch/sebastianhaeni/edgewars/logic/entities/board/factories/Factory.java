@@ -15,7 +15,7 @@ public abstract class Factory extends Entity {
 
     public final static int MAX_LEVEL = 3;
 
-    private Node mNode;
+    private final Node mNode;
 
     private int mLevel = 1;
 
@@ -128,6 +128,6 @@ public abstract class Factory extends Entity {
     protected abstract long getProducingDuration();
 
     public boolean maxLevelReached() {
-        return mLevel == this.MAX_LEVEL;
+        return mLevel == MAX_LEVEL;
     }
 }

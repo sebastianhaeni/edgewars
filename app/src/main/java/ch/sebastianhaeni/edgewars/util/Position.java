@@ -4,8 +4,8 @@ package ch.sebastianhaeni.edgewars.util;
  * Position helper class.
  */
 public class Position {
-    private float mX;
-    private float mY;
+    private final float mX;
+    private final float mY;
 
     /**
      * Constructor

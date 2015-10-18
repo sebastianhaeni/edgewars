@@ -13,7 +13,7 @@ public class Edge extends BoardEntity {
     private final Node mNode1;
     private final Node mNode2;
     private double mLength;
-    private ArrayList<IDrawable> mDrawables = new ArrayList<>();
+    private final ArrayList<IDrawable> mDrawables = new ArrayList<>();
 
     /**
      * Constructor

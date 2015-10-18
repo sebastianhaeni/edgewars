@@ -18,8 +18,8 @@ import ch.sebastianhaeni.edgewars.ui.GameController;
  */
 public class GameSurfaceView extends GLSurfaceView {
 
-    private GameThread mThread;
-    private GameController mController;
+    private final GameThread mThread;
+    private final GameController mController;
 
     /**
      * Constructor
@@ -53,6 +53,7 @@ public class GameSurfaceView extends GLSurfaceView {
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
         boolean retry = true;
+        mThread.setRunning(false);
         while (retry) {
             try {
                 mThread.join();

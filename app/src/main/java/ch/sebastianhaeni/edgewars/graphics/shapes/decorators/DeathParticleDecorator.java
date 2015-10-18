@@ -23,7 +23,7 @@ public class DeathParticleDecorator extends DrawableDecorator {
     private float mTime;
     private long mLastTime;
 
-    private FloatBuffer mParticles;
+    private final FloatBuffer mParticles;
 
     /**
      * Initializes particle data. Texture is not loaded because that has

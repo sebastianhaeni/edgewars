@@ -10,9 +10,9 @@ import ch.sebastianhaeni.edgewars.R;
  */
 public class ShapeProgram extends ESProgram {
 
-    private int mPositionHandle;
-    private int mMVPMatrixHandle;
-    private int mColorHandle;
+    private final int mPositionHandle;
+    private final int mMVPMatrixHandle;
+    private final int mColorHandle;
 
     /**
      * Constructor
@@ -22,7 +22,7 @@ public class ShapeProgram extends ESProgram {
     public ShapeProgram(Context context) {
         super(context);
 
-        // get handle to vertex shader's vPosition member
+        // get handle to vertex shader' vPosition member
         mPositionHandle = GLES20.glGetAttribLocation(getProgramHandle(), "a_position");
 
         // get handle to shape's transformation matrix

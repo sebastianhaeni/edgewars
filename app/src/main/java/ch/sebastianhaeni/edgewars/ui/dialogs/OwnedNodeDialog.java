@@ -23,7 +23,7 @@ import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
 public class OwnedNodeDialog extends Dialog {
 
     private final DialogOwnedNodeBinding mBinding;
-    private Node mNode;
+    private final Node mNode;
 
     public OwnedNodeDialog(Context context, Node node) {
         super(context);

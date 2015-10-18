@@ -12,7 +12,7 @@ abstract public class Shape implements IDrawable {
     private float mColor[] = Colors.NODE_NEUTRAL;
 
     /**
-     * Construcotr
+     * Constructor
      *
      * @param position the position this shape has it's starting point
      */

@@ -13,7 +13,7 @@ public class FightUnitState extends UnitState {
     private final Unit mFightingUnit;
     private final Random mRandom = new Random();
     private final Player mPlayer;
-    private Node mTargetNode;
+    private final Node mTargetNode;
 
     /**
      * Constructor

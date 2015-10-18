@@ -11,6 +11,7 @@ import javax.microedition.khronos.opengles.GL10;
 import ch.sebastianhaeni.edgewars.graphics.programs.ParticleProgram;
 import ch.sebastianhaeni.edgewars.graphics.programs.ShapeProgram;
 import ch.sebastianhaeni.edgewars.graphics.shapes.IDrawable;
+import ch.sebastianhaeni.edgewars.logic.Game;
 import ch.sebastianhaeni.edgewars.logic.GameState;
 import ch.sebastianhaeni.edgewars.logic.GameThread;
 
@@ -66,6 +67,7 @@ public class GameRenderer implements GLSurfaceView.Renderer {
         mShapeProgram = new ShapeProgram(mContext);
         mParticleProgram = new ParticleProgram(mContext);
 
+        Game.getInstance().reset();
         mThread.setRunning(true);
         mThread.start();
     }

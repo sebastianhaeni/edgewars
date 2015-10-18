@@ -37,7 +37,7 @@ public class MovingState extends UnitState {
                 OwnedState state = (OwnedState) reached.getState();
                 if (state.getOwner().equals(mPlayer)) {
                     reached.addUnit(getUnit());
-                    getUnit().setState(new IdleState(getUnit(), mNode));
+                    getUnit().setState(new IdleState(getUnit()));
                 } else {
                     getUnit().setState(new AttackNodeState(getUnit(), mNode));
                 }
