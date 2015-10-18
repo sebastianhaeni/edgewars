@@ -6,9 +6,8 @@ import java.util.ArrayList;
 import java.util.Stack;
 
 import ch.sebastianhaeni.edgewars.BR;
-import ch.sebastianhaeni.edgewars.graphics.shapes.Circle;
 import ch.sebastianhaeni.edgewars.graphics.shapes.IDrawable;
-import ch.sebastianhaeni.edgewars.graphics.shapes.decorators.DeathParticleDecorator;
+import ch.sebastianhaeni.edgewars.graphics.shapes.Polygon;
 import ch.sebastianhaeni.edgewars.logic.Game;
 import ch.sebastianhaeni.edgewars.logic.commands.MoveUnitCommand;
 import ch.sebastianhaeni.edgewars.logic.entities.board.BoardEntity;
@@ -39,7 +38,8 @@ import ch.sebastianhaeni.edgewars.util.Position;
  */
 public class Node extends BoardEntity {
 
-    private final Circle mCircle;
+    //region members
+    private final Polygon mCircle;
     private ArrayList<MeleeUnit> mMeleeUnits = new ArrayList<>();
     private ArrayList<TankUnit> mTankUnits = new ArrayList<>();
     private ArrayList<SprinterUnit> mSprinterUnits = new ArrayList<>();
@@ -56,6 +56,7 @@ public class Node extends BoardEntity {
 
     private Stack<MoveUnitCommand> mMoveUnitCommands = new Stack<>();
     private NodeState mState;
+    //endregion
 
     /**
      * Constructor
@@ -68,10 +69,9 @@ public class Node extends BoardEntity {
         mPosition = position;
         mHealth = getMaxHealth();
 
-        mCircle = new Circle(mPosition);
+        mCircle = new Polygon(mPosition, 80, 0);
 
         mDrawables.add(mCircle);
-       // mDrawables.add(new DeathParticleDecorator(mCircle));
     }
 
     @Override
@@ -84,17 +84,7 @@ public class Node extends BoardEntity {
         mState.update(millis);
     }
 
-    /**
-     * @return gets the node's position
-     */
-    public Position getPosition() {
-        return mPosition;
-    }
-
-    @Override
-    public ArrayList<IDrawable> getDrawables() {
-        return mDrawables;
-    }
+    //region actions
 
     /**
      * Adds a melee unit to this node.
@@ -177,6 +167,68 @@ public class Node extends BoardEntity {
     }
 
     /**
+     * Issues a command to send all melee units to another node from this node.
+     *
+     * @param node target node
+     */
+    public void sendMeleeUnits(Node node) {
+        for (Unit u : mMeleeUnits) {
+            mMoveUnitCommands.add(new MoveUnitCommand(u, node));
+        }
+        mMeleeUnits.clear();
+        notifyPropertyChanged(BR.node);
+    }
+
+    /**
+     * Issues a command to send all tank units to another node from this node.
+     *
+     * @param node target node
+     */
+    public void sendTankUnits(Node node) {
+        for (Unit u : mTankUnits) {
+            mMoveUnitCommands.add(new MoveUnitCommand(u, node));
+        }
+        mMeleeUnits.clear();
+        notifyPropertyChanged(BR.node);
+    }
+
+    /**
+     * Issues a command to send all sprinter units to another node from this node.
+     *
+     * @param node target node
+     */
+    public void sendSprinterUnits(Node node) {
+        for (Unit u : mSprinterUnits) {
+            mMoveUnitCommands.add(new MoveUnitCommand(u, node));
+        }
+        mMeleeUnits.clear();
+        notifyPropertyChanged(BR.node);
+    }
+
+    /**
+     * Removes a damage value from health.
+     *
+     * @param attackDamage the amount of damage that is inflicted
+     */
+    public void deductHealth(int attackDamage) {
+        int newHealth = mHealth - attackDamage;
+        if (newHealth <= 0) {
+            setState(new NeutralState(this));
+            // TODO add death particles
+            mHealth = 0;
+            return;
+        }
+        mHealth = newHealth;
+
+        notifyPropertyChanged(BR.health);
+        notifyPropertyChanged(BR.repairCost);
+    }
+
+    //endregion
+
+    //region databinding
+
+    /**
      * @return gets the cost to repair the node with the current health
      */
     @Bindable
@@ -249,6 +301,22 @@ public class Node extends BoardEntity {
         return mSprinterUnits.size();
     }
 
+    //endregion
+
+    //region getters/setters
+
+    /**
+     * @return gets the node's position
+     */
+    public Position getPosition() {
+        return mPosition;
+    }
+
+    @Override
+    public ArrayList<IDrawable> getDrawables() {
+        return mDrawables;
+    }
+
     /**
      * @return gets melee factory
      */
@@ -271,74 +339,8 @@ public class Node extends BoardEntity {
     }
 
     /**
-     * Issues a command to send all melee units to another node from this node.
-     *
-     * @param node target node
-     */
-    public void sendMeleeUnits(Node node) {
-        for (Unit u : mMeleeUnits) {
-            mMoveUnitCommands.add(new MoveUnitCommand(u, node));
-        }
-        mMeleeUnits.clear();
-        notifyPropertyChanged(BR.node);
-    }
-
-    /**
-     * Issues a command to send all tank units to another node from this node.
-     *
-     * @param node target node
-     */
-    public void sendTankUnits(Node node) {
-        for (Unit u : mTankUnits) {
-            mMoveUnitCommands.add(new MoveUnitCommand(u, node));
-        }
-        mMeleeUnits.clear();
-        notifyPropertyChanged(BR.node);
-    }
-
-    /**
-     * Issues a command to send all sprinter units to another node from this node.
-     *
-     * @param node target node
-     */
-    public void sendSprinterUnits(Node node) {
-        for (Unit u : mSprinterUnits) {
-            mMoveUnitCommands.add(new MoveUnitCommand(u, node));
-        }
-        mMeleeUnits.clear();
-        notifyPropertyChanged(BR.node);
-    }
-
-    /**
-     * Removes a damage value from health.
-     *
-     * @param attackDamage the amount of damage that is inflicted
-     */
-    public void deductHealth(int attackDamage) {
-        int newHealth = mHealth - attackDamage;
-        if (newHealth <= 0) {
-            setState(new NeutralState(this));
-            // TODO add death particles
-            mHealth = 0;
-            return;
-        }
-        mHealth = newHealth;
-
-        notifyPropertyChanged(BR.health);
-        notifyPropertyChanged(BR.repairCost);
-    }
-
-    /**
-     * Sets the new state of this node.
-     * @param state new state
-     */
-    public void setState(NodeState state) {
-        mState = state;
-        setUpdateInterval(state.getUpdateInterval());
-    }
-
-    /**
      * Sets the color of this node.
+     *
      * @param color new color
      */
     public void setColor(float[] color) {
@@ -352,6 +354,16 @@ public class Node extends BoardEntity {
      */
     public NodeState getState() {
         return mState;
+    }
+
+    /**
+     * Sets the new state of this node.
+     *
+     * @param state new state
+     */
+    public void setState(NodeState state) {
+        mState = state;
+        setUpdateInterval(state.getUpdateInterval());
     }
 
     /**
@@ -381,4 +393,7 @@ public class Node extends BoardEntity {
     public int getHealthLevelUpgradeCost() {
         return 50;
     }
+
+    //endregion
+
 }
