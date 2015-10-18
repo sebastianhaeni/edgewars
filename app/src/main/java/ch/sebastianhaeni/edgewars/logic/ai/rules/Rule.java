@@ -15,4 +15,8 @@ public abstract class Rule {
     public abstract boolean applies();
 
     public abstract ArrayList<Command> getCommands();
+
+    protected GameState getState() {
+        return mState;
+    }
 }

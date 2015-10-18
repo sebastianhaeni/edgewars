@@ -17,8 +17,8 @@ public class Line extends Shape {
 
     private static final float WIDTH = 0.2f;
 
-    private FloatBuffer vertexBuffer;
-    private int vertexCount;
+    private final FloatBuffer vertexBuffer;
+    private final int vertexCount;
 
     /**
      * Initializes the line with a source and destination rectangle that's really thin. The corners

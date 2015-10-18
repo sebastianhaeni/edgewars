@@ -12,13 +12,13 @@ public class ParticleProgram extends ESProgram {
 
     // Attribute locations
     private final int mMVPMatrixHandle;
-    private int mLifetimeHandle;
-    private int mStartPositionHandle;
-    private int mEndPositionHandle;
+    private final int mLifetimeHandle;
+    private final int mStartPositionHandle;
+    private final int mEndPositionHandle;
 
     // Uniform location
-    private int mTimeHandle;
-    private int mColorHandle;
+    private final int mTimeHandle;
+    private final int mColorHandle;
 
     /**
      * Constructor

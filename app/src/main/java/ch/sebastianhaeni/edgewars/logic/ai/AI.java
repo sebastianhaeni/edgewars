@@ -10,4 +10,8 @@ public abstract class AI {
     }
 
     public abstract void update(long millis);
+
+    protected GameState getState() {
+        return mState;
+    }
 }
