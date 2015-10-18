@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import ch.sebastianhaeni.edgewars.logic.LevelLoader;
 import ch.sebastianhaeni.edgewars.logic.entities.Player;
 import ch.sebastianhaeni.edgewars.logic.entities.board.Edge;
 import ch.sebastianhaeni.edgewars.logic.entities.board.factories.Factory;
@@ -82,14 +81,15 @@ public class LevelDeserializer implements JsonDeserializer {
             int playerId = playerObject.get("player_id").getAsInt();
             String playerNature = playerObject.get("nature").getAsString();
 
-            Player player;
+            // FIXME: 18.10.2015 steven, please fix
+            Player player = null;
 
             switch (playerNature) {
                 case "human":
-                    player = LevelLoader.humanPlayer;
+                    //player = LevelLoader.humanPlayer;
                     break;
                 default: // computer player
-                    player = LevelLoader.addComputerPlayer();
+                    //player = LevelLoader.addComputerPlayer();
                     break;
             }
 
