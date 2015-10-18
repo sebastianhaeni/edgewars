@@ -16,10 +16,10 @@ public class Game {
 
     private static Game mGame;
 
-    private Stack<Command> mCommandStack = new Stack<>();
-    private HashMap<Entity, Long> mEntities = new HashMap<>();
+    private final Stack<Command> mCommandStack = new Stack<>();
+    private final HashMap<Entity, Long> mEntities = new HashMap<>();
+    private final Stack<Entity> mEntitiesQueue = new Stack<>();
     private boolean mUpdating;
-    private Stack<Entity> mEntitiesQueue = new Stack<>();
 
     /**
      * Privatised constructor. Because singleton.

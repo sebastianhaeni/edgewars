@@ -24,7 +24,7 @@ public abstract class Unit extends BoardEntity {
     public Unit(Node node) {
         super(-1);
         setUpdateInterval(getSpeed());
-        setState(new IdleState(this, node));
+        setState(new IdleState(this));
         mHealth = getMaxHealth();
     }
 

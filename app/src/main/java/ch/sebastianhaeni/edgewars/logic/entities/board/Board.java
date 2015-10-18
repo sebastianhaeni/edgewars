@@ -11,8 +11,8 @@ import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
  * drawables.
  */
 public class Board extends Entity {
-    private ArrayList<BoardEntity> mEntities = new ArrayList<>();
-    private ArrayList<IDrawable> mDrawables = new ArrayList<>();
+    private final ArrayList<BoardEntity> mEntities = new ArrayList<>();
+    private final ArrayList<IDrawable> mDrawables = new ArrayList<>();
 
     /**
      * Constructor

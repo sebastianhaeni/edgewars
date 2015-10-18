@@ -1,6 +1,5 @@
 package ch.sebastianhaeni.edgewars;
 
-import android.app.Application;
 import android.content.Context;
 
 import com.orm.SugarApp;

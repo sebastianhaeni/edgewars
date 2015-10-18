@@ -25,15 +25,14 @@ import ch.sebastianhaeni.edgewars.util.Colors;
 
 public class LevelLoader {
 
-    public static Player humanPlayer = new Player(Colors.NODE_MINE);
-    public static ArrayList<Player> computerPlayers = new ArrayList<>();
+    public final ArrayList<Player> mComputerPlayers = new ArrayList<>();
 
-    private Context mContext;
+    private final Context mContext;
     private Levels mLevels;
 
-    public static Player addComputerPlayer() {
+    public Player addComputerPlayer() {
         Player newComputerPlayer = new Player(Colors.NODE_OPPONENT);
-        computerPlayers.add(newComputerPlayer);
+        mComputerPlayers.add(newComputerPlayer);
         return newComputerPlayer;
     }
 
@@ -70,20 +69,20 @@ public class LevelLoader {
             board.addEntity(node);
         }
 
-        ArrayList<Player> players = new ArrayList<>(computerPlayers);
-        players.add(LevelLoader.humanPlayer);
-        GameState state = new GameState(camera, board, players, LevelLoader.humanPlayer);
+        ArrayList<Player> players = new ArrayList<>(mComputerPlayers);
+
+        Player humanPlayer = new Player(Colors.NODE_MINE);
+
+        players.add(humanPlayer);
+        GameState state = new GameState(camera, board, players, humanPlayer);
 
         // add AI to computer players
-        for (Player computerPlayer : LevelLoader.computerPlayers) {
+        for (Player computerPlayer : mComputerPlayers) {
             computerPlayer.setAI(new RuleBasedAI(state));
         }
 
         return state;
     }
-
-    //private void validateJsonFile() {
-    //}
 
     private void loadLevelsFromJsonFile() {
         // initialize Gson

@@ -13,7 +13,7 @@ import ch.sebastianhaeni.edgewars.logic.commands.Command;
 public class RuleBasedAI extends AI {
 
     private final ArrayList<Rule> mRules;
-    private ArrayList<Command> mCommands = new ArrayList<>();
+    private final ArrayList<Command> mCommands = new ArrayList<>();
 
     public RuleBasedAI(GameState state) {
         super(state);

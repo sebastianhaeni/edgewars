@@ -8,6 +8,7 @@ import java.util.Stack;
 import ch.sebastianhaeni.edgewars.BR;
 import ch.sebastianhaeni.edgewars.graphics.shapes.Circle;
 import ch.sebastianhaeni.edgewars.graphics.shapes.IDrawable;
+import ch.sebastianhaeni.edgewars.graphics.shapes.decorators.DeathParticleDecorator;
 import ch.sebastianhaeni.edgewars.logic.Game;
 import ch.sebastianhaeni.edgewars.logic.commands.MoveUnitCommand;
 import ch.sebastianhaeni.edgewars.logic.entities.board.BoardEntity;
@@ -38,22 +39,24 @@ import ch.sebastianhaeni.edgewars.util.Position;
  */
 public class Node extends BoardEntity {
 
-    private Circle mCircle;
-    private ArrayList<MeleeUnit> mMeleeUnits = new ArrayList<>();
-    private ArrayList<TankUnit> mTankUnits = new ArrayList<>();
-    private ArrayList<SprinterUnit> mSprinterUnits = new ArrayList<>();
+    public static final int DAMAGE_LEVEL_UPGRADE_COST = 50;
+    public static final int HEALTH_LEVEL_UPGRADE_COST = 50;
+    private final Circle mCircle;
+    private final ArrayList<MeleeUnit> mMeleeUnits = new ArrayList<>();
+    private final ArrayList<TankUnit> mTankUnits = new ArrayList<>();
+    private final ArrayList<SprinterUnit> mSprinterUnits = new ArrayList<>();
 
-    private MeleeFactory mMeleeFactory = new MeleeFactory(this);
-    private TankFactory mTankFactory = new TankFactory(this);
-    private SprinterFactory mSprinterFactory = new SprinterFactory(this);
+    private final MeleeFactory mMeleeFactory = new MeleeFactory(this);
+    private final TankFactory mTankFactory = new TankFactory(this);
+    private final SprinterFactory mSprinterFactory = new SprinterFactory(this);
 
     private int mHealth;
     private int mHealthLevel = 1;
     private int mDamageLevel = 1;
-    private Position mPosition;
-    private ArrayList<IDrawable> mDrawables = new ArrayList<>();
+    private final Position mPosition;
+    private final ArrayList<IDrawable> mDrawables = new ArrayList<>();
 
-    private Stack<MoveUnitCommand> mMoveUnitCommands = new Stack<>();
+    private final Stack<MoveUnitCommand> mMoveUnitCommands = new Stack<>();
     private NodeState mState;
 
     /**
@@ -312,7 +315,7 @@ public class Node extends BoardEntity {
         int newHealth = mHealth - attackDamage;
         if (newHealth <= 0) {
             setState(new NeutralState(this));
-            // TODO add death particles
+            mDrawables.add(new DeathParticleDecorator(mCircle));
             mHealth = 0;
             return;
         }
@@ -368,13 +371,13 @@ public class Node extends BoardEntity {
      * @return gets the cost of upgrading the damage level
      */
     public int getDamageLevelUpgradeCost() {
-        return 50;
+        return DAMAGE_LEVEL_UPGRADE_COST;
     }
 
     /**
      * @return gets the cost of upgrading the health level
      */
     public int getHealthLevelUpgradeCost() {
-        return 50;
+        return HEALTH_LEVEL_UPGRADE_COST;
     }
 }
