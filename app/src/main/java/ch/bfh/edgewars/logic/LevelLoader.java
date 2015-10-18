@@ -50,11 +50,13 @@ public class LevelLoader {
         // TODO: validate levels.json with json schema
         // this.validateJsonFile();
 
-
         // load levels from json file to mLevels
         this.loadLevelsFromJsonFile();
 
+    }
 
+    public int getNumberOfLevels () {
+        return mLevels.getLevels().size();
     }
 
     public GameState build (int levelNumber) {
