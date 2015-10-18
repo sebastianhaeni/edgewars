@@ -5,7 +5,6 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonParser;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -37,13 +36,13 @@ public class LevelLoader {
     private Context mContext;
     private Levels mLevels;
 
-    public static Player addComputerPlayer () {
+    public static Player addComputerPlayer() {
         Player newComputerPlayer = new Player(Colors.RED);
         computerPlayers.add(newComputerPlayer);
         return newComputerPlayer;
     }
 
-    public LevelLoader (Context context) {
+    public LevelLoader(Context context) {
 
         mContext = context;
 
@@ -55,17 +54,17 @@ public class LevelLoader {
 
     }
 
-    public int getNumberOfLevels () {
-        return mLevels.getLevels().size();
+    public int getNumberOfLevels() {
+        return mLevels.getmLevels().size();
     }
 
-    public GameState build (int levelNumber) {
+    public GameState build(int levelNumber) {
 
         Board board = new Board();
         Camera camera = new Camera();
 
         // TODO: do it better?
-        Level level = mLevels.getLevels().get(levelNumber-1);
+        Level level = mLevels.getmLevels().get(levelNumber - 1);
 
         List<Node> nodes = level.getNodes();
         List<Edge> edges = level.getEdges();
@@ -94,10 +93,9 @@ public class LevelLoader {
     private void validateJsonFile() {
 
 
-
     }
 
-    private void loadLevelsFromJsonFile () {
+    private void loadLevelsFromJsonFile() {
 
         // initialize Gson
         GsonBuilder gsonBuilder = new GsonBuilder();

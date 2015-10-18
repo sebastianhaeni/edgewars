@@ -1,15 +1,11 @@
 package ch.bfh.edgewars.logic.levels;
 
-import android.util.Log;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-
-import org.json.JSONException;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -34,7 +30,7 @@ import ch.bfh.edgewars.util.Position;
 public class LevelDeserializer implements JsonDeserializer {
 
     private Levels mLevels;
-    private List<Level> mLevelList;
+    private ArrayList<Level> mLevelList;
     private Map mPlayerMap;
     private Map mNodeMap;
 
@@ -51,7 +47,7 @@ public class LevelDeserializer implements JsonDeserializer {
         JsonArray levelsArray = jsonObject.get("levels").getAsJsonArray();
 
         // iterate through all mLevels of json file and create level objects
-        for (int i=0; i<levelsArray.size(); i++) {
+        for (int i = 0; i < levelsArray.size(); i++) {
             JsonObject levelObject = levelsArray.get(i).getAsJsonObject();
 
             // create level
@@ -61,31 +57,31 @@ public class LevelDeserializer implements JsonDeserializer {
 
             // add players to level
             JsonArray playersArray = levelObject.get("players").getAsJsonArray();
-            List<Player> playersList = this.createPlayers(playersArray);
+            ArrayList<Player> playersList = this.createPlayers(playersArray);
             level.setPlayers(playersList);
 
             // add nodes to level
             JsonArray nodesArray = levelObject.get("nodes").getAsJsonArray();
-            List<Node> nodesList =  this.createNodes(nodesArray);
+            ArrayList<Node> nodesList = this.createNodes(nodesArray);
             level.setNodes(nodesList);
 
             // add edges to level
             JsonArray edgesArray = levelObject.get("edges").getAsJsonArray();
-            List<Edge> edgesList = this.createEdges(edgesArray);
+            ArrayList<Edge> edgesList = this.createEdges(edgesArray);
             level.setmEdges(edgesList);
 
             mLevelList.add(level);
         }
 
-        mLevels.setLevels(mLevelList);
+        mLevels.setmLevels(mLevelList);
         return mLevels;
     }
 
-    private List<Player> createPlayers (JsonArray playersArray) throws JsonParseException {
+    private ArrayList<Player> createPlayers(JsonArray playersArray) throws JsonParseException {
 
-        List<Player> levelPlayersList = new ArrayList<>();
+        ArrayList<Player> levelPlayersList = new ArrayList<>();
 
-        for (int i=0; i<playersArray.size(); i++) {
+        for (int i = 0; i < playersArray.size(); i++) {
             JsonObject playerObject = playersArray.get(i).getAsJsonObject();
 
             int playerId = playerObject.get("player_id").getAsInt();
@@ -112,11 +108,11 @@ public class LevelDeserializer implements JsonDeserializer {
         return levelPlayersList;
     }
 
-    private List<Node> createNodes (JsonArray nodesArray) throws JsonParseException {
+    private ArrayList<Node> createNodes(JsonArray nodesArray) throws JsonParseException {
 
-        List<Node> levelNodesList = new ArrayList<>();
+        ArrayList<Node> levelNodesList = new ArrayList<>();
 
-        for (int i=0; i<nodesArray.size(); i++) {
+        for (int i = 0; i < nodesArray.size(); i++) {
             JsonObject nodeObject = nodesArray.get(i).getAsJsonObject();
 
             Node node = new Node();
@@ -153,11 +149,11 @@ public class LevelDeserializer implements JsonDeserializer {
         return levelNodesList;
     }
 
-    private List<Edge> createEdges (JsonArray edgesArray) throws JsonParseException{
+    private ArrayList<Edge> createEdges(JsonArray edgesArray) throws JsonParseException {
 
-        List<Edge> levelEdgesList = new ArrayList<>();
+        ArrayList<Edge> levelEdgesList = new ArrayList<>();
 
-        for (int i=0; i<edgesArray.size(); i++) {
+        for (int i = 0; i < edgesArray.size(); i++) {
             JsonObject edgeObject = edgesArray.get(i).getAsJsonObject();
 
             Edge edge = new Edge();
@@ -176,7 +172,7 @@ public class LevelDeserializer implements JsonDeserializer {
         return levelEdgesList;
     }
 
-    private void addInitialState (JsonObject initialValuesObject, Node node) throws JsonParseException {
+    private void addInitialState(JsonObject initialValuesObject, Node node) throws JsonParseException {
 
         // get owner player id
         int ownerId = initialValuesObject.get("owner_id").getAsInt();
@@ -198,13 +194,13 @@ public class LevelDeserializer implements JsonDeserializer {
         ArrayList<TankUnit> tankUnits = new ArrayList<>();
 
         // add units to node
-        for (int i=0; i<meleeCount; i++)
+        for (int i = 0; i < meleeCount; i++)
             meleeUnits.add(new MeleeUnit(node));
 
-        for (int i=0; i<sprinterCount; i++)
+        for (int i = 0; i < sprinterCount; i++)
             sprinterUnits.add(new SprinterUnit(node));
 
-        for (int i=0; i<tankCount; i++)
+        for (int i = 0; i < tankCount; i++)
             tankUnits.add(new TankUnit(node));
 
         // get initial node factories

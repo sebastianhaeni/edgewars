@@ -21,7 +21,7 @@ public class Edge extends BoardEntity {
         this.setNodes(node1, node2);
     }
 
-    public void setNodes (Node node1, Node node2) {
+    public void setNodes(Node node1, Node node2) {
         mNode1 = node1;
         mNode2 = node2;
 

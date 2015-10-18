@@ -1,28 +1,23 @@
 package ch.bfh.edgewars.logic.levels;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class Levels {
 
-    private List<Level> levels = new ArrayList<>();
+    private ArrayList<Level> mLevels = new ArrayList<>();
 
     /**
-     *
-     * @return
-     * The levels_schema
+     * @return The mLevels
      */
-    public List<Level> getLevels() {
-        return levels;
+    public ArrayList<Level> getmLevels() {
+        return mLevels;
     }
 
     /**
-     *
-     * @param levels
-     * The levels_schema
+     * @param mLevels The mLevels
      */
-    public void setLevels(List<Level> levels) {
-        this.levels = levels;
+    public void setmLevels(ArrayList<Level> mLevels) {
+        this.mLevels = mLevels;
     }
 
 }

@@ -70,7 +70,7 @@ public class Node extends BoardEntity {
         return mPosition;
     }
 
-    public void setPosition (Position position) {
+    public void setPosition(Position position) {
         mPosition = position;
         mShapes.clear();
         mShapes.add(new Circle(mPosition));
@@ -110,15 +110,15 @@ public class Node extends BoardEntity {
         }
     }
 
-    public void setMeleeUnits (ArrayList<MeleeUnit> meleeUnits) {
+    public void setMeleeUnits(ArrayList<MeleeUnit> meleeUnits) {
         mMeleeUnits = meleeUnits;
     }
 
-    public void setSprinterUnits (ArrayList<SprinterUnit> sprinterUnits) {
+    public void setSprinterUnits(ArrayList<SprinterUnit> sprinterUnits) {
         mSprinterUnits = sprinterUnits;
     }
 
-    public void setTankUnits (ArrayList<TankUnit> tankUnits) {
+    public void setTankUnits(ArrayList<TankUnit> tankUnits) {
         mTankUnits = tankUnits;
     }
 
