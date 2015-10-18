@@ -13,31 +13,29 @@ import ch.sebastianhaeni.edgewars.util.Position;
 /**
  * Draws a circle with a uniform color at a certain position.
  */
-public class Circle extends Shape {
-    private static final int CORNERS = 364;
-    private static boolean verticesInitialized = false;
-    private static float vertices[] = new float[CORNERS * 3];
+public class Polygon extends Shape {
 
     private final FloatBuffer mVertexBuffer;
+    private final int mCorners;
 
     /**
      * Sets up the drawing object data for use in an OpenGL ES context.
      *
      * @param position Position of the circle
+     * @param corners  the amount of corners this polygon should have
+     * @param angle    angle of the polygon
      */
-    public Circle(Position position) {
+    public Polygon(Position position, int corners, int angle) {
         super(position);
 
-        if (!verticesInitialized) {
-            vertices[0] = 0;
-            vertices[1] = 0;
-            vertices[2] = 0;
-            for (int i = 1; i < CORNERS; i++) {
-                vertices[(i * 3)] = (float) (0.5 * Math.cos((3.14 / 180) * (float) i));
-                vertices[(i * 3) + 1] = (float) (0.5 * Math.sin((3.14 / 180) * (float) i));
-                vertices[(i * 3) + 2] = 0;
-            }
-            verticesInitialized = true;
+        mCorners = corners;
+        float[] vertices = new float[corners * 3];
+
+        float step = 360f / corners;
+        for (int i = 0; i < corners; i++) {
+            vertices[(i * 3)] = (float) (0.5 * Math.cos((3.14 / 180) * ((step * i) + angle)));
+            vertices[(i * 3) + 1] = (float) (0.5 * Math.sin((3.14 / 180) * ((step * i) + angle)));
+            vertices[(i * 3) + 2] = 0;
         }
 
         // initialize vertex byte buffer for shape coordinates
@@ -92,7 +90,7 @@ public class Circle extends Shape {
         ESShader.checkGlError("glUniform4fv");
 
         // Draw the triangle
-        GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, 0, CORNERS);
+        GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, 0, mCorners);
         ESShader.checkGlError("glDrawArrays");
 
         // Disable vertex array

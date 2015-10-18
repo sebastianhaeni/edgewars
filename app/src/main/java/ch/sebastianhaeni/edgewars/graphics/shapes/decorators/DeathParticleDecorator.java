@@ -17,7 +17,7 @@ import ch.sebastianhaeni.edgewars.graphics.shapes.Shape;
  */
 public class DeathParticleDecorator extends DrawableDecorator {
     private final int PARTICLE_SIZE = 7;
-    private final int NUM_PARTICLES = 100000;
+    private final int NUM_PARTICLES = 1000;
 
     // Update time
     private float mTime;
