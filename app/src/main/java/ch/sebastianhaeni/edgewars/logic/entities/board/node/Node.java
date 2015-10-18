@@ -39,7 +39,7 @@ import ch.sebastianhaeni.edgewars.util.Position;
 public class Node extends BoardEntity {
 
     //region members
-    private Polygon mCircle;
+    private final Polygon mCircle;
     private ArrayList<MeleeUnit> mMeleeUnits = new ArrayList<>();
     private ArrayList<TankUnit> mTankUnits = new ArrayList<>();
     private ArrayList<SprinterUnit> mSprinterUnits = new ArrayList<>();
@@ -338,16 +338,6 @@ public class Node extends BoardEntity {
     }
 
     /**
-     * Sets the new state of this node.
-     *
-     * @param state new state
-     */
-    public void setState(NodeState state) {
-        mState = state;
-        setUpdateInterval(state.getUpdateInterval());
-    }
-
-    /**
      * Sets the color of this node.
      *
      * @param color new color
@@ -363,6 +353,16 @@ public class Node extends BoardEntity {
      */
     public NodeState getState() {
         return mState;
+    }
+
+    /**
+     * Sets the new state of this node.
+     *
+     * @param state new state
+     */
+    public void setState(NodeState state) {
+        mState = state;
+        setUpdateInterval(state.getUpdateInterval());
     }
 
     /**
