@@ -29,7 +29,7 @@ public class LevelLoader {
     public static Player humanPlayer = new Player(Colors.NODE_MINE);
     public static ArrayList<Player> computerPlayers = new ArrayList<>();
 
-    private final ingit LEVELS_RESOURCE_FILE = R.raw.levels;
+    private final int LEVELS_RESOURCE_FILE = R.raw.levels;
     private final int SCHEMA_RESOURCE_FILE = R.raw.levels_schema;
 
     private Context mContext;
