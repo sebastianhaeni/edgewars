@@ -21,7 +21,6 @@ import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
 import ch.sebastianhaeni.edgewars.logic.levels.Level;
 import ch.sebastianhaeni.edgewars.logic.levels.LevelDeserializer;
 import ch.sebastianhaeni.edgewars.logic.levels.Levels;
-import ch.sebastianhaeni.edgewars.util.Colors;
 
 public class LevelLoader {
 
