@@ -12,7 +12,6 @@ import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
  */
 public class Board extends Entity {
     private final ArrayList<BoardEntity> mEntities = new ArrayList<>();
-    private final ArrayList<IDrawable> mDrawables = new ArrayList<>();
 
     /**
      * Constructor
@@ -30,18 +29,7 @@ public class Board extends Entity {
         mEntities.add(e);
     }
 
-    /**
-     * @return gets the drawables on the board
-     */
-    public ArrayList<IDrawable> getDrawables() {
-        mDrawables.clear();
-        for (BoardEntity e : mEntities) {
-            for (IDrawable s : e.getDrawables()) {
-                mDrawables.add(s);
-            }
-        }
-        return mDrawables;
-    }
+
 
     /**
      * @return gets the nodes on the board

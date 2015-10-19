@@ -1,8 +1,7 @@
 package ch.sebastianhaeni.edgewars.logic.entities.board.units;
 
-import java.util.ArrayList;
-
-import ch.sebastianhaeni.edgewars.graphics.shapes.IDrawable;
+import ch.sebastianhaeni.edgewars.graphics.shapes.Polygon;
+import ch.sebastianhaeni.edgewars.graphics.shapes.Shape;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
 
 /**
@@ -18,10 +17,18 @@ public class TankUnit extends Unit {
     /**
      * Constructor
      *
-     * @param node the node this unit was produced
+     * @param count count of the units in this container
+     * @param node  the node this unit starts at
      */
-    public TankUnit(Node node) {
-        super(node);
+    public TankUnit(int count, Node node) {
+        super(count, node);
+    }
+
+    @Override
+    protected Shape getShape() {
+        Polygon p = new Polygon(getPosition(), 5, 0);
+        p.setColor(getNode().getCircle().getColor());
+        return p;
     }
 
     @Override
@@ -49,8 +56,4 @@ public class TankUnit extends Unit {
         return SPEED;
     }
 
-    @Override
-    public ArrayList<IDrawable> getDrawables() {
-        return null;
-    }
 }

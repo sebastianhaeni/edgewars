@@ -1,32 +1,49 @@
 package ch.sebastianhaeni.edgewars.logic.entities.board.units;
 
+import ch.sebastianhaeni.edgewars.graphics.shapes.Shape;
+import ch.sebastianhaeni.edgewars.graphics.shapes.decorators.TextDecorator;
 import ch.sebastianhaeni.edgewars.logic.entities.board.BoardEntity;
+import ch.sebastianhaeni.edgewars.logic.entities.board.Edge;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.state.OwnedState;
 import ch.sebastianhaeni.edgewars.logic.entities.board.units.state.DeadState;
 import ch.sebastianhaeni.edgewars.logic.entities.board.units.state.IdleState;
 import ch.sebastianhaeni.edgewars.logic.entities.board.units.state.MovingState;
 import ch.sebastianhaeni.edgewars.logic.entities.board.units.state.UnitState;
+import ch.sebastianhaeni.edgewars.util.Position;
 
 /**
  * A unit owned by a player and produced at a node from a factory.
  */
 public abstract class Unit extends BoardEntity {
 
+    private final int mCount;
+    private final Position mPosition;
+    private final Node mNode;
     private UnitState mState;
     private int mHealth;
 
     /**
      * Constructor
      *
-     * @param node the node this unit was produced at
+     * @param count count of units in this container
+     * @param node  the node this unit starts at
      */
-    public Unit(Node node) {
+    public Unit(int count, Node node) {
         super(-1);
         setUpdateInterval(getSpeed());
         setState(new IdleState(this));
         mHealth = getMaxHealth();
+        mCount = count;
+        mNode=node;
+        mPosition = new Position(node.getPosition().getX(), node.getPosition().getY());
+        getDrawables().add(new TextDecorator(getShape(), String.valueOf(mCount)));
     }
+
+    /**
+     * @return gets the shape that represents this unit
+     */
+    protected abstract Shape getShape();
 
     /**
      * @return gets the name of this unit type
@@ -61,12 +78,19 @@ public abstract class Unit extends BoardEntity {
     }
 
     /**
+     * @return gets position
+     */
+    public Position getPosition() {
+        return mPosition;
+    }
+
+    /**
      * Sets the unit's state.
      *
      * @param state the new state
      */
     public void setState(UnitState state) {
-        this.mState = state;
+        mState = state;
         setUpdateInterval(state.getUpdateInterval());
     }
 
@@ -79,9 +103,10 @@ public abstract class Unit extends BoardEntity {
      * Sends the unit along the edge to the target node.
      *
      * @param node to which node the unit should move
+     * @param edge the edge the unit moves on
      */
-    public void move(Node node) {
-        setState(new MovingState(this, node, ((OwnedState) node.getState()).getOwner()));
+    public void move(Node node, Edge edge) {
+        setState(new MovingState(this, node, ((OwnedState) edge.getSourceNode().getState()).getOwner(), edge));
     }
 
     /**
@@ -99,4 +124,10 @@ public abstract class Unit extends BoardEntity {
         mHealth = newHealth;
     }
 
+    /**
+     * @return gets the node
+     */
+    public Node getNode() {
+        return mNode;
+    }
 }

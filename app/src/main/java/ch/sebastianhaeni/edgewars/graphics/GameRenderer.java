@@ -67,7 +67,6 @@ public class GameRenderer implements GLSurfaceView.Renderer {
         mShapeProgram = new ShapeProgram(mContext);
         mParticleProgram = new ParticleProgram(mContext);
 
-        Game.getInstance().reset();
         mThread.setRunning(true);
         mThread.start();
     }
@@ -85,7 +84,7 @@ public class GameRenderer implements GLSurfaceView.Renderer {
      */
     private void renderState() {
         // Draw drawables
-        for (IDrawable s : mGameState.getBoard().getDrawables()) {
+        for (IDrawable s : Game.getInstance().getDrawables()) {
 
             // Set the camera position (View matrix)
             Matrix.setLookAtM(

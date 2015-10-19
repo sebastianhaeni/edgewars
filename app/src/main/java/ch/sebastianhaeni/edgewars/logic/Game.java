@@ -2,12 +2,17 @@ package ch.sebastianhaeni.edgewars.logic;
 
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
+import ch.sebastianhaeni.edgewars.graphics.shapes.IDrawable;
 import ch.sebastianhaeni.edgewars.logic.commands.Command;
 import ch.sebastianhaeni.edgewars.logic.entities.Entity;
+import ch.sebastianhaeni.edgewars.logic.entities.board.BoardEntity;
+import ch.sebastianhaeni.edgewars.logic.entities.board.Edge;
+import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
 
 /**
  * This class controls the game.
@@ -19,6 +24,7 @@ public class Game {
     private final Stack<Command> mCommandStack = new Stack<>();
     private final HashMap<Entity, Long> mEntities = new HashMap<>();
     private final Stack<Entity> mEntitiesQueue = new Stack<>();
+    private final ArrayList<IDrawable> mDrawables = new ArrayList<>();
     private boolean mUpdating;
 
     /**
@@ -51,6 +57,7 @@ public class Game {
      */
     public void register(Command command) {
         mCommandStack.push(command);
+        Log.d("Game", "Registering command: " + command);
     }
 
     /**
@@ -86,7 +93,9 @@ public class Game {
 
         // Add entities in queue to entity list
         while (mEntitiesQueue.size() > 0) {
-            mEntities.put(mEntitiesQueue.pop(), 0L);
+            Entity e = mEntitiesQueue.pop();
+            mEntities.put(e, 0L);
+            Log.d("Game", "Registering entity: " + e);
         }
 
         // Update entities
@@ -103,6 +112,42 @@ public class Game {
             }
         }
         mUpdating = false;
+    }
+
+    /**
+     * Gets the edge between two nodes or null.
+     *
+     * @param node1 node 1
+     * @param node2 node 2
+     * @return the edge between or <code>null</code>
+     */
+    public Edge getEdgeBetween(Node node1, Node node2) {
+        for (Entity entity : mEntities.keySet()) {
+            if (entity instanceof Edge) {
+                Edge edge = (Edge) entity;
+                if ((edge.getSourceNode().equals(node1) && edge.getTargetEdge().equals(node2)) || (edge.getTargetEdge().equals(node1) && edge.getSourceNode().equals(node2))) {
+                    return edge;
+                }
+            }
+        }
+
+        throw new RuntimeException("No edge between these two nodes.");
+    }
+
+    /**
+     * @return gets the drawables on the board
+     */
+    public ArrayList<IDrawable> getDrawables() {
+        mDrawables.clear();
+        for (Entity e : mEntities.keySet()) {
+            if (e instanceof BoardEntity) {
+                BoardEntity be = (BoardEntity) e;
+                for (IDrawable s : be.getDrawables()) {
+                    mDrawables.add(s);
+                }
+            }
+        }
+        return mDrawables;
     }
 }
 

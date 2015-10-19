@@ -2,7 +2,6 @@ package ch.sebastianhaeni.edgewars.logic.entities.board.factories;
 
 import ch.sebastianhaeni.edgewars.BR;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
-import ch.sebastianhaeni.edgewars.logic.entities.board.units.MeleeUnit;
 
 /**
  * A concrete factory that builds melee units.
@@ -20,7 +19,7 @@ public class MeleeFactory extends Factory {
 
     @Override
     protected void produceUnit() {
-        getNode().addUnit(new MeleeUnit(getNode()));
+        getNode().addMeleeUnit();
         notifyPropertyChanged(BR.meleeCount);
     }
 

@@ -20,7 +20,7 @@ public class SprinterFactory extends Factory {
 
     @Override
     public void produceUnit() {
-        getNode().addUnit(new SprinterUnit(getNode()));
+        getNode().addSprinterUnit();
         notifyPropertyChanged(BR.sprinterCount);
     }
 

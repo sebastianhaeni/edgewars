@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 
+import ch.sebastianhaeni.edgewars.EUnitType;
 import ch.sebastianhaeni.edgewars.graphics.GameRenderer;
 import ch.sebastianhaeni.edgewars.logic.GameState;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
@@ -25,6 +26,9 @@ public class GameController {
     private float mPreviousY;
     private float mStartX;
     private float mStartY;
+    private boolean mSelectingNode;
+    private Node mSourceNode;
+    private EUnitType mSendingUnitType;
 
     /**
      * Constructor
@@ -103,6 +107,27 @@ public class GameController {
         for (Node node : mGameState.getBoard().getNodes()) {
             if (Math.abs((node.getPosition().getX() * scale) + cameraX - x) < nodeSize
                     && Math.abs((node.getPosition().getY() * scale) + cameraY - y) < nodeSize) {
+
+                if (mSelectingNode) {
+                    mSelectingNode = false;
+                    if (node.equals(mSourceNode)) {
+                        return;
+                    }
+
+                    switch (mSendingUnitType) {
+                        case MELEE:
+                            mSourceNode.sendMeleeUnits(node);
+                            break;
+                        case SPRINTER:
+                            mSourceNode.sendSprinterUnits(node);
+                            break;
+                        case TANK:
+                            mSourceNode.sendTankUnits(node);
+                            break;
+                    }
+                    return;
+                }
+
                 showNodeDialog(node);
                 break;
             }
@@ -128,12 +153,45 @@ public class GameController {
         OwnedState state = (OwnedState) node.getState();
 
         if (state.getOwner().equals(mGameState.getHuman())) {
-            OwnedNodeDialog dialog = new OwnedNodeDialog(mContext, node);
+            OwnedNodeDialog dialog = new OwnedNodeDialog(mContext, node, this);
             dialog.show();
             return;
         }
 
         OpponentNodeDialog dialog = new OpponentNodeDialog(mContext, node);
         dialog.show();
+    }
+
+    /**
+     * Sends a melee along the way.
+     *
+     * @param node source node
+     */
+    public void askForMeleeTargetNode(Node node) {
+        mSelectingNode = true;
+        mSendingUnitType = EUnitType.MELEE;
+        mSourceNode = node;
+    }
+
+    /**
+     * Sends a tank along the way.
+     *
+     * @param node source node
+     */
+    public void askForTankTargetNode(Node node) {
+        mSelectingNode = true;
+        mSendingUnitType = EUnitType.TANK;
+        mSourceNode = node;
+    }
+
+    /**
+     * Sends a sprinter along the way.
+     *
+     * @param node source node
+     */
+    public void askForSprinterTargetNode(Node node) {
+        mSelectingNode = true;
+        mSendingUnitType = EUnitType.SPRINTER;
+        mSourceNode = node;
     }
 }

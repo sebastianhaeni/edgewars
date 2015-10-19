@@ -4,8 +4,8 @@ package ch.sebastianhaeni.edgewars.util;
  * Position helper class.
  */
 public class Position {
-    private final float mX;
-    private final float mY;
+    private float mX;
+    private float mY;
 
     /**
      * Constructor
@@ -30,5 +30,21 @@ public class Position {
      */
     public float getY() {
         return mY;
+    }
+
+    /**
+     * Sets new coordinates.
+     *
+     * @param x coordinate
+     * @param y coordinate
+     */
+    public void set(float x, float y) {
+        mX = x;
+        mY = y;
+    }
+
+    @Override
+    public String toString() {
+        return "{x: " + mX + ", y: " + mY + "}";
     }
 }

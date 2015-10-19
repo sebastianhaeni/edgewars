@@ -10,6 +10,8 @@ import ch.sebastianhaeni.edgewars.logic.entities.Entity;
  */
 public abstract class BoardEntity extends Entity {
 
+    private final ArrayList<IDrawable> mDrawables = new ArrayList<>();
+
     /**
      * Constructor for updating entities.
      *
@@ -29,5 +31,7 @@ public abstract class BoardEntity extends Entity {
     /**
      * @return gets the drawables
      */
-    public abstract ArrayList<IDrawable> getDrawables();
+    public ArrayList<IDrawable> getDrawables() {
+        return mDrawables;
+    }
 }

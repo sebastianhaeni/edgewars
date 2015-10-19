@@ -2,12 +2,10 @@ package ch.sebastianhaeni.edgewars.logic.entities.board.node;
 
 import android.databinding.Bindable;
 
-import java.util.ArrayList;
-import java.util.Stack;
-
 import ch.sebastianhaeni.edgewars.BR;
 import ch.sebastianhaeni.edgewars.graphics.shapes.IDrawable;
 import ch.sebastianhaeni.edgewars.graphics.shapes.Polygon;
+import ch.sebastianhaeni.edgewars.graphics.shapes.Shape;
 import ch.sebastianhaeni.edgewars.logic.Game;
 import ch.sebastianhaeni.edgewars.logic.commands.MoveUnitCommand;
 import ch.sebastianhaeni.edgewars.logic.entities.board.BoardEntity;
@@ -40,9 +38,9 @@ public class Node extends BoardEntity {
 
     //region members
     private final Polygon mCircle;
-    private ArrayList<MeleeUnit> mMeleeUnits = new ArrayList<>();
-    private ArrayList<TankUnit> mTankUnits = new ArrayList<>();
-    private ArrayList<SprinterUnit> mSprinterUnits = new ArrayList<>();
+    private int mMeleeUnits;
+    private int mTankUnits;
+    private int mSprinterUnits;
 
     private MeleeFactory mMeleeFactory = new MeleeFactory(this);
     private TankFactory mTankFactory = new TankFactory(this);
@@ -52,9 +50,7 @@ public class Node extends BoardEntity {
     private int mHealthLevel = 1;
     private int mDamageLevel = 1;
     private Position mPosition;
-    private ArrayList<IDrawable> mDrawables = new ArrayList<>();
 
-    private Stack<MoveUnitCommand> mMoveUnitCommands = new Stack<>();
     private NodeState mState;
     //endregion
 
@@ -70,16 +66,11 @@ public class Node extends BoardEntity {
 
         mCircle = new Polygon(mPosition, 80, 0);
 
-        mDrawables.add(mCircle);
+        getDrawables().add(mCircle);
     }
 
     @Override
     public void update(long millis) {
-        if (mMoveUnitCommands.size() > 0) {
-            MoveUnitCommand c = mMoveUnitCommands.pop();
-            Game.getInstance().register(c);
-        }
-
         mState.update(millis);
     }
 
@@ -87,51 +78,26 @@ public class Node extends BoardEntity {
 
     /**
      * Adds a melee unit to this node.
-     *
-     * @param unit unit to be added
      */
-    public void addUnit(MeleeUnit unit) {
-        mMeleeUnits.add(unit);
+    public void addMeleeUnit() {
+        mMeleeUnits++;
         notifyPropertyChanged(BR.meleeCount);
     }
 
     /**
      * Adds a tank unit to this node.
-     *
-     * @param unit unit to be added
      */
-    public void addUnit(TankUnit unit) {
-        mTankUnits.add(unit);
+    public void addTankUnit() {
+        mTankUnits++;
         notifyPropertyChanged(BR.tankCount);
     }
 
     /**
      * Adds a sprinter unit to this node.
-     *
-     * @param unit unit to be added
      */
-    public void addUnit(SprinterUnit unit) {
-        mSprinterUnits.add(unit);
+    public void addSprinterUnit() {
+        mSprinterUnits++;
         notifyPropertyChanged(BR.sprinterCount);
-    }
-
-    /**
-     * Adds a unit to this node. It is figured out if it is a melee, tank or sprinter.
-     *
-     * @param unit unit to be added
-     */
-    public void addUnit(Unit unit) {
-        if (unit instanceof MeleeUnit) {
-            mMeleeUnits.add((MeleeUnit) unit);
-            return;
-        }
-        if (unit instanceof TankUnit) {
-            mTankUnits.add((TankUnit) unit);
-            return;
-        }
-        if (unit instanceof SprinterUnit) {
-            mSprinterUnits.add((SprinterUnit) unit);
-        }
     }
 
     /**
@@ -171,10 +137,11 @@ public class Node extends BoardEntity {
      * @param node target node
      */
     public void sendMeleeUnits(Node node) {
-        for (Unit u : mMeleeUnits) {
-            mMoveUnitCommands.add(new MoveUnitCommand(u, node));
-        }
-        mMeleeUnits.clear();
+        Game.getInstance().register(new MoveUnitCommand(
+                new MeleeUnit(mMeleeUnits, node),
+                node,
+                Game.getInstance().getEdgeBetween(this, node)));
+        mMeleeUnits = 0;
         notifyPropertyChanged(BR.node);
     }
 
@@ -184,10 +151,11 @@ public class Node extends BoardEntity {
      * @param node target node
      */
     public void sendTankUnits(Node node) {
-        for (Unit u : mTankUnits) {
-            mMoveUnitCommands.add(new MoveUnitCommand(u, node));
-        }
-        mMeleeUnits.clear();
+        Game.getInstance().register(new MoveUnitCommand(
+                new TankUnit(mTankUnits, node),
+                node,
+                Game.getInstance().getEdgeBetween(this, node)));
+        mTankUnits = 0;
         notifyPropertyChanged(BR.node);
     }
 
@@ -197,10 +165,11 @@ public class Node extends BoardEntity {
      * @param node target node
      */
     public void sendSprinterUnits(Node node) {
-        for (Unit u : mSprinterUnits) {
-            mMoveUnitCommands.add(new MoveUnitCommand(u, node));
-        }
-        mMeleeUnits.clear();
+        Game.getInstance().register(new MoveUnitCommand(
+                new SprinterUnit(mSprinterUnits, node),
+                node,
+                Game.getInstance().getEdgeBetween(this, node)));
+        mSprinterUnits = 0;
         notifyPropertyChanged(BR.node);
     }
 
@@ -281,7 +250,7 @@ public class Node extends BoardEntity {
      */
     @Bindable
     public int getMeleeCount() {
-        return mMeleeUnits.size();
+        return mMeleeUnits;
     }
 
     /**
@@ -289,7 +258,7 @@ public class Node extends BoardEntity {
      */
     @Bindable
     public int getTankCount() {
-        return mTankUnits.size();
+        return mTankUnits;
     }
 
     /**
@@ -297,7 +266,7 @@ public class Node extends BoardEntity {
      */
     @Bindable
     public int getSprinterCount() {
-        return mSprinterUnits.size();
+        return mSprinterUnits;
     }
 
     //endregion
@@ -305,15 +274,17 @@ public class Node extends BoardEntity {
     //region getters/setters
 
     /**
+     * @return gets the circle representing this node
+     */
+    public Shape getCircle() {
+        return mCircle;
+    }
+
+    /**
      * @return gets the node's position
      */
     public Position getPosition() {
         return mPosition;
-    }
-
-    @Override
-    public ArrayList<IDrawable> getDrawables() {
-        return mDrawables;
     }
 
     /**
@@ -391,6 +362,22 @@ public class Node extends BoardEntity {
      */
     public int getHealthLevelUpgradeCost() {
         return 50;
+    }
+
+    public void addUnit(Unit unit) {
+        if (unit instanceof MeleeUnit) {
+            mMeleeUnits++;
+            return;
+        }
+        if (unit instanceof TankUnit) {
+            mTankUnits++;
+            return;
+        }
+        if (unit instanceof SprinterUnit) {
+            mSprinterUnits++;
+            return;
+        }
+        throw new IllegalArgumentException("Unit is not handled.");
     }
 
     //endregion

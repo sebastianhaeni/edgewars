@@ -16,15 +16,15 @@ public abstract class Entity extends BaseObservable {
      * @param interval the interval to be updated in
      */
     public Entity(long interval) {
+        this();
         mInterval = interval;
-        Game.getInstance().register(this);
     }
 
     /**
      * Constructor for entities that don't want to be updated.
      */
     public Entity() {
-        // no op
+        Game.getInstance().register(this);
     }
 
     /**

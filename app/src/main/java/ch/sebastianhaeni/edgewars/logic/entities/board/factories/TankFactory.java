@@ -2,7 +2,6 @@ package ch.sebastianhaeni.edgewars.logic.entities.board.factories;
 
 import ch.sebastianhaeni.edgewars.BR;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
-import ch.sebastianhaeni.edgewars.logic.entities.board.units.TankUnit;
 
 /**
  * A concrete factory that builds melee units.
@@ -20,7 +19,7 @@ public class TankFactory extends Factory {
 
     @Override
     public void produceUnit() {
-        getNode().addUnit(new TankUnit(getNode()));
+        getNode().addTankUnit();
         notifyPropertyChanged(BR.tankCount);
     }
 

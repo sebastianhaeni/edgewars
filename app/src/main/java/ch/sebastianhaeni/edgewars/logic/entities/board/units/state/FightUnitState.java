@@ -33,7 +33,6 @@ public class FightUnitState extends UnitState {
     @Override
     public void update(long millis) {
         if (getUnit().getState() instanceof DeadState) {
-            getUnit().setState(new MovingState(getUnit(), mTargetNode, mPlayer));
             return;
         }
 
