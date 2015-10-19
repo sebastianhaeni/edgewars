@@ -22,6 +22,7 @@ import ch.sebastianhaeni.edgewars.logic.entities.board.node.state.OwnedState;
 import ch.sebastianhaeni.edgewars.logic.entities.board.units.MeleeUnit;
 import ch.sebastianhaeni.edgewars.logic.entities.board.units.SprinterUnit;
 import ch.sebastianhaeni.edgewars.logic.entities.board.units.TankUnit;
+import ch.sebastianhaeni.edgewars.util.Colors;
 import ch.sebastianhaeni.edgewars.util.Position;
 
 public class LevelDeserializer implements JsonDeserializer {
@@ -49,10 +50,14 @@ public class LevelDeserializer implements JsonDeserializer {
             int levelNumber = levelObject.get("level_number").getAsInt();
             level.setLevelNumber(levelNumber);
 
-            // add players to level
+            // add computer players to level
             JsonArray playersArray = levelObject.get("players").getAsJsonArray();
-            ArrayList<Player> playersList = this.createPlayers(playersArray);
-            level.setPlayers(playersList);
+            ArrayList<Player> computerPlayersList = this.createPlayers(playersArray, "computer", Colors.NODE_OPPONENT);
+            level.setComputerPlayers(computerPlayersList);
+
+            // add human player(s) to level
+            ArrayList<Player> humanPlayersList = this.createPlayers(playersArray, "human", Colors.NODE_MINE);
+            level.setHumanPlayers(humanPlayersList);
 
             // add nodes to level
             JsonArray nodesArray = levelObject.get("nodes").getAsJsonArray();
@@ -71,7 +76,7 @@ public class LevelDeserializer implements JsonDeserializer {
         return levels;
     }
 
-    private ArrayList<Player> createPlayers(JsonArray playersArray) throws JsonParseException {
+    private ArrayList<Player> createPlayers(JsonArray playersArray, String nature, float[] color) throws JsonParseException {
 
         ArrayList<Player> levelPlayersList = new ArrayList<>();
 
@@ -82,15 +87,12 @@ public class LevelDeserializer implements JsonDeserializer {
             String playerNature = playerObject.get("nature").getAsString();
 
             // FIXME: 18.10.2015 steven, please fix
-            Player player = null;
+            Player player;
 
-            switch (playerNature) {
-                case "human":
-                    //player = LevelLoader.humanPlayer;
-                    break;
-                default: // computer player
-                    //player = LevelLoader.addComputerPlayer();
-                    break;
+            if (playerNature.equals(nature)) {
+                player = new Player (color);
+            } else {
+                continue;
             }
 
             // add player to hash map (in order to match with nodes below)

@@ -25,16 +25,8 @@ import ch.sebastianhaeni.edgewars.util.Colors;
 
 public class LevelLoader {
 
-    public final ArrayList<Player> mComputerPlayers = new ArrayList<>();
-
     private final Context mContext;
     private Levels mLevels;
-
-    public Player addComputerPlayer() {
-        Player newComputerPlayer = new Player(Colors.NODE_OPPONENT);
-        mComputerPlayers.add(newComputerPlayer);
-        return newComputerPlayer;
-    }
 
     public LevelLoader(Context context) {
 
@@ -69,15 +61,19 @@ public class LevelLoader {
             board.addEntity(node);
         }
 
-        ArrayList<Player> players = new ArrayList<>(mComputerPlayers);
+        // get human player
+        Player humanPlayer = level.getHumanPlayers().get(0);
 
-        Player humanPlayer = new Player(Colors.NODE_MINE);
+        // get all players of level and add to array list
+        ArrayList<Player> allPlayers = new ArrayList<>();
+        ArrayList<Player> computerPlayers = level.getComputerPlayers();
+        allPlayers.addAll(computerPlayers);
+        allPlayers.add(humanPlayer);
 
-        players.add(humanPlayer);
-        GameState state = new GameState(camera, board, players, humanPlayer);
+        GameState state = new GameState(camera, board, allPlayers, humanPlayer);
 
         // add AI to computer players
-        for (Player computerPlayer : mComputerPlayers) {
+        for (Player computerPlayer : computerPlayers) {
             computerPlayer.setAI(new RuleBasedAI(state));
         }
 

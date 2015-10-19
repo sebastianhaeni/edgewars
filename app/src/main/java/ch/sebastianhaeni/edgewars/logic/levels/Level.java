@@ -9,7 +9,8 @@ import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
 public class Level {
 
     private int mLevelNumber;
-    private ArrayList<Player> mPlayers = new ArrayList<>();
+    private ArrayList<Player> mHumanPlayers = new ArrayList<>();
+    private ArrayList<Player> mComputerPlayers = new ArrayList<>();
     private ArrayList<Node> mNodes = new ArrayList<>();
     private ArrayList<Edge> mEdges = new ArrayList<>();
 
@@ -27,12 +28,20 @@ public class Level {
         this.mLevelNumber = levelNumber;
     }
 
-    public ArrayList<Player> getPlayers() {
-        return mPlayers;
+    public ArrayList<Player> getHumanPlayers() {
+        return mHumanPlayers;
     }
 
-    public void setPlayers(ArrayList<Player> players) {
-        this.mPlayers = players;
+    public void setHumanPlayers(ArrayList<Player> humanPlayers) {
+        this.mHumanPlayers = humanPlayers;
+    }
+
+    public ArrayList<Player> getComputerPlayers() {
+        return mComputerPlayers;
+    }
+
+    public void setComputerPlayers(ArrayList<Player> computerPlayers) {
+        this.mComputerPlayers = computerPlayers;
     }
 
     /**
