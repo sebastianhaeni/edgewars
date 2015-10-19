@@ -6,7 +6,7 @@ android {
     buildToolsVersion "23.0.1"
 
     defaultConfig {
-        applicationId "ch.bfh.edgewars"
+        applicationId "ch.sebastianhaeni.edgewars"
         minSdkVersion 21
         targetSdkVersion 23
         versionCode 1
