@@ -18,6 +18,8 @@ public abstract class ESProgram {
     public ESProgram(Context context) {
         mContext = context;
         mProgramHandle = ESShader.loadProgram(getVertexShaderSource(), getFragmentShaderSource());
+        bind();
+        ESShader.linkProgram(mProgramHandle);
     }
 
     /**
@@ -43,4 +45,11 @@ public abstract class ESProgram {
      * @return gets the resource ID of the fragment shader source file
      */
     protected abstract int getFragmentShaderSource();
+
+    /**
+     * Can be overridden by implementations to bind variables.
+     */
+    public void bind() {
+        // no op
+    }
 }
