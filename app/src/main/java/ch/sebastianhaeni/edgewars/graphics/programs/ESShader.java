@@ -123,7 +123,6 @@ public class ESShader {
         int vertexShader;
         int fragmentShader;
         int programObject;
-        int[] linked = new int[1];
 
         // Load the vertex/fragment shaders
         vertexShader = loadShader(GLES20.GL_VERTEX_SHADER, getCode(vertShaderSrc));
@@ -147,21 +146,6 @@ public class ESShader {
         GLES20.glAttachShader(programObject, vertexShader);
         GLES20.glAttachShader(programObject, fragmentShader);
 
-        // Link the program
-        GLES20.glLinkProgram(programObject);
-
-        // Check the link status
-        GLES20.glGetProgramiv(programObject, GLES20.GL_LINK_STATUS, linked, 0);
-
-        if (linked[0] == 0) {
-            throw new RuntimeException("Error linking program: "
-                    + GLES20.glGetProgramInfoLog(programObject));
-        }
-
-        // Free up no longer needed shader resources
-        GLES20.glDeleteShader(vertexShader);
-        GLES20.glDeleteShader(fragmentShader);
-
         return programObject;
     }
 
@@ -184,4 +168,22 @@ public class ESShader {
         return null;
     }
 
+    public static void linkProgram(int programHandle) {
+        int[] linked = new int[1];
+
+        // Link the program
+        GLES20.glLinkProgram(programHandle);
+
+        // Check the link status
+        GLES20.glGetProgramiv(programHandle, GLES20.GL_LINK_STATUS, linked, 0);
+
+        if (linked[0] == 0) {
+            throw new RuntimeException("Error linking program: "
+                    + GLES20.glGetProgramInfoLog(programHandle));
+        }
+
+        // Free up no longer needed shader resources
+        //GLES20.glDeleteShader(vertexShader);
+        //GLES20.glDeleteShader(fragmentShader);
+    }
 }

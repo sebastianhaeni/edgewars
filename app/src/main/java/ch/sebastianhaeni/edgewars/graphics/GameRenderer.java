@@ -8,6 +8,8 @@ import android.opengl.Matrix;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
+import ch.sebastianhaeni.edgewars.graphics.programs.BatchTextProgram;
+import ch.sebastianhaeni.edgewars.graphics.programs.GLText;
 import ch.sebastianhaeni.edgewars.graphics.programs.ParticleProgram;
 import ch.sebastianhaeni.edgewars.graphics.programs.ShapeProgram;
 import ch.sebastianhaeni.edgewars.graphics.shapes.IDrawable;
@@ -45,6 +47,8 @@ public class GameRenderer implements GLSurfaceView.Renderer {
     private int mScreenHeight;
     private ShapeProgram mShapeProgram;
     private ParticleProgram mParticleProgram;
+    private BatchTextProgram mBatchTextProgram;
+    private GLText glText;
 
     /**
      * Constructor
@@ -64,8 +68,19 @@ public class GameRenderer implements GLSurfaceView.Renderer {
         // Set the background frame color
         GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
+        mBatchTextProgram = new BatchTextProgram(mContext);
         mShapeProgram = new ShapeProgram(mContext);
         mParticleProgram = new ParticleProgram(mContext);
+
+        glText = new GLText(mContext);
+
+        // Load the font from file (set size + padding), creates the texture
+        // NOTE: after a successful call to this the font is ready for rendering!
+        glText.load("Roboto-Regular.ttf", 14, 2, 2);  // Create Font (Height: 14 Pixels / X+Y Padding 2 Pixels)
+
+        // enable texture + alpha blending
+        GLES20.glEnable(GLES20.GL_BLEND);
+        GLES20.glBlendFunc(GLES20.GL_ONE, GLES20.GL_ONE_MINUS_SRC_ALPHA);
 
         mThread.setRunning(true);
         mThread.start();
@@ -75,6 +90,10 @@ public class GameRenderer implements GLSurfaceView.Renderer {
     public void onDrawFrame(GL10 unused) {
         // Draw background color
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
+
+        glText.begin(1.0f, 1.0f, 1.0f, 1.0f, mMVPMatrix);         // Begin Text Rendering (Set Color WHITE)
+        glText.draw("Test String 3D!", 0f, 0f);
+        glText.end();
 
         renderState();
     }
@@ -140,11 +159,24 @@ public class GameRenderer implements GLSurfaceView.Renderer {
         return mMVPMatrix;
     }
 
+    /**
+     * @return gets shape program
+     */
     public ShapeProgram getShapeProgram() {
         return mShapeProgram;
     }
 
+    /**
+     * @return gets particle program
+     */
     public ParticleProgram getParticleProgram() {
         return mParticleProgram;
+    }
+
+    /**
+     * @return gets batch text program
+     */
+    public BatchTextProgram getBatchTextProgram() {
+        return mBatchTextProgram;
     }
 }
