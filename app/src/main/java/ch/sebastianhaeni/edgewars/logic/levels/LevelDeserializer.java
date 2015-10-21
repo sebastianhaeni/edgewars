@@ -86,7 +86,6 @@ public class LevelDeserializer implements JsonDeserializer {
             int playerId = playerObject.get("player_id").getAsInt();
             String playerNature = playerObject.get("nature").getAsString();
 
-            // FIXME: 18.10.2015 steven, please fix
             Player player;
 
             if (playerNature.equals(nature)) {
