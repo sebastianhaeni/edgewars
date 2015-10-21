@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Random;
 
 import ch.sebastianhaeni.edgewars.R;
 import ch.sebastianhaeni.edgewars.logic.ai.RuleBasedAI;
@@ -21,40 +22,44 @@ import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
 import ch.sebastianhaeni.edgewars.logic.levels.Level;
 import ch.sebastianhaeni.edgewars.logic.levels.LevelDeserializer;
 import ch.sebastianhaeni.edgewars.logic.levels.Levels;
-import ch.sebastianhaeni.edgewars.util.Colors;
 
 public class LevelLoader {
-
-    public final ArrayList<Player> mComputerPlayers = new ArrayList<>();
 
     private final Context mContext;
     private Levels mLevels;
 
-    public Player addComputerPlayer() {
-        Player newComputerPlayer = new Player(Colors.NODE_OPPONENT);
-        mComputerPlayers.add(newComputerPlayer);
-        return newComputerPlayer;
-    }
-
     public LevelLoader(Context context) {
 
         mContext = context;
-
-        // TODO: validate levels.json with json schema
-        // this.validateJsonFile();
 
         // load levels from json file to mLevels
         this.loadLevelsFromJsonFile();
 
     }
 
-    public GameState build(int levelNumber) {
+    public ArrayList<Integer> getLevelNumbers() {
+        return mLevels.getAllLevelNumbers();
+    }
+
+    public int getRandomLevelNumber() {
+        ArrayList<Integer> levelNumbers = this.getLevelNumbers();
+        Random r = new Random();
+        int i = r.nextInt(levelNumbers.size());
+        int levelNr = levelNumbers.get(i);
+        return levelNr;
+    }
+
+    public GameState build(int levelNumber) throws IllegalArgumentException {
+
+        // ensure that the specified level number does exist
+        if (!mLevels.getAllLevelNumbers().contains(levelNumber)) {
+            throw new IllegalArgumentException("A level with the specified number (" + levelNumber + ") was not found!");
+        }
+
+        Level level = mLevels.getLevels().get(levelNumber - 1);
 
         Board board = new Board();
         Camera camera = new Camera();
-
-        // TODO: do it better?
-        Level level = mLevels.getLevels().get(levelNumber - 1);
 
         ArrayList<Node> nodes = level.getNodes();
         ArrayList<Edge> edges = level.getEdges();
@@ -69,15 +74,19 @@ public class LevelLoader {
             board.addEntity(node);
         }
 
-        ArrayList<Player> players = new ArrayList<>(mComputerPlayers);
+        // get human player
+        Player humanPlayer = level.getHumanPlayers().get(0);
 
-        Player humanPlayer = new Player(Colors.NODE_MINE);
+        // get all players of level and add to array list
+        ArrayList<Player> allPlayers = new ArrayList<>();
+        ArrayList<Player> computerPlayers = level.getComputerPlayers();
+        allPlayers.addAll(computerPlayers);
+        allPlayers.add(humanPlayer);
 
-        players.add(humanPlayer);
-        GameState state = new GameState(camera, board, players, humanPlayer);
+        GameState state = new GameState(camera, board, allPlayers, humanPlayer);
 
         // add AI to computer players
-        for (Player computerPlayer : mComputerPlayers) {
+        for (Player computerPlayer : computerPlayers) {
             computerPlayer.setAI(new RuleBasedAI(state));
         }
 
@@ -85,7 +94,7 @@ public class LevelLoader {
     }
 
     private void loadLevelsFromJsonFile() {
-        // initialize Gson
+        // initialize gson
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(Levels.class, new LevelDeserializer());
         Gson gson = gsonBuilder.create();

@@ -6,6 +6,9 @@ import android.support.annotation.NonNull;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 
+import java.util.ArrayList;
+import java.util.Random;
+
 import ch.sebastianhaeni.edgewars.logic.GameState;
 import ch.sebastianhaeni.edgewars.logic.GameThread;
 import ch.sebastianhaeni.edgewars.logic.LevelLoader;
@@ -32,7 +35,8 @@ public class GameSurfaceView extends GLSurfaceView {
         LevelLoader levelLoader = new LevelLoader(context);
 
         // load game state and level number
-        GameState gameState = levelLoader.build(5);
+        int levelNr = levelLoader.getRandomLevelNumber();
+        GameState gameState = levelLoader.build(levelNr);
 
         mThread = new GameThread();
         GameRenderer renderer = new GameRenderer(context, mThread, gameState);
