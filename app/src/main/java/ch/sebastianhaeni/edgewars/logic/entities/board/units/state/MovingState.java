@@ -79,7 +79,7 @@ public class MovingState extends UnitState {
      * Moves the unit along the edge.
      */
     private void move() {
-        mTravelledDistance += getUnit().getSpeed() / 2000;
+        mTravelledDistance += getUnit().getSpeed() / 2000f;
 
         double dx = mTargetPosition.getX() - mStartingPosition.getX();
         double dy = mTargetPosition.getY() - mStartingPosition.getY();

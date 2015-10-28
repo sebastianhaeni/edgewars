@@ -1,5 +1,7 @@
 package ch.sebastianhaeni.edgewars.util;
 
+import android.util.Log;
+
 /**
  * Position helper class.
  */

@@ -1,12 +1,12 @@
 package ch.sebastianhaeni.edgewars.graphics.shapes.decorators;
 
-import android.util.Log;
-
 import ch.sebastianhaeni.edgewars.graphics.GameRenderer;
 import ch.sebastianhaeni.edgewars.graphics.shapes.Shape;
+import ch.sebastianhaeni.edgewars.graphics.text.TextObject;
 
 public class TextDecorator extends DrawableDecorator {
     private final String mText;
+    private boolean mAdded;
 
     public TextDecorator(Shape shape, String text) {
         super(shape);
@@ -15,7 +15,17 @@ public class TextDecorator extends DrawableDecorator {
 
     @Override
     public void draw(GameRenderer renderer) {
-        Log.d("TextDecorator", "Drawing text: " + mText);
+        if (mAdded) {
+            return;
+        }
+
+        mAdded = true;
+
+        renderer.getTextManager().addText(
+                new TextObject(
+                        mText,
+                        getShape().getPosition().getX(),
+                        getShape().getPosition().getY()));
     }
 
 }

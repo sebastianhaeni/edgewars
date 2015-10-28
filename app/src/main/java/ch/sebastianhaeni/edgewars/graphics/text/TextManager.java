@@ -8,11 +8,13 @@ import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 import java.util.Vector;
 
+import ch.sebastianhaeni.edgewars.graphics.programs.ESShader;
+
 public class TextManager {
 
     private static final float RI_TEXT_UV_BOX_WIDTH = 0.125f;
     private static final float RI_TEXT_WIDTH = 32.0f;
-    private static final float RI_TEXT_SPACESIZE = 20f;
+    private static final float RI_TEXT_SPACE_SIZE = 20f;
 
     private FloatBuffer vertexBuffer;
     private FloatBuffer textureBuffer;
@@ -33,14 +35,17 @@ public class TextManager {
 
     private float uniformScale;
 
-    public static int[] l_size = {36, 29, 30, 34, 25, 25, 34, 33,
-            11, 20, 31, 24, 48, 35, 39, 29,
-            42, 31, 27, 31, 34, 35, 46, 35,
-            31, 27, 30, 26, 28, 26, 31, 28,
-            28, 28, 29, 29, 14, 24, 30, 18,
-            26, 14, 14, 14, 25, 28, 31, 0,
-            0, 38, 39, 12, 36, 34, 0, 0,
-            0, 38, 0, 0, 0, 0, 0, 0};
+    public static int[] l_size =
+            {
+                    36, 29, 30, 34, 25, 25, 34, 33,
+                    11, 20, 31, 24, 48, 35, 39, 29,
+                    42, 31, 27, 31, 34, 35, 46, 35,
+                    31, 27, 30, 26, 28, 26, 31, 28,
+                    28, 28, 29, 29, 14, 24, 30, 18,
+                    26, 14, 14, 14, 25, 28, 31, 0,
+                    0, 38, 39, 12, 36, 34, 0, 0,
+                    0, 38, 0, 0, 0, 0, 0, 0
+            };
 
     public Vector<TextObject> textCollection;
 
@@ -99,7 +104,7 @@ public class TextManager {
         }
     }
 
-    public void PrepareDrawInfo() {
+    public void prepareDrawInfo() {
         // Reset the indices.
         index_vectors = 0;
         index_indices = 0;
@@ -129,9 +134,9 @@ public class TextManager {
 
     }
 
-    public void PrepareDraw() {
+    public void prepareDraw() {
         // Setup all the arrays
-        PrepareDrawInfo();
+        prepareDrawInfo();
 
         // Using the iterator protects for problems with concurrency
         for (TextObject txt : textCollection) {
@@ -143,9 +148,10 @@ public class TextManager {
         }
     }
 
-    public void Draw(float[] m) {
+    public void draw(float[] m) {
         // Set the correct shader for our grid object.
         GLES20.glUseProgram(riGraphicTools.sp_Text);
+        ESShader.checkGlError("glUseProgram");
 
         // The vertex buffer.
         ByteBuffer bb = ByteBuffer.allocateDirect(vectors.length * 4);
@@ -177,54 +183,56 @@ public class TextManager {
 
         // get handle to vertex shader's vPosition member
         int mPositionHandle = GLES20.glGetAttribLocation(riGraphicTools.sp_Text, "vPosition");
+        int mTexCoordLoc = GLES20.glGetAttribLocation(riGraphicTools.sp_Text, "a_texCoord");
+        int mColorHandle = GLES20.glGetAttribLocation(riGraphicTools.sp_Text, "a_Color");
+        ESShader.checkGlError("glGetAttribLocation");
+        int mtrxhandle = GLES20.glGetUniformLocation(riGraphicTools.sp_Text, "uMVPMatrix");
+        int mSamplerLoc = GLES20.glGetUniformLocation(riGraphicTools.sp_Text, "s_texture");
+        ESShader.checkGlError("glGetUniformLocation");
 
         // Enable a handle to the triangle vertices
         GLES20.glEnableVertexAttribArray(mPositionHandle);
+        ESShader.checkGlError("glEnableVertexAttribArray");
 
         // Prepare the background coordinate data
         GLES20.glVertexAttribPointer(mPositionHandle, 3,
                 GLES20.GL_FLOAT, false,
                 0, vertexBuffer);
+        ESShader.checkGlError("glGetUniformLocation");
 
-        int mTexCoordLoc = GLES20.glGetAttribLocation(riGraphicTools.sp_Text, "a_texCoord");
-
-        // Prepare the texturecoordinates
+        // Prepare the texture coordinates
         GLES20.glVertexAttribPointer(mTexCoordLoc, 2, GLES20.GL_FLOAT,
                 false,
                 0, textureBuffer);
+        ESShader.checkGlError("glVertexAttribPointer");
 
         GLES20.glEnableVertexAttribArray(mPositionHandle);
         GLES20.glEnableVertexAttribArray(mTexCoordLoc);
-
-        int mColorHandle = GLES20.glGetAttribLocation(riGraphicTools.sp_Text, "a_Color");
-
-        // Enable a handle to the triangle vertices
         GLES20.glEnableVertexAttribArray(mColorHandle);
+        ESShader.checkGlError("glEnableVertexAttribArray");
 
         // Prepare the background coordinate data
         GLES20.glVertexAttribPointer(mColorHandle, 4,
                 GLES20.GL_FLOAT, false,
                 0, colorBuffer);
-
-        // get handle to shape's transformation matrix
-        int mtrxhandle = GLES20.glGetUniformLocation(riGraphicTools.sp_Text, "uMVPMatrix");
+        ESShader.checkGlError("glVertexAttribPointer");
 
         // Apply the projection and view transformation
         GLES20.glUniformMatrix4fv(mtrxhandle, 1, false, m, 0);
-
-        int mSamplerLoc = GLES20.glGetUniformLocation(riGraphicTools.sp_Text, "s_texture");
+        ESShader.checkGlError("glUniformMatrix4fv");
 
         // Set the sampler texture unit to our selected id
         GLES20.glUniform1i(mSamplerLoc, textureNr);
+        ESShader.checkGlError("glUniform1i");
 
-        // Draw the triangle
+        // draw the triangle
         GLES20.glDrawElements(GLES20.GL_TRIANGLES, indices.length, GLES20.GL_UNSIGNED_SHORT, drawListBuffer);
+        ESShader.checkGlError("glDrawElements");
 
         // Disable vertex array
         GLES20.glDisableVertexAttribArray(mPositionHandle);
         GLES20.glDisableVertexAttribArray(mTexCoordLoc);
         GLES20.glDisableVertexAttribArray(mColorHandle);
-
     }
 
     private int convertCharToIndex(int c_val) {
@@ -278,7 +286,7 @@ public class TextManager {
 
             if (index == -1) {
                 // unknown character, we will add a space for it to be save.
-                x += ((RI_TEXT_SPACESIZE) * uniformScale);
+                x += ((RI_TEXT_SPACE_SIZE) * -uniformScale);
                 continue;
             }
 
@@ -298,16 +306,16 @@ public class TextManager {
 
             vec[0] = x;
             vec[1] = y + (RI_TEXT_WIDTH * uniformScale);
-            vec[2] = 0.99f;
+            vec[2] = 0;
             vec[3] = x;
             vec[4] = y;
-            vec[5] = 0.99f;
-            vec[6] = x + (RI_TEXT_WIDTH * uniformScale);
+            vec[5] = 0;
+            vec[6] = x + (RI_TEXT_WIDTH * -uniformScale);
             vec[7] = y;
-            vec[8] = 0.99f;
-            vec[9] = x + (RI_TEXT_WIDTH * uniformScale);
+            vec[8] = 0;
+            vec[9] = x + (RI_TEXT_WIDTH * -uniformScale);
             vec[10] = y + (RI_TEXT_WIDTH * uniformScale);
-            vec[11] = 0.99f;
+            vec[11] = 0;
 
             colors = new float[]
                     {val.color[0], val.color[1], val.color[2], val.color[3],
@@ -331,7 +339,7 @@ public class TextManager {
             addCharRenderInformation(vec, colors, uv, indices);
 
             // Calculate the new position
-            x += ((l_size[index] / 2) * uniformScale);
+            x += ((l_size[index] / 2) * -uniformScale);
         }
     }
 

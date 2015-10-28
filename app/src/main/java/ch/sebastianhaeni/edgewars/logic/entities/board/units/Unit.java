@@ -35,9 +35,11 @@ public abstract class Unit extends BoardEntity {
         setState(new IdleState(this));
         mHealth = getMaxHealth();
         mCount = count;
-        mNode=node;
+        mNode = node;
+        mState = new IdleState(this);
         mPosition = new Position(node.getPosition().getX(), node.getPosition().getY());
         getDrawables().add(new TextDecorator(getShape(), String.valueOf(mCount)));
+        getDrawables().add(getShape());
     }
 
     /**

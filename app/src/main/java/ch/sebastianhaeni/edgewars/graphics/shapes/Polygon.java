@@ -89,7 +89,7 @@ public class Polygon extends Shape {
         GLES20.glUniform4fv(renderer.getShapeProgram().getColorHandle(), 1, getColor(), 0);
         ESShader.checkGlError("glUniform4fv");
 
-        // Draw the triangle
+        // draw the triangle
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, 0, mCorners);
         ESShader.checkGlError("glDrawArrays");
 
