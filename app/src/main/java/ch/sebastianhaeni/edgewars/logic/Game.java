@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-import ch.sebastianhaeni.edgewars.graphics.shapes.IDrawable;
+import ch.sebastianhaeni.edgewars.graphics.drawables.IDrawable;
 import ch.sebastianhaeni.edgewars.logic.commands.Command;
 import ch.sebastianhaeni.edgewars.logic.entities.Entity;
 import ch.sebastianhaeni.edgewars.logic.entities.board.BoardEntity;

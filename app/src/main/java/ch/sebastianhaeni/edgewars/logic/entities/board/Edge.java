@@ -2,9 +2,10 @@ package ch.sebastianhaeni.edgewars.logic.entities.board;
 
 import java.util.ArrayList;
 
-import ch.sebastianhaeni.edgewars.graphics.shapes.IDrawable;
-import ch.sebastianhaeni.edgewars.graphics.shapes.Line;
+import ch.sebastianhaeni.edgewars.graphics.drawables.IDrawable;
+import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Line;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
+import ch.sebastianhaeni.edgewars.util.Colors;
 
 /**
  * An edge connects two nodes and has no functionality.
@@ -26,7 +27,7 @@ public class Edge extends BoardEntity {
         mTargetNode = targetNode;
 
         mDrawables.clear();
-        mDrawables.add(new Line(sourceNode.getPosition(), targetNode.getPosition()));
+        mDrawables.add(new Line(sourceNode.getPosition(), targetNode.getPosition(), Colors.EDGE));
     }
 
     @Override

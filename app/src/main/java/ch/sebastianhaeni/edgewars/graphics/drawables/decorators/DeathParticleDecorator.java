@@ -1,4 +1,4 @@
-package ch.sebastianhaeni.edgewars.graphics.shapes.decorators;
+package ch.sebastianhaeni.edgewars.graphics.drawables.decorators;
 
 import android.opengl.GLES20;
 import android.os.SystemClock;
@@ -9,8 +9,8 @@ import java.nio.FloatBuffer;
 import java.util.Random;
 
 import ch.sebastianhaeni.edgewars.graphics.GameRenderer;
-import ch.sebastianhaeni.edgewars.graphics.programs.ESShader;
-import ch.sebastianhaeni.edgewars.graphics.shapes.Shape;
+import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Shape;
+import ch.sebastianhaeni.edgewars.graphics.programs.OpenGLUtil;
 
 /**
  * Decorates a shape with death particles. Duration of animation is 1s.
@@ -67,7 +67,7 @@ public class DeathParticleDecorator extends DrawableDecorator {
 
         // Use the program object
         GLES20.glUseProgram(renderer.getParticleProgram().getProgramHandle());
-        ESShader.checkGlError("glUseProgram");
+        OpenGLUtil.checkGlError("glUseProgram");
 
         // Apply the projection and view transformation
         GLES20.glUniformMatrix4fv(
@@ -76,11 +76,11 @@ public class DeathParticleDecorator extends DrawableDecorator {
                 false,
                 renderer.getMVPMatrix(),
                 0);
-        ESShader.checkGlError("glUniformMatrix4fv");
+        OpenGLUtil.checkGlError("glUniformMatrix4fv");
 
         // Load uniform time variable
         GLES20.glUniform1f(renderer.getParticleProgram().getTimeHandle(), mTime);
-        ESShader.checkGlError("glUniform1f");
+        OpenGLUtil.checkGlError("glUniform1f");
 
         // set color of base shape
         GLES20.glUniform4f(
@@ -89,7 +89,7 @@ public class DeathParticleDecorator extends DrawableDecorator {
                 getShape().getColor()[1],
                 getShape().getColor()[2],
                 .5f);
-        ESShader.checkGlError("glUniform4f");
+        OpenGLUtil.checkGlError("glUniform4f");
 
         // Load the vertex attributes
         mParticles.position(0);
@@ -100,7 +100,7 @@ public class DeathParticleDecorator extends DrawableDecorator {
                 false,
                 PARTICLE_SIZE * 4,
                 mParticles);
-        ESShader.checkGlError("glVertexAttribPointer");
+        OpenGLUtil.checkGlError("glVertexAttribPointer");
 
         mParticles.position(1);
         GLES20.glVertexAttribPointer(
@@ -110,7 +110,7 @@ public class DeathParticleDecorator extends DrawableDecorator {
                 false,
                 PARTICLE_SIZE * 4,
                 mParticles);
-        ESShader.checkGlError("glVertexAttribPointer");
+        OpenGLUtil.checkGlError("glVertexAttribPointer");
 
         mParticles.position(4);
         GLES20.glVertexAttribPointer(
@@ -120,7 +120,7 @@ public class DeathParticleDecorator extends DrawableDecorator {
                 false,
                 PARTICLE_SIZE * 4,
                 mParticles);
-        ESShader.checkGlError("glVertexAttribPointer");
+        OpenGLUtil.checkGlError("glVertexAttribPointer");
 
         GLES20.glEnableVertexAttribArray(renderer.getParticleProgram().getLifetimeHandle());
         GLES20.glEnableVertexAttribArray(renderer.getParticleProgram().getEndPositionHandle());

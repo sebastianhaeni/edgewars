@@ -1,8 +1,8 @@
-package ch.sebastianhaeni.edgewars.graphics.shapes.decorators;
+package ch.sebastianhaeni.edgewars.graphics.drawables.decorators;
 
 import ch.sebastianhaeni.edgewars.graphics.GameRenderer;
-import ch.sebastianhaeni.edgewars.graphics.shapes.IDrawable;
-import ch.sebastianhaeni.edgewars.graphics.shapes.Shape;
+import ch.sebastianhaeni.edgewars.graphics.drawables.IDrawable;
+import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Shape;
 
 /**
  * Decorates a shape and is drawable.

@@ -27,11 +27,11 @@ public class OwnedNodeDialog extends Dialog {
     private final Node mNode;
     private final GameController mController;
 
-    public OwnedNodeDialog(Context context, Node node,GameController controller) {
+    public OwnedNodeDialog(Context context, Node node, GameController controller) {
         super(context);
         setTitle("Owned Node");
         mNode = node;
-        mController=controller;
+        mController = controller;
         mBinding = DataBindingUtil.inflate(getLayoutInflater(), R.layout.dialog_owned_node, null, false);
         mBinding.setNode(mNode);
         mBinding.setDialog(this);

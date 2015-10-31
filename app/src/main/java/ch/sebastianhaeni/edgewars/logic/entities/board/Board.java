@@ -2,7 +2,6 @@ package ch.sebastianhaeni.edgewars.logic.entities.board;
 
 import java.util.ArrayList;
 
-import ch.sebastianhaeni.edgewars.graphics.shapes.IDrawable;
 import ch.sebastianhaeni.edgewars.logic.entities.Entity;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
 
@@ -28,8 +27,6 @@ public class Board extends Entity {
     public void addEntity(BoardEntity e) {
         mEntities.add(e);
     }
-
-
 
     /**
      * @return gets the nodes on the board

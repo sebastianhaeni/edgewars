@@ -1,7 +1,7 @@
 package ch.sebastianhaeni.edgewars.logic.entities.board.units;
 
-import ch.sebastianhaeni.edgewars.graphics.shapes.Shape;
-import ch.sebastianhaeni.edgewars.graphics.shapes.decorators.TextDecorator;
+import ch.sebastianhaeni.edgewars.graphics.drawables.decorators.TextDecorator;
+import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Shape;
 import ch.sebastianhaeni.edgewars.logic.entities.board.BoardEntity;
 import ch.sebastianhaeni.edgewars.logic.entities.board.Edge;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
@@ -98,7 +98,10 @@ public abstract class Unit extends BoardEntity {
 
     @Override
     public void update(long millis) {
-        getState().update(millis);
+        if (mState == null) {
+            return;
+        }
+        mState.update(millis);
     }
 
     /**

@@ -3,9 +3,9 @@ package ch.sebastianhaeni.edgewars.logic.entities.board.node;
 import android.databinding.Bindable;
 
 import ch.sebastianhaeni.edgewars.BR;
-import ch.sebastianhaeni.edgewars.graphics.shapes.IDrawable;
-import ch.sebastianhaeni.edgewars.graphics.shapes.Polygon;
-import ch.sebastianhaeni.edgewars.graphics.shapes.Shape;
+import ch.sebastianhaeni.edgewars.graphics.drawables.IDrawable;
+import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Polygon;
+import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Shape;
 import ch.sebastianhaeni.edgewars.logic.Game;
 import ch.sebastianhaeni.edgewars.logic.commands.MoveUnitCommand;
 import ch.sebastianhaeni.edgewars.logic.entities.board.BoardEntity;
@@ -18,6 +18,7 @@ import ch.sebastianhaeni.edgewars.logic.entities.board.units.MeleeUnit;
 import ch.sebastianhaeni.edgewars.logic.entities.board.units.SprinterUnit;
 import ch.sebastianhaeni.edgewars.logic.entities.board.units.TankUnit;
 import ch.sebastianhaeni.edgewars.logic.entities.board.units.Unit;
+import ch.sebastianhaeni.edgewars.util.Colors;
 import ch.sebastianhaeni.edgewars.util.Position;
 
 /**
@@ -64,7 +65,7 @@ public class Node extends BoardEntity {
         mPosition = position;
         mHealth = getMaxHealth();
 
-        mCircle = new Polygon(mPosition, 80, 0);
+        mCircle = new Polygon(mPosition, Colors.NODE_NEUTRAL, 80, 0);
 
         getDrawables().add(mCircle);
     }

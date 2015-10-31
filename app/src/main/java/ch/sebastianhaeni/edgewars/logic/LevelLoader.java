@@ -19,7 +19,6 @@ import ch.sebastianhaeni.edgewars.logic.entities.board.Board;
 import ch.sebastianhaeni.edgewars.logic.entities.board.Edge;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.state.OwnedState;
-import ch.sebastianhaeni.edgewars.logic.levels.Level;
 import ch.sebastianhaeni.edgewars.logic.levels.LevelDeserializer;
 import ch.sebastianhaeni.edgewars.logic.levels.Levels;
 import ch.sebastianhaeni.edgewars.util.Colors;
@@ -46,7 +45,7 @@ public class LevelLoader {
         // this.validateJsonFile();
 
         // load levels from json file to mLevels
-       // this.loadLevelsFromJsonFile();
+        // this.loadLevelsFromJsonFile();
 
     }
 
@@ -61,6 +60,9 @@ public class LevelLoader {
 
         Node node1 = new Node(new Position(-5, 0));
         node1.setState(new OwnedState(node1, human));
+        node1.getMeleeFactory().buildUnit();
+        node1.getMeleeFactory().buildUnit();
+        node1.getMeleeFactory().buildUnit();
 
         Node node2 = new Node(new Position(0, -3));
 

@@ -1,4 +1,4 @@
-package ch.sebastianhaeni.edgewars.graphics.shapes;
+package ch.sebastianhaeni.edgewars.graphics.drawables.shapes;
 
 import android.opengl.GLES20;
 
@@ -7,7 +7,7 @@ import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
 import ch.sebastianhaeni.edgewars.graphics.GameRenderer;
-import ch.sebastianhaeni.edgewars.graphics.programs.ESShader;
+import ch.sebastianhaeni.edgewars.graphics.programs.OpenGLUtil;
 import ch.sebastianhaeni.edgewars.util.Position;
 
 /**
@@ -22,11 +22,12 @@ public class Polygon extends Shape {
      * Sets up the drawing object data for use in an OpenGL ES context.
      *
      * @param position Position of the circle
+     * @param color    Color of this polygon
      * @param corners  the amount of corners this polygon should have
      * @param angle    angle of the polygon
      */
-    public Polygon(Position position, int corners, int angle) {
-        super(position);
+    public Polygon(Position position, float[] color, int corners, int angle) {
+        super(position, color);
 
         mCorners = corners;
         float[] vertices = new float[corners * 3];
@@ -60,7 +61,7 @@ public class Polygon extends Shape {
     public void draw(GameRenderer renderer) {
         // Add program to OpenGL environment
         GLES20.glUseProgram(renderer.getShapeProgram().getProgramHandle());
-        ESShader.checkGlError("glUseProgram");
+        OpenGLUtil.checkGlError("glUseProgram");
 
         // Apply the projection and view transformation
         GLES20.glUniformMatrix4fv(
@@ -69,11 +70,11 @@ public class Polygon extends Shape {
                 false,
                 renderer.getMVPMatrix(),
                 0);
-        ESShader.checkGlError("glUniformMatrix4fv");
+        OpenGLUtil.checkGlError("glUniformMatrix4fv");
 
         // Enable a handle to the vertices
         GLES20.glEnableVertexAttribArray(renderer.getShapeProgram().getPositionHandle());
-        ESShader.checkGlError("glEnableVertexAttribArray");
+        OpenGLUtil.checkGlError("glEnableVertexAttribArray");
 
         // Prepare the triangle coordinate data
         GLES20.glVertexAttribPointer(
@@ -83,19 +84,19 @@ public class Polygon extends Shape {
                 false,
                 GameRenderer.VERTEX_STRIDE,
                 mVertexBuffer);
-        ESShader.checkGlError("glVertexAttribPointer");
+        OpenGLUtil.checkGlError("glVertexAttribPointer");
 
         // Set color for drawing the triangle
         GLES20.glUniform4fv(renderer.getShapeProgram().getColorHandle(), 1, getColor(), 0);
-        ESShader.checkGlError("glUniform4fv");
+        OpenGLUtil.checkGlError("glUniform4fv");
 
         // draw the triangle
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, 0, mCorners);
-        ESShader.checkGlError("glDrawArrays");
+        OpenGLUtil.checkGlError("glDrawArrays");
 
         // Disable vertex array
         GLES20.glDisableVertexAttribArray(renderer.getShapeProgram().getPositionHandle());
-        ESShader.checkGlError("glDisableVertexAttribArray");
+        OpenGLUtil.checkGlError("glDisableVertexAttribArray");
 
     }
 

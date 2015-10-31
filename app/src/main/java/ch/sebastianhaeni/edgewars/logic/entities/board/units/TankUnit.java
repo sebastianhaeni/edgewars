@@ -1,7 +1,7 @@
 package ch.sebastianhaeni.edgewars.logic.entities.board.units;
 
-import ch.sebastianhaeni.edgewars.graphics.shapes.Polygon;
-import ch.sebastianhaeni.edgewars.graphics.shapes.Shape;
+import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Polygon;
+import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Shape;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
 
 /**
@@ -26,7 +26,7 @@ public class TankUnit extends Unit {
 
     @Override
     protected Shape getShape() {
-        Polygon p = new Polygon(getPosition(), 5, 0);
+        Polygon p = new Polygon(getPosition(), getNode().getCircle().getColor(), 5, 0);
         p.setColor(getNode().getCircle().getColor());
         return p;
     }

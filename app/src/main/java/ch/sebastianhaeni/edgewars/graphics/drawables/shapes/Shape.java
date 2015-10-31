@@ -1,6 +1,6 @@
-package ch.sebastianhaeni.edgewars.graphics.shapes;
+package ch.sebastianhaeni.edgewars.graphics.drawables.shapes;
 
-import ch.sebastianhaeni.edgewars.util.Colors;
+import ch.sebastianhaeni.edgewars.graphics.drawables.IDrawable;
 import ch.sebastianhaeni.edgewars.util.Position;
 
 /**
@@ -9,15 +9,17 @@ import ch.sebastianhaeni.edgewars.util.Position;
 abstract public class Shape implements IDrawable {
 
     private final Position mPosition;
-    private float mColor[] = Colors.NODE_NEUTRAL;
+    private float mColor[];
 
     /**
      * Constructor
      *
      * @param position the position this shape has it's starting point
+     * @param color    the color of this shape
      */
-    public Shape(Position position) {
+    public Shape(Position position, float[] color) {
         mPosition = position;
+        mColor = color;
     }
 
     /**
