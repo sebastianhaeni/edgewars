@@ -29,13 +29,12 @@ public class GameSurfaceView extends GLSurfaceView {
      *
      * @param context app context
      */
-    public GameSurfaceView(Context context) {
+    public GameSurfaceView(Context context, int levelNr) {
         super(context);
 
         LevelLoader levelLoader = new LevelLoader(context);
 
         // load game state and level number
-        int levelNr = levelLoader.getRandomLevelNumber();
         GameState gameState = levelLoader.build(levelNr);
 
         mThread = new GameThread();
