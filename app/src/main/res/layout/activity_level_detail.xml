@@ -23,7 +23,7 @@
             android:id="@+id/textLevel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{`Level ` + activity.level}"/>
+            android:text="@{`Level ` + activity.getLevel}"/>
 
         <LinearLayout
             android:layout_width="match_parent"
