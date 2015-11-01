@@ -1,14 +1,15 @@
 package ch.sebastianhaeni.edgewars.graphics.drawables.shapes;
 
-import ch.sebastianhaeni.edgewars.graphics.drawables.IDrawable;
+import ch.sebastianhaeni.edgewars.graphics.drawables.Drawable;
 import ch.sebastianhaeni.edgewars.util.Position;
 
 /**
  * A basic shape with a position and a uni color.
  */
-abstract public class Shape implements IDrawable {
+abstract public class Shape extends Drawable {
 
     private final Position mPosition;
+    private final int mLayer;
     private float mColor[];
 
     /**
@@ -16,10 +17,18 @@ abstract public class Shape implements IDrawable {
      *
      * @param position the position this shape has it's starting point
      * @param color    the color of this shape
+     * @param layer    the layer of this shape to be drawn at
      */
-    public Shape(Position position, float[] color) {
+    public Shape(Position position, float[] color, int layer) {
+        super(layer);
         mPosition = position;
         mColor = color;
+        mLayer = layer;
+    }
+
+    @Override
+    public int getLayer() {
+        return mLayer;
     }
 
     /**

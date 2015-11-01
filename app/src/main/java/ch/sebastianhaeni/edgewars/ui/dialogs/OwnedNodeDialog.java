@@ -5,6 +5,7 @@ import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.view.View;
 
+import ch.sebastianhaeni.edgewars.EUnitType;
 import ch.sebastianhaeni.edgewars.R;
 import ch.sebastianhaeni.edgewars.databinding.DialogOwnedNodeBinding;
 import ch.sebastianhaeni.edgewars.logic.Game;
@@ -71,17 +72,17 @@ public class OwnedNodeDialog extends Dialog {
     }
 
     public void sendMelee(View view) {
-        mController.askForMeleeTargetNode(mNode);
+        mController.askPlayerForTargetNode(mNode, EUnitType.MELEE);
         dismiss();
     }
 
     public void sendTank(View view) {
-        mController.askForTankTargetNode(mNode);
+        mController.askPlayerForTargetNode(mNode, EUnitType.TANK);
         dismiss();
     }
 
     public void sendSprinter(View view) {
-        mController.askForSprinterTargetNode(mNode);
+        mController.askPlayerForTargetNode(mNode, EUnitType.SPRINTER);
         dismiss();
     }
 

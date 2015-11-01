@@ -1,16 +1,18 @@
 package ch.sebastianhaeni.edgewars.logic;
 
+import android.support.v4.media.session.MediaControllerCompat;
 import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
-import ch.sebastianhaeni.edgewars.graphics.drawables.IDrawable;
+import ch.sebastianhaeni.edgewars.graphics.drawables.Drawable;
+import ch.sebastianhaeni.edgewars.graphics.drawables.RenderQueue;
 import ch.sebastianhaeni.edgewars.logic.commands.Command;
 import ch.sebastianhaeni.edgewars.logic.entities.Entity;
-import ch.sebastianhaeni.edgewars.logic.entities.board.BoardEntity;
 import ch.sebastianhaeni.edgewars.logic.entities.board.Edge;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
 
@@ -24,7 +26,7 @@ public class Game {
     private final Stack<Command> mCommandStack = new Stack<>();
     private final HashMap<Entity, Long> mEntities = new HashMap<>();
     private final Stack<Entity> mEntitiesQueue = new Stack<>();
-    private final ArrayList<IDrawable> mDrawables = new ArrayList<>();
+    private final RenderQueue mDrawables = new RenderQueue();
     private boolean mUpdating;
 
     /**
@@ -44,7 +46,7 @@ public class Game {
     }
 
     /**
-     * Resets the singelton and thus a new game is born.
+     * Resets the singleton and thus a new game is born.
      */
     public void reset() {
         mGame = null;
@@ -61,7 +63,7 @@ public class Game {
     }
 
     /**
-     * Registers a new entity  to be updated in the game loop.
+     * Registers a new entity to be updated in the game loop.
      *
      * @param entity the entity to be updated
      */
@@ -77,6 +79,27 @@ public class Game {
 
         Log.d("Game", "Registering entity: " + entity);
         mEntities.put(entity, 0L);
+    }
+
+    /**
+     * Reisters a new drawable to be drawn.
+     *
+     * @param drawable drawable to register.
+     * @param layer
+     */
+    public void register(Drawable drawable, int layer) {
+        mDrawables.add(drawable, layer);
+        Log.d("Game", "Registering drawable: " + drawable);
+    }
+
+    /**
+     * Unregisters a drawable so it's not drawn any longer.
+     *
+     * @param drawable drawable to unregister
+     */
+    public void unregister(Drawable drawable) {
+        mDrawables.remove(drawable);
+        Log.d("Game", "Unregistering drawable: " + drawable);
     }
 
     /**
@@ -125,7 +148,7 @@ public class Game {
         for (Entity entity : mEntities.keySet()) {
             if (entity instanceof Edge) {
                 Edge edge = (Edge) entity;
-                if ((edge.getSourceNode().equals(node1) && edge.getTargetEdge().equals(node2)) || (edge.getTargetEdge().equals(node1) && edge.getSourceNode().equals(node2))) {
+                if ((edge.getSourceNode().equals(node1) && edge.getTargetNode().equals(node2)) || (edge.getTargetNode().equals(node1) && edge.getSourceNode().equals(node2))) {
                     return edge;
                 }
             }
@@ -137,17 +160,32 @@ public class Game {
     /**
      * @return gets the drawables on the board
      */
-    public ArrayList<IDrawable> getDrawables() {
-        mDrawables.clear();
-        for (Entity e : mEntities.keySet()) {
-            if (e instanceof BoardEntity) {
-                BoardEntity be = (BoardEntity) e;
-                for (IDrawable s : be.getDrawables()) {
-                    mDrawables.add(s);
+    public RenderQueue getDrawables() {
+        return mDrawables;
+    }
+
+    /**
+     * Gets a list of connected nodes.
+     *
+     * @param node source node (which is not included in the list)
+     * @return list of connected nodes
+     */
+    public List<Node> getConnectedNodes(Node node) {
+        List<Node> neighbors = new ArrayList<>();
+
+        for (Entity entity : mEntities.keySet()) {
+            if (entity instanceof Edge) {
+                Edge edge = (Edge) entity;
+                if (edge.getSourceNode().equals(node)) {
+                    neighbors.add(edge.getTargetNode());
+                } else if (edge.getTargetNode().equals(node)) {
+                    neighbors.add(edge.getSourceNode());
                 }
             }
         }
-        return mDrawables;
+
+        return neighbors;
     }
+
 }
 

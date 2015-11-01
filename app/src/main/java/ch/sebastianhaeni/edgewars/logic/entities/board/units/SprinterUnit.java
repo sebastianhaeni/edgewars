@@ -1,7 +1,5 @@
 package ch.sebastianhaeni.edgewars.logic.entities.board.units;
 
-import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Polygon;
-import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Shape;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
 
 /**
@@ -22,13 +20,6 @@ public class SprinterUnit extends Unit {
      */
     public SprinterUnit(int count, Node node) {
         super(count, node);
-    }
-
-    @Override
-    protected Shape getShape() {
-        Polygon p = new Polygon(getPosition(), getNode().getCircle().getColor(), 4, 0);
-        p.setColor(getNode().getCircle().getColor());
-        return p;
     }
 
     @Override
@@ -54,6 +45,11 @@ public class SprinterUnit extends Unit {
     @Override
     public long getSpeed() {
         return SPEED;
+    }
+
+    @Override
+    public int getPolygonCorners() {
+        return 5;
     }
 
 }

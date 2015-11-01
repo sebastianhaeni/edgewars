@@ -2,6 +2,8 @@ package ch.sebastianhaeni.edgewars.logic.entities.board.units.state;
 
 import android.util.Log;
 
+import ch.sebastianhaeni.edgewars.graphics.drawables.decorators.TextDecorator;
+import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Polygon;
 import ch.sebastianhaeni.edgewars.logic.entities.Player;
 import ch.sebastianhaeni.edgewars.logic.entities.board.Edge;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
@@ -18,6 +20,8 @@ public class MovingState extends UnitState {
     private final Player mPlayer;
     private final Position mStartingPosition;
     private final Position mTargetPosition;
+    private final Polygon mShape;
+    private final TextDecorator mText;
     private float mTravelledDistance;
 
     /**
@@ -33,14 +37,19 @@ public class MovingState extends UnitState {
         mNode = node;
         mPlayer = player;
 
-        if (edge.getTargetEdge().equals(mNode)) {
+        Node startingNode;
+        if (edge.getTargetNode().equals(mNode)) {
             mStartingPosition = edge.getSourceNode().getPosition();
             mTargetPosition = mNode.getPosition();
+            startingNode = edge.getSourceNode();
         } else {
             mStartingPosition = mNode.getPosition();
             mTargetPosition = edge.getSourceNode().getPosition();
+            startingNode = mNode;
         }
 
+        mShape = new Polygon(new Position(startingNode.getPosition()), startingNode.getCircle().getColor(), 6, unit.getPolygonCorners(), 0);
+        mText = new TextDecorator(mShape, String.valueOf(unit.getCount()), 7);
     }
 
     @Override
@@ -62,6 +71,9 @@ public class MovingState extends UnitState {
      * @param reached the reached node
      */
     private void capture(Node reached) {
+        mShape.destroy();
+        mText.destroy();
+
         if (reached.getState() instanceof NeutralState) {
             reached.setState(new OwnedState(reached, mPlayer));
         } else {
@@ -92,7 +104,7 @@ public class MovingState extends UnitState {
         float x = (float) (mStartingPosition.getX() + (mTravelledDistance * dx));
         float y = (float) (mStartingPosition.getY() + (mTravelledDistance * dy));
 
-        getUnit().getPosition().set(x, y);
+        mShape.getPosition().set(x, y);
     }
 
     /**
@@ -101,7 +113,7 @@ public class MovingState extends UnitState {
      * @return the reached node or <code>null</code> if nothing reached yet
      */
     private Node getReachedNode() {
-        return mNode.getPosition().equals(getUnit().getPosition()) ? mNode : null;
+        return mShape.getPosition().isAboutTheSame(mTargetPosition) ? mNode : null;
     }
 
     @Override

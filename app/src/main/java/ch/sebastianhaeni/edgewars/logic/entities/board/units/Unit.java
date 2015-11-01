@@ -1,7 +1,5 @@
 package ch.sebastianhaeni.edgewars.logic.entities.board.units;
 
-import ch.sebastianhaeni.edgewars.graphics.drawables.decorators.TextDecorator;
-import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Shape;
 import ch.sebastianhaeni.edgewars.logic.entities.board.BoardEntity;
 import ch.sebastianhaeni.edgewars.logic.entities.board.Edge;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
@@ -10,7 +8,6 @@ import ch.sebastianhaeni.edgewars.logic.entities.board.units.state.DeadState;
 import ch.sebastianhaeni.edgewars.logic.entities.board.units.state.IdleState;
 import ch.sebastianhaeni.edgewars.logic.entities.board.units.state.MovingState;
 import ch.sebastianhaeni.edgewars.logic.entities.board.units.state.UnitState;
-import ch.sebastianhaeni.edgewars.util.Position;
 
 /**
  * A unit owned by a player and produced at a node from a factory.
@@ -18,7 +15,6 @@ import ch.sebastianhaeni.edgewars.util.Position;
 public abstract class Unit extends BoardEntity {
 
     private final int mCount;
-    private final Position mPosition;
     private final Node mNode;
     private UnitState mState;
     private int mHealth;
@@ -37,15 +33,7 @@ public abstract class Unit extends BoardEntity {
         mCount = count;
         mNode = node;
         mState = new IdleState(this);
-        mPosition = new Position(node.getPosition().getX(), node.getPosition().getY());
-        getDrawables().add(new TextDecorator(getShape(), String.valueOf(mCount)));
-        getDrawables().add(getShape());
     }
-
-    /**
-     * @return gets the shape that represents this unit
-     */
-    protected abstract Shape getShape();
 
     /**
      * @return gets the name of this unit type
@@ -77,13 +65,6 @@ public abstract class Unit extends BoardEntity {
      */
     public UnitState getState() {
         return mState;
-    }
-
-    /**
-     * @return gets position
-     */
-    public Position getPosition() {
-        return mPosition;
     }
 
     /**
@@ -135,4 +116,16 @@ public abstract class Unit extends BoardEntity {
     public Node getNode() {
         return mNode;
     }
+
+    /**
+     * @return gets unit count
+     */
+    public int getCount() {
+        return mCount;
+    }
+
+    /**
+     * @return gets the amount of corners the polygon representation for this unit has
+     */
+    public abstract int getPolygonCorners();
 }

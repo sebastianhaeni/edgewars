@@ -29,7 +29,7 @@ public class Line extends Shape {
      * @param color the color of the edge
      */
     public Line(Position src, Position dst, float[] color) {
-        super(src, color);
+        super(src, color, 2);
 
         float[] mCoordinates = new float[]{
                 // in counterclockwise order:

@@ -15,4 +15,7 @@ public abstract class Colors {
 
     // Text
     public static final float[] TEXT = {1f, 1f, 1f, 1f};
+
+    // Node selection corona
+    public static final float[] CORONA = {1f, 1f, 1f, 1f};
 }

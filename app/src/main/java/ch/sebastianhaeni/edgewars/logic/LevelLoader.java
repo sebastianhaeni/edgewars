@@ -59,12 +59,14 @@ public class LevelLoader {
         Player computer = new Player(Colors.NODE_OPPONENT);
 
         Node node1 = new Node(new Position(-5, 0));
+        node1.deductHealth(50);
         node1.setState(new OwnedState(node1, human));
         node1.getMeleeFactory().buildUnit();
         node1.getMeleeFactory().buildUnit();
         node1.getMeleeFactory().buildUnit();
 
         Node node2 = new Node(new Position(0, -3));
+        node2.deductHealth(75);
 
         Node node3 = new Node(new Position(5, 1));
         node3.setState(new OwnedState(node3, computer));

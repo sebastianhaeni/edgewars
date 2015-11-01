@@ -23,19 +23,36 @@ public class Polygon extends Shape {
      *
      * @param position Position of the circle
      * @param color    Color of this polygon
+     * @param layer    the layer this polygon should be drawn at
      * @param corners  the amount of corners this polygon should have
      * @param angle    angle of the polygon
      */
-    public Polygon(Position position, float[] color, int corners, int angle) {
-        super(position, color);
+    public Polygon(Position position, float[] color, int layer, int corners, int angle) {
+        this(position, color, layer, corners, angle, 1);
+    }
+
+    /**
+     * Sets up the drawing object data for use in an OpenGL ES context.
+     *
+     * @param position Position of the circle
+     * @param color    Color of this polygon
+     * @param layer    the layer this polygon should be drawn at
+     * @param corners  the amount of corners this polygon should have
+     * @param angle    angle of the polygon
+     * @param size     size of the polygon (diameter)
+     */
+    public Polygon(Position position, float[] color, int layer, int corners, int angle, float size) {
+        super(position, color, layer);
 
         mCorners = corners;
+        float radius = size * .5f;
+
         float[] vertices = new float[corners * 3];
 
         float step = 360f / corners;
         for (int i = 0; i < corners; i++) {
-            vertices[(i * 3)] = (float) (0.5 * Math.cos((3.14 / 180) * ((step * i) + angle)));
-            vertices[(i * 3) + 1] = (float) (0.5 * Math.sin((3.14 / 180) * ((step * i) + angle)));
+            vertices[(i * 3)] = (float) (radius * Math.cos((3.14 / 180) * ((step * i) + angle)));
+            vertices[(i * 3) + 1] = (float) (radius * Math.sin((3.14 / 180) * ((step * i) + angle)));
             vertices[(i * 3) + 2] = 0;
         }
 
@@ -59,6 +76,10 @@ public class Polygon extends Shape {
      */
     @Override
     public void draw(GameRenderer renderer) {
+        if (mVertexBuffer == null) {
+            return;
+        }
+
         // Add program to OpenGL environment
         GLES20.glUseProgram(renderer.getShapeProgram().getProgramHandle());
         OpenGLUtil.checkGlError("glUseProgram");

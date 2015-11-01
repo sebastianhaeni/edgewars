@@ -2,7 +2,7 @@ package ch.sebastianhaeni.edgewars.logic.entities.board;
 
 import java.util.ArrayList;
 
-import ch.sebastianhaeni.edgewars.graphics.drawables.IDrawable;
+import ch.sebastianhaeni.edgewars.graphics.drawables.Drawable;
 import ch.sebastianhaeni.edgewars.logic.entities.Entity;
 
 /**
@@ -10,7 +10,7 @@ import ch.sebastianhaeni.edgewars.logic.entities.Entity;
  */
 public abstract class BoardEntity extends Entity {
 
-    private final ArrayList<IDrawable> mDrawables = new ArrayList<>();
+    private final ArrayList<Drawable> mDrawables = new ArrayList<>();
 
     /**
      * Constructor for updating entities.
@@ -28,10 +28,4 @@ public abstract class BoardEntity extends Entity {
         super();
     }
 
-    /**
-     * @return gets the drawables
-     */
-    public ArrayList<IDrawable> getDrawables() {
-        return mDrawables;
-    }
 }

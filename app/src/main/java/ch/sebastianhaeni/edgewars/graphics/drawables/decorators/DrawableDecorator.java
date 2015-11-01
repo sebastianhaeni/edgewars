@@ -1,13 +1,14 @@
 package ch.sebastianhaeni.edgewars.graphics.drawables.decorators;
 
 import ch.sebastianhaeni.edgewars.graphics.GameRenderer;
-import ch.sebastianhaeni.edgewars.graphics.drawables.IDrawable;
+import ch.sebastianhaeni.edgewars.graphics.drawables.Drawable;
 import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Shape;
+import ch.sebastianhaeni.edgewars.logic.Game;
 
 /**
  * Decorates a shape and is drawable.
  */
-public abstract class DrawableDecorator implements IDrawable {
+public abstract class DrawableDecorator extends Drawable {
 
     private final Shape mShape;
 
@@ -15,8 +16,10 @@ public abstract class DrawableDecorator implements IDrawable {
      * Constructor
      *
      * @param shape the shape to be decorated
+     * @param layer the layer to be drawn on
      */
-    public DrawableDecorator(Shape shape) {
+    public DrawableDecorator(Shape shape, int layer) {
+        super(layer);
         mShape = shape;
     }
 

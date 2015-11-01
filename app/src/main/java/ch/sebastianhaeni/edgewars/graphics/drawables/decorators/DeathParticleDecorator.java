@@ -30,9 +30,10 @@ public class DeathParticleDecorator extends DrawableDecorator {
      * to be loaded in the graphics thread. This constructor is called in the game update thread.
      *
      * @param shape The shape this decorator decorates
+     * @param layer the layer to draw at
      */
-    public DeathParticleDecorator(Shape shape) {
-        super(shape);
+    public DeathParticleDecorator(Shape shape, int layer) {
+        super(shape, layer);
 
         // Fill in particle data array
         Random generator = new Random();
@@ -140,6 +141,11 @@ public class DeathParticleDecorator extends DrawableDecorator {
         GLES20.glDisableVertexAttribArray(renderer.getParticleProgram().getLifetimeHandle());
         GLES20.glDisableVertexAttribArray(renderer.getParticleProgram().getEndPositionHandle());
         GLES20.glDisableVertexAttribArray(renderer.getParticleProgram().getStartPositionHandle());
+    }
+
+    @Override
+    public int getLayer() {
+        return 10;
     }
 
     /**

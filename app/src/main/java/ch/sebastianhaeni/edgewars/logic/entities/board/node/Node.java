@@ -3,7 +3,7 @@ package ch.sebastianhaeni.edgewars.logic.entities.board.node;
 import android.databinding.Bindable;
 
 import ch.sebastianhaeni.edgewars.BR;
-import ch.sebastianhaeni.edgewars.graphics.drawables.IDrawable;
+import ch.sebastianhaeni.edgewars.graphics.drawables.decorators.TextDecorator;
 import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Polygon;
 import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Shape;
 import ch.sebastianhaeni.edgewars.logic.Game;
@@ -39,6 +39,7 @@ public class Node extends BoardEntity {
 
     //region members
     private final Polygon mCircle;
+    private final TextDecorator mHealthLabel;
     private int mMeleeUnits;
     private int mTankUnits;
     private int mSprinterUnits;
@@ -61,13 +62,12 @@ public class Node extends BoardEntity {
      * @param position the position this node is at
      */
     public Node(Position position) {
-        setState(new NeutralState(this));
         mPosition = position;
+        mCircle = new Polygon(mPosition, Colors.NODE_NEUTRAL, 3, 80, 0);
         mHealth = getMaxHealth();
+        mHealthLabel = new TextDecorator(mCircle, String.valueOf(getHealth()), 6);
 
-        mCircle = new Polygon(mPosition, Colors.NODE_NEUTRAL, 80, 0);
-
-        getDrawables().add(mCircle);
+        setState(new NeutralState(this));
     }
 
     @Override
@@ -129,6 +129,7 @@ public class Node extends BoardEntity {
      */
     public void repair() {
         mHealth = getMaxHealth();
+        mHealthLabel.setText(String.valueOf(mHealth));
         notifyPropertyChanged(BR.health);
     }
 
@@ -188,6 +189,7 @@ public class Node extends BoardEntity {
             return;
         }
         mHealth = newHealth;
+        mHealthLabel.setText(String.valueOf(mHealth));
 
         notifyPropertyChanged(BR.health);
         notifyPropertyChanged(BR.repairCost);
@@ -315,9 +317,7 @@ public class Node extends BoardEntity {
      * @param color new color
      */
     public void setColor(float[] color) {
-        for (IDrawable s : getDrawables()) {
-            s.getShape().setColor(color);
-        }
+        mCircle.setColor(color);
     }
 
     /**

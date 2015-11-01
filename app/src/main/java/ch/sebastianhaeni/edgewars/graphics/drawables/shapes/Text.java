@@ -40,9 +40,13 @@ public class Text extends Shape {
 
     private String mText;
 
+    @SuppressWarnings("FieldCanBeLocal")
     private FloatBuffer mVertexBuffer;
+    @SuppressWarnings("FieldCanBeLocal")
     private FloatBuffer mTextureBuffer;
+    @SuppressWarnings("FieldCanBeLocal")
     private FloatBuffer mColorBuffer;
+    @SuppressWarnings("FieldCanBeLocal")
     private ShortBuffer mDrawListBuffer;
 
     private float[] mVectors;
@@ -61,11 +65,11 @@ public class Text extends Shape {
      * @param position position of the text
      * @param color    color of the text
      * @param text     the text itself
+     * @param layer    draw layer
      */
-    public Text(Position position, float[] color, String text) {
-        super(position, color);
+    public Text(Position position, float[] color, String text, int layer) {
+        super(position, color, layer);
         setText(text);
-        setColor(new float[]{1f, 1f, 1f, 1f});
     }
 
     /**
@@ -202,8 +206,8 @@ public class Text extends Shape {
      */
     private void convertTextToTriangleInfo() {
         // Get attributes from text object
-        float x = getPosition().getX();
-        float y = getPosition().getY() + 2.8f; // I have no clue why there has to be an offset here
+        float x = 0;
+        float y = 0;
 
         // Create
         for (int j = 0; j < mText.length(); j++) {

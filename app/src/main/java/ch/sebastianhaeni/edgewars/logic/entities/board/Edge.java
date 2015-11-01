@@ -2,7 +2,7 @@ package ch.sebastianhaeni.edgewars.logic.entities.board;
 
 import java.util.ArrayList;
 
-import ch.sebastianhaeni.edgewars.graphics.drawables.IDrawable;
+import ch.sebastianhaeni.edgewars.graphics.drawables.Drawable;
 import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Line;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
 import ch.sebastianhaeni.edgewars.util.Colors;
@@ -13,7 +13,7 @@ import ch.sebastianhaeni.edgewars.util.Colors;
 public class Edge extends BoardEntity {
     private final Node mSourceNode;
     private final Node mTargetNode;
-    private final ArrayList<IDrawable> mDrawables = new ArrayList<>();
+    private final ArrayList<Drawable> mDrawables = new ArrayList<>();
 
     /**
      * Constructor
@@ -31,11 +31,6 @@ public class Edge extends BoardEntity {
     }
 
     @Override
-    public ArrayList<IDrawable> getDrawables() {
-        return mDrawables;
-    }
-
-    @Override
     public void update(long millis) {
         // no op
     }
@@ -50,7 +45,7 @@ public class Edge extends BoardEntity {
     /**
      * @return gets the target node
      */
-    public Node getTargetEdge() {
+    public Node getTargetNode() {
         return mTargetNode;
     }
 }

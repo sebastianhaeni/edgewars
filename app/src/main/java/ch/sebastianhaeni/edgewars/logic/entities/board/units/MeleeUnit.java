@@ -12,7 +12,7 @@ public class MeleeUnit extends Unit {
     private static final int ATTACK_DAMAGE = 5;
     private static final int HEALTH = 5;
     private static final float ACCURACY = 1;
-    private static final int SPEED = 5;
+    private static final int SPEED = 15;
 
     /**
      * Constructor
@@ -22,13 +22,6 @@ public class MeleeUnit extends Unit {
      */
     public MeleeUnit(int count, Node node) {
         super(count, node);
-    }
-
-    @Override
-    protected Shape getShape() {
-        Polygon p = new Polygon(getPosition(), getNode().getCircle().getColor(), 3, 0);
-        p.setColor(getNode().getCircle().getColor());
-        return p;
     }
 
     @Override
@@ -54,5 +47,10 @@ public class MeleeUnit extends Unit {
     @Override
     public long getSpeed() {
         return SPEED;
+    }
+
+    @Override
+    public int getPolygonCorners() {
+        return 3;
     }
 }
