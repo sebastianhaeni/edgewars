@@ -13,7 +13,7 @@ public abstract class NodeState {
      *
      * @param node the node that has this state
      */
-    public NodeState(Node node) {
+    NodeState(Node node) {
         mNode = node;
     }
 

@@ -9,7 +9,7 @@ public abstract class Command {
     /**
      * Constructor
      */
-    protected Command() {
+    Command() {
     }
 
     /**

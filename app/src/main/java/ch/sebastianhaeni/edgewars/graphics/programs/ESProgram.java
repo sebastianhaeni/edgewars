@@ -25,7 +25,7 @@ public abstract class ESProgram {
      *
      * @param context app context
      */
-    public ESProgram(Context context) {
+    ESProgram(Context context) {
         mContext = context;
         mProgramHandle = loadProgram(getVertexShaderSource(), getFragmentShaderSource());
         linkProgram(mProgramHandle);
@@ -41,7 +41,7 @@ public abstract class ESProgram {
      * @param shaderCode String containing the shader code.
      * @return Returns an id for the shader.
      */
-    public static int loadShader(int type, String shaderCode) {
+    private static int loadShader(int type, String shaderCode) {
         int shader;
         int[] compiled = new int[1];
 
@@ -129,7 +129,7 @@ public abstract class ESProgram {
      *
      * @param programHandle handle to the program
      */
-    public static void linkProgram(int programHandle) {
+    private static void linkProgram(int programHandle) {
         int[] linked = new int[1];
 
         // Link the program

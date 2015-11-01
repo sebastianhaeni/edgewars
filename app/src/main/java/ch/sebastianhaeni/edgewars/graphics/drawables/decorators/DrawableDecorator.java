@@ -17,7 +17,7 @@ public abstract class DrawableDecorator extends Drawable {
      * @param shape the shape to be decorated
      * @param layer the layer to be drawn on
      */
-    public DrawableDecorator(Shape shape, int layer) {
+    DrawableDecorator(Shape shape, int layer) {
         super(layer);
         mShape = shape;
     }

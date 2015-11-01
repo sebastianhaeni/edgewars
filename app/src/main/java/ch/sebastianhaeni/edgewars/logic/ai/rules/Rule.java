@@ -8,7 +8,7 @@ import ch.sebastianhaeni.edgewars.logic.commands.Command;
 public abstract class Rule {
     private final GameState mState;
 
-    public Rule(GameState state) {
+    Rule(GameState state) {
         mState = state;
     }
 

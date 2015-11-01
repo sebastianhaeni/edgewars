@@ -33,10 +33,11 @@ public class GameController {
     private float mPreviousY;
     private float mStartX;
     private float mStartY;
+    private final ArrayList<Shape> mCoronas = new ArrayList<>();
+
     private boolean mSelectingNode;
     private Node mSourceNode;
     private EUnitType mSendingUnitType;
-    private ArrayList<Shape> mCoronas = new ArrayList<>();
 
     /**
      * Constructor

@@ -13,14 +13,14 @@ public abstract class UnitState {
      *
      * @param unit the unit having this state
      */
-    public UnitState(Unit unit) {
+    UnitState(Unit unit) {
         mUnit = unit;
     }
 
     /**
      * @return gets the unit having this state
      */
-    protected Unit getUnit() {
+    Unit getUnit() {
         return mUnit;
     }
 
