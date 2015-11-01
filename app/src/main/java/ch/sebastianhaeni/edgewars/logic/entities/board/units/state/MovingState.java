@@ -16,7 +16,7 @@ import ch.sebastianhaeni.edgewars.util.Position;
  * The state of a unit moving along an edge.
  */
 public class MovingState extends UnitState {
-    private static final float UNIT_RADIUS = .3f;
+    private static final float UNIT_RADIUS = .5f;
     private final Node mNode;
     private final Player mPlayer;
     private final Position mStartingPosition;
