@@ -39,8 +39,8 @@ import ch.sebastianhaeni.edgewars.util.Position;
  */
 public class Node extends BoardEntity {
 
-    public static final int DAMAGE_LEVEL_UPGRADE_COST = 50;
-    public static final int HEALTH_LEVEL_UPGRADE_COST = 50;
+    private static final int DAMAGE_LEVEL_UPGRADE_COST = 50;
+    private static final int HEALTH_LEVEL_UPGRADE_COST = 50;
     private final Circle mCircle;
     private final ArrayList<MeleeUnit> mMeleeUnits = new ArrayList<>();
     private final ArrayList<TankUnit> mTankUnits = new ArrayList<>();
@@ -54,6 +54,7 @@ public class Node extends BoardEntity {
     private int mHealthLevel = 1;
     private int mDamageLevel = 1;
     private final Position mPosition;
+    private final float mRadius = 0.7f;
     private final ArrayList<IDrawable> mDrawables = new ArrayList<>();
 
     private final Stack<MoveUnitCommand> mMoveUnitCommands = new Stack<>();
@@ -67,7 +68,7 @@ public class Node extends BoardEntity {
     public Node(Position position) {
         setState(new NeutralState(this));
         mPosition = position;
-        mCircle = new Circle(mPosition);
+        mCircle = new Circle(mPosition, mRadius);
         mDrawables.add(mCircle);
     }
 
@@ -86,6 +87,13 @@ public class Node extends BoardEntity {
      */
     public Position getPosition() {
         return mPosition;
+    }
+
+    /**
+     * @return gets the node's radius
+     */
+    public float getRadius() {
+        return mRadius;
     }
 
     @Override

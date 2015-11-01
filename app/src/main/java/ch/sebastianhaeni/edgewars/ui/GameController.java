@@ -1,7 +1,6 @@
 package ch.sebastianhaeni.edgewars.ui;
 
 import android.content.Context;
-import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 
 import ch.sebastianhaeni.edgewars.graphics.GameRenderer;
@@ -81,28 +80,34 @@ public class GameController {
     /**
      * Figures out if a node is clicked at that coordinate and what to do after.
      *
-     * @param x x coordinate
-     * @param y y coordinate
+     * @param touchX x coordinate
+     * @param touchY y coordinate
      */
-    private void clickNode(float x, float y) {
-        // center x and y to middle point of screen
-        x = x - (mRenderer.getWidth() * .5f);
-        y = y - (mRenderer.getHeight() * .5f);
+    private void clickNode(float touchX, float touchY) {
 
-        // get camera position
-        float cameraX = mGameState.getCamera().getScreenX() * .5f;
-        float cameraY = mGameState.getCamera().getScreenY() * .5f;
+        // get camera position and multiply it by factor 2/3 (why? I dunno..)
+        float cameraX = mGameState.getCamera().getScreenX() * (2f / 3f);
+        float cameraY = mGameState.getCamera().getScreenY() * (2f / 3f);
 
-        DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
 
-        // determine size of a node
-        float nodeSize = 90; // TODO calculate this
-        float scale = metrics.densityDpi * .25f;
-
-        // search through nodes if one lies at that coordinate
+        // loop through all nodes and test if one is positioned at the coordinates of the user touch
         for (Node node : mGameState.getBoard().getNodes()) {
-            if (Math.abs((node.getPosition().getX() * scale) + cameraX - x) < nodeSize
-                    && Math.abs((node.getPosition().getY() * scale) + cameraY - y) < nodeSize) {
+
+            // calculate node radius in pixels
+            float nodeRadiusGL = node.getRadius();
+            float nodeRadiusX = mRenderer.getAndroidLengthX(nodeRadiusGL);
+            float nodeRadiusY = mRenderer.getAndroidLengthY(nodeRadiusGL);
+
+            // add 33% user imprecision tolerance
+            nodeRadiusX = nodeRadiusX * 1.33f;
+            nodeRadiusY = nodeRadiusY * 1.33f;
+
+            // convert node coordinates to Android coordinates
+            float nodeX = mRenderer.getAndroidCoordinateX(node.getPosition().getX());
+            float nodeY = mRenderer.getAndroidCoordinateY(node.getPosition().getY());
+
+            if (Math.abs(nodeX + cameraX - touchX) < nodeRadiusX &&
+                    Math.abs(nodeY + cameraY - touchY) < nodeRadiusY) {
                 showNodeDialog(node);
                 break;
             }
