@@ -1,9 +1,6 @@
 package ch.sebastianhaeni.edgewars.ui;
 
 import android.content.Context;
-import android.graphics.Matrix;
-import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.MotionEvent;
 
 import ch.sebastianhaeni.edgewars.graphics.GameRenderer;

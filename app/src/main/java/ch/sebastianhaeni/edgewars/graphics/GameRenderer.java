@@ -4,7 +4,6 @@ import android.content.Context;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
-import android.util.Log;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -30,8 +29,8 @@ public class GameRenderer implements GLSurfaceView.Renderer {
     // number of coordinates per vertex in this array
     public static final int COORDS_PER_VERTEX = 3;
     public static final int VERTEX_STRIDE = COORDS_PER_VERTEX * 4; // 4 bytes per vertex
-    public static final int EYE_HEIGHT = 15;
-    public static final int MIN_HEIGHT = 3;
+    private static final int EYE_HEIGHT = 15;
+    private static final int MIN_HEIGHT = 3;
 
     private final GameThread mThread;
     private final GameState mGameState;
