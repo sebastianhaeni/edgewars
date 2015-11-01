@@ -1,7 +1,9 @@
 package ch.sebastianhaeni.edgewars.ui;
 
 import android.content.Context;
+import android.graphics.Matrix;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.MotionEvent;
 
 import ch.sebastianhaeni.edgewars.graphics.GameRenderer;
@@ -48,8 +50,8 @@ public class GameController {
         // MotionEvent reports input details from the touch screen
         // and other input controls.
 
-        float x = e.getX();
-        float y = e.getY();
+        float x = e.getRawX();
+        float y = e.getRawY();
 
         switch (e.getAction()) {
             case MotionEvent.ACTION_DOWN:
@@ -81,29 +83,48 @@ public class GameController {
     /**
      * Figures out if a node is clicked at that coordinate and what to do after.
      *
-     * @param x x coordinate
-     * @param y y coordinate
+     * @param clickX x coordinate
+     * @param clickY y coordinate
      */
-    private void clickNode(float x, float y) {
-        // center x and y to middle point of screen
-        x = x - (mRenderer.getWidth() * .5f);
-        y = y - (mRenderer.getHeight() * .5f);
-
-        // get camera position
-        float cameraX = mGameState.getCamera().getScreenX() * .5f;
-        float cameraY = mGameState.getCamera().getScreenY() * .5f;
+    private void clickNode(float clickX, float clickY) {
 
         DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
 
+        Log.i("debugging", "___________________________________________");
+        Log.i("debugging", "clickX=" + clickX + "; clickY=" + clickY);
+
+
+        // get camera position
+        float cameraX = mGameState.getCamera().getScreenX() * (2f/3f);
+        float cameraY = mGameState.getCamera().getScreenY() * (2f/3f);
+        Log.i("debugging", "cameraX=" + cameraX + "; cameraY=" + cameraY);
+
+
         // determine size of a node
         float nodeSize = 90; // TODO calculate this
-        float scale = metrics.densityDpi * .25f;
 
-        // search through nodes if one lies at that coordinate
+
+        // loop through nodes and test if one lies at the click coordinate
         for (Node node : mGameState.getBoard().getNodes()) {
-            if (Math.abs((node.getPosition().getX() * scale) + cameraX - x) < nodeSize
-                    && Math.abs((node.getPosition().getY() * scale) + cameraY - y) < nodeSize) {
+
+            float nodeX = mRenderer.getAndroidCoordinateX(node.getPosition().getX());
+            float nodeY = mRenderer.getAndroidCoordinateY(node.getPosition().getY());
+
+            Log.i("debugging", "calcNodeX[i]=" + nodeX + "; calcNodeY[i]=" + nodeY);
+
+            if (Math.abs(nodeX+cameraX - clickX) < nodeSize &&
+                    Math.abs(nodeY+cameraY - clickY) < nodeSize) {
                 showNodeDialog(node);
+
+                float originalCameraX = mGameState.getCamera().getX();
+                float originalCameraY = mGameState.getCamera().getY();
+
+                Log.i("debugging", "cameraX="+originalCameraX+"; cameraY="+originalCameraY);
+                Log.i("debugging", "nodeX=" + node.getPosition().getX() + "; nodeY=" + node.getPosition().getY());
+                Log.i("debugging", "calcNodeX=" + nodeX + "; calcNodeY=" + nodeY);
+                float calcClickX = clickX-originalCameraX;
+                float calcClickY = clickY-originalCameraY;
+                Log.i("debugging", "calcClickX="+calcClickX+"; calcClickY="+calcClickY);
                 break;
             }
         }

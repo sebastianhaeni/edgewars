@@ -4,6 +4,7 @@ import android.content.Context;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
+import android.util.Log;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -30,6 +31,7 @@ public class GameRenderer implements GLSurfaceView.Renderer {
     public static final int COORDS_PER_VERTEX = 3;
     public static final int VERTEX_STRIDE = COORDS_PER_VERTEX * 4; // 4 bytes per vertex
     public static final int EYE_HEIGHT = 15;
+    public static final int MIN_HEIGHT = 3;
 
     private final GameThread mThread;
     private final GameState mGameState;
@@ -91,12 +93,16 @@ public class GameRenderer implements GLSurfaceView.Renderer {
             Matrix.setLookAtM(
                     mViewMatrix,
                     0,
+                    // eye point x,y,z
                     mGameState.getCamera().getX() + s.getShape().getPosition().getX(),
                     mGameState.getCamera().getY() + s.getShape().getPosition().getY(),
                     -EYE_HEIGHT,
+                    // center of view x,y,z
                     mGameState.getCamera().getX() + s.getShape().getPosition().getX(),
                     mGameState.getCamera().getY() + s.getShape().getPosition().getY(),
-                    0f, 0f, 1.0f, 0.0f);
+                    0f,
+                    // up vector x,y,z
+                    0f, 1.0f, 0.0f);
 
             // Calculate the projection and view transformation
             Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
@@ -117,7 +123,7 @@ public class GameRenderer implements GLSurfaceView.Renderer {
 
         // this projection matrix is applied to object coordinates
         // in the onDrawFrame() method
-        Matrix.frustumM(mProjectionMatrix, 0, -ratio, ratio, -1, 1, 3, EYE_HEIGHT);
+        Matrix.frustumM(mProjectionMatrix, 0, -ratio, ratio, -1, 1, MIN_HEIGHT, EYE_HEIGHT);
     }
 
     /**
@@ -139,6 +145,16 @@ public class GameRenderer implements GLSurfaceView.Renderer {
      */
     public float[] getMVPMatrix() {
         return mMVPMatrix;
+    }
+
+    public float getAndroidCoordinateX (float objectCoordinateX) {
+        float maxX = ((float) EYE_HEIGHT/MIN_HEIGHT) * ((float) mScreenWidth/mScreenHeight);
+        return (objectCoordinateX+maxX) * (mScreenWidth/(2*maxX));
+    }
+
+    public float getAndroidCoordinateY (float objectCoordinateY) {
+        float maxY = ((float) EYE_HEIGHT/MIN_HEIGHT);
+        return (objectCoordinateY+maxY) * (mScreenHeight/(2*maxY));
     }
 
     public ShapeProgram getShapeProgram() {

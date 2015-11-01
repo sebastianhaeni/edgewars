@@ -73,10 +73,6 @@ public class Circle extends Shape {
                 0);
         ESShader.checkGlError("glUniformMatrix4fv");
 
-        // Enable a handle to the vertices
-        GLES20.glEnableVertexAttribArray(renderer.getShapeProgram().getPositionHandle());
-        ESShader.checkGlError("glEnableVertexAttribArray");
-
         // Prepare the triangle coordinate data
         GLES20.glVertexAttribPointer(
                 renderer.getShapeProgram().getPositionHandle(),
@@ -86,6 +82,10 @@ public class Circle extends Shape {
                 GameRenderer.VERTEX_STRIDE,
                 mVertexBuffer);
         ESShader.checkGlError("glVertexAttribPointer");
+
+        // Enable the attribute before drawing is possible
+        GLES20.glEnableVertexAttribArray(renderer.getShapeProgram().getPositionHandle());
+        ESShader.checkGlError("glEnableVertexAttribArray");
 
         // Set color for drawing the triangle
         GLES20.glUniform4fv(renderer.getShapeProgram().getColorHandle(), 1, getColor(), 0);
