@@ -1,16 +1,25 @@
 package ch.sebastianhaeni.edgewars.ui;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.MotionEvent;
 
+import java.util.ArrayList;
+
+import ch.sebastianhaeni.edgewars.EUnitType;
 import ch.sebastianhaeni.edgewars.graphics.GameRenderer;
+import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Polygon;
+import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Shape;
+import ch.sebastianhaeni.edgewars.logic.Game;
 import ch.sebastianhaeni.edgewars.logic.GameState;
+import ch.sebastianhaeni.edgewars.logic.SoundEngine;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.state.NeutralState;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.state.OwnedState;
 import ch.sebastianhaeni.edgewars.ui.dialogs.NeutralNodeDialog;
 import ch.sebastianhaeni.edgewars.ui.dialogs.OpponentNodeDialog;
 import ch.sebastianhaeni.edgewars.ui.dialogs.OwnedNodeDialog;
+import ch.sebastianhaeni.edgewars.util.Colors;
 
 /**
  * The game controller handles inputs from the user and delegates them to the according action.
@@ -24,6 +33,10 @@ public class GameController {
     private float mPreviousY;
     private float mStartX;
     private float mStartY;
+    private boolean mSelectingNode;
+    private Node mSourceNode;
+    private EUnitType mSendingUnitType;
+    private ArrayList<Shape> mCoronas = new ArrayList<>();
 
     /**
      * Constructor
@@ -63,6 +76,8 @@ public class GameController {
                 mGameState.getCamera().moveCamera(dx, dy);
                 break;
             case MotionEvent.ACTION_UP:
+                SoundEngine.getInstance().play(SoundEngine.Sounds.TICK);
+                Log.d("audio", "tick");
                 // detect single click (not moving the camera)
                 if (e.getEventTime() - e.getDownTime() < 200
                         && Math.abs(x - mStartX) < 5
@@ -89,10 +104,8 @@ public class GameController {
         float cameraX = mGameState.getCamera().getScreenX() * (2f / 3f);
         float cameraY = mGameState.getCamera().getScreenY() * (2f / 3f);
 
-
         // loop through all nodes and test if one is positioned at the coordinates of the user touch
         for (Node node : mGameState.getBoard().getNodes()) {
-
             // calculate node radius in pixels
             float nodeRadiusGL = node.getRadius();
             float nodeRadiusX = mRenderer.getAndroidLengthX(nodeRadiusGL);
@@ -106,11 +119,46 @@ public class GameController {
             float nodeX = mRenderer.getAndroidCoordinateX(node.getPosition().getX());
             float nodeY = mRenderer.getAndroidCoordinateY(node.getPosition().getY());
 
-            if (Math.abs(nodeX + cameraX - touchX) < nodeRadiusX &&
-                    Math.abs(nodeY + cameraY - touchY) < nodeRadiusY) {
-                showNodeDialog(node);
-                break;
+            if (!(Math.abs(nodeX + cameraX - touchX) < nodeRadiusX &&
+                    Math.abs(nodeY + cameraY - touchY) < nodeRadiusY)) {
+                continue;
             }
+
+            if (mSelectingNode) {
+                mSelectingNode = false;
+
+                if (node.equals(mSourceNode)
+                        || !Game.getInstance().getConnectedNodes(mSourceNode).contains(node)) {
+                    showNodeDialog(node);
+                    break;
+                }
+
+                switch (mSendingUnitType) {
+                    case MELEE:
+                        mSourceNode.sendMeleeUnits(node);
+                        break;
+                    case SPRINTER:
+                        mSourceNode.sendSprinterUnits(node);
+                        break;
+                    case TANK:
+                        mSourceNode.sendTankUnits(node);
+                        break;
+                }
+            } else {
+                showNodeDialog(node);
+            }
+            break;
+        }
+
+        clearCoronas();
+    }
+
+    /**
+     * Clears coronas off nodes.
+     */
+    private void clearCoronas() {
+        for (Shape corona : mCoronas) {
+            corona.destroy();
         }
     }
 
@@ -133,7 +181,7 @@ public class GameController {
         OwnedState state = (OwnedState) node.getState();
 
         if (state.getOwner().equals(mGameState.getHuman())) {
-            OwnedNodeDialog dialog = new OwnedNodeDialog(mContext, node);
+            OwnedNodeDialog dialog = new OwnedNodeDialog(mContext, node, this);
             dialog.show();
             return;
         }
@@ -141,4 +189,24 @@ public class GameController {
         OpponentNodeDialog dialog = new OpponentNodeDialog(mContext, node);
         dialog.show();
     }
+
+    /**
+     * Asks the player the player for the units to be sent to.
+     *
+     * @param node source node
+     * @param type type of unit
+     */
+    public void askPlayerForTargetNode(Node node, EUnitType type) {
+        mSelectingNode = true;
+        mSourceNode = node;
+        mSendingUnitType = type;
+        mCoronas.clear();
+
+        for (Node neighbor : Game.getInstance().getConnectedNodes(node)) {
+            Polygon corona = new Polygon(neighbor.getPosition(), Colors.CORONA, 1, 300, 0, .75f);
+            corona.register();
+            mCoronas.add(corona);
+        }
+    }
+
 }

@@ -1,6 +1,9 @@
 package ch.sebastianhaeni.edgewars.logic.entities.board.units;
 
+import android.util.Log;
+
 import ch.sebastianhaeni.edgewars.logic.entities.board.BoardEntity;
+import ch.sebastianhaeni.edgewars.logic.entities.board.Edge;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.state.OwnedState;
 import ch.sebastianhaeni.edgewars.logic.entities.board.units.state.DeadState;
@@ -13,19 +16,25 @@ import ch.sebastianhaeni.edgewars.logic.entities.board.units.state.UnitState;
  */
 public abstract class Unit extends BoardEntity {
 
+    private final Node mNode;
     private UnitState mState;
+    private int mCount;
     private int mHealth;
 
     /**
      * Constructor
      *
-     * @param node the node this unit was produced at
+     * @param count count of units in this container
+     * @param node  the node this unit starts at
      */
-    public Unit(Node node) {
+    public Unit(int count, Node node) {
         super(-1);
         setUpdateInterval(getSpeed());
         setState(new IdleState(this));
         mHealth = getMaxHealth();
+        mCount = count;
+        mNode = node;
+        mState = new IdleState(this);
     }
 
     /**
@@ -66,22 +75,31 @@ public abstract class Unit extends BoardEntity {
      * @param state the new state
      */
     public void setState(UnitState state) {
-        this.mState = state;
+        mState = state;
         setUpdateInterval(state.getUpdateInterval());
     }
 
     @Override
     public void update(long millis) {
-        getState().update(millis);
+        if (mState == null) {
+            return;
+        }
+        mState.update(millis);
+    }
+
+    @Override
+    public void initialize() {
+        // no op
     }
 
     /**
      * Sends the unit along the edge to the target node.
      *
      * @param node to which node the unit should move
+     * @param edge the edge the unit moves on
      */
-    public void move(Node node) {
-        setState(new MovingState(this, node, ((OwnedState) node.getState()).getOwner()));
+    public void move(Node node, Edge edge) {
+        setState(new MovingState(this, node, ((OwnedState) edge.getSourceNode().getState()).getOwner(), edge));
     }
 
     /**
@@ -93,10 +111,32 @@ public abstract class Unit extends BoardEntity {
     public void deductHealth(int attackDamage) {
         int newHealth = mHealth - attackDamage;
         if (newHealth <= 0) {
-            setState(new DeadState(this));
+            mCount--;
+            if (mCount <= 0) {
+                Log.d("Unit", "Unit died!");
+                setState(new DeadState(this));
+            }
             return;
         }
         mHealth = newHealth;
     }
 
+    /**
+     * @return gets the node
+     */
+    public Node getNode() {
+        return mNode;
+    }
+
+    /**
+     * @return gets unit count
+     */
+    public int getCount() {
+        return mCount;
+    }
+
+    /**
+     * @return gets the amount of corners the polygon representation for this unit has
+     */
+    public abstract int getPolygonCorners();
 }

@@ -1,16 +1,21 @@
 package ch.sebastianhaeni.edgewars.graphics;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
+import android.opengl.GLUtils;
 import android.opengl.Matrix;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
+import ch.sebastianhaeni.edgewars.R;
+import ch.sebastianhaeni.edgewars.graphics.drawables.Drawable;
 import ch.sebastianhaeni.edgewars.graphics.programs.ParticleProgram;
 import ch.sebastianhaeni.edgewars.graphics.programs.ShapeProgram;
-import ch.sebastianhaeni.edgewars.graphics.shapes.IDrawable;
+import ch.sebastianhaeni.edgewars.graphics.programs.TextProgram;
 import ch.sebastianhaeni.edgewars.logic.Game;
 import ch.sebastianhaeni.edgewars.logic.GameState;
 import ch.sebastianhaeni.edgewars.logic.GameThread;
@@ -53,6 +58,7 @@ public class GameRenderer implements GLSurfaceView.Renderer {
 
     private ShapeProgram mShapeProgram;
     private ParticleProgram mParticleProgram;
+    private TextProgram mTextProgram;
 
     /**
      * Constructor
@@ -69,52 +75,22 @@ public class GameRenderer implements GLSurfaceView.Renderer {
 
     @Override
     public void onSurfaceCreated(GL10 unused, EGLConfig config) {
+        // Create the image information
+        loadTextures();
+
         // Set the background frame color
         GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
         mShapeProgram = new ShapeProgram(mContext);
         mParticleProgram = new ParticleProgram(mContext);
+        mTextProgram = new TextProgram(mContext);
 
-        Game.getInstance().reset();
+        // enable texture + alpha blending
+        GLES20.glEnable(GLES20.GL_BLEND);
+        GLES20.glBlendFunc(GLES20.GL_ONE, GLES20.GL_ONE_MINUS_SRC_ALPHA);
+
         mThread.setRunning(true);
         mThread.start();
-    }
-
-    @Override
-    public void onDrawFrame(GL10 unused) {
-        // Draw background color
-        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
-
-        renderState();
-    }
-
-    /**
-     * Renders the game state to the surface.
-     */
-    private void renderState() {
-        // Draw drawables
-        for (IDrawable s : mGameState.getBoard().getDrawables()) {
-
-            // Set the camera position (View matrix)
-            Matrix.setLookAtM(
-                    mViewMatrix,
-                    0,
-                    // eye point x,y,z
-                    mGameState.getCamera().getX() + s.getShape().getPosition().getX(),
-                    mGameState.getCamera().getY() + s.getShape().getPosition().getY(),
-                    -EYE_HEIGHT,
-                    // center of view x,y,z
-                    mGameState.getCamera().getX() + s.getShape().getPosition().getX(),
-                    mGameState.getCamera().getY() + s.getShape().getPosition().getY(),
-                    0f,
-                    // up vector x,y,z
-                    0f, 1.0f, 0.0f);
-
-            // Calculate the projection and view transformation
-            Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
-
-            s.draw(this);
-        }
     }
 
     @Override
@@ -136,18 +112,41 @@ public class GameRenderer implements GLSurfaceView.Renderer {
         Matrix.frustumM(mProjectionMatrix, 0, -ratio, ratio, -1, 1, MIN_HEIGHT, EYE_HEIGHT);
     }
 
-    /**
-     * @return gets the screen width
-     */
-    public int getWidth() {
-        return mScreenWidth;
+    @Override
+    public void onDrawFrame(GL10 unused) {
+        // draw background color
+        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
+
+        renderState();
     }
 
     /**
-     * @return gets the screen height
+     * Renders the game state to the surface.
      */
-    public int getHeight() {
-        return mScreenHeight;
+    private void renderState() {
+        // draw drawables
+        for (Drawable s : Game.getInstance().getDrawables()) {
+
+            // Set the camera position (View matrix)
+            Matrix.setLookAtM(
+                    mViewMatrix,
+                    0,
+                    // eye point x,y,z
+                    mGameState.getCamera().getX() + s.getShape().getPosition().getX(),
+                    mGameState.getCamera().getY() + s.getShape().getPosition().getY(),
+                    -EYE_HEIGHT,
+                    // center of view x,y,z
+                    mGameState.getCamera().getX() + s.getShape().getPosition().getX(),
+                    mGameState.getCamera().getY() + s.getShape().getPosition().getY(),
+                    0f,
+                    // up vector x,y,z
+                    0f, 1.0f, 0.0f);
+
+            // Calculate the projection and view transformation
+            Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
+
+            s.draw(this);
+        }
     }
 
     /**
@@ -189,11 +188,62 @@ public class GameRenderer implements GLSurfaceView.Renderer {
         return (objectLengthY * (mScreenHeight) / (2 * mMaxY));
     }
 
+    /**
+     * @return gets shape program
+     */
     public ShapeProgram getShapeProgram() {
         return mShapeProgram;
     }
 
+    /**
+     * @return gets particle program
+     */
     public ParticleProgram getParticleProgram() {
         return mParticleProgram;
+    }
+
+    /**
+     * @return gets text program
+     */
+    public TextProgram getTextProgram() {
+        return mTextProgram;
+    }
+
+    /**
+     * Loads textures to the graphic memory.
+     */
+    private void loadTextures() {
+        // Generate Textures, if more needed, alter these numbers.
+        int[] textureNames = new int[1];
+        GLES20.glGenTextures(1, textureNames, 0);
+
+        // Again for the text texture
+        Bitmap bmp = BitmapFactory.decodeResource(mContext.getResources(), R.raw.font);
+        GLES20.glActiveTexture(GLES20.GL_TEXTURE0 + 1);
+        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textureNames[0]);
+        GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR);
+        GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
+        GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, bmp, 0);
+        bmp.recycle();
+    }
+
+    /**
+     * Manages indexes for texture bitmaps. An index has to be unique.
+     */
+    public enum Textures {
+        FONT(1);
+
+        private final int mIndex;
+
+        Textures(int index) {
+            mIndex = index;
+        }
+
+        /**
+         * @return gets the index
+         */
+        public int get() {
+            return mIndex;
+        }
     }
 }

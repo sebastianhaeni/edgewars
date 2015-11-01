@@ -5,6 +5,7 @@ import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.view.View;
 
+import ch.sebastianhaeni.edgewars.EUnitType;
 import ch.sebastianhaeni.edgewars.R;
 import ch.sebastianhaeni.edgewars.databinding.DialogOwnedNodeBinding;
 import ch.sebastianhaeni.edgewars.logic.Game;
@@ -19,16 +20,19 @@ import ch.sebastianhaeni.edgewars.logic.commands.UpgradeFactoryCommand;
 import ch.sebastianhaeni.edgewars.logic.commands.UpgradeNodeDamageCommand;
 import ch.sebastianhaeni.edgewars.logic.commands.UpgradeNodeHealthCommand;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
+import ch.sebastianhaeni.edgewars.ui.GameController;
 
 public class OwnedNodeDialog extends Dialog {
 
     private final DialogOwnedNodeBinding mBinding;
     private final Node mNode;
+    private final GameController mController;
 
-    public OwnedNodeDialog(Context context, Node node) {
+    public OwnedNodeDialog(Context context, Node node, GameController controller) {
         super(context);
         setTitle("Owned Node");
         mNode = node;
+        mController = controller;
         mBinding = DataBindingUtil.inflate(getLayoutInflater(), R.layout.dialog_owned_node, null, false);
         mBinding.setNode(mNode);
         mBinding.setDialog(this);
@@ -68,15 +72,18 @@ public class OwnedNodeDialog extends Dialog {
     }
 
     public void sendMelee(View view) {
-        mNode.sendMeleeUnits(null);
+        mController.askPlayerForTargetNode(mNode, EUnitType.MELEE);
+        dismiss();
     }
 
     public void sendTank(View view) {
-        mNode.sendTankUnits(null);
+        mController.askPlayerForTargetNode(mNode, EUnitType.TANK);
+        dismiss();
     }
 
     public void sendSprinter(View view) {
-        mNode.sendSprinterUnits(null);
+        mController.askPlayerForTargetNode(mNode, EUnitType.SPRINTER);
+        dismiss();
     }
 
     public void buildMeleeFactory() {

@@ -1,8 +1,5 @@
 package ch.sebastianhaeni.edgewars.logic.entities.board;
 
-import java.util.ArrayList;
-
-import ch.sebastianhaeni.edgewars.graphics.shapes.IDrawable;
 import ch.sebastianhaeni.edgewars.logic.entities.Entity;
 
 /**
@@ -27,7 +24,7 @@ public abstract class BoardEntity extends Entity {
     }
 
     /**
-     * @return gets the drawables
+     * Initializes the entity with the game.
      */
-    public abstract ArrayList<IDrawable> getDrawables();
+    public abstract void initialize();
 }

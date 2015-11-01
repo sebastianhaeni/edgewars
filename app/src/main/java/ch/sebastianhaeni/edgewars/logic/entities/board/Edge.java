@@ -1,63 +1,51 @@
 package ch.sebastianhaeni.edgewars.logic.entities.board;
 
-import java.util.ArrayList;
-
-import ch.sebastianhaeni.edgewars.graphics.shapes.IDrawable;
-import ch.sebastianhaeni.edgewars.graphics.shapes.Line;
+import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Line;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
+import ch.sebastianhaeni.edgewars.util.Colors;
 
 /**
  * An edge connects two nodes and has no functionality.
  */
 public class Edge extends BoardEntity {
-    private final Node mNode1;
-    private final Node mNode2;
-    private double mLength;
-    private final ArrayList<IDrawable> mDrawables = new ArrayList<>();
+    private final Node mSourceNode;
+    private final Node mTargetNode;
+    private final Line mLine;
 
     /**
      * Constructor
      *
-     * @param node1 start edge
-     * @param node2 target edge
+     * @param sourceNode start edge
+     * @param targetNode target edge
      */
-    public Edge(Node node1, Node node2) {
-        mNode1 = node1;
-        mNode2 = node2;
-
-        calculateLength();
-
-        mDrawables.clear();
-        mDrawables.add(new Line(node1.getPosition(), node2.getPosition()));
-    }
-
-    /**
-     * @return gets the length of this edge
-     */
-    public double getLength() {
-        return mLength;
-    }
-
-    /**
-     * Calculates the length of the edge with Pythagoras.
-     */
-    private void calculateLength() {
-        float x1 = mNode1.getPosition().getX();
-        float y1 = mNode1.getPosition().getY();
-
-        float x2 = mNode2.getPosition().getX();
-        float y2 = mNode2.getPosition().getY();
-
-        mLength = Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
-    }
-
-    @Override
-    public ArrayList<IDrawable> getDrawables() {
-        return mDrawables;
+    public Edge(Node sourceNode, Node targetNode) {
+        super();
+        mSourceNode = sourceNode;
+        mTargetNode = targetNode;
+        mLine = new Line(sourceNode.getPosition(), targetNode.getPosition(), Colors.EDGE);
     }
 
     @Override
     public void update(long millis) {
         // no op
+    }
+
+    /**
+     * @return gets the source node
+     */
+    public Node getSourceNode() {
+        return mSourceNode;
+    }
+
+    /**
+     * @return gets the target node
+     */
+    public Node getTargetNode() {
+        return mTargetNode;
+    }
+
+    @Override
+    public void initialize() {
+        mLine.register();
     }
 }

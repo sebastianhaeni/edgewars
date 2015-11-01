@@ -4,8 +4,8 @@ package ch.sebastianhaeni.edgewars.util;
  * Position helper class.
  */
 public class Position {
-    private final float mX;
-    private final float mY;
+    private float mX;
+    private float mY;
 
     /**
      * Constructor
@@ -16,6 +16,17 @@ public class Position {
     public Position(float x, float y) {
         this.mX = x;
         this.mY = y;
+    }
+
+    /**
+     * Copy constructor.
+     *
+     * @param position the position to be copied
+     */
+    public Position(Position position) {
+        this.mX = position.getX();
+        this.mY = position.getY();
+
     }
 
     /**
@@ -30,5 +41,31 @@ public class Position {
      */
     public float getY() {
         return mY;
+    }
+
+    /**
+     * Sets new coordinates.
+     *
+     * @param x coordinate
+     * @param y coordinate
+     */
+    public void set(float x, float y) {
+        mX = x;
+        mY = y;
+    }
+
+    @Override
+    public String toString() {
+        return "{x: " + mX + ", y: " + mY + "}";
+    }
+
+    /**
+     * Determines if the positions are about the same with a precision of .01.
+     *
+     * @param position the other position to compare with
+     * @return if this is about the same
+     */
+    public boolean isAboutTheSame(Position position) {
+        return Math.abs(mX - position.getX()) < .01f && Math.abs(mY - position.getY()) < .01f;
     }
 }

@@ -2,7 +2,6 @@ package ch.sebastianhaeni.edgewars.logic.entities.board;
 
 import java.util.ArrayList;
 
-import ch.sebastianhaeni.edgewars.graphics.shapes.IDrawable;
 import ch.sebastianhaeni.edgewars.logic.entities.Entity;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
 
@@ -12,7 +11,6 @@ import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
  */
 public class Board extends Entity {
     private final ArrayList<BoardEntity> mEntities = new ArrayList<>();
-    private final ArrayList<IDrawable> mDrawables = new ArrayList<>();
 
     /**
      * Constructor
@@ -31,19 +29,6 @@ public class Board extends Entity {
     }
 
     /**
-     * @return gets the drawables on the board
-     */
-    public ArrayList<IDrawable> getDrawables() {
-        mDrawables.clear();
-        for (BoardEntity e : mEntities) {
-            for (IDrawable s : e.getDrawables()) {
-                mDrawables.add(s);
-            }
-        }
-        return mDrawables;
-    }
-
-    /**
      * @return gets the nodes on the board
      */
     public ArrayList<Node> getNodes() {
@@ -59,5 +44,14 @@ public class Board extends Entity {
     @Override
     public void update(long millis) {
         // no op
+    }
+
+    /**
+     * Initializes the board with the game.
+     */
+    public void initialize() {
+        for (BoardEntity entity : mEntities) {
+            entity.initialize();
+        }
     }
 }

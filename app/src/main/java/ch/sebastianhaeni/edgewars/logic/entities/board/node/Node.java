@@ -2,13 +2,10 @@ package ch.sebastianhaeni.edgewars.logic.entities.board.node;
 
 import android.databinding.Bindable;
 
-import java.util.ArrayList;
-import java.util.Stack;
-
 import ch.sebastianhaeni.edgewars.BR;
-import ch.sebastianhaeni.edgewars.graphics.shapes.Circle;
-import ch.sebastianhaeni.edgewars.graphics.shapes.IDrawable;
-import ch.sebastianhaeni.edgewars.graphics.shapes.decorators.DeathParticleDecorator;
+import ch.sebastianhaeni.edgewars.graphics.drawables.decorators.TextDecorator;
+import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Polygon;
+import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Shape;
 import ch.sebastianhaeni.edgewars.logic.Game;
 import ch.sebastianhaeni.edgewars.logic.commands.MoveUnitCommand;
 import ch.sebastianhaeni.edgewars.logic.entities.board.BoardEntity;
@@ -21,6 +18,7 @@ import ch.sebastianhaeni.edgewars.logic.entities.board.units.MeleeUnit;
 import ch.sebastianhaeni.edgewars.logic.entities.board.units.SprinterUnit;
 import ch.sebastianhaeni.edgewars.logic.entities.board.units.TankUnit;
 import ch.sebastianhaeni.edgewars.logic.entities.board.units.Unit;
+import ch.sebastianhaeni.edgewars.util.Colors;
 import ch.sebastianhaeni.edgewars.util.Position;
 
 /**
@@ -39,26 +37,27 @@ import ch.sebastianhaeni.edgewars.util.Position;
  */
 public class Node extends BoardEntity {
 
+    //region members
     private static final int DAMAGE_LEVEL_UPGRADE_COST = 50;
     private static final int HEALTH_LEVEL_UPGRADE_COST = 50;
-    private final Circle mCircle;
-    private final ArrayList<MeleeUnit> mMeleeUnits = new ArrayList<>();
-    private final ArrayList<TankUnit> mTankUnits = new ArrayList<>();
-    private final ArrayList<SprinterUnit> mSprinterUnits = new ArrayList<>();
+    private static final float RADIUS = .7f;
+    private final Polygon mCircle;
+    private final TextDecorator mHealthLabel;
+    private int mMeleeUnits;
+    private int mTankUnits;
+    private int mSprinterUnits;
 
-    private final MeleeFactory mMeleeFactory = new MeleeFactory(this);
-    private final TankFactory mTankFactory = new TankFactory(this);
-    private final SprinterFactory mSprinterFactory = new SprinterFactory(this);
+    private MeleeFactory mMeleeFactory = new MeleeFactory(this);
+    private TankFactory mTankFactory = new TankFactory(this);
+    private SprinterFactory mSprinterFactory = new SprinterFactory(this);
 
     private int mHealth;
     private int mHealthLevel = 1;
     private int mDamageLevel = 1;
-    private final Position mPosition;
-    private final float mRadius = 0.7f;
-    private final ArrayList<IDrawable> mDrawables = new ArrayList<>();
+    private Position mPosition;
 
-    private final Stack<MoveUnitCommand> mMoveUnitCommands = new Stack<>();
     private NodeState mState;
+    //endregion
 
     /**
      * Constructor
@@ -66,88 +65,71 @@ public class Node extends BoardEntity {
      * @param position the position this node is at
      */
     public Node(Position position) {
-        setState(new NeutralState(this));
         mPosition = position;
-        mCircle = new Circle(mPosition, mRadius);
-        mDrawables.add(mCircle);
+        mHealth = getMaxHealth();
+
+        mCircle = new Polygon(mPosition, Colors.NODE_NEUTRAL, 3, 80, 0, RADIUS);
+        mHealthLabel = new TextDecorator(mCircle, String.valueOf(getHealth()), 6);
+
+        setState(new NeutralState(this));
     }
 
     @Override
     public void update(long millis) {
-        if (mMoveUnitCommands.size() > 0) {
-            MoveUnitCommand c = mMoveUnitCommands.pop();
-            Game.getInstance().register(c);
-        }
-
         mState.update(millis);
     }
 
-    /**
-     * @return gets the node's position
-     */
-    public Position getPosition() {
-        return mPosition;
-    }
-
-    /**
-     * @return gets the node's radius
-     */
-    public float getRadius() {
-        return mRadius;
-    }
-
     @Override
-    public ArrayList<IDrawable> getDrawables() {
-        return mDrawables;
+    public void initialize() {
+        mCircle.register();
+        mHealthLabel.register();
     }
+
+    //region actions
 
     /**
      * Adds a melee unit to this node.
-     *
-     * @param unit unit to be added
      */
-    public void addUnit(MeleeUnit unit) {
-        mMeleeUnits.add(unit);
+    public void addMeleeUnit() {
+        mMeleeUnits++;
         notifyPropertyChanged(BR.meleeCount);
     }
 
     /**
      * Adds a tank unit to this node.
-     *
-     * @param unit unit to be added
      */
-    public void addUnit(TankUnit unit) {
-        mTankUnits.add(unit);
+    public void addTankUnit() {
+        mTankUnits++;
         notifyPropertyChanged(BR.tankCount);
     }
 
     /**
      * Adds a sprinter unit to this node.
-     *
-     * @param unit unit to be added
      */
-    public void addUnit(SprinterUnit unit) {
-        mSprinterUnits.add(unit);
+    public void addSprinterUnit() {
+        mSprinterUnits++;
         notifyPropertyChanged(BR.sprinterCount);
     }
 
     /**
-     * Adds a unit to this node. It is figured out if it is a melee, tank or sprinter.
+     * Adds units to a node.
      *
-     * @param unit unit to be added
+     * @param unit the unit to be added
      */
     public void addUnit(Unit unit) {
         if (unit instanceof MeleeUnit) {
-            mMeleeUnits.add((MeleeUnit) unit);
+            mMeleeUnits += unit.getCount();
             return;
         }
         if (unit instanceof TankUnit) {
-            mTankUnits.add((TankUnit) unit);
+            mTankUnits += unit.getCount();
             return;
         }
         if (unit instanceof SprinterUnit) {
-            mSprinterUnits.add((SprinterUnit) unit);
+            mSprinterUnits += unit.getCount();
+            return;
         }
+        throw new IllegalArgumentException("Unit is not handled.");
     }
 
     /**
@@ -178,8 +160,75 @@ public class Node extends BoardEntity {
      */
     public void repair() {
         mHealth = getMaxHealth();
+        mHealthLabel.setText(String.valueOf(mHealth));
         notifyPropertyChanged(BR.health);
     }
+
+    /**
+     * Issues a command to send all melee units to another node from this node.
+     *
+     * @param node target node
+     */
+    public void sendMeleeUnits(Node node) {
+        Game.getInstance().register(new MoveUnitCommand(
+                new MeleeUnit(mMeleeUnits, node),
+                node,
+                Game.getInstance().getEdgeBetween(this, node)));
+        mMeleeUnits = 0;
+        notifyPropertyChanged(BR.node);
+    }
+
+    /**
+     * Issues a command to send all tank units to another node from this node.
+     *
+     * @param node target node
+     */
+    public void sendTankUnits(Node node) {
+        Game.getInstance().register(new MoveUnitCommand(
+                new TankUnit(mTankUnits, node),
+                node,
+                Game.getInstance().getEdgeBetween(this, node)));
+        mTankUnits = 0;
+        notifyPropertyChanged(BR.node);
+    }
+
+    /**
+     * Issues a command to send all sprinter units to another node from this node.
+     *
+     * @param node target node
+     */
+    public void sendSprinterUnits(Node node) {
+        Game.getInstance().register(new MoveUnitCommand(
+                new SprinterUnit(mSprinterUnits, node),
+                node,
+                Game.getInstance().getEdgeBetween(this, node)));
+        mSprinterUnits = 0;
+        notifyPropertyChanged(BR.node);
+    }
+
+    /**
+     * Removes a damage value from health.
+     *
+     * @param attackDamage the amount of damage that is inflicted
+     */
+    public void deductHealth(int attackDamage) {
+        int newHealth = mHealth - attackDamage;
+        if (newHealth <= 0) {
+            setState(new NeutralState(this));
+            // TODO add death particles
+            mHealth = 0;
+            return;
+        }
+        mHealth = newHealth;
+        mHealthLabel.setText(String.valueOf(mHealth));
+
+        notifyPropertyChanged(BR.health);
+        notifyPropertyChanged(BR.repairCost);
+    }
+
+    //endregion
+
+    //region databinding
 
     /**
      * @return gets the cost to repair the node with the current health
@@ -235,7 +284,7 @@ public class Node extends BoardEntity {
      */
     @Bindable
     public int getMeleeCount() {
-        return mMeleeUnits.size();
+        return mMeleeUnits;
     }
 
     /**
@@ -243,7 +292,7 @@ public class Node extends BoardEntity {
      */
     @Bindable
     public int getTankCount() {
-        return mTankUnits.size();
+        return mTankUnits;
     }
 
     /**
@@ -251,7 +300,25 @@ public class Node extends BoardEntity {
      */
     @Bindable
     public int getSprinterCount() {
-        return mSprinterUnits.size();
+        return mSprinterUnits;
+    }
+
+    //endregion
+
+    //region getters/setters
+
+    /**
+     * @return gets the circle representing this node
+     */
+    public Shape getCircle() {
+        return mCircle;
+    }
+
+    /**
+     * @return gets the node's position
+     */
+    public Position getPosition() {
+        return mPosition;
     }
 
     /**
@@ -276,61 +343,19 @@ public class Node extends BoardEntity {
     }
 
     /**
-     * Issues a command to send all melee units to another node from this node.
+     * Sets the color of this node.
      *
-     * @param node target node
+     * @param color new color
      */
-    public void sendMeleeUnits(Node node) {
-        for (Unit u : mMeleeUnits) {
-            mMoveUnitCommands.add(new MoveUnitCommand(u, node));
-        }
-        mMeleeUnits.clear();
-        notifyPropertyChanged(BR.node);
+    public void setColor(float[] color) {
+        mCircle.setColor(color);
     }
 
     /**
-     * Issues a command to send all tank units to another node from this node.
-     *
-     * @param node target node
+     * @return gets the node's state
      */
-    public void sendTankUnits(Node node) {
-        for (Unit u : mTankUnits) {
-            mMoveUnitCommands.add(new MoveUnitCommand(u, node));
-        }
-        mMeleeUnits.clear();
-        notifyPropertyChanged(BR.node);
-    }
-
-    /**
-     * Issues a command to send all sprinter units to another node from this node.
-     *
-     * @param node target node
-     */
-    public void sendSprinterUnits(Node node) {
-        for (Unit u : mSprinterUnits) {
-            mMoveUnitCommands.add(new MoveUnitCommand(u, node));
-        }
-        mMeleeUnits.clear();
-        notifyPropertyChanged(BR.node);
-    }
-
-    /**
-     * Removes a damage value from health.
-     *
-     * @param attackDamage the amount of damage that is inflicted
-     */
-    public void deductHealth(int attackDamage) {
-        int newHealth = mHealth - attackDamage;
-        if (newHealth <= 0) {
-            setState(new NeutralState(this));
-            mDrawables.add(new DeathParticleDecorator(mCircle));
-            mHealth = 0;
-            return;
-        }
-        mHealth = newHealth;
-
-        notifyPropertyChanged(BR.health);
-        notifyPropertyChanged(BR.repairCost);
+    public NodeState getState() {
+        return mState;
     }
 
     /**
@@ -341,24 +366,6 @@ public class Node extends BoardEntity {
     public void setState(NodeState state) {
         mState = state;
         setUpdateInterval(state.getUpdateInterval());
-    }
-
-    /**
-     * Sets the color of this node.
-     *
-     * @param color new color
-     */
-    public void setColor(float[] color) {
-        for (IDrawable s : getDrawables()) {
-            s.getShape().setColor(color);
-        }
-    }
-
-    /**
-     * @return gets the node's state
-     */
-    public NodeState getState() {
-        return mState;
     }
 
     /**
@@ -388,4 +395,30 @@ public class Node extends BoardEntity {
     public int getHealthLevelUpgradeCost() {
         return HEALTH_LEVEL_UPGRADE_COST;
     }
+
+    /**
+     * @return gets the amount of damage the node inflicts to intruders
+     */
+    public int getDamage() {
+        switch (mDamageLevel) {
+            case 1:
+                return 30;
+            case 2:
+                return 50;
+            case 3:
+                return 80;
+            default:
+                throw new IllegalArgumentException("Damage level " + mDamageLevel + " is not allowed");
+        }
+    }
+
+    /**
+     * @return gets the circle radius
+     */
+    public float getRadius() {
+        return .7f;
+    }
+
+    //endregion
+
 }

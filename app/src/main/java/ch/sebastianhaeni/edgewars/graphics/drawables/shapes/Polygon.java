@@ -1,4 +1,4 @@
-package ch.sebastianhaeni.edgewars.graphics.shapes;
+package ch.sebastianhaeni.edgewars.graphics.drawables.shapes;
 
 import android.opengl.GLES20;
 
@@ -7,38 +7,52 @@ import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
 import ch.sebastianhaeni.edgewars.graphics.GameRenderer;
-import ch.sebastianhaeni.edgewars.graphics.programs.ESShader;
+import ch.sebastianhaeni.edgewars.graphics.programs.OpenGLUtil;
 import ch.sebastianhaeni.edgewars.util.Position;
 
 /**
  * Draws a circle with a uniform color at a certain position.
  */
-public class Circle extends Shape {
-    private static final int CORNERS = 364;
-    private static boolean verticesInitialized = false;
-    private static float vertices[] = new float[CORNERS * 3];
+public class Polygon extends Shape {
 
     private final FloatBuffer mVertexBuffer;
+    private final int mCorners;
 
     /**
      * Sets up the drawing object data for use in an OpenGL ES context.
      *
      * @param position Position of the circle
-     * @param radius   Radius of the circle
+     * @param color    Color of this polygon
+     * @param layer    the layer this polygon should be drawn at
+     * @param corners  the amount of corners this polygon should have
+     * @param angle    angle of the polygon
      */
-    public Circle(Position position, float radius) {
-        super(position);
+    public Polygon(Position position, float[] color, int layer, int corners, int angle) {
+        this(position, color, layer, corners, angle, 1);
+    }
 
-        if (!verticesInitialized) {
-            vertices[0] = 0;
-            vertices[1] = 0;
-            vertices[2] = 0;
-            for (int i = 1; i < CORNERS; i++) {
-                vertices[(i * 3)] = (float) (radius * Math.cos((3.14 / 180) * (float) i));
-                vertices[(i * 3) + 1] = (float) (radius * Math.sin((3.14 / 180) * (float) i));
-                vertices[(i * 3) + 2] = 0;
-            }
-            verticesInitialized = true;
+    /**
+     * Sets up the drawing object data for use in an OpenGL ES context.
+     *
+     * @param position Position of the circle
+     * @param color    Color of this polygon
+     * @param layer    the layer this polygon should be drawn at
+     * @param corners  the amount of corners this polygon should have
+     * @param angle    angle of the polygon
+     * @param radius     size of the polygon (diameter)
+     */
+    public Polygon(Position position, float[] color, int layer, int corners, int angle, float radius) {
+        super(position, color, layer);
+
+        mCorners = corners;
+
+        float[] vertices = new float[corners * 3];
+
+        float step = 360f / corners;
+        for (int i = 0; i < corners; i++) {
+            vertices[(i * 3)] = (float) (radius * Math.cos((3.14 / 180) * ((step * i) + angle)));
+            vertices[(i * 3) + 1] = (float) (radius * Math.sin((3.14 / 180) * ((step * i) + angle)));
+            vertices[(i * 3) + 2] = 0;
         }
 
         // initialize vertex byte buffer for shape coordinates
@@ -61,9 +75,13 @@ public class Circle extends Shape {
      */
     @Override
     public void draw(GameRenderer renderer) {
+        if (mVertexBuffer == null) {
+            return;
+        }
+
         // Add program to OpenGL environment
         GLES20.glUseProgram(renderer.getShapeProgram().getProgramHandle());
-        ESShader.checkGlError("glUseProgram");
+        OpenGLUtil.checkGlError("glUseProgram");
 
         // Apply the projection and view transformation
         GLES20.glUniformMatrix4fv(
@@ -72,7 +90,11 @@ public class Circle extends Shape {
                 false,
                 renderer.getMVPMatrix(),
                 0);
-        ESShader.checkGlError("glUniformMatrix4fv");
+        OpenGLUtil.checkGlError("glUniformMatrix4fv");
+
+        // Enable a handle to the vertices
+        GLES20.glEnableVertexAttribArray(renderer.getShapeProgram().getPositionHandle());
+        OpenGLUtil.checkGlError("glEnableVertexAttribArray");
 
         // Prepare the triangle coordinate data
         GLES20.glVertexAttribPointer(
@@ -82,23 +104,19 @@ public class Circle extends Shape {
                 false,
                 GameRenderer.VERTEX_STRIDE,
                 mVertexBuffer);
-        ESShader.checkGlError("glVertexAttribPointer");
-
-        // Enable the attribute before drawing is possible
-        GLES20.glEnableVertexAttribArray(renderer.getShapeProgram().getPositionHandle());
-        ESShader.checkGlError("glEnableVertexAttribArray");
+        OpenGLUtil.checkGlError("glVertexAttribPointer");
 
         // Set color for drawing the triangle
         GLES20.glUniform4fv(renderer.getShapeProgram().getColorHandle(), 1, getColor(), 0);
-        ESShader.checkGlError("glUniform4fv");
+        OpenGLUtil.checkGlError("glUniform4fv");
 
-        // Draw the triangle
-        GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, 0, CORNERS);
-        ESShader.checkGlError("glDrawArrays");
+        // draw the triangle
+        GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, 0, mCorners);
+        OpenGLUtil.checkGlError("glDrawArrays");
 
         // Disable vertex array
         GLES20.glDisableVertexAttribArray(renderer.getShapeProgram().getPositionHandle());
-        ESShader.checkGlError("glDisableVertexAttribArray");
+        OpenGLUtil.checkGlError("glDisableVertexAttribArray");
 
     }
 

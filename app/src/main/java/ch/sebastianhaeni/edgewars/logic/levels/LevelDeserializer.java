@@ -182,17 +182,9 @@ public class LevelDeserializer implements JsonDeserializer {
         int tankCount = units.get("tank_count").getAsInt();
 
         // add units to node
-        for (int i = 0; i < meleeCount; i++) {
-            node.addUnit(new MeleeUnit(node));
-        }
-
-        for (int i = 0; i < sprinterCount; i++) {
-            node.addUnit(new SprinterUnit(node));
-        }
-
-        for (int i = 0; i < tankCount; i++) {
-            node.addUnit(new TankUnit(node));
-        }
+        node.addUnit(new MeleeUnit(meleeCount, node));
+        node.addUnit(new SprinterUnit(sprinterCount, node));
+        node.addUnit(new TankUnit(tankCount, node));
 
         // get initial node factories
         JsonObject factories = initialValuesObject.get("factories").getAsJsonObject();

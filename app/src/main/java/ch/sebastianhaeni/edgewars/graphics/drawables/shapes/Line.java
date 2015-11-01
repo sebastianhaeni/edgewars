@@ -1,4 +1,4 @@
-package ch.sebastianhaeni.edgewars.graphics.shapes;
+package ch.sebastianhaeni.edgewars.graphics.drawables.shapes;
 
 import android.opengl.GLES20;
 
@@ -7,7 +7,7 @@ import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
 import ch.sebastianhaeni.edgewars.graphics.GameRenderer;
-import ch.sebastianhaeni.edgewars.graphics.programs.ESShader;
+import ch.sebastianhaeni.edgewars.graphics.programs.OpenGLUtil;
 import ch.sebastianhaeni.edgewars.util.Position;
 
 /**
@@ -24,18 +24,19 @@ public class Line extends Shape {
      * Initializes the line with a source and destination rectangle that's really thin. The corners
      * are not rounded.
      *
-     * @param src where the line starts
-     * @param dst where the line ends
+     * @param src   where the line starts
+     * @param dst   where the line ends
+     * @param color the color of the edge
      */
-    public Line(Position src, Position dst) {
-        super(src);
+    public Line(Position src, Position dst, float[] color) {
+        super(src, color, 2);
 
         float[] mCoordinates = new float[]{
                 // in counterclockwise order:
                 0f, (WIDTH * .5f), 0f, // top left
                 0f, -(WIDTH * .5f), 0f, // bottom left
-                src.getX() - dst.getX(), src.getY() - dst.getY() + (WIDTH * .5f), 0f, // bottom right
-                src.getX() - dst.getX(), src.getY() - dst.getY() - (WIDTH * .5f), 0f // top right
+                src.getX() - dst.getX(), src.getY() - dst.getY() - (WIDTH * .5f), 0f, // bottom right
+                src.getX() - dst.getX(), src.getY() - dst.getY() + (WIDTH * .5f), 0f  // top right
         };
 
         vertexCount = mCoordinates.length / GameRenderer.COORDS_PER_VERTEX;
@@ -59,7 +60,7 @@ public class Line extends Shape {
     public void draw(GameRenderer renderer) {
         // Add program to OpenGL environment
         GLES20.glUseProgram(renderer.getShapeProgram().getProgramHandle());
-        ESShader.checkGlError("glUseProgram");
+        OpenGLUtil.checkGlError("glUseProgram");
 
         // Apply the projection and view transformation
         GLES20.glUniformMatrix4fv(
@@ -68,30 +69,30 @@ public class Line extends Shape {
                 false,
                 renderer.getMVPMatrix(),
                 0);
-        ESShader.checkGlError("glUniformMatrix4fv");
+        OpenGLUtil.checkGlError("glUniformMatrix4fv");
 
         // Enable a handle to the vertices
         GLES20.glEnableVertexAttribArray(renderer.getShapeProgram().getPositionHandle());
-        ESShader.checkGlError("glEnableVertexAttribArray");
+        OpenGLUtil.checkGlError("glEnableVertexAttribArray");
 
         // Prepare the triangle coordinate data
         GLES20.glVertexAttribPointer(
                 renderer.getShapeProgram().getPositionHandle(), GameRenderer.COORDS_PER_VERTEX,
                 GLES20.GL_FLOAT, false,
                 GameRenderer.VERTEX_STRIDE, vertexBuffer);
-        ESShader.checkGlError("glVertexAttribPointer");
+        OpenGLUtil.checkGlError("glVertexAttribPointer");
 
         // Set color for drawing the triangle
         GLES20.glUniform4fv(renderer.getShapeProgram().getColorHandle(), 1, getColor(), 0);
-        ESShader.checkGlError("glUniform4fv");
+        OpenGLUtil.checkGlError("glUniform4fv");
 
-        // Draw the triangle
+        // draw the triangle
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, 0, vertexCount);
-        ESShader.checkGlError("glDrawArrays");
+        OpenGLUtil.checkGlError("glDrawArrays");
 
         // Disable vertex array
         GLES20.glDisableVertexAttribArray(renderer.getShapeProgram().getPositionHandle());
-        ESShader.checkGlError("glDisableVertexAttribArray");
+        OpenGLUtil.checkGlError("glDisableVertexAttribArray");
 
     }
 

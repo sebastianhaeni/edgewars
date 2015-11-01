@@ -29,6 +29,8 @@ public class GameState {
         mBoard = board;
         mPlayers = players;
         mHuman = human;
+
+        mBoard.initialize();
     }
 
     /**

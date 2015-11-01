@@ -41,14 +41,6 @@ public class LevelLoader {
         return mLevels.getAllLevelNumbers();
     }
 
-    public int getRandomLevelNumber() {
-        ArrayList<Integer> levelNumbers = this.getLevelNumbers();
-        Random r = new Random();
-        int i = r.nextInt(levelNumbers.size());
-        int levelNr = levelNumbers.get(i);
-        return levelNr;
-    }
-
     public GameState build(int levelNumber) throws IllegalArgumentException {
 
         // ensure that the specified level number does exist
