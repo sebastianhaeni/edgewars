@@ -45,6 +45,8 @@ public class GameRenderer implements GLSurfaceView.Renderer {
 
     private int mScreenWidth;
     private int mScreenHeight;
+    private float mMaxX;
+    private float mMaxY;
     private ShapeProgram mShapeProgram;
     private ParticleProgram mParticleProgram;
 
@@ -115,6 +117,10 @@ public class GameRenderer implements GLSurfaceView.Renderer {
     public void onSurfaceChanged(GL10 unused, int width, int height) {
         mScreenWidth = width;
         mScreenHeight = height;
+
+        mMaxX = ((float) EYE_HEIGHT / MIN_HEIGHT) * ((float) mScreenWidth / mScreenHeight);
+        mMaxY = ((float) EYE_HEIGHT / MIN_HEIGHT);
+
         // Adjust the viewport based on geometry changes,
         // such as screen rotation
         GLES20.glViewport(0, 0, width, height);
@@ -147,14 +153,20 @@ public class GameRenderer implements GLSurfaceView.Renderer {
         return mMVPMatrix;
     }
 
-    public float getAndroidCoordinateX (float objectCoordinateX) {
-        float maxX = ((float) EYE_HEIGHT/MIN_HEIGHT) * ((float) mScreenWidth/mScreenHeight);
-        return (objectCoordinateX+maxX) * (mScreenWidth/(2*maxX));
+    public float getAndroidCoordinateX(float objectCoordinateX) {
+        return (objectCoordinateX + mMaxX) * (mScreenWidth / (2 * mMaxX));
     }
 
-    public float getAndroidCoordinateY (float objectCoordinateY) {
-        float maxY = ((float) EYE_HEIGHT/MIN_HEIGHT);
-        return (objectCoordinateY+maxY) * (mScreenHeight/(2*maxY));
+    public float getAndroidCoordinateY(float objectCoordinateY) {
+        return (objectCoordinateY + mMaxY) * (mScreenHeight / (2 * mMaxY));
+    }
+
+    public float getAndroidLengthX(float objectLengthX) {
+        return (objectLengthX * (mScreenWidth) / (2 * mMaxX));
+    }
+
+    public float getAndroidLengthY(float objectLengthY) {
+        return (objectLengthY * (mScreenHeight) / (2 * mMaxY));
     }
 
     public ShapeProgram getShapeProgram() {

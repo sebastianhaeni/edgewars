@@ -88,20 +88,21 @@ public class GameController {
      */
     private void clickNode(float clickX, float clickY) {
 
-        DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
-
         Log.i("debugging", "___________________________________________");
         Log.i("debugging", "clickX=" + clickX + "; clickY=" + clickY);
 
-
         // get camera position
-        float cameraX = mGameState.getCamera().getScreenX() * (2f/3f);
-        float cameraY = mGameState.getCamera().getScreenY() * (2f/3f);
+        float cameraX = mGameState.getCamera().getScreenX() * (2f / 3f);
+        float cameraY = mGameState.getCamera().getScreenY() * (2f / 3f);
         Log.i("debugging", "cameraX=" + cameraX + "; cameraY=" + cameraY);
 
+        float nodeLengthX = mRenderer.getAndroidLengthX(0.5f);
+        float nodeLengthY = mRenderer.getAndroidLengthY(0.5f);
 
-        // determine size of a node
-        float nodeSize = 90; // TODO calculate this
+        // + 1/3 imprecision tolerance
+        nodeLengthX = nodeLengthX * 1.33f;
+        nodeLengthY = nodeLengthY * 1.33f;
+        Log.i("debugging", "nodeLengthX=" + nodeLengthX + "; nodeLengthY=" + nodeLengthY);
 
 
         // loop through nodes and test if one lies at the click coordinate
@@ -112,19 +113,19 @@ public class GameController {
 
             Log.i("debugging", "calcNodeX[i]=" + nodeX + "; calcNodeY[i]=" + nodeY);
 
-            if (Math.abs(nodeX+cameraX - clickX) < nodeSize &&
-                    Math.abs(nodeY+cameraY - clickY) < nodeSize) {
+            if (Math.abs(nodeX + cameraX - clickX) < nodeLengthX &&
+                    Math.abs(nodeY + cameraY - clickY) < nodeLengthY) {
                 showNodeDialog(node);
 
                 float originalCameraX = mGameState.getCamera().getX();
                 float originalCameraY = mGameState.getCamera().getY();
 
-                Log.i("debugging", "cameraX="+originalCameraX+"; cameraY="+originalCameraY);
+                Log.i("debugging", "cameraX=" + originalCameraX + "; cameraY=" + originalCameraY);
                 Log.i("debugging", "nodeX=" + node.getPosition().getX() + "; nodeY=" + node.getPosition().getY());
                 Log.i("debugging", "calcNodeX=" + nodeX + "; calcNodeY=" + nodeY);
-                float calcClickX = clickX-originalCameraX;
-                float calcClickY = clickY-originalCameraY;
-                Log.i("debugging", "calcClickX="+calcClickX+"; calcClickY="+calcClickY);
+                float calcClickX = clickX - originalCameraX;
+                float calcClickY = clickY - originalCameraY;
+                Log.i("debugging", "calcClickX=" + calcClickX + "; calcClickY=" + calcClickY);
                 break;
             }
         }
