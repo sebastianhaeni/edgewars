@@ -28,7 +28,7 @@ public abstract class Factory extends Entity {
      *
      * @param node the node this factory is at
      */
-    public Factory(Node node) {
+    Factory(Node node) {
         super();
         setUpdateInterval(getProducingDuration());
         mNode = node;

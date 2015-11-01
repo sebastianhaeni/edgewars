@@ -12,14 +12,14 @@ public abstract class BoardEntity extends Entity {
      *
      * @param interval the interval time this entity wants to be updated
      */
-    public BoardEntity(long interval) {
+    protected BoardEntity(long interval) {
         super(interval);
     }
 
     /**
      * Constructor for entities that don't want to be updated.
      */
-    public BoardEntity() {
+    protected BoardEntity() {
         super();
     }
 

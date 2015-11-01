@@ -81,10 +81,10 @@ public class Game {
     }
 
     /**
-     * Reisters a new drawable to be drawn.
+     * Registers a new drawable to be drawn.
      *
      * @param drawable drawable to register.
-     * @param layer
+     * @param layer    layer to draw on
      */
     public void register(Drawable drawable, int layer) {
         mDrawables.add(drawable, layer);

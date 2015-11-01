@@ -88,13 +88,6 @@ public class Text extends Shape {
         convertTextToTriangleInfo();
     }
 
-    /**
-     * @return gets the text
-     */
-    public String getText() {
-        return mText;
-    }
-
     @Override
     public void draw(GameRenderer renderer) {
         // Set the correct shader for our grid object.
@@ -186,7 +179,7 @@ public class Text extends Shape {
         mIndexColors = 0;
 
         // Get the total amount of characters
-        int charCount = getText().length();
+        int charCount = mText.length();
 
         // Create the arrays we need with the correct size.
         mVectors = null;

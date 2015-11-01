@@ -18,7 +18,7 @@ public abstract class Drawable {
      *
      * @param layer layer this drawable is at
      */
-    public Drawable(int layer) {
+    protected Drawable(int layer) {
         mLayer = layer;
     }
 

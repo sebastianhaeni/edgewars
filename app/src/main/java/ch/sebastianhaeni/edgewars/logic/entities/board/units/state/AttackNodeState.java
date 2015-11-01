@@ -11,7 +11,7 @@ import ch.sebastianhaeni.edgewars.logic.entities.board.units.Unit;
  * State of a unit attacking a node.
  */
 public class AttackNodeState extends UnitState {
-    public static final String TAG = "AttackNodeState";
+    private static final String TAG = "AttackNodeState";
     private final Node mNode;
     private final Random mRandom = new Random();
 

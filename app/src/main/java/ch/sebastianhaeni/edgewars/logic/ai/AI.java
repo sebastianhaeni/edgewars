@@ -5,7 +5,7 @@ import ch.sebastianhaeni.edgewars.logic.GameState;
 public abstract class AI {
     private final GameState mState;
 
-    public AI(GameState state) {
+    AI(GameState state) {
         mState = state;
     }
 

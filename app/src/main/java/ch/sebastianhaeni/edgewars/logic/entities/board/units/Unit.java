@@ -27,7 +27,7 @@ public abstract class Unit extends BoardEntity {
      * @param count count of units in this container
      * @param node  the node this unit starts at
      */
-    public Unit(int count, Node node) {
+    Unit(int count, Node node) {
         super(-1);
         setUpdateInterval(getSpeed());
         setState(new IdleState(this));

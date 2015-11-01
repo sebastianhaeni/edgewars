@@ -19,7 +19,7 @@ abstract public class Shape extends Drawable {
      * @param color    the color of this shape
      * @param layer    the layer of this shape to be drawn at
      */
-    public Shape(Position position, float[] color, int layer) {
+    Shape(Position position, float[] color, int layer) {
         super(layer);
         mPosition = position;
         mColor = color;

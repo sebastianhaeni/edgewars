@@ -42,7 +42,7 @@ public class LevelSelectionActivity extends Activity {
         setContentView(binding.getRoot());
     }
 
-    public void selectLevel(View view) {
+    private void selectLevel(View view) {
         Intent intent = new Intent(LevelSelectionActivity.this, LevelDetailActivity.class);
         intent.putExtra(LevelDetailActivity.LEVEL_ID, view.getId());
         startActivity(intent);

@@ -47,14 +47,14 @@ public class Node extends BoardEntity {
     private int mTankUnits;
     private int mSprinterUnits;
 
-    private MeleeFactory mMeleeFactory = new MeleeFactory(this);
-    private TankFactory mTankFactory = new TankFactory(this);
-    private SprinterFactory mSprinterFactory = new SprinterFactory(this);
+    private final MeleeFactory mMeleeFactory = new MeleeFactory(this);
+    private final TankFactory mTankFactory = new TankFactory(this);
+    private final SprinterFactory mSprinterFactory = new SprinterFactory(this);
 
     private int mHealth;
     private int mHealthLevel = 1;
     private int mDamageLevel = 1;
-    private Position mPosition;
+    private final Position mPosition;
 
     private NodeState mState;
     //endregion

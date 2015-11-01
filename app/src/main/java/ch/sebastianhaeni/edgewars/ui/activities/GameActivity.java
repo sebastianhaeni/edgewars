@@ -1,7 +1,6 @@
 package ch.sebastianhaeni.edgewars.ui.activities;
 
 import android.app.Activity;
-import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
