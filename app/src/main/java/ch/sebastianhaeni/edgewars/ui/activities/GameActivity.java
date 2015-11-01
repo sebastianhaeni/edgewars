@@ -20,7 +20,11 @@ public class GameActivity extends Activity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        int levelNr = getIntent().getExtras().getInt(LevelDetailActivity.LEVEL_ID);
+        int levelNr = 1;
+        if (getIntent().getExtras() != null) {
+            levelNr = getIntent().getExtras().getInt(LevelDetailActivity.LEVEL_ID);
+        }
+
         mGLView = new GameSurfaceView(this);
         mGLView.startLevel(levelNr);
         setContentView(mGLView);
