@@ -24,8 +24,9 @@ public class Circle extends Shape {
      * Sets up the drawing object data for use in an OpenGL ES context.
      *
      * @param position Position of the circle
+     * @param radius   Radius of the circle
      */
-    public Circle(Position position) {
+    public Circle(Position position, float radius) {
         super(position);
 
         if (!verticesInitialized) {
@@ -33,8 +34,8 @@ public class Circle extends Shape {
             vertices[1] = 0;
             vertices[2] = 0;
             for (int i = 1; i < CORNERS; i++) {
-                vertices[(i * 3)] = (float) (0.5 * Math.cos((3.14 / 180) * (float) i));
-                vertices[(i * 3) + 1] = (float) (0.5 * Math.sin((3.14 / 180) * (float) i));
+                vertices[(i * 3)] = (float) (radius * Math.cos((3.14 / 180) * (float) i));
+                vertices[(i * 3) + 1] = (float) (radius * Math.sin((3.14 / 180) * (float) i));
                 vertices[(i * 3) + 2] = 0;
             }
             verticesInitialized = true;

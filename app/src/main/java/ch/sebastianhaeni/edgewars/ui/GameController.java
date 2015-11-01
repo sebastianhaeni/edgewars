@@ -89,24 +89,25 @@ public class GameController {
         float cameraX = mGameState.getCamera().getScreenX() * (2f / 3f);
         float cameraY = mGameState.getCamera().getScreenY() * (2f / 3f);
 
-        // calculate node lengths
-        float nodeLengthX = mRenderer.getAndroidLengthX(0.5f);
-        float nodeLengthY = mRenderer.getAndroidLengthY(0.5f);
-
-        // add 1/3 user imprecision tolerance
-        nodeLengthX = nodeLengthX * 1.33f;
-        nodeLengthY = nodeLengthY * 1.33f;
-
 
         // loop through all nodes and test if one is positioned at the coordinates of the user touch
         for (Node node : mGameState.getBoard().getNodes()) {
+
+            // calculate node radius in pixels
+            float nodeRadiusGL = node.getRadius();
+            float nodeRadiusX = mRenderer.getAndroidLengthX(nodeRadiusGL);
+            float nodeRadiusY = mRenderer.getAndroidLengthY(nodeRadiusGL);
+
+            // add 33% user imprecision tolerance
+            nodeRadiusX = nodeRadiusX * 1.33f;
+            nodeRadiusY = nodeRadiusY * 1.33f;
 
             // convert node coordinates to Android coordinates
             float nodeX = mRenderer.getAndroidCoordinateX(node.getPosition().getX());
             float nodeY = mRenderer.getAndroidCoordinateY(node.getPosition().getY());
 
-            if (Math.abs(nodeX + cameraX - touchX) < nodeLengthX &&
-                    Math.abs(nodeY + cameraY - touchY) < nodeLengthY) {
+            if (Math.abs(nodeX + cameraX - touchX) < nodeRadiusX &&
+                    Math.abs(nodeY + cameraY - touchY) < nodeRadiusY) {
                 showNodeDialog(node);
                 break;
             }
