@@ -3,7 +3,6 @@ package ch.sebastianhaeni.edgewars.graphics.drawables.decorators;
 import ch.sebastianhaeni.edgewars.graphics.GameRenderer;
 import ch.sebastianhaeni.edgewars.graphics.drawables.Drawable;
 import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Shape;
-import ch.sebastianhaeni.edgewars.logic.Game;
 
 /**
  * Decorates a shape and is drawable.

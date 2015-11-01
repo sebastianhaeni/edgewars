@@ -76,6 +76,7 @@ public class MovingState extends UnitState {
 
         if (reached.getState() instanceof NeutralState) {
             reached.setState(new OwnedState(reached, mPlayer));
+            reached.addUnit(getUnit());
         } else {
             OwnedState state = (OwnedState) reached.getState();
             if (state.getOwner().equals(mPlayer)) {

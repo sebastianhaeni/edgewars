@@ -365,20 +365,41 @@ public class Node extends BoardEntity {
         return 50;
     }
 
+    /**
+     * Adds units to a node.
+     *
+     * @param unit the unit to be added
+     */
     public void addUnit(Unit unit) {
         if (unit instanceof MeleeUnit) {
-            mMeleeUnits++;
+            mMeleeUnits += unit.getCount();
             return;
         }
         if (unit instanceof TankUnit) {
-            mTankUnits++;
+            mTankUnits += unit.getCount();
             return;
         }
         if (unit instanceof SprinterUnit) {
-            mSprinterUnits++;
+            mSprinterUnits += unit.getCount();
             return;
         }
         throw new IllegalArgumentException("Unit is not handled.");
+    }
+
+    /**
+     * @return gets the amount of damage the node inflicts to intruders
+     */
+    public int getDamage() {
+        switch (mDamageLevel) {
+            case 1:
+                return 30;
+            case 2:
+                return 50;
+            case 3:
+                return 80;
+            default:
+                throw new IllegalArgumentException("Damage level " + mDamageLevel + " is not allowed");
+        }
     }
 
     //endregion

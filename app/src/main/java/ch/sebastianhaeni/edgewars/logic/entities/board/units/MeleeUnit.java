@@ -1,7 +1,5 @@
 package ch.sebastianhaeni.edgewars.logic.entities.board.units;
 
-import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Polygon;
-import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Shape;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
 
 /**

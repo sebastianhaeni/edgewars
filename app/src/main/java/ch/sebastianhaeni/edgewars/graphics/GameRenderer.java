@@ -7,14 +7,12 @@ import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLUtils;
 import android.opengl.Matrix;
-import android.util.Log;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 import ch.sebastianhaeni.edgewars.R;
 import ch.sebastianhaeni.edgewars.graphics.drawables.Drawable;
-import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Text;
 import ch.sebastianhaeni.edgewars.graphics.programs.ParticleProgram;
 import ch.sebastianhaeni.edgewars.graphics.programs.ShapeProgram;
 import ch.sebastianhaeni.edgewars.graphics.programs.TextProgram;

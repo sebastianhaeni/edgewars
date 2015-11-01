@@ -1,6 +1,5 @@
 package ch.sebastianhaeni.edgewars.logic;
 
-import android.support.v4.media.session.MediaControllerCompat;
 import android.util.Log;
 
 import java.util.ArrayList;

@@ -1,5 +1,7 @@
 package ch.sebastianhaeni.edgewars.logic.entities.board.units;
 
+import android.util.Log;
+
 import ch.sebastianhaeni.edgewars.logic.entities.board.BoardEntity;
 import ch.sebastianhaeni.edgewars.logic.entities.board.Edge;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
@@ -14,9 +16,9 @@ import ch.sebastianhaeni.edgewars.logic.entities.board.units.state.UnitState;
  */
 public abstract class Unit extends BoardEntity {
 
-    private final int mCount;
     private final Node mNode;
     private UnitState mState;
+    private int mCount;
     private int mHealth;
 
     /**
@@ -104,7 +106,11 @@ public abstract class Unit extends BoardEntity {
     public void deductHealth(int attackDamage) {
         int newHealth = mHealth - attackDamage;
         if (newHealth <= 0) {
-            setState(new DeadState(this));
+            mCount--;
+            if (mCount <= 0) {
+                Log.d("Unit", "Unit died!");
+                setState(new DeadState(this));
+            }
             return;
         }
         mHealth = newHealth;
