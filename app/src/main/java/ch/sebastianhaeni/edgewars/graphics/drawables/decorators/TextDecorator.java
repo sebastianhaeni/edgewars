@@ -38,6 +38,12 @@ public class TextDecorator extends DrawableDecorator {
     }
 
     @Override
+    public void register() {
+        super.register();
+        mText.register();
+    }
+
+    @Override
     public void destroy() {
         super.destroy();
         mText.destroy();

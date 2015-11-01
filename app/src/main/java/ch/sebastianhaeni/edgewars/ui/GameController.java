@@ -1,7 +1,6 @@
 package ch.sebastianhaeni.edgewars.ui;
 
 import android.content.Context;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
 
@@ -105,7 +104,6 @@ public class GameController {
         float cameraX = mGameState.getCamera().getScreenX() * (2f / 3f);
         float cameraY = mGameState.getCamera().getScreenY() * (2f / 3f);
 
-
         // loop through all nodes and test if one is positioned at the coordinates of the user touch
         for (Node node : mGameState.getBoard().getNodes()) {
             // calculate node radius in pixels
@@ -202,9 +200,11 @@ public class GameController {
         mSelectingNode = true;
         mSourceNode = node;
         mSendingUnitType = type;
+        mCoronas.clear();
 
         for (Node neighbor : Game.getInstance().getConnectedNodes(node)) {
-            Polygon corona = new Polygon(neighbor.getPosition(), Colors.CORONA, 1, 300, 0, 1.1f);
+            Polygon corona = new Polygon(neighbor.getPosition(), Colors.CORONA, 1, 300, 0, .75f);
+            corona.register();
             mCoronas.add(corona);
         }
     }

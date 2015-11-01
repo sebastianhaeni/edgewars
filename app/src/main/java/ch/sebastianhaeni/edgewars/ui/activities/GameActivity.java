@@ -11,7 +11,7 @@ import ch.sebastianhaeni.edgewars.graphics.GameSurfaceView;
 
 public class GameActivity extends Activity {
 
-    private GLSurfaceView mGLView;
+    private GameSurfaceView mGLView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,7 +22,8 @@ public class GameActivity extends Activity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         int levelNr = getIntent().getExtras().getInt(LevelDetailActivity.LEVEL_ID);
-        mGLView = new GameSurfaceView(this, levelNr);
+        mGLView = new GameSurfaceView(this);
+        mGLView.startLevel(levelNr);
         setContentView(mGLView);
     }
 

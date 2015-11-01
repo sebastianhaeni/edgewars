@@ -1,8 +1,5 @@
 package ch.sebastianhaeni.edgewars.logic.entities.board;
 
-import java.util.ArrayList;
-
-import ch.sebastianhaeni.edgewars.graphics.drawables.Drawable;
 import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Line;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
 import ch.sebastianhaeni.edgewars.util.Colors;
@@ -13,7 +10,7 @@ import ch.sebastianhaeni.edgewars.util.Colors;
 public class Edge extends BoardEntity {
     private final Node mSourceNode;
     private final Node mTargetNode;
-    private final ArrayList<Drawable> mDrawables = new ArrayList<>();
+    private final Line mLine;
 
     /**
      * Constructor
@@ -25,9 +22,7 @@ public class Edge extends BoardEntity {
         super();
         mSourceNode = sourceNode;
         mTargetNode = targetNode;
-
-        mDrawables.clear();
-        mDrawables.add(new Line(sourceNode.getPosition(), targetNode.getPosition(), Colors.EDGE));
+        mLine = new Line(sourceNode.getPosition(), targetNode.getPosition(), Colors.EDGE);
     }
 
     @Override
@@ -47,5 +42,10 @@ public class Edge extends BoardEntity {
      */
     public Node getTargetNode() {
         return mTargetNode;
+    }
+
+    @Override
+    public void initialize() {
+        mLine.register();
     }
 }

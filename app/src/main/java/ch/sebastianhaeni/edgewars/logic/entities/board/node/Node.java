@@ -40,6 +40,7 @@ public class Node extends BoardEntity {
     //region members
     private static final int DAMAGE_LEVEL_UPGRADE_COST = 50;
     private static final int HEALTH_LEVEL_UPGRADE_COST = 50;
+    private static final float RADIUS = .7f;
     private final Polygon mCircle;
     private final TextDecorator mHealthLabel;
     private int mMeleeUnits;
@@ -65,8 +66,9 @@ public class Node extends BoardEntity {
      */
     public Node(Position position) {
         mPosition = position;
-        mCircle = new Polygon(mPosition, Colors.NODE_NEUTRAL, 3, 80, 0);
         mHealth = getMaxHealth();
+
+        mCircle = new Polygon(mPosition, Colors.NODE_NEUTRAL, 3, 80, 0, RADIUS);
         mHealthLabel = new TextDecorator(mCircle, String.valueOf(getHealth()), 6);
 
         setState(new NeutralState(this));
@@ -75,6 +77,12 @@ public class Node extends BoardEntity {
     @Override
     public void update(long millis) {
         mState.update(millis);
+    }
+
+    @Override
+    public void initialize() {
+        mCircle.register();
+        mHealthLabel.register();
     }
 
     //region actions
@@ -388,8 +396,6 @@ public class Node extends BoardEntity {
         return HEALTH_LEVEL_UPGRADE_COST;
     }
 
-
-
     /**
      * @return gets the amount of damage the node inflicts to intruders
      */
@@ -404,6 +410,13 @@ public class Node extends BoardEntity {
             default:
                 throw new IllegalArgumentException("Damage level " + mDamageLevel + " is not allowed");
         }
+    }
+
+    /**
+     * @return gets the circle radius
+     */
+    public float getRadius() {
+        return .7f;
     }
 
     //endregion

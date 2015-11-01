@@ -19,7 +19,6 @@ public abstract class Drawable {
      * @param layer layer this drawable is at
      */
     public Drawable(int layer) {
-        Game.getInstance().register(this, layer);
         mLayer = layer;
     }
 
@@ -47,5 +46,12 @@ public abstract class Drawable {
      */
     public int getLayer() {
         return mLayer;
+    }
+
+    /**
+     * Registers the drawable to be drawn.
+     */
+    public void register() {
+        Game.getInstance().register(this, mLayer);
     }
 }

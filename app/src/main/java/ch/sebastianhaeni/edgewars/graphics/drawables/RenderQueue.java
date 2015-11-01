@@ -37,6 +37,9 @@ public class RenderQueue implements Iterable<Drawable> {
         public DrawableIterator() {
             synchronized (mBuckets) {
                 mLayers = mBuckets.navigableKeySet();
+                if (mLayers.size() <= 0) {
+                    return;
+                }
                 mCurrentLayer = mLayers.first();
             }
         }
@@ -44,6 +47,10 @@ public class RenderQueue implements Iterable<Drawable> {
         @Override
         public boolean hasNext() {
             synchronized (mBuckets) {
+                if (mBuckets.size() <= 0) {
+                    return false;
+                }
+
                 if (mCurrentElement < mBuckets.get(mCurrentLayer).size()) {
                     return true;
                 }

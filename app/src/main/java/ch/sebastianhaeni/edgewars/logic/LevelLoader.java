@@ -37,10 +37,9 @@ public class LevelLoader {
 
     }
 
-    public GameState build(int levelNumber) {
-
-        Board board = new Board();
-        Camera camera = new Camera();
+    public ArrayList<Integer> getLevelNumbers() {
+        return mLevels.getAllLevelNumbers();
+    }
 
     public GameState build(int levelNumber) throws IllegalArgumentException {
 

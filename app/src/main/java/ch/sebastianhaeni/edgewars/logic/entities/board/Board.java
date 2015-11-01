@@ -45,4 +45,13 @@ public class Board extends Entity {
     public void update(long millis) {
         // no op
     }
+
+    /**
+     * Initializes the board with the game.
+     */
+    public void initialize() {
+        for (BoardEntity entity : mEntities) {
+            entity.initialize();
+        }
+    }
 }

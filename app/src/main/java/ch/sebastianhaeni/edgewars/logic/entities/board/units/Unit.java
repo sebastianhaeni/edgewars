@@ -87,6 +87,11 @@ public abstract class Unit extends BoardEntity {
         mState.update(millis);
     }
 
+    @Override
+    public void initialize() {
+        // no op
+    }
+
     /**
      * Sends the unit along the edge to the target node.
      *

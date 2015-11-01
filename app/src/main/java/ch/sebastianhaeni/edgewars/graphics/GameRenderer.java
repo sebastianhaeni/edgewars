@@ -149,35 +149,6 @@ public class GameRenderer implements GLSurfaceView.Renderer {
         }
     }
 
-    @Override
-    public void onSurfaceChanged(GL10 unused, int width, int height) {
-        mScreenWidth = width;
-        mScreenHeight = height;
-        // Adjust the viewport based on geometry changes,
-        // such as screen rotation
-        GLES20.glViewport(0, 0, width, height);
-
-        float ratio = (float) width / height;
-
-        // this projection matrix is applied to object coordinates
-        // in the onDrawFrame() method
-        Matrix.frustumM(mProjectionMatrix, 0, -ratio, ratio, -1, 1, 3, EYE_HEIGHT);
-    }
-
-    /**
-     * @return gets the screen width
-     */
-    public int getWidth() {
-        return mScreenWidth;
-    }
-
-    /**
-     * @return gets the screen height
-     */
-    public int getHeight() {
-        return mScreenHeight;
-    }
-
     /**
      * @return gets the model view projection matrix
      */
