@@ -1,6 +1,7 @@
 package ch.sebastianhaeni.edgewars.logic.levels;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Levels {
 
@@ -18,6 +19,21 @@ public class Levels {
      */
     public void setLevels(ArrayList<Level> mLevels) {
         this.mLevels = mLevels;
+    }
+
+    public ArrayList<Integer> getAllLevelNumbers() {
+        ArrayList<Integer> levelNumbers = new ArrayList<>();
+        ArrayList<Level> levels = this.getLevels();
+
+        // add level number of each level to array list
+        for (int i = 0; i < levels.size(); i++) {
+            levelNumbers.add(levels.get(i).getLevelNumber());
+        }
+
+        // sort numbers in ascending order
+        Collections.sort(levelNumbers);
+
+        return levelNumbers;
     }
 
 }

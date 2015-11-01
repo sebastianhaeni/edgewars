@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Random;
 
 import ch.sebastianhaeni.edgewars.R;
 import ch.sebastianhaeni.edgewars.logic.ai.RuleBasedAI;
@@ -18,80 +19,40 @@ import ch.sebastianhaeni.edgewars.logic.entities.Player;
 import ch.sebastianhaeni.edgewars.logic.entities.board.Board;
 import ch.sebastianhaeni.edgewars.logic.entities.board.Edge;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
-import ch.sebastianhaeni.edgewars.logic.entities.board.node.state.OwnedState;
+import ch.sebastianhaeni.edgewars.logic.levels.Level;
 import ch.sebastianhaeni.edgewars.logic.levels.LevelDeserializer;
 import ch.sebastianhaeni.edgewars.logic.levels.Levels;
-import ch.sebastianhaeni.edgewars.util.Colors;
-import ch.sebastianhaeni.edgewars.util.Position;
 
 public class LevelLoader {
 
-    public final ArrayList<Player> mComputerPlayers = new ArrayList<>();
-
     private final Context mContext;
     private Levels mLevels;
-
-    public Player addComputerPlayer() {
-        Player newComputerPlayer = new Player(Colors.NODE_OPPONENT);
-        mComputerPlayers.add(newComputerPlayer);
-        return newComputerPlayer;
-    }
 
     public LevelLoader(Context context) {
 
         mContext = context;
 
-        // TODO: validate levels.json with json schema
-        // this.validateJsonFile();
-
         // load levels from json file to mLevels
-        // this.loadLevelsFromJsonFile();
+        this.loadLevelsFromJsonFile();
 
     }
 
     public GameState build(int levelNumber) {
-        Camera camera = new Camera();
+
         Board board = new Board();
-
-        ArrayList<Player> players = new ArrayList<>();
-
-        Player human = new Player(Colors.NODE_MINE);
-        Player computer = new Player(Colors.NODE_OPPONENT);
-
-        Node node1 = new Node(new Position(-5, 0));
-        node1.deductHealth(50);
-        node1.setState(new OwnedState(node1, human));
-        node1.getMeleeFactory().buildUnit();
-        node1.getMeleeFactory().buildUnit();
-        node1.getMeleeFactory().buildUnit();
-
-        Node node2 = new Node(new Position(0, -3));
-        node2.deductHealth(75);
-
-        Node node3 = new Node(new Position(5, 1));
-        node3.setState(new OwnedState(node3, computer));
-
-        // add edges before nodes so they are drawn under them
-        board.addEntity(new Edge(node1, node2));
-        board.addEntity(new Edge(node2, node3));
-
-        board.addEntity(node1);
-        board.addEntity(node2);
-        board.addEntity(node3);
-
-        players.add(human);
-        players.add(computer);
-
-        GameState state = new GameState(camera, board, players, human);
-
-        computer.setAI(new RuleBasedAI(state));
-
-        return state;
-      /*  Board board = new Board();
         Camera camera = new Camera();
 
-        // TODO: do it better?
+    public GameState build(int levelNumber) throws IllegalArgumentException {
+
+        // ensure that the specified level number does exist
+        if (!mLevels.getAllLevelNumbers().contains(levelNumber)) {
+            throw new IllegalArgumentException("A level with the specified number (" + levelNumber + ") was not found!");
+        }
+
         Level level = mLevels.getLevels().get(levelNumber - 1);
+
+        Board board = new Board();
+        Camera camera = new Camera();
 
         ArrayList<Node> nodes = level.getNodes();
         ArrayList<Edge> edges = level.getEdges();
@@ -106,23 +67,27 @@ public class LevelLoader {
             board.addEntity(node);
         }
 
-        ArrayList<Player> players = new ArrayList<>(mComputerPlayers);
+        // get human player
+        Player humanPlayer = level.getHumanPlayers().get(0);
 
-        Player humanPlayer = new Player(Colors.NODE_MINE);
+        // get all players of level and add to array list
+        ArrayList<Player> allPlayers = new ArrayList<>();
+        ArrayList<Player> computerPlayers = level.getComputerPlayers();
+        allPlayers.addAll(computerPlayers);
+        allPlayers.add(humanPlayer);
 
-        players.add(humanPlayer);
-        GameState state = new GameState(camera, board, players, humanPlayer);
+        GameState state = new GameState(camera, board, allPlayers, humanPlayer);
 
         // add AI to computer players
-        for (Player computerPlayer : mComputerPlayers) {
+        for (Player computerPlayer : computerPlayers) {
             computerPlayer.setAI(new RuleBasedAI(state));
         }
 
-        return state;*/
+        return state;
     }
 
     private void loadLevelsFromJsonFile() {
-        // initialize Gson
+        // initialize gson
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(Levels.class, new LevelDeserializer());
         Gson gson = gsonBuilder.create();

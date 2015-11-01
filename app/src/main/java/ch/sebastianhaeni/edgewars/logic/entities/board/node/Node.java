@@ -38,6 +38,8 @@ import ch.sebastianhaeni.edgewars.util.Position;
 public class Node extends BoardEntity {
 
     //region members
+    private static final int DAMAGE_LEVEL_UPGRADE_COST = 50;
+    private static final int HEALTH_LEVEL_UPGRADE_COST = 50;
     private final Polygon mCircle;
     private final TextDecorator mHealthLabel;
     private int mMeleeUnits;
@@ -99,6 +101,27 @@ public class Node extends BoardEntity {
     public void addSprinterUnit() {
         mSprinterUnits++;
         notifyPropertyChanged(BR.sprinterCount);
+    }
+
+    /**
+     * Adds units to a node.
+     *
+     * @param unit the unit to be added
+     */
+    public void addUnit(Unit unit) {
+        if (unit instanceof MeleeUnit) {
+            mMeleeUnits += unit.getCount();
+            return;
+        }
+        if (unit instanceof TankUnit) {
+            mTankUnits += unit.getCount();
+            return;
+        }
+        if (unit instanceof SprinterUnit) {
+            mSprinterUnits += unit.getCount();
+            return;
+        }
+        throw new IllegalArgumentException("Unit is not handled.");
     }
 
     /**
@@ -355,36 +378,17 @@ public class Node extends BoardEntity {
      * @return gets the cost of upgrading the damage level
      */
     public int getDamageLevelUpgradeCost() {
-        return 50;
+        return DAMAGE_LEVEL_UPGRADE_COST;
     }
 
     /**
      * @return gets the cost of upgrading the health level
      */
     public int getHealthLevelUpgradeCost() {
-        return 50;
+        return HEALTH_LEVEL_UPGRADE_COST;
     }
 
-    /**
-     * Adds units to a node.
-     *
-     * @param unit the unit to be added
-     */
-    public void addUnit(Unit unit) {
-        if (unit instanceof MeleeUnit) {
-            mMeleeUnits += unit.getCount();
-            return;
-        }
-        if (unit instanceof TankUnit) {
-            mTankUnits += unit.getCount();
-            return;
-        }
-        if (unit instanceof SprinterUnit) {
-            mSprinterUnits += unit.getCount();
-            return;
-        }
-        throw new IllegalArgumentException("Unit is not handled.");
-    }
+
 
     /**
      * @return gets the amount of damage the node inflicts to intruders
