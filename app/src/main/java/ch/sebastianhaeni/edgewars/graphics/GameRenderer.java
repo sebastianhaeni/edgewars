@@ -45,8 +45,13 @@ public class GameRenderer implements GLSurfaceView.Renderer {
 
     private int mScreenWidth;
     private int mScreenHeight;
+
+    // mMaxX and mMaxY are the maximal values of our OpenGL coordinate system that are displayed on screen
+    // the coordinate system ranges [-mMaxX, mMaxX] in X direction and [-mMaxY, mMaxY] in Y direction
+    // note: Y axis is inverted; top-most value on screen is -mMaxY
     private float mMaxX;
     private float mMaxY;
+
     private ShapeProgram mShapeProgram;
     private ParticleProgram mParticleProgram;
 
@@ -153,18 +158,34 @@ public class GameRenderer implements GLSurfaceView.Renderer {
         return mMVPMatrix;
     }
 
+    /**
+     * @param objectCoordinateX X coordinate of object (OpenGL)
+     * @return the X coordinate in screen pixels
+     */
     public float getAndroidCoordinateX(float objectCoordinateX) {
         return (objectCoordinateX + mMaxX) * (mScreenWidth / (2 * mMaxX));
     }
 
+    /**
+     * @param objectCoordinateY y coordinate of object (OpenGL)
+     * @return the Y coordinate in screen pixels
+     */
     public float getAndroidCoordinateY(float objectCoordinateY) {
         return (objectCoordinateY + mMaxY) * (mScreenHeight / (2 * mMaxY));
     }
 
+    /**
+     * @param objectLengthX length of object in X direction based on OpenGL coordinates
+     * @return the length of object in X direction in screen pixels
+     */
     public float getAndroidLengthX(float objectLengthX) {
         return (objectLengthX * (mScreenWidth) / (2 * mMaxX));
     }
 
+    /**
+     * @param objectLengthY length of object in Y direction based on OpenGL coordinates
+     * @return the length of object in Y direction in screen pixels
+     */
     public float getAndroidLengthY(float objectLengthY) {
         return (objectLengthY * (mScreenHeight) / (2 * mMaxY));
     }

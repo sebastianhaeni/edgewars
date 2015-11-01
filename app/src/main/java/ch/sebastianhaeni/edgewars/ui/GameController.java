@@ -50,8 +50,8 @@ public class GameController {
         // MotionEvent reports input details from the touch screen
         // and other input controls.
 
-        float x = e.getRawX();
-        float y = e.getRawY();
+        float x = e.getX();
+        float y = e.getY();
 
         switch (e.getAction()) {
             case MotionEvent.ACTION_DOWN:
@@ -83,49 +83,34 @@ public class GameController {
     /**
      * Figures out if a node is clicked at that coordinate and what to do after.
      *
-     * @param clickX x coordinate
-     * @param clickY y coordinate
+     * @param touchX x coordinate
+     * @param touchY y coordinate
      */
-    private void clickNode(float clickX, float clickY) {
+    private void clickNode(float touchX, float touchY) {
 
-        Log.i("debugging", "___________________________________________");
-        Log.i("debugging", "clickX=" + clickX + "; clickY=" + clickY);
-
-        // get camera position
+        // get camera position and multiply it by factor 2/3 (why? I dunno..)
         float cameraX = mGameState.getCamera().getScreenX() * (2f / 3f);
         float cameraY = mGameState.getCamera().getScreenY() * (2f / 3f);
-        Log.i("debugging", "cameraX=" + cameraX + "; cameraY=" + cameraY);
 
+        // calculate node lengths
         float nodeLengthX = mRenderer.getAndroidLengthX(0.5f);
         float nodeLengthY = mRenderer.getAndroidLengthY(0.5f);
 
-        // + 1/3 imprecision tolerance
+        // add 1/3 user imprecision tolerance
         nodeLengthX = nodeLengthX * 1.33f;
         nodeLengthY = nodeLengthY * 1.33f;
-        Log.i("debugging", "nodeLengthX=" + nodeLengthX + "; nodeLengthY=" + nodeLengthY);
 
 
-        // loop through nodes and test if one lies at the click coordinate
+        // loop through all nodes and test if one is positioned at the coordinates of the user touch
         for (Node node : mGameState.getBoard().getNodes()) {
 
+            // convert node coordinates to Android coordinates
             float nodeX = mRenderer.getAndroidCoordinateX(node.getPosition().getX());
             float nodeY = mRenderer.getAndroidCoordinateY(node.getPosition().getY());
 
-            Log.i("debugging", "calcNodeX[i]=" + nodeX + "; calcNodeY[i]=" + nodeY);
-
-            if (Math.abs(nodeX + cameraX - clickX) < nodeLengthX &&
-                    Math.abs(nodeY + cameraY - clickY) < nodeLengthY) {
+            if (Math.abs(nodeX + cameraX - touchX) < nodeLengthX &&
+                    Math.abs(nodeY + cameraY - touchY) < nodeLengthY) {
                 showNodeDialog(node);
-
-                float originalCameraX = mGameState.getCamera().getX();
-                float originalCameraY = mGameState.getCamera().getY();
-
-                Log.i("debugging", "cameraX=" + originalCameraX + "; cameraY=" + originalCameraY);
-                Log.i("debugging", "nodeX=" + node.getPosition().getX() + "; nodeY=" + node.getPosition().getY());
-                Log.i("debugging", "calcNodeX=" + nodeX + "; calcNodeY=" + nodeY);
-                float calcClickX = clickX - originalCameraX;
-                float calcClickY = clickY - originalCameraY;
-                Log.i("debugging", "calcClickX=" + calcClickX + "; calcClickY=" + calcClickY);
                 break;
             }
         }
