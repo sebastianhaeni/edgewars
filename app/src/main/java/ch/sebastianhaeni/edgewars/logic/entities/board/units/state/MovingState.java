@@ -40,16 +40,12 @@ public class MovingState extends UnitState {
         mNode = node;
         mPlayer = player;
 
-        Node startingNode;
-        if (edge.getTargetNode().equals(mNode)) {
-            mStartingPosition = edge.getSourceNode().getPosition();
-            mTargetPosition = mNode.getPosition();
-            startingNode = edge.getSourceNode();
-        } else {
-            mStartingPosition = mNode.getPosition();
-            mTargetPosition = edge.getSourceNode().getPosition();
-            startingNode = mNode;
-        }
+        Node startingNode = edge.getTargetNode().equals(mNode)
+                ? edge.getSourceNode()
+                : edge.getTargetNode();
+
+        mTargetPosition = mNode.getPosition();
+        mStartingPosition = startingNode.getPosition();
 
         mShape = new Polygon(new Position(startingNode.getPosition()),
                 startingNode.getCircle().getColor(), 6, unit.getPolygonCorners(), 0, UNIT_RADIUS);

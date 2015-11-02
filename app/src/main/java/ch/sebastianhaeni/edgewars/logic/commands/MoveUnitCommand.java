@@ -29,8 +29,8 @@ public class MoveUnitCommand extends Command {
 
     @Override
     public void execute() {
-        Log.d("MoveUnitCommand", "Sending units");
-        mUnit.move(mNode, mEdge);
+        Log.d("MoveUnitCommand", "Sending " + mUnit.getCount() + " units");
         mNode.clearUnit(mUnit);
+        mUnit.move(mNode, mEdge);
     }
 }
