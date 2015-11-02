@@ -69,6 +69,8 @@ public class Node extends BoardEntity {
      * @param position the position this node is at
      */
     public Node(Position position) {
+        super();
+
         mPosition = position;
         mHealth = getMaxHealth();
 
@@ -179,7 +181,7 @@ public class Node extends BoardEntity {
                 node,
                 Game.getInstance().getEdgeBetween(this, node)));
         mMeleeUnits = 0;
-        notifyPropertyChanged(BR.node);
+        notifyPropertyChanged(BR.meleeCount);
     }
 
     /**
@@ -193,7 +195,7 @@ public class Node extends BoardEntity {
                 node,
                 Game.getInstance().getEdgeBetween(this, node)));
         mTankUnits = 0;
-        notifyPropertyChanged(BR.node);
+        notifyPropertyChanged(BR.tankCount);
     }
 
     /**
@@ -207,7 +209,7 @@ public class Node extends BoardEntity {
                 node,
                 Game.getInstance().getEdgeBetween(this, node)));
         mSprinterUnits = 0;
-        notifyPropertyChanged(BR.node);
+        notifyPropertyChanged(BR.sprinterCount);
     }
 
     /**
@@ -223,19 +225,15 @@ public class Node extends BoardEntity {
             }
 
             setState(new NeutralState(this));
-
-            if (mParticles != null) {
-                mParticles.destroy();
-            }
             mParticles = new DeathParticleDecorator(mCircle, 9);
             mParticles.register();
 
             mHealth = 0;
         } else {
             mHealth = newHealth;
-            mHealthLabel.setText(String.valueOf(mHealth));
         }
 
+        mHealthLabel.setText(String.valueOf(mHealth));
         notifyPropertyChanged(BR.health);
         notifyPropertyChanged(BR.repairCost);
     }
@@ -271,7 +269,7 @@ public class Node extends BoardEntity {
             case 2:
                 return 150;
             case 3:
-                return 220;
+                return 300;
             default:
                 throw new IllegalStateException("Level must be 1, 2 or 3");
         }

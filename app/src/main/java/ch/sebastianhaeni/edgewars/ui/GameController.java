@@ -124,8 +124,6 @@ public class GameController {
             }
 
             if (mSelectingNode) {
-                mSelectingNode = false;
-
                 if (node.equals(mSourceNode)
                         || !Game.getInstance().getConnectedNodes(mSourceNode).contains(node)) {
                     showNodeDialog(node);
@@ -150,6 +148,7 @@ public class GameController {
             break;
         }
 
+        mSelectingNode = false;
         clearCoronas();
     }
 

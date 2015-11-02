@@ -11,7 +11,7 @@ public class MeleeUnit extends Unit {
     private static final int ATTACK_DAMAGE = 5;
     private static final int HEALTH = 5;
     private static final float ACCURACY = 1;
-    private static final int SPEED = 15;
+    private static final int SPEED = 55;
 
     /**
      * Constructor

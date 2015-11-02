@@ -9,18 +9,14 @@ public class RenderQueue implements Iterable<Drawable> {
     private final TreeMap<Integer, ArrayList<Drawable>> mBuckets = new TreeMap<>();
 
     public void add(Drawable drawable, int layer) {
-        synchronized (mBuckets) {
-            if (!mBuckets.containsKey(layer)) {
-                mBuckets.put(layer, new ArrayList<Drawable>());
-            }
-            mBuckets.get(layer).add(drawable);
+        if (!mBuckets.containsKey(layer)) {
+            mBuckets.put(layer, new ArrayList<Drawable>());
         }
+        mBuckets.get(layer).add(drawable);
     }
 
     public synchronized void remove(Drawable drawable) {
-        synchronized (mBuckets) {
-            mBuckets.get(drawable.getLayer()).remove(drawable);
-        }
+        mBuckets.get(drawable.getLayer()).remove(drawable);
     }
 
     @Override
@@ -35,63 +31,67 @@ public class RenderQueue implements Iterable<Drawable> {
         private int mCurrentElement = 0;
 
         public DrawableIterator() {
-            synchronized (mBuckets) {
-                mLayers = mBuckets.navigableKeySet();
-                if (mLayers.size() <= 0) {
-                    return;
-                }
-                mCurrentLayer = mLayers.first();
+            mLayers = mBuckets.navigableKeySet();
+            if (mLayers.size() <= 0) {
+                return;
             }
+            mCurrentLayer = mLayers.first();
+
         }
 
         @Override
         public boolean hasNext() {
-            synchronized (mBuckets) {
-                if (mBuckets.size() <= 0) {
-                    return false;
-                }
+            if (mBuckets.size() <= 0) {
+                return false;
+            }
 
-                if (mCurrentElement < mBuckets.get(mCurrentLayer).size()) {
+            if (mCurrentElement < mBuckets.get(mCurrentLayer).size()) {
+                return true;
+            }
+
+            if (mCurrentLayer == mLayers.last()) {
+                return false;
+            }
+
+            int layer = mCurrentLayer;
+            while (mLayers.higher(layer) != null) {
+                layer = mLayers.higher(layer);
+                if (mBuckets.get(layer).size() > 0) {
                     return true;
                 }
-
-                if (mCurrentLayer == mLayers.last()) {
-                    return false;
-                }
-
-                int layer = mCurrentLayer;
-
-                while (mLayers.higher(layer) != null) {
-                    layer = mLayers.higher(layer);
-                    if (mBuckets.get(layer).size() > 0) {
-                        return true;
-                    }
-                }
-
-                return mBuckets.get(layer).size() > 0;
             }
+
+            return mCurrentLayer != layer && mBuckets.get(layer).size() > 0;
         }
 
         @Override
         public Drawable next() {
-            synchronized (mBuckets) {
-                if (mCurrentElement >= mBuckets.get(mCurrentLayer).size()) {
+            int lastLayer = mCurrentLayer;
+            int lastElement = mCurrentElement - 1;
+            if (mCurrentElement >= mBuckets.get(mCurrentLayer).size()) {
+                mCurrentElement = 0;
+                mCurrentLayer = mLayers.higher(mCurrentLayer);
+
+                while (mBuckets.get(mCurrentLayer).size() <= 0) {
                     mCurrentLayer = mLayers.higher(mCurrentLayer);
-                    mCurrentElement = 0;
                 }
 
-                Drawable next = mBuckets.get(mCurrentLayer).get(mCurrentElement);
-                mCurrentElement++;
-
-                return next;
             }
+
+            // preventing exception when the queue has changed in the meantime
+            if (mBuckets.get(mCurrentLayer).size() <= 0) {
+                return mBuckets.get(lastLayer).get(lastElement);
+            }
+
+            Drawable next = mBuckets.get(mCurrentLayer).get(mCurrentElement);
+            mCurrentElement++;
+
+            return next;
         }
 
         @Override
         public void remove() {
-            synchronized (mBuckets) {
-                mBuckets.get(mCurrentLayer).remove(mCurrentElement);
-            }
+            throw new UnsupportedOperationException("remove is not supported");
         }
     }
 }
