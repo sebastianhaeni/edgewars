@@ -1,0 +1,18 @@
+{
+  "name": "sbb-redesign",
+  "version": "0.0.1",
+  "private": true,
+  "description": "A redesign of the sbb.ch website. This has no affiliation with SBB",
+  "devDependencies": {
+    "browserify": "^12.0.0",
+    "del": "^2.0.2",
+    "gulp": "^3.9.0",
+    "gulp-live-server": "0.0.29",
+    "gulp-nunjucks-render": "^1.0.0",
+    "gulp-sass": "^2.0.4",
+    "gulp-util": "^3.0.7",
+    "run-sequence": "^1.1.4",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0"
+  }
+}

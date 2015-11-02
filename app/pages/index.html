@@ -1,0 +1,74 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="starter-template">
+    <h1>Edge Wars</h1>
+    <p class="lead">This page shows statistical data pulled from the <a href="https://trello.com/b/8MByIfMz/edge-wars" onclick="window.open(this.href);return false;">Edge Wars Trello board</a>.</p>
+</div>
+
+<div class="row">
+    <div class="col-xs-12"><h3>Hours by sprint</h3></div>
+    <div class="col-xs-12">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Sprint</th>
+                    <th>Hours</th>
+                </tr>
+            </thead>
+            <tbody id="hours-by-sprint">
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12"><h3>Hours by category</h3></div>
+    <div class="col-xs-12">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Sprint</th>
+                    <th>Hours</th>
+                </tr>
+            </thead>
+            <tbody id="hours-by-category">
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12"><h3>Hours by person</h3></div>
+    <div class="col-xs-12">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Person</th>
+                    <th>Hours</th>
+                </tr>
+            </thead>
+            <tbody id="hours-by-person">
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12"><h3>All tasks</h3></div>
+    <div class="col-xs-12">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Task</th>
+                    <th>Hours</th>
+                </tr>
+            </thead>
+            <tbody id="hours-by-task">
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}
