@@ -24,9 +24,7 @@ public class Game {
 
     private final Stack<Command> mCommandStack = new Stack<>();
     private final HashMap<Entity, Long> mEntities = new HashMap<>();
-    private final Stack<Entity> mEntitiesQueue = new Stack<>();
     private final RenderQueue mDrawables = new RenderQueue();
-    private boolean mUpdating;
 
     /**
      * Privatised constructor. Because singleton.
@@ -67,17 +65,14 @@ public class Game {
      * @param entity the entity to be updated
      */
     public void register(Entity entity) {
-        if (mEntities.containsKey(entity)) {
-            return;
-        }
+        synchronized (mEntities) {
+            if (mEntities.containsKey(entity)) {
+                return;
+            }
 
-        if (mUpdating) {
-            mEntitiesQueue.push(entity);
-            return;
+            Log.d("Game", "Registering entity: " + entity);
+            mEntities.put(entity, 0L);
         }
-
-        Log.d("Game", "Registering entity: " + entity);
-        mEntities.put(entity, 0L);
     }
 
     /**
@@ -113,27 +108,19 @@ public class Game {
             mCommandStack.pop().execute();
         }
 
-        // Add entities in queue to entity list
-        while (mEntitiesQueue.size() > 0) {
-            Entity e = mEntitiesQueue.pop();
-            mEntities.put(e, 0L);
-            Log.d("Game", "Registering entity: " + e);
-        }
+        synchronized (mEntities) {
+            for (Map.Entry<Entity, Long> pair : mEntities.entrySet()) {
+                if (pair.getKey().getInterval() < 0) {
+                    continue;
+                }
+                pair.setValue(pair.getValue() + millis);
 
-        // Update entities
-        mUpdating = true;
-        for (Map.Entry<Entity, Long> pair : mEntities.entrySet()) {
-            if (pair.getKey().getInterval() < 0) {
-                continue;
-            }
-            pair.setValue(pair.getValue() + millis);
-
-            if (pair.getValue() > pair.getKey().getInterval()) {
-                pair.getKey().update(pair.getValue());
-                pair.setValue(0L);
+                if (pair.getValue() > pair.getKey().getInterval()) {
+                    pair.getKey().update(pair.getValue());
+                    pair.setValue(0L);
+                }
             }
         }
-        mUpdating = false;
     }
 
     /**

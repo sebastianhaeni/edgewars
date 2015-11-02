@@ -8,6 +8,7 @@ import android.view.View;
 
 import ch.sebastianhaeni.edgewars.R;
 import ch.sebastianhaeni.edgewars.databinding.ActivityMainBinding;
+import ch.sebastianhaeni.edgewars.logic.SoundEngine;
 
 public class MainActivity extends Activity {
 
@@ -25,6 +26,8 @@ public class MainActivity extends Activity {
     }
 
     public void start(View view) {
+        // initialize sound engine in this thread because we don't want to block the main thread
+        SoundEngine.getInstance();
         startActivity(new Intent(MainActivity.this, LevelSelectionActivity.class));
     }
 

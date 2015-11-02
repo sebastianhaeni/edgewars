@@ -21,6 +21,7 @@ public class OwnedState extends NodeState {
     public OwnedState(Node node, Player owner) {
         super(node);
         mOwner = owner;
+        node.clearUnitsAndLevels();
         node.setColor(owner.getColor());
     }
 

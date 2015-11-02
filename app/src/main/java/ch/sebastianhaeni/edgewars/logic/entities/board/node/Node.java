@@ -1,6 +1,7 @@
 package ch.sebastianhaeni.edgewars.logic.entities.board.node;
 
 import android.databinding.Bindable;
+import android.util.Log;
 
 import ch.sebastianhaeni.edgewars.BR;
 import ch.sebastianhaeni.edgewars.graphics.drawables.decorators.DeathParticleDecorator;
@@ -220,6 +221,7 @@ public class Node extends BoardEntity {
     public void deductHealth(int attackDamage) {
         int newHealth = mHealth - attackDamage;
         if (newHealth <= 0) {
+            Log.d("Node", "Node died!");
             if (getState() instanceof OwnedState && ((OwnedState) getState()).getOwner().isHuman()) {
                 SoundEngine.getInstance().play(SoundEngine.Sounds.NODE_LOST);
             }
@@ -429,6 +431,14 @@ public class Node extends BoardEntity {
      */
     public float getRadius() {
         return .7f;
+    }
+
+    public void clearUnitsAndLevels() {
+        mDamageLevel = 1;
+        mHealthLevel = 1;
+        mMeleeUnits = 0;
+        mSprinterUnits = 0;
+        mTankUnits = 0;
     }
 
     //endregion

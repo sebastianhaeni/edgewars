@@ -17,6 +17,7 @@ public class AttackNodeState extends UnitState {
     private static final String TAG = "AttackNodeState";
     private final Node mNode;
     private final Random mRandom = new Random();
+    private boolean mIsStateInvalid;
 
     /**
      * Constructor
@@ -31,19 +32,24 @@ public class AttackNodeState extends UnitState {
 
     @Override
     public void update(long millis) {
+        if (mIsStateInvalid) {
+            return;
+        }
         if (mNode.getState() instanceof NeutralState) {
             mNode.setState(new OwnedState(mNode, getUnit().getPlayer()));
             mNode.addUnit(getUnit());
             if (getUnit().getPlayer().isHuman()) {
                 SoundEngine.getInstance().play(SoundEngine.Sounds.NODE_CAPTURED);
             }
+            mIsStateInvalid = true;
             return;
         }
 
-        Log.d(TAG, "Attacking with " + getUnit());
+        getUnit().deductHealth(mNode.getDamage());
+
+        Log.d(TAG, "Attacking with " + getUnit() + ", units left: " + getUnit().getCount());
         if (mRandom.nextFloat() < getUnit().getAccuracy()) {
             mNode.deductHealth(getUnit().getAttackDamage());
-            getUnit().deductHealth(mNode.getDamage());
         } else {
             Log.d(TAG, "missed!");
         }
