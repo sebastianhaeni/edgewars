@@ -90,6 +90,10 @@ public class Node extends BoardEntity {
     public void initialize() {
         mCircle.register();
         mHealthLabel.register();
+
+        Game.getInstance().register(mMeleeFactory);
+        Game.getInstance().register(mTankFactory);
+        Game.getInstance().register(mSprinterFactory);
     }
 
     //region actions
@@ -147,7 +151,6 @@ public class Node extends BoardEntity {
             return;
         }
         mHealthLevel++;
-        repair();
         notifyPropertyChanged(BR.healthLevel);
     }
 
@@ -233,6 +236,17 @@ public class Node extends BoardEntity {
             mSprinterUnits = 0;
             notifyPropertyChanged(BR.sprinterCount);
         }
+    }
+
+    /**
+     * Resets the node by removing all units and resetting the levels.
+     */
+    public void clearUnitsAndLevels() {
+        mDamageLevel = 1;
+        mHealthLevel = 1;
+        mMeleeUnits = 0;
+        mSprinterUnits = 0;
+        mTankUnits = 0;
     }
 
     /**
@@ -453,17 +467,6 @@ public class Node extends BoardEntity {
      */
     public float getRadius() {
         return .7f;
-    }
-
-    /**
-     * Resets the node by removing all units and resetting the levels.
-     */
-    public void clearUnitsAndLevels() {
-        mDamageLevel = 1;
-        mHealthLevel = 1;
-        mMeleeUnits = 0;
-        mSprinterUnits = 0;
-        mTankUnits = 0;
     }
 
     //endregion

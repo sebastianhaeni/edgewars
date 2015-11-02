@@ -51,7 +51,11 @@ public class MoveUnitCommand extends Command {
     @Override
     public void execute() {
         Log.d("MoveUnitCommand", "Sending " + mUnit.getCount() + " units");
-        mNode.clearUnit(mUnit);
+        if (mEdge.getTargetNode().equals(mNode)) {
+            mEdge.getSourceNode().clearUnit(mUnit);
+        } else {
+            mEdge.getTargetNode().clearUnit(mUnit);
+        }
         mUnit.move(mNode, mEdge);
     }
 }
