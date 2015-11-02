@@ -4,7 +4,7 @@ $('table').stupidtable();
 
 function load() {
     $.ajax({
-        url: '/data/data.json',
+        url: 'data/data.json',
         success: function(response){
             process(response);
         }
