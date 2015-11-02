@@ -4,6 +4,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
+import ch.sebastianhaeni.edgewars.EUnitType;
 import ch.sebastianhaeni.edgewars.logic.Game;
 import ch.sebastianhaeni.edgewars.logic.GameState;
 import ch.sebastianhaeni.edgewars.logic.commands.BuildMeleeUnitCommand;
@@ -13,7 +14,6 @@ import ch.sebastianhaeni.edgewars.logic.entities.Player;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.state.NeutralState;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.state.OwnedState;
-import ch.sebastianhaeni.edgewars.logic.entities.board.units.MeleeUnit;
 
 public class IdleRule extends Rule {
     private Node mNode;
@@ -75,12 +75,10 @@ public class IdleRule extends Rule {
         Log.d("IdleRule", "Target: " + mTarget.getPosition());
 
         if (mNode.getMeleeCount() >= 10) {
-            commands.add(new MoveUnitCommand(
-                    new MeleeUnit(
-                            mNode.getMeleeCount(),
-                            mTarget, getPlayer()),
+            commands.add(new MoveUnitCommand(mNode.getMeleeCount(), EUnitType.MELEE,
                     mTarget,
-                    Game.getInstance().getEdgeBetween(mNode, mTarget)));
+                    Game.getInstance().getEdgeBetween(mNode, mTarget),
+                    getPlayer()));
         }
 
         commands.add(new BuildMeleeUnitCommand(mNode.getMeleeFactory()));

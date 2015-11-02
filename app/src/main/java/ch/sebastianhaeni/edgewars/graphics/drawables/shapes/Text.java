@@ -90,6 +90,13 @@ public class Text extends Shape {
 
     @Override
     public void draw(GameRenderer renderer) {
+        if (mIndices == null
+                || mVectors == null
+                || mTextureCoordinates == null
+                || mColors == null) {
+            return;
+        }
+
         // Set the correct shader for our grid object.
         int programHandle = renderer.getTextProgram().getProgramHandle();
         GLES20.glUseProgram(programHandle);

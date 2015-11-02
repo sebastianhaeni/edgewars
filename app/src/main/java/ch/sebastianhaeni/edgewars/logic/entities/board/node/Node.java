@@ -4,6 +4,7 @@ import android.databinding.Bindable;
 import android.util.Log;
 
 import ch.sebastianhaeni.edgewars.BR;
+import ch.sebastianhaeni.edgewars.EUnitType;
 import ch.sebastianhaeni.edgewars.graphics.drawables.decorators.DeathParticleDecorator;
 import ch.sebastianhaeni.edgewars.graphics.drawables.decorators.TextDecorator;
 import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Polygon;
@@ -177,9 +178,11 @@ public class Node extends BoardEntity {
      */
     public void sendMeleeUnits(Node node) {
         Game.getInstance().register(new MoveUnitCommand(
-                new MeleeUnit(mMeleeUnits, node, ((OwnedState) getState()).getOwner()),
+                mMeleeUnits,
+                EUnitType.MELEE,
                 node,
-                Game.getInstance().getEdgeBetween(this, node)));
+                Game.getInstance().getEdgeBetween(this, node),
+                ((OwnedState) getState()).getOwner()));
     }
 
     /**
@@ -189,9 +192,11 @@ public class Node extends BoardEntity {
      */
     public void sendTankUnits(Node node) {
         Game.getInstance().register(new MoveUnitCommand(
-                new TankUnit(mTankUnits, node, ((OwnedState) getState()).getOwner()),
+                mTankUnits,
+                EUnitType.TANK,
                 node,
-                Game.getInstance().getEdgeBetween(this, node)));
+                Game.getInstance().getEdgeBetween(this, node),
+                ((OwnedState) getState()).getOwner()));
     }
 
     /**
@@ -201,9 +206,11 @@ public class Node extends BoardEntity {
      */
     public void sendSprinterUnits(Node node) {
         Game.getInstance().register(new MoveUnitCommand(
-                new SprinterUnit(mSprinterUnits, node, ((OwnedState) getState()).getOwner()),
+                mSprinterUnits,
+                EUnitType.SPRINTER,
                 node,
-                Game.getInstance().getEdgeBetween(this, node)));
+                Game.getInstance().getEdgeBetween(this, node),
+                ((OwnedState) getState()).getOwner()));
     }
 
     /**

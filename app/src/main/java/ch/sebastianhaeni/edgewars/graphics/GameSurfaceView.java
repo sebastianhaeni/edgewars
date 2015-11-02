@@ -51,6 +51,8 @@ public class GameSurfaceView extends GLSurfaceView {
         // load game state and level number
         GameState gameState = levelLoader.build(levelId);
 
+        gameState.init();
+
         mThread = new GameThread();
         GameRenderer renderer = new GameRenderer(mContext, mThread, gameState);
         mController = new GameController(mContext, renderer, gameState);

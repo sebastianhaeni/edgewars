@@ -1,7 +1,5 @@
 package ch.sebastianhaeni.edgewars.logic.entities.board.units.state;
 
-import android.util.Log;
-
 import java.util.Random;
 
 import ch.sebastianhaeni.edgewars.logic.SoundEngine;
