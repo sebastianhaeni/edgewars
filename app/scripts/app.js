@@ -1,3 +1,6 @@
+require('./stupidtable');
+
+$('table').stupidtable();
 
 function load() {
     $.ajax({
@@ -13,13 +16,12 @@ function process(json) {
     bySprint(json);
     byCategory(json);
     byPerson(json);
+
+    $('th:nth-child(2)').click();
 }
 
 function byTask(json) {
     $.each(json.cards, function(i, card) {
-        /*if(card.closed !== true) {
-            return true;
-        }*/
         var idShort = card.idShort;
 
         $.each(json.actions, function(i, action) {
@@ -35,7 +37,7 @@ function byTask(json) {
             }
         });
 
-        if(card.hours == undefined) {
+        if(card.hours == undefined || isNaN(parseInt(card.hours))) {
             return true;
         }
 
@@ -46,9 +48,6 @@ function byTask(json) {
 function bySprint(json) {
     var sprints = {};
     $.each(json.cards, function(i, card) {
-        /*if(card.closed !== true) {
-            return true;
-        }*/
         var idShort = card.idShort;
 
         $.each(json.actions, function(i, action) {
@@ -69,7 +68,11 @@ function bySprint(json) {
                 if(isNaN(sprints[label.name])) {
                     sprints[label.name] = 0;
                 }
-                sprints[label.name] += parseInt(card.hours);
+                var hours = parseInt(card.hours)
+                if(isNaN(hours)) {
+                    return true;
+                }
+                sprints[label.name] += hours;
             }
         });
     });
@@ -82,9 +85,6 @@ function bySprint(json) {
 function byCategory(json) {
     var sprints = {};
     $.each(json.cards, function(i, card) {
-        /*if(card.closed !== true) {
-            return true;
-        }*/
         var idShort = card.idShort;
 
         $.each(json.actions, function(i, action) {
@@ -105,7 +105,11 @@ function byCategory(json) {
                 if(isNaN(sprints[label.name])) {
                     sprints[label.name] = 0;
                 }
-                sprints[label.name] += parseInt(card.hours);
+                var hours = parseInt(card.hours)
+                if(isNaN(hours)) {
+                    return true;
+                }
+                sprints[label.name] += hours;
             }
         });
     });
@@ -118,9 +122,6 @@ function byCategory(json) {
 function byPerson(json) {
     var persons = {};
     $.each(json.cards, function(i, card) {
-        /*if(card.closed !== true) {
-            return true;
-        }*/
         var idShort = card.idShort;
 
         $.each(json.actions, function(i, action) {
@@ -145,7 +146,11 @@ function byPerson(json) {
                 if(isNaN(persons[member.fullName])) {
                     persons[member.fullName] = 0;
                 }
-                persons[member.fullName] += parseInt(card.hours);
+                var hours = parseInt(card.hours)
+                if(isNaN(hours)) {
+                    return true;
+                }
+                persons[member.fullName] += hours;
             }
         });
     });
