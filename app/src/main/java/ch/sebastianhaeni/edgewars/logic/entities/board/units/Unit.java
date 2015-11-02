@@ -2,6 +2,7 @@ package ch.sebastianhaeni.edgewars.logic.entities.board.units;
 
 import android.util.Log;
 
+import ch.sebastianhaeni.edgewars.logic.entities.Player;
 import ch.sebastianhaeni.edgewars.logic.entities.board.BoardEntity;
 import ch.sebastianhaeni.edgewars.logic.entities.board.Edge;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
@@ -17,6 +18,7 @@ import ch.sebastianhaeni.edgewars.logic.entities.board.units.state.UnitState;
 public abstract class Unit extends BoardEntity {
 
     private final Node mNode;
+    private final Player mPlayer;
     private UnitState mState;
     private int mCount;
     private int mHealth;
@@ -24,16 +26,20 @@ public abstract class Unit extends BoardEntity {
     /**
      * Constructor
      *
-     * @param count count of units in this container
-     * @param node  the node this unit starts at
+     * @param count  count of units in this container
+     * @param node   the node this unit goes to
+     * @param player the owning player
      */
-    Unit(int count, Node node) {
+    Unit(int count, Node node, Player player) {
         super(-1);
-        setUpdateInterval(getSpeed());
-        setState(new IdleState(this));
+        setUpdateInterval(10);
+
         mHealth = getMaxHealth();
         mCount = count;
         mNode = node;
+        mPlayer = player;
+
+        // let the unit idle
         mState = new IdleState(this);
     }
 
@@ -139,4 +145,11 @@ public abstract class Unit extends BoardEntity {
      * @return gets the amount of corners the polygon representation for this unit has
      */
     public abstract int getPolygonCorners();
+
+    /**
+     * @return gets the owning player
+     */
+    public Player getPlayer() {
+        return mPlayer;
+    }
 }

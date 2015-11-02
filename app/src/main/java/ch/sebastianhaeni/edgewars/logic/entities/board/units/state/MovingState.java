@@ -4,6 +4,7 @@ import android.util.Log;
 
 import ch.sebastianhaeni.edgewars.graphics.drawables.decorators.TextDecorator;
 import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Polygon;
+import ch.sebastianhaeni.edgewars.logic.SoundEngine;
 import ch.sebastianhaeni.edgewars.logic.entities.Player;
 import ch.sebastianhaeni.edgewars.logic.entities.board.Edge;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
@@ -82,14 +83,22 @@ public class MovingState extends UnitState {
         if (reached.getState() instanceof NeutralState) {
             reached.setState(new OwnedState(reached, mPlayer));
             reached.addUnit(getUnit());
-        } else {
-            OwnedState state = (OwnedState) reached.getState();
-            if (state.getOwner().equals(mPlayer)) {
-                reached.addUnit(getUnit());
-                getUnit().setState(new IdleState(getUnit()));
-            } else {
-                getUnit().setState(new AttackNodeState(getUnit(), mNode));
+            if (mPlayer.isHuman()) {
+                SoundEngine.getInstance().play(SoundEngine.Sounds.NODE_CAPTURED);
             }
+            return;
+        }
+
+        OwnedState state = (OwnedState) reached.getState();
+        if (state.getOwner().equals(mPlayer)) {
+            reached.addUnit(getUnit());
+            getUnit().setState(new IdleState(getUnit()));
+            return;
+        }
+
+        getUnit().setState(new AttackNodeState(getUnit(), mNode));
+        if (mPlayer.isHuman()) {
+            SoundEngine.getInstance().play(SoundEngine.Sounds.NODE_ATTACKED);
         }
     }
 

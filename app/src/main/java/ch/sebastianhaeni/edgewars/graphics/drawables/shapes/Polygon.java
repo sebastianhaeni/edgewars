@@ -39,7 +39,7 @@ public class Polygon extends Shape {
      * @param layer    the layer this polygon should be drawn at
      * @param corners  the amount of corners this polygon should have
      * @param angle    angle of the polygon
-     * @param radius     size of the polygon (diameter)
+     * @param radius   size of the polygon (diameter)
      */
     public Polygon(Position position, float[] color, int layer, int corners, int angle, float radius) {
         super(position, color, layer);
