@@ -18,10 +18,12 @@
     <GridLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="20dp"
+        android:layout_margin="2dp"
+        android:horizontalSpacing="10dp"
         android:minHeight="300dp"
         android:minWidth="520dp"
-        android:useDefaultMargins="true">
+        android:useDefaultMargins="true"
+        android:verticalSpacing="10dp">
 
         <TextView
             android:id="@+id/textDefense"
@@ -70,23 +72,26 @@
 
         <Button
             android:id="@+id/buttonUpgradeHealth"
-            style="?android:attr/buttonStyleSmall"
+            style="@style/GameButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_column="3"
             android:layout_row="1"
             android:onClick="@{dialog.upgradeHealth}"
-            android:text="Upgrade"/>
+            android:text="Upgrade"
+            android:visibility="@{node.healthLevel &lt; 3 ? View.VISIBLE : View.INVISIBLE}"/>
 
         <Button
             android:id="@+id/buttonUpgradeDamage"
-            style="?android:attr/buttonStyleSmall"
+            style="@style/GameButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_column="3"
             android:layout_row="2"
+
             android:onClick="@{dialog.upgradeDamage}"
-            android:text="Upgrade"/>
+            android:text="Upgrade"
+            android:visibility="@{node.damageLevel &lt; 3 ? View.VISIBLE : View.INVISIBLE}"/>
 
         <TextView
             android:id="@+id/textUpgradeHealthCost"
@@ -106,21 +111,24 @@
 
         <Button
             android:id="@+id/buttonRepair"
-            style="?android:attr/buttonStyleSmall"
+            style="@style/GameButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_column="8"
+            android:layout_column="7"
             android:layout_row="1"
+
             android:onClick="@{dialog.repairNode}"
-            android:text="Repair"/>
+            android:text="Repair"
+            android:visibility="@{node.health &lt; node.maxHealth ? View.VISIBLE : View.INVISIBLE}"/>
 
         <TextView
             android:id="@+id/textRepairCost"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_column="9"
+            android:layout_column="8"
             android:layout_row="1"
-            android:text="50E"/>
+            android:text="@{node.repairCost + `E`}"
+            android:visibility="@{node.health &lt; node.maxHealth ? View.VISIBLE : View.INVISIBLE}"/>
 
         <TextView
             android:id="@+id/textTroups"
@@ -160,13 +168,14 @@
 
         <Button
             android:id="@+id/buttonSendMelee"
-            style="?android:attr/buttonStyleSmall"
+            style="@style/GameButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_column="4"
             android:layout_row="4"
             android:onClick="@{dialog.sendMelee}"
             android:text="Send"
+            android:visibility="@{node.meleeCount &gt; 0 ? View.VISIBLE : View.INVISIBLE}"
             />
 
         <TextView
@@ -196,13 +205,14 @@
 
         <Button
             android:id="@+id/buttonSendTank"
-            style="?android:attr/buttonStyleSmall"
+            style="@style/GameButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_column="4"
             android:layout_row="5"
             android:onClick="@{dialog.sendTank}"
             android:text="Send"
+            android:visibility="@{node.tankCount &gt; 0 ? View.VISIBLE : View.INVISIBLE}"
             />
 
         <TextView
@@ -232,13 +242,14 @@
 
         <Button
             android:id="@+id/buttonSendSprinter"
-            style="?android:attr/buttonStyleSmall"
+            style="@style/GameButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_column="4"
             android:layout_row="6"
             android:onClick="@{dialog.sendSprinter}"
             android:text="Send"
+            android:visibility="@{node.sprinterCount &gt; 0 ? View.VISIBLE : View.INVISIBLE}"
             />
 
 
@@ -272,7 +283,7 @@
 
         <Button
             android:id="@+id/buttonBuildMelee"
-            style="?android:attr/buttonStyleSmall"
+            style="@style/GameButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_column="7"
@@ -283,13 +294,14 @@
 
         <Button
             android:id="@+id/buttonMeleeLevel"
-            style="?android:attr/buttonStyleSmall"
+            style="@style/GameButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_column="8"
             android:layout_row="4"
             android:onClick="@{dialog.upgradeMeleeFactory}"
             android:text="Upgrade"
+            android:visibility="@{node.meleeFactory.level &lt; 3 ? View.VISIBLE : View.INVISIBLE}"
             />
 
         <TextView
@@ -311,7 +323,7 @@
 
         <Button
             android:id="@+id/buttonBuildTank"
-            style="?android:attr/buttonStyleSmall"
+            style="@style/GameButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_column="7"
@@ -322,13 +334,14 @@
 
         <Button
             android:id="@+id/buttonTankLevel"
-            style="?android:attr/buttonStyleSmall"
+            style="@style/GameButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_column="8"
             android:layout_row="5"
             android:onClick="@{dialog.upgradeTankFactory}"
             android:text="Upgrade"
+            android:visibility="@{node.tankFactory.level &lt; 3 ? View.VISIBLE : View.INVISIBLE}"
             />
 
         <TextView
@@ -350,7 +363,7 @@
 
         <Button
             android:id="@+id/buttonSprinter"
-            style="?android:attr/buttonStyleSmall"
+            style="@style/GameButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_column="7"
@@ -361,13 +374,27 @@
 
         <Button
             android:id="@+id/buttonSprinterLevel"
-            style="?android:attr/buttonStyleSmall"
+            style="@style/GameButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_column="8"
+
             android:layout_row="6"
             android:onClick="@{dialog.upgradeSprinterFactory}"
             android:text="Upgrade"
+            android:visibility="@{node.sprinterFactory.level &lt; 3 ? View.VISIBLE : View.INVISIBLE}"
+            />
+
+        <Button
+            style="@style/GameButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="8"
+            android:layout_gravity="end"
+
+            android:layout_row="0"
+            android:onClick="@{dialog.dismiss}"
+            android:text="X"
             />
     </GridLayout>
 

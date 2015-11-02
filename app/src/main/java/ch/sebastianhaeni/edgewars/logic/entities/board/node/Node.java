@@ -223,12 +223,18 @@ public class Node extends BoardEntity {
             }
 
             setState(new NeutralState(this));
+
+            if (mParticles != null) {
+                mParticles.destroy();
+            }
             mParticles = new DeathParticleDecorator(mCircle, 9);
+            mParticles.register();
+
             mHealth = 0;
-            return;
+        } else {
+            mHealth = newHealth;
+            mHealthLabel.setText(String.valueOf(mHealth));
         }
-        mHealth = newHealth;
-        mHealthLabel.setText(String.valueOf(mHealth));
 
         notifyPropertyChanged(BR.health);
         notifyPropertyChanged(BR.repairCost);
