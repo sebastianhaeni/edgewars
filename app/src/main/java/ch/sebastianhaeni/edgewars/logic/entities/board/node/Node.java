@@ -455,6 +455,9 @@ public class Node extends BoardEntity {
         return .7f;
     }
 
+    /**
+     * Resets the node by removing all units and resetting the levels.
+     */
     public void clearUnitsAndLevels() {
         mDamageLevel = 1;
         mHealthLevel = 1;
