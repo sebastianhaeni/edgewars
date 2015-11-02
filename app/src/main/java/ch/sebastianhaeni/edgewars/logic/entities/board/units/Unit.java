@@ -6,7 +6,6 @@ import ch.sebastianhaeni.edgewars.logic.entities.Player;
 import ch.sebastianhaeni.edgewars.logic.entities.board.BoardEntity;
 import ch.sebastianhaeni.edgewars.logic.entities.board.Edge;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
-import ch.sebastianhaeni.edgewars.logic.entities.board.node.state.OwnedState;
 import ch.sebastianhaeni.edgewars.logic.entities.board.units.state.DeadState;
 import ch.sebastianhaeni.edgewars.logic.entities.board.units.state.IdleState;
 import ch.sebastianhaeni.edgewars.logic.entities.board.units.state.MovingState;
@@ -105,7 +104,7 @@ public abstract class Unit extends BoardEntity {
      * @param edge the edge the unit moves on
      */
     public void move(Node node, Edge edge) {
-        setState(new MovingState(this, node, ((OwnedState) edge.getSourceNode().getState()).getOwner(), edge));
+        setState(new MovingState(this, node, getPlayer(), edge));
     }
 
     /**

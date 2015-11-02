@@ -22,7 +22,6 @@ public class MoveUnitCommand extends Command {
      * @param edge the edge the unit moves on
      */
     public MoveUnitCommand(Unit unit, Node node, Edge edge) {
-
         mUnit = unit;
         mNode = node;
         mEdge = edge;
@@ -32,5 +31,6 @@ public class MoveUnitCommand extends Command {
     public void execute() {
         Log.d("MoveUnitCommand", "Sending units");
         mUnit.move(mNode, mEdge);
+        mNode.clearUnit(mUnit);
     }
 }

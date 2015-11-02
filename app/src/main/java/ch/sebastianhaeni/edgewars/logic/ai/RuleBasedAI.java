@@ -9,20 +9,21 @@ import ch.sebastianhaeni.edgewars.logic.ai.rules.IdleRule;
 import ch.sebastianhaeni.edgewars.logic.ai.rules.Rule;
 import ch.sebastianhaeni.edgewars.logic.ai.rules.UnderAttackRule;
 import ch.sebastianhaeni.edgewars.logic.commands.Command;
+import ch.sebastianhaeni.edgewars.logic.entities.Player;
 
 public class RuleBasedAI extends AI {
 
     private final ArrayList<Rule> mRules;
     private final ArrayList<Command> mCommands = new ArrayList<>();
 
-    public RuleBasedAI(GameState state) {
-        super(state);
+    public RuleBasedAI(GameState state, Player player) {
+        super(state, player);
 
         mRules = new ArrayList<>();
-        mRules.add(new IdleRule(state));
-        mRules.add(new UnderAttackRule(state));
-        mRules.add(new AttackingRule(state));
-        mRules.add(new ExposedNodeRule(state));
+        mRules.add(new IdleRule(state, getPlayer()));
+        mRules.add(new UnderAttackRule(state, getPlayer()));
+        mRules.add(new AttackingRule(state, getPlayer()));
+        mRules.add(new ExposedNodeRule(state, getPlayer()));
     }
 
     @Override
@@ -30,7 +31,7 @@ public class RuleBasedAI extends AI {
         mCommands.clear();
 
         for (Rule r : mRules) {
-            if (r.applies()) {
+            if (r.applies(millis)) {
                 for (Command c : r.getCommands()) {
                     mCommands.add(c);
                 }

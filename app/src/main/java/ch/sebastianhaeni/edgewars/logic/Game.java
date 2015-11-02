@@ -108,12 +108,15 @@ public class Game {
             mCommandStack.pop().execute();
         }
 
+        HashMap<Entity, Long> entities = new HashMap<>(mEntities);
+
         synchronized (mEntities) {
-            for (Map.Entry<Entity, Long> pair : mEntities.entrySet()) {
+            for (Map.Entry<Entity, Long> pair : entities.entrySet()) {
                 if (pair.getKey().getInterval() < 0) {
                     continue;
                 }
                 pair.setValue(pair.getValue() + millis);
+                mEntities.put(pair.getKey(), pair.getValue());
 
                 if (pair.getValue() > pair.getKey().getInterval()) {
                     pair.getKey().update(pair.getValue());
@@ -131,11 +134,13 @@ public class Game {
      * @return the edge between or <code>null</code>
      */
     public Edge getEdgeBetween(Node node1, Node node2) {
-        for (Entity entity : mEntities.keySet()) {
-            if (entity instanceof Edge) {
-                Edge edge = (Edge) entity;
-                if ((edge.getSourceNode().equals(node1) && edge.getTargetNode().equals(node2)) || (edge.getTargetNode().equals(node1) && edge.getSourceNode().equals(node2))) {
-                    return edge;
+        synchronized (mEntities) {
+            for (Entity entity : mEntities.keySet()) {
+                if (entity instanceof Edge) {
+                    Edge edge = (Edge) entity;
+                    if ((edge.getSourceNode().equals(node1) && edge.getTargetNode().equals(node2)) || (edge.getTargetNode().equals(node1) && edge.getSourceNode().equals(node2))) {
+                        return edge;
+                    }
                 }
             }
         }
@@ -159,18 +164,20 @@ public class Game {
     public List<Node> getConnectedNodes(Node node) {
         List<Node> neighbors = new ArrayList<>();
 
-        for (Entity entity : mEntities.keySet()) {
-            if (entity instanceof Edge) {
-                Edge edge = (Edge) entity;
-                if (edge.getSourceNode().equals(node)) {
-                    neighbors.add(edge.getTargetNode());
-                } else if (edge.getTargetNode().equals(node)) {
-                    neighbors.add(edge.getSourceNode());
+        synchronized (mEntities) {
+            for (Entity entity : mEntities.keySet()) {
+                if (entity instanceof Edge) {
+                    Edge edge = (Edge) entity;
+                    if (edge.getSourceNode().equals(node)) {
+                        neighbors.add(edge.getTargetNode());
+                    } else if (edge.getTargetNode().equals(node)) {
+                        neighbors.add(edge.getSourceNode());
+                    }
                 }
             }
-        }
 
-        return neighbors;
+            return neighbors;
+        }
     }
 
 }
