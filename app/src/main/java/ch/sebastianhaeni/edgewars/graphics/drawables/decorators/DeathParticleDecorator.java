@@ -24,6 +24,7 @@ public class DeathParticleDecorator extends DrawableDecorator {
     private long mLastTime;
 
     private final FloatBuffer mParticles;
+    private boolean mFinished;
 
     /**
      * Initializes particle data. Texture is not loaded because that has
@@ -127,25 +128,13 @@ public class DeathParticleDecorator extends DrawableDecorator {
         GLES20.glEnableVertexAttribArray(renderer.getParticleProgram().getEndPositionHandle());
         GLES20.glEnableVertexAttribArray(renderer.getParticleProgram().getStartPositionHandle());
 
-        // Blend particles
-        GLES20.glEnable(GLES20.GL_BLEND);
-        GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE);
-
         // Drawing the actual points
         GLES20.glDrawArrays(GLES20.GL_POINTS, 0, NUM_PARTICLES);
-
-        // Disable blend particles
-        GLES20.glDisable(GLES20.GL_BLEND);
 
         // Disable vertex array
         GLES20.glDisableVertexAttribArray(renderer.getParticleProgram().getLifetimeHandle());
         GLES20.glDisableVertexAttribArray(renderer.getParticleProgram().getEndPositionHandle());
         GLES20.glDisableVertexAttribArray(renderer.getParticleProgram().getStartPositionHandle());
-    }
-
-    @Override
-    public int getLayer() {
-        return 10;
     }
 
     /**
@@ -162,8 +151,9 @@ public class DeathParticleDecorator extends DrawableDecorator {
 
         mTime += deltaTime;
 
-        if (mTime >= 1.0f) {
+        if (mTime >= 1.0f && !mFinished) {
             mTime = 0.0f;
+            mFinished = true;
         }
     }
 

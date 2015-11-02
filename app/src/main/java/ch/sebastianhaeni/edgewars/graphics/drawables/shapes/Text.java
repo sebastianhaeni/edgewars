@@ -211,7 +211,7 @@ public class Text extends Shape {
 
         // Get attributes from text object
         float x = -(textWidth * .5f);
-        float y = -.2f;
+        float y = -.25f;
 
         // Create
         for (int j = 0; j < mText.length(); j++) {

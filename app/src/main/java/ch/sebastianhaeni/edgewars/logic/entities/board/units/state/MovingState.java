@@ -25,6 +25,7 @@ public class MovingState extends UnitState {
     private final Polygon mShape;
     private final TextDecorator mText;
     private float mTravelledDistance;
+    private boolean mIsStateInvalid;
 
     /**
      * Constructor
@@ -60,10 +61,14 @@ public class MovingState extends UnitState {
 
     @Override
     public void update(long millis) {
+        if (mIsStateInvalid) {
+            return;
+        }
         Node reached = getReachedNode();
 
         if (reached != null) {
             Log.d("MovingState", "Node reached");
+            mIsStateInvalid = true;
             capture(reached);
             return;
         }
