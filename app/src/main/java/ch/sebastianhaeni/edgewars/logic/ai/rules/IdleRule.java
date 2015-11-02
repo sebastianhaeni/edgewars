@@ -27,7 +27,7 @@ public class IdleRule extends Rule {
     @Override
     public boolean applies(long millis) {
         mTimePassed += millis;
-        if (mTimePassed < 10000) {
+        if (mTimePassed < 4000) {
             return false;
         }
         mTimePassed = 0;
