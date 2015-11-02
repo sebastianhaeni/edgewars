@@ -1,5 +1,6 @@
 package ch.sebastianhaeni.edgewars.logic.entities.board.units;
 
+import ch.sebastianhaeni.edgewars.logic.entities.Player;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
 
 /**
@@ -15,11 +16,12 @@ public class MeleeUnit extends Unit {
     /**
      * Constructor
      *
-     * @param count count of units in this container
-     * @param node  the node this unit starts at
+     * @param count  count of units in this container
+     * @param node   the node this unit goes to
+     * @param player the owning player
      */
-    public MeleeUnit(int count, Node node) {
-        super(count, node);
+    public MeleeUnit(int count, Node node, Player player) {
+        super(count, node, player);
     }
 
     @Override

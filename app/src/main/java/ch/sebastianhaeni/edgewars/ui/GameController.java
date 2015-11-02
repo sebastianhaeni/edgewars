@@ -1,7 +1,6 @@
 package ch.sebastianhaeni.edgewars.ui;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.MotionEvent;
 
 import java.util.ArrayList;
@@ -77,12 +76,11 @@ public class GameController {
                 mGameState.getCamera().moveCamera(dx, dy);
                 break;
             case MotionEvent.ACTION_UP:
-                SoundEngine.getInstance().play(SoundEngine.Sounds.TICK);
-                Log.d("audio", "tick");
                 // detect single click (not moving the camera)
                 if (e.getEventTime() - e.getDownTime() < 200
                         && Math.abs(x - mStartX) < 5
                         && Math.abs(y - mStartY) < 5) {
+                    SoundEngine.getInstance().play(SoundEngine.Sounds.CLICK);
                     clickNode(x, y);
                 }
                 mGameState.getCamera().freeCamera();
@@ -145,6 +143,7 @@ public class GameController {
                         mSourceNode.sendTankUnits(node);
                         break;
                 }
+                SoundEngine.getInstance().play(SoundEngine.Sounds.UNIT_SENT);
             } else {
                 showNodeDialog(node);
             }

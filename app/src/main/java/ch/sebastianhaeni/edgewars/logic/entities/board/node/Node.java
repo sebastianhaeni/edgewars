@@ -3,10 +3,12 @@ package ch.sebastianhaeni.edgewars.logic.entities.board.node;
 import android.databinding.Bindable;
 
 import ch.sebastianhaeni.edgewars.BR;
+import ch.sebastianhaeni.edgewars.graphics.drawables.decorators.DeathParticleDecorator;
 import ch.sebastianhaeni.edgewars.graphics.drawables.decorators.TextDecorator;
 import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Polygon;
 import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Shape;
 import ch.sebastianhaeni.edgewars.logic.Game;
+import ch.sebastianhaeni.edgewars.logic.SoundEngine;
 import ch.sebastianhaeni.edgewars.logic.commands.MoveUnitCommand;
 import ch.sebastianhaeni.edgewars.logic.entities.board.BoardEntity;
 import ch.sebastianhaeni.edgewars.logic.entities.board.factories.MeleeFactory;
@@ -14,6 +16,7 @@ import ch.sebastianhaeni.edgewars.logic.entities.board.factories.SprinterFactory
 import ch.sebastianhaeni.edgewars.logic.entities.board.factories.TankFactory;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.state.NeutralState;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.state.NodeState;
+import ch.sebastianhaeni.edgewars.logic.entities.board.node.state.OwnedState;
 import ch.sebastianhaeni.edgewars.logic.entities.board.units.MeleeUnit;
 import ch.sebastianhaeni.edgewars.logic.entities.board.units.SprinterUnit;
 import ch.sebastianhaeni.edgewars.logic.entities.board.units.TankUnit;
@@ -57,6 +60,7 @@ public class Node extends BoardEntity {
     private final Position mPosition;
 
     private NodeState mState;
+    private DeathParticleDecorator mParticles;
     //endregion
 
     /**
@@ -171,7 +175,7 @@ public class Node extends BoardEntity {
      */
     public void sendMeleeUnits(Node node) {
         Game.getInstance().register(new MoveUnitCommand(
-                new MeleeUnit(mMeleeUnits, node),
+                new MeleeUnit(mMeleeUnits, node, ((OwnedState) this.getState()).getOwner()),
                 node,
                 Game.getInstance().getEdgeBetween(this, node)));
         mMeleeUnits = 0;
@@ -185,7 +189,7 @@ public class Node extends BoardEntity {
      */
     public void sendTankUnits(Node node) {
         Game.getInstance().register(new MoveUnitCommand(
-                new TankUnit(mTankUnits, node),
+                new TankUnit(mTankUnits, node, ((OwnedState) this.getState()).getOwner()),
                 node,
                 Game.getInstance().getEdgeBetween(this, node)));
         mTankUnits = 0;
@@ -199,7 +203,7 @@ public class Node extends BoardEntity {
      */
     public void sendSprinterUnits(Node node) {
         Game.getInstance().register(new MoveUnitCommand(
-                new SprinterUnit(mSprinterUnits, node),
+                new SprinterUnit(mSprinterUnits, node, ((OwnedState) this.getState()).getOwner()),
                 node,
                 Game.getInstance().getEdgeBetween(this, node)));
         mSprinterUnits = 0;
@@ -214,8 +218,12 @@ public class Node extends BoardEntity {
     public void deductHealth(int attackDamage) {
         int newHealth = mHealth - attackDamage;
         if (newHealth <= 0) {
+            if (getState() instanceof OwnedState && ((OwnedState) getState()).getOwner().isHuman()) {
+                SoundEngine.getInstance().play(SoundEngine.Sounds.NODE_LOST);
+            }
+
             setState(new NeutralState(this));
-            // TODO add death particles
+            mParticles = new DeathParticleDecorator(mCircle, 9);
             mHealth = 0;
             return;
         }

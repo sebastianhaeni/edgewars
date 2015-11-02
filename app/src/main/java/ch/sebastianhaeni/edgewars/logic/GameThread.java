@@ -24,6 +24,10 @@ public class GameThread extends Thread {
     @Override
     public void run() {
         long delta = System.currentTimeMillis();
+
+        // initialize sound engine in this thread because we don't want to block the main thread
+        SoundEngine.getInstance();
+
         while (mRunning) {
             // updateState game state
             delta = System.currentTimeMillis() - delta;

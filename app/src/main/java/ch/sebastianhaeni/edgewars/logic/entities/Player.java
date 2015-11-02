@@ -73,4 +73,11 @@ public class Player extends Entity {
             throw new RuntimeException("Player energy is lower than 0, this should have been checked before calling this");
         }
     }
+
+    /**
+     * @return true if this player is human or some other sort of organic life form, false otherwise
+     */
+    public boolean isHuman() {
+        return mAi == null;
+    }
 }
