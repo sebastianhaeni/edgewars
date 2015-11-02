@@ -10,4 +10,4 @@
 *.iml
 
 # for branch gh-pages
-.node_modules/
+node_modules/
