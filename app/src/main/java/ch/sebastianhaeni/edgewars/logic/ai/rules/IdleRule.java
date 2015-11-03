@@ -71,9 +71,6 @@ public class IdleRule extends Rule {
     public ArrayList<Command> getCommands() {
         ArrayList<Command> commands = new ArrayList<>();
 
-        Log.d("IdleRule", "Source: " + mNode.getPosition());
-        Log.d("IdleRule", "Target: " + mTarget.getPosition());
-
         if (mNode.getMeleeCount() >= 10) {
             commands.add(new MoveUnitCommand(mNode.getMeleeCount(), EUnitType.MELEE,
                     mTarget,
