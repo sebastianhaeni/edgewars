@@ -1,10 +1,13 @@
 package ch.sebastianhaeni.edgewars.graphics.drawables.shapes;
 
+import android.graphics.Matrix;
 import android.opengl.GLES20;
+import android.util.Log;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+import java.util.Arrays;
 
 import ch.sebastianhaeni.edgewars.graphics.GameRenderer;
 import ch.sebastianhaeni.edgewars.graphics.programs.OpenGLUtil;
@@ -31,27 +34,57 @@ public class Line extends Shape {
     public Line(Position src, Position dst, float[] color) {
         super(src, color, 2);
 
-        float[] mCoordinates = new float[]{
-                // in counterclockwise order:
-                0f, (WIDTH * .5f), 0f, // top left
-                0f, -(WIDTH * .5f), 0f, // bottom left
-                src.getX() - dst.getX(), src.getY() - dst.getY() - (WIDTH * .5f), 0f, // bottom right
-                src.getX() - dst.getX(), src.getY() - dst.getY() + (WIDTH * .5f), 0f  // top right
+        //float[] mCoordinates = new float[]{
+        //        // in counterclockwise order:
+        //        0f, (WIDTH * .5f), 0f, // top left
+        //        0f, -(WIDTH * .5f), 0f, // bottom left
+        //        src.getX() - dst.getX(), src.getY() - dst.getY() - (WIDTH * .5f), 0f, // bottom right
+        //        src.getX() - dst.getX(), src.getY() - dst.getY() + (WIDTH * .5f), 0f  // top right
+        //};
+
+        float angle = (float) Math.toDegrees(Math.atan2(dst.getY() - src.getY(), dst.getX() - src.getX()));
+        float distance = (float) Math.sqrt(
+                Math.pow((double) dst.getX() - src.getX(), 2.0)
+                        + Math.pow((double) dst.getY() - src.getY(), 2.0));
+
+        Matrix m = new Matrix();
+        m.setRotate(Math.abs(angle), src.getX(), src.getY());
+
+        float half = WIDTH * .5f;
+        float[] coordinates = new float[]{
+                src.getX() - half, src.getY(),
+                src.getX() + half, src.getY(),
+                src.getX() - half, src.getY() + distance,
+                src.getX() + half, src.getY() + distance,
+        };
+        Log.d("Line", src + ", " + dst);
+        Log.d("Line", String.valueOf(angle));
+        Log.d("Line", String.valueOf(distance));
+        Log.d("Line", Arrays.toString(coordinates));
+        m.mapPoints(coordinates);
+        Log.d("Line", Arrays.toString(coordinates));
+        Log.d("Line", "");
+
+        coordinates = new float[]{
+                coordinates[0], coordinates[1], 0,
+                coordinates[2], coordinates[3], 0,
+                coordinates[4], coordinates[5], 0,
+                coordinates[6], coordinates[7], 0,
         };
 
-        vertexCount = mCoordinates.length / GameRenderer.COORDS_PER_VERTEX;
+        vertexCount = coordinates.length / GameRenderer.COORDS_PER_VERTEX;
 
         // initialize vertex byte buffer for shape coordinates
         ByteBuffer bb = ByteBuffer.allocateDirect(
                 // (number of coordinate values * 4 bytes per float)
-                mCoordinates.length * 4);
+                coordinates.length * 4);
 
         // use the device hardware's native byte order
         bb.order(ByteOrder.nativeOrder());
         // create a floating point buffer from the ByteBuffer
         vertexBuffer = bb.asFloatBuffer();
         // add the coordinates to the FloatBuffer
-        vertexBuffer.put(mCoordinates);
+        vertexBuffer.put(coordinates);
         // set the buffer to read the first coordinate
         vertexBuffer.position(0);
     }

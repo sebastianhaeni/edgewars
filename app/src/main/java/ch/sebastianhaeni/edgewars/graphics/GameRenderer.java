@@ -13,6 +13,7 @@ import javax.microedition.khronos.opengles.GL10;
 
 import ch.sebastianhaeni.edgewars.R;
 import ch.sebastianhaeni.edgewars.graphics.drawables.Drawable;
+import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Line;
 import ch.sebastianhaeni.edgewars.graphics.programs.ParticleProgram;
 import ch.sebastianhaeni.edgewars.graphics.programs.ShapeProgram;
 import ch.sebastianhaeni.edgewars.graphics.programs.TextProgram;
@@ -127,21 +128,36 @@ public class GameRenderer implements GLSurfaceView.Renderer {
         // draw drawables
         for (Drawable s : Game.getInstance().getDrawables()) {
 
-            // Set the camera position (View matrix)
-            Matrix.setLookAtM(
-                    mViewMatrix,
-                    0,
-                    // eye point x,y,z
-                    mGameState.getCamera().getX() + s.getShape().getPosition().getX(),
-                    mGameState.getCamera().getY() + s.getShape().getPosition().getY(),
-                    -EYE_HEIGHT,
-                    // center of view x,y,z
-                    mGameState.getCamera().getX() + s.getShape().getPosition().getX(),
-                    mGameState.getCamera().getY() + s.getShape().getPosition().getY(),
-                    0f,
-                    // up vector x,y,z
-                    0f, 1.0f, 0.0f);
-
+            if (s instanceof Line) {
+                Matrix.setLookAtM(
+                        mViewMatrix,
+                        0,
+                        // eye point x,y,z
+                        mGameState.getCamera().getX(),
+                        mGameState.getCamera().getY(),
+                        -EYE_HEIGHT,
+                        // center of view x,y,z
+                        mGameState.getCamera().getX(),
+                        mGameState.getCamera().getY(),
+                        0f,
+                        // up vector x,y,z
+                        0f, -1.0f, 0.0f);
+            } else {
+                // Set the camera position (View matrix)
+                Matrix.setLookAtM(
+                        mViewMatrix,
+                        0,
+                        // eye point x,y,z
+                        mGameState.getCamera().getX() + s.getShape().getPosition().getX(),
+                        mGameState.getCamera().getY() + s.getShape().getPosition().getY(),
+                        -EYE_HEIGHT,
+                        // center of view x,y,z
+                        mGameState.getCamera().getX() + s.getShape().getPosition().getX(),
+                        mGameState.getCamera().getY() + s.getShape().getPosition().getY(),
+                        0f,
+                        // up vector x,y,z
+                        0f, 1.0f, 0.0f);
+            }
             // Calculate the projection and view transformation
             Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
 
