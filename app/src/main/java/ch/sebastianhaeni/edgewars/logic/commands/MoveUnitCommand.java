@@ -42,7 +42,7 @@ public class MoveUnitCommand extends Command {
                 break;
         }
 
-        Game.getInstance().register(mUnit);
+        mUnit.register();
 
         mNode = node;
         mEdge = edge;

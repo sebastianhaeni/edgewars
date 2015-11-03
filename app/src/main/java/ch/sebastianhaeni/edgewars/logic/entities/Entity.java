@@ -2,6 +2,8 @@ package ch.sebastianhaeni.edgewars.logic.entities;
 
 import android.databinding.BaseObservable;
 
+import ch.sebastianhaeni.edgewars.logic.Game;
+
 /**
  * An entity is a thing in the game and it may wants to be updated.
  */
@@ -45,6 +47,13 @@ public abstract class Entity extends BaseObservable {
      */
     public long getInterval() {
         return mInterval;
+    }
+
+    /**
+     * Registers this entity to the game.
+     */
+    public void register() {
+        Game.getInstance().register(this);
     }
 
 }

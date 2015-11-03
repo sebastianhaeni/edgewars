@@ -37,6 +37,7 @@ public class Text extends Shape {
                     0, 38, 39, 12, 36, 34, 0, 0,
                     0, 38, 0, 0, 0, 0, 0, 0
             };
+    private final boolean mIsStatic;
 
     private String mText;
 
@@ -58,6 +59,7 @@ public class Text extends Shape {
     private int mIndexIndices;
     private int mIndexTextureCoordinate;
     private int mIndexColors;
+    private boolean mStaticPositionInitialized;
 
     /**
      * Constructor
@@ -68,7 +70,22 @@ public class Text extends Shape {
      * @param layer    draw layer
      */
     public Text(Position position, float[] color, String text, int layer) {
+        this(position, color, text, layer, false);
+    }
+
+    /**
+     * Constructor
+     *
+     * @param position position of the text
+     * @param color    color of the text
+     * @param text     the text itself
+     * @param layer    draw layer
+     * @param isStatic true if this text is not moved with the camera
+     */
+    public Text(Position position, float[] color, String text, int layer, boolean isStatic) {
         super(position, color, layer);
+        mIsStatic = isStatic;
+
         setText(text);
     }
 
@@ -84,95 +101,109 @@ public class Text extends Shape {
 
         mText = text;
 
-        prepareDrawInfo();
-        convertTextToTriangleInfo();
+        synchronized (this) {
+            prepareDrawInfo();
+            convertTextToTriangleInfo();
+        }
     }
 
     @Override
     public void draw(GameRenderer renderer) {
-        if (mIndices == null
-                || mVectors == null
-                || mTextureCoordinates == null
-                || mColors == null) {
-            return;
+
+        if (mIsStatic && !mStaticPositionInitialized) {
+
+            if (renderer.getMaxX() <= 0) {
+                // values not ready yet
+                return;
+            }
+
+            setPosition(new Position(getPosition().getX() - renderer.getMaxX(), getPosition().getY() - renderer.getMaxY()));
+            prepareDrawInfo();
+            convertTextToTriangleInfo();
+            mStaticPositionInitialized = true;
         }
 
-        // Set the correct shader for our grid object.
-        int programHandle = renderer.getTextProgram().getProgramHandle();
-        GLES20.glUseProgram(programHandle);
-        OpenGLUtil.checkGlError("glUseProgram");
+        synchronized (this) {
 
-        // The vertex buffer.
-        ByteBuffer bb = ByteBuffer.allocateDirect(mVectors.length * 4);
-        bb.order(ByteOrder.nativeOrder());
-        mVertexBuffer = bb.asFloatBuffer();
-        mVertexBuffer.put(mVectors);
-        mVertexBuffer.position(0);
+            // Set the correct shader for our grid object.
+            int programHandle = renderer.getTextProgram().getProgramHandle();
+            GLES20.glUseProgram(programHandle);
+            OpenGLUtil.checkGlError("glUseProgram");
 
-        // The vertex buffer.
-        ByteBuffer bb3 = ByteBuffer.allocateDirect(mColors.length * 4);
-        bb3.order(ByteOrder.nativeOrder());
-        mColorBuffer = bb3.asFloatBuffer();
-        mColorBuffer.put(mColors);
-        mColorBuffer.position(0);
+            // The vertex buffer.
+            ByteBuffer bb = ByteBuffer.allocateDirect(mVectors.length * 4);
+            bb.order(ByteOrder.nativeOrder());
+            mVertexBuffer = bb.asFloatBuffer();
+            mVertexBuffer.put(mVectors);
+            mVertexBuffer.position(0);
 
-        // The texture buffer
-        ByteBuffer bb2 = ByteBuffer.allocateDirect(mTextureCoordinates.length * 4);
-        bb2.order(ByteOrder.nativeOrder());
-        mTextureBuffer = bb2.asFloatBuffer();
-        mTextureBuffer.put(mTextureCoordinates);
-        mTextureBuffer.position(0);
+            // The vertex buffer.
+            ByteBuffer bb3 = ByteBuffer.allocateDirect(mColors.length * 4);
+            bb3.order(ByteOrder.nativeOrder());
+            mColorBuffer = bb3.asFloatBuffer();
+            mColorBuffer.put(mColors);
+            mColorBuffer.position(0);
 
-        // initialize byte buffer for the draw list
-        ByteBuffer dlb = ByteBuffer.allocateDirect(mIndices.length * 2);
-        dlb.order(ByteOrder.nativeOrder());
-        mDrawListBuffer = dlb.asShortBuffer();
-        mDrawListBuffer.put(mIndices);
-        mDrawListBuffer.position(0);
+            // The texture buffer
+            ByteBuffer bb2 = ByteBuffer.allocateDirect(mTextureCoordinates.length * 4);
+            bb2.order(ByteOrder.nativeOrder());
+            mTextureBuffer = bb2.asFloatBuffer();
+            mTextureBuffer.put(mTextureCoordinates);
+            mTextureBuffer.position(0);
 
-        // Enable a handle to the triangle vertices
-        GLES20.glEnableVertexAttribArray(renderer.getTextProgram().getPositionHandle());
-        OpenGLUtil.checkGlError("glEnableVertexAttribArray");
+            // initialize byte buffer for the draw list
+            ByteBuffer dlb = ByteBuffer.allocateDirect(mIndices.length * 2);
+            dlb.order(ByteOrder.nativeOrder());
+            mDrawListBuffer = dlb.asShortBuffer();
+            mDrawListBuffer.put(mIndices);
+            mDrawListBuffer.position(0);
 
-        // Prepare the background coordinate data
-        GLES20.glVertexAttribPointer(renderer.getTextProgram().getPositionHandle(), 3,
-                GLES20.GL_FLOAT, false,
-                0, mVertexBuffer);
-        OpenGLUtil.checkGlError("glGetUniformLocation");
+            // Enable a handle to the triangle vertices
+            GLES20.glEnableVertexAttribArray(renderer.getTextProgram().getPositionHandle());
+            OpenGLUtil.checkGlError("glEnableVertexAttribArray");
 
-        // Prepare the texture coordinates
-        GLES20.glVertexAttribPointer(renderer.getTextProgram().getTexCoordinateLoc(), 2, GLES20.GL_FLOAT,
-                false,
-                0, mTextureBuffer);
-        OpenGLUtil.checkGlError("glVertexAttribPointer");
+            // Prepare the background coordinate data
+            GLES20.glVertexAttribPointer(renderer.getTextProgram().getPositionHandle(), 3,
+                    GLES20.GL_FLOAT, false,
+                    0, mVertexBuffer);
+            OpenGLUtil.checkGlError("glGetUniformLocation");
 
-        GLES20.glEnableVertexAttribArray(renderer.getTextProgram().getPositionHandle());
-        GLES20.glEnableVertexAttribArray(renderer.getTextProgram().getTexCoordinateLoc());
-        GLES20.glEnableVertexAttribArray(renderer.getTextProgram().getColorHandle());
-        OpenGLUtil.checkGlError("glEnableVertexAttribArray");
+            // Prepare the texture coordinates
+            GLES20.glVertexAttribPointer(renderer.getTextProgram().getTexCoordinateLoc(), 2, GLES20.GL_FLOAT,
+                    false,
+                    0, mTextureBuffer);
+            OpenGLUtil.checkGlError("glVertexAttribPointer");
 
-        // Prepare the background coordinate data
-        GLES20.glVertexAttribPointer(renderer.getTextProgram().getColorHandle(), 4,
-                GLES20.GL_FLOAT, false,
-                0, mColorBuffer);
-        OpenGLUtil.checkGlError("glVertexAttribPointer");
+            GLES20.glEnableVertexAttribArray(renderer.getTextProgram().getPositionHandle());
+            GLES20.glEnableVertexAttribArray(renderer.getTextProgram().getTexCoordinateLoc());
+            GLES20.glEnableVertexAttribArray(renderer.getTextProgram().getColorHandle());
+            OpenGLUtil.checkGlError("glEnableVertexAttribArray");
 
-        // Apply the projection and view transformation
-        GLES20.glUniformMatrix4fv(renderer.getTextProgram().getMatrixHandle(), 1, false, renderer.getMVPMatrix(), 0);
-        OpenGLUtil.checkGlError("glUniformMatrix4fv");
+            // Prepare the background coordinate data
+            GLES20.glVertexAttribPointer(renderer.getTextProgram().getColorHandle(), 4,
+                    GLES20.GL_FLOAT, false,
+                    0, mColorBuffer);
+            OpenGLUtil.checkGlError("glVertexAttribPointer");
 
-        // Set the sampler texture unit to our selected id
-        GLES20.glUniform1i(renderer.getTextProgram().getSamplerLoc(), GameRenderer.Textures.FONT.get());
-        OpenGLUtil.checkGlError("glUniform1i");
+            // Apply the projection and view transformation
+            GLES20.glUniformMatrix4fv(renderer.getTextProgram().getMatrixHandle(), 1, false, mIsStatic
+                    ? renderer.getStaticMVPMatrix()
+                    : renderer.getMVPMatrix(), 0);
+            OpenGLUtil.checkGlError("glUniformMatrix4fv");
 
-        // draw the triangle
-        GLES20.glDrawElements(GLES20.GL_TRIANGLES, mIndices.length, GLES20.GL_UNSIGNED_SHORT, mDrawListBuffer);
-        OpenGLUtil.checkGlError("glDrawElements");
+            // Set the sampler texture unit to our selected id
+            GLES20.glUniform1i(renderer.getTextProgram().getSamplerLoc(), GameRenderer.Textures.FONT.get());
+            OpenGLUtil.checkGlError("glUniform1i");
 
-        // Disable vertex array
-        GLES20.glDisableVertexAttribArray(renderer.getTextProgram().getPositionHandle());
-        GLES20.glDisableVertexAttribArray(renderer.getTextProgram().getTexCoordinateLoc());
-        GLES20.glDisableVertexAttribArray(renderer.getTextProgram().getColorHandle());
+            // draw the triangle
+            GLES20.glDrawElements(GLES20.GL_TRIANGLES, mIndices.length, GLES20.GL_UNSIGNED_SHORT, mDrawListBuffer);
+            OpenGLUtil.checkGlError("glDrawElements");
+
+            // Disable vertex array
+            GLES20.glDisableVertexAttribArray(renderer.getTextProgram().getPositionHandle());
+            GLES20.glDisableVertexAttribArray(renderer.getTextProgram().getTexCoordinateLoc());
+            GLES20.glDisableVertexAttribArray(renderer.getTextProgram().getColorHandle());
+        }
     }
 
     /**
@@ -213,7 +244,11 @@ public class Text extends Shape {
             int c_val = (int) c;
 
             int index = convertCharToIndex(c_val);
-            textWidth += ((LETTER_WIDTHS[index] / 2) * UNIFORM_SCALE);
+            if (index < 0) {
+                textWidth += RI_TEXT_SPACE_SIZE * UNIFORM_SCALE;
+            } else {
+                textWidth += (LETTER_WIDTHS[index] / 2) * UNIFORM_SCALE;
+            }
         }
 
         // Get attributes from text object
@@ -230,7 +265,7 @@ public class Text extends Shape {
 
             if (index == -1) {
                 // unknown character, we will add a space for it to be save.
-                x += ((RI_TEXT_SPACE_SIZE) * UNIFORM_SCALE);
+                x += RI_TEXT_SPACE_SIZE * UNIFORM_SCALE;
                 continue;
             }
 

@@ -2,8 +2,11 @@ package ch.sebastianhaeni.edgewars.logic.entities;
 
 import java.util.UUID;
 
+import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Text;
 import ch.sebastianhaeni.edgewars.logic.ai.AI;
 import ch.sebastianhaeni.edgewars.logic.ai.RuleBasedAI;
+import ch.sebastianhaeni.edgewars.util.Colors;
+import ch.sebastianhaeni.edgewars.util.Position;
 
 /**
  * A player in the game can take action and issue commands. At least 1 player is always human.
@@ -11,6 +14,7 @@ import ch.sebastianhaeni.edgewars.logic.ai.RuleBasedAI;
 public class Player extends Entity {
     private final UUID mId;
     private final boolean mIsHuman;
+    private Text mEnergyLabel;
     private AI mAi;
     private final float[] mColor;
     private int mEnergy;
@@ -26,12 +30,28 @@ public class Player extends Entity {
         mId = UUID.randomUUID();
         mColor = color;
         mIsHuman = isHuman;
+
     }
 
     @Override
     public void update(long millis) {
         if (mAi != null) {
             mAi.update(millis);
+        }
+        if (mEnergyLabel != null) {
+            mEnergyLabel.setText(mEnergy + " energy");
+        }
+    }
+
+    @Override
+    public void register() {
+        super.register();
+        if (mIsHuman) {
+            mEnergyLabel = new Text(
+                    new Position(1, .4f),
+                    Colors.ENERGY_TEXT, mEnergy + " energy",
+                    10, true);
+            mEnergyLabel.register();
         }
     }
 

@@ -8,7 +8,7 @@ import ch.sebastianhaeni.edgewars.util.Position;
  */
 abstract public class Shape extends Drawable {
 
-    private final Position mPosition;
+    private Position mPosition;
     private final int mLayer;
     private float mColor[];
 
@@ -45,6 +45,15 @@ abstract public class Shape extends Drawable {
      */
     public void setColor(float[] color) {
         mColor = color;
+    }
+
+    /**
+     * Sets position of this shape.
+     *
+     * @param position new position
+     */
+    protected void setPosition(Position position) {
+        mPosition = position;
     }
 
     /**

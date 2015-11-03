@@ -23,8 +23,4 @@ public abstract class BoardEntity extends Entity {
         super();
     }
 
-    /**
-     * Initializes the entity with the game.
-     */
-    public abstract void initialize();
 }

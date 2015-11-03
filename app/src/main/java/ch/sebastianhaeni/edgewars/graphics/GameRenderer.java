@@ -44,6 +44,7 @@ public class GameRenderer implements GLSurfaceView.Renderer {
     private final float[] mMVPMatrix = new float[16];
     private final float[] mProjectionMatrix = new float[16];
     private final float[] mViewMatrix = new float[16];
+    private final float[] mStaticMVPMatrix=new float[16];
 
     private final Context mContext;
 
@@ -98,18 +99,36 @@ public class GameRenderer implements GLSurfaceView.Renderer {
         mScreenWidth = width;
         mScreenHeight = height;
 
-        mMaxX = ((float) EYE_HEIGHT / MIN_HEIGHT) * ((float) mScreenWidth / mScreenHeight);
+        float ratio = (float) width / height;
+
+        mMaxX = ((float) EYE_HEIGHT / MIN_HEIGHT) * ratio;
         mMaxY = ((float) EYE_HEIGHT / MIN_HEIGHT);
 
         // Adjust the viewport based on geometry changes,
         // such as screen rotation
         GLES20.glViewport(0, 0, width, height);
 
-        float ratio = (float) width / height;
-
         // this projection matrix is applied to object coordinates
         // in the onDrawFrame() method
         Matrix.frustumM(mProjectionMatrix, 0, -ratio, ratio, -1, 1, MIN_HEIGHT, EYE_HEIGHT);
+
+        Matrix.setLookAtM(
+                mViewMatrix,
+                0,
+                // eye point x,y,z
+                0,
+                0,
+                -EYE_HEIGHT,
+                // center of view x,y,z
+                0,
+                0,
+                0f,
+                // down vector x,y,z
+                0f, -1.0f, 0.0f);
+
+        // Calculate the projection and view transformation
+        Matrix.multiplyMM(mStaticMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
+
     }
 
     @Override
@@ -223,6 +242,27 @@ public class GameRenderer implements GLSurfaceView.Renderer {
         GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
         GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, bmp, 0);
         bmp.recycle();
+    }
+
+    /**
+     * @return gets the static mvp matrix
+     */
+    public float[] getStaticMVPMatrix() {
+        return mStaticMVPMatrix;
+    }
+
+    /**
+     * @return gets max y coordinate drawn on screen
+     */
+    public float getMaxX() {
+        return mMaxX;
+    }
+
+    /**
+     * @return gets max y coordinate drawn on screen
+     */
+    public float getMaxY() {
+        return mMaxY;
     }
 
     /**

@@ -18,4 +18,7 @@ public abstract class Colors {
 
     // Node selection corona
     public static final float[] CORONA = {1f, 1f, 1f, 1f};
+
+    // Energy label that display the players energy
+    public static final float[] ENERGY_TEXT = {1f, 1f, 1f, 1f};
 }
