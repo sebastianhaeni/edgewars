@@ -1,5 +1,6 @@
 package ch.sebastianhaeni.edgewars.graphics.drawables.decorators;
 
+import android.graphics.Matrix;
 import android.opengl.GLES20;
 import android.os.SystemClock;
 
@@ -39,6 +40,9 @@ public class DeathParticleDecorator extends DrawableDecorator {
         // Fill in particle data array
         Random generator = new Random();
 
+        float x = shape.getPosition().getX();
+        float y = shape.getPosition().getY();
+
         float[] particleData = new float[NUM_PARTICLES * PARTICLE_SIZE];
         for (int i = 0; i < NUM_PARTICLES; i++) {
             // Life time of particle
@@ -46,15 +50,16 @@ public class DeathParticleDecorator extends DrawableDecorator {
 
             // End position of particle
             double angle = (Math.random() * Math.PI * 2);
-            particleData[i * 7 + 1] = (float) ((generator.nextFloat() * 8.0f - 4.0f) * Math.cos(angle));
-            particleData[i * 7 + 2] = (float) ((generator.nextFloat() * 8.0f - 4.0f) * Math.sin(angle));
+            particleData[i * 7 + 1] = (float) ((generator.nextFloat() * 8.0f - 4.0f) * Math.cos(angle)) + x;
+            particleData[i * 7 + 2] = (float) ((generator.nextFloat() * 8.0f - 4.0f) * Math.sin(angle)) + y;
             particleData[i * 7 + 3] = generator.nextFloat() * 8.0f - 4.0f;
 
             // Start position of particle
-            particleData[i * 7 + 4] = generator.nextFloat() * 0.25f - 0.125f;
-            particleData[i * 7 + 5] = generator.nextFloat() * 0.25f - 0.125f;
+            particleData[i * 7 + 4] = generator.nextFloat() * 0.25f - 0.125f + x;
+            particleData[i * 7 + 5] = generator.nextFloat() * 0.25f - 0.125f + y;
             particleData[i * 7 + 6] = generator.nextFloat() * 0.25f - 0.125f;
         }
+
         mParticles = ByteBuffer.allocateDirect(particleData.length * 4)
                 .order(ByteOrder.nativeOrder()).asFloatBuffer();
         mParticles.put(particleData).position(0);
