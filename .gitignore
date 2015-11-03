@@ -1,1 +1,14 @@
+.gradle
+.idea
+
+/local.properties
+/build
+/app/build
+/captures
+
+.DS_Store
+*.apk
+*.iml
+
+# for branch gh-pages
 node_modules/
