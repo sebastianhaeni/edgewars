@@ -1,7 +1,5 @@
 package ch.sebastianhaeni.edgewars.logic.ai.rules;
 
-import android.util.Log;
-
 import java.util.ArrayList;
 
 import ch.sebastianhaeni.edgewars.EUnitType;
@@ -70,9 +68,6 @@ public class IdleRule extends Rule {
     @Override
     public ArrayList<Command> getCommands() {
         ArrayList<Command> commands = new ArrayList<>();
-
-        Log.d("IdleRule", "Source: " + mNode.getPosition());
-        Log.d("IdleRule", "Target: " + mTarget.getPosition());
 
         if (mNode.getMeleeCount() >= 10) {
             commands.add(new MoveUnitCommand(mNode.getMeleeCount(), EUnitType.MELEE,
