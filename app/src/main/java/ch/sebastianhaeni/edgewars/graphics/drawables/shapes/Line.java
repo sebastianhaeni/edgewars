@@ -2,12 +2,10 @@ package ch.sebastianhaeni.edgewars.graphics.drawables.shapes;
 
 import android.graphics.Matrix;
 import android.opengl.GLES20;
-import android.util.Log;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
-import java.util.Arrays;
 
 import ch.sebastianhaeni.edgewars.graphics.GameRenderer;
 import ch.sebastianhaeni.edgewars.graphics.programs.OpenGLUtil;
@@ -34,36 +32,30 @@ public class Line extends Shape {
     public Line(Position src, Position dst, float[] color) {
         super(src, color, 2);
 
-        //float[] mCoordinates = new float[]{
-        //        // in counterclockwise order:
-        //        0f, (WIDTH * .5f), 0f, // top left
-        //        0f, -(WIDTH * .5f), 0f, // bottom left
-        //        src.getX() - dst.getX(), src.getY() - dst.getY() - (WIDTH * .5f), 0f, // bottom right
-        //        src.getX() - dst.getX(), src.getY() - dst.getY() + (WIDTH * .5f), 0f  // top right
-        //};
-
-        float angle = (float) Math.toDegrees(Math.atan2(dst.getY() - src.getY(), dst.getX() - src.getX()));
         float distance = (float) Math.sqrt(
                 Math.pow((double) dst.getX() - src.getX(), 2.0)
                         + Math.pow((double) dst.getY() - src.getY(), 2.0));
 
+        float angle = (float) Math.toDegrees(Math.asin((dst.getY() - src.getY()) / distance));
+
+        if (angle < 0) {
+            angle += 360;
+        }
+
         Matrix m = new Matrix();
-        m.setRotate(Math.abs(angle), src.getX(), src.getY());
 
         float half = WIDTH * .5f;
         float[] coordinates = new float[]{
-                src.getX() - half, src.getY(),
-                src.getX() + half, src.getY(),
-                src.getX() - half, src.getY() + distance,
-                src.getX() + half, src.getY() + distance,
+                0, -half,
+                0, half,
+                distance, -half,
+                distance, +half,
         };
-        Log.d("Line", src + ", " + dst);
-        Log.d("Line", String.valueOf(angle));
-        Log.d("Line", String.valueOf(distance));
-        Log.d("Line", Arrays.toString(coordinates));
+
+        m.setRotate(Math.abs(angle), 0, 0);
         m.mapPoints(coordinates);
-        Log.d("Line", Arrays.toString(coordinates));
-        Log.d("Line", "");
+        m.setTranslate(src.getX(), src.getY());
+        m.mapPoints(coordinates);
 
         coordinates = new float[]{
                 coordinates[0], coordinates[1], 0,

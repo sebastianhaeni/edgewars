@@ -47,14 +47,14 @@ public class Camera extends Entity {
      * @param dy delta y
      */
     public void moveCamera(float dx, float dy) {
-        mCameraScreenX += dx;
-        mCameraScreenY += dy;
+        mCameraScreenX -= dx;
+        mCameraScreenY -= dy;
         dx = dx * TOUCH_SCALE_FACTOR;
         dy = dy * TOUCH_SCALE_FACTOR;
         mCameraDx = dx;
         mCameraDy = dy;
-        mCameraX -= dx;
-        mCameraY -= dy;
+        mCameraX += dx;
+        mCameraY += dy;
     }
 
     /**
