@@ -26,19 +26,6 @@ public class Polygon extends Shape {
      * @param layer    the layer this polygon should be drawn at
      * @param corners  the amount of corners this polygon should have
      * @param angle    angle of the polygon
-     */
-    public Polygon(Position position, float[] color, int layer, int corners, int angle) {
-        this(position, color, layer, corners, angle, 1);
-    }
-
-    /**
-     * Sets up the drawing object data for use in an OpenGL ES context.
-     *
-     * @param position Position of the circle
-     * @param color    Color of this polygon
-     * @param layer    the layer this polygon should be drawn at
-     * @param corners  the amount of corners this polygon should have
-     * @param angle    angle of the polygon
      * @param radius   size of the polygon (diameter)
      */
     public Polygon(Position position, float[] color, int layer, int corners, int angle, float radius) {
@@ -50,8 +37,8 @@ public class Polygon extends Shape {
 
         float step = 360f / corners;
         for (int i = 0; i < corners; i++) {
-            vertices[(i * 3)] = (float) (radius * Math.cos((3.14 / 180) * ((step * i) + angle)));
-            vertices[(i * 3) + 1] = (float) (radius * Math.sin((3.14 / 180) * ((step * i) + angle)));
+            vertices[(i * 3)] = (float) (radius * Math.cos((3.14 / 180) * ((step * i) + angle))) + position.getX();
+            vertices[(i * 3) + 1] = (float) (radius * Math.sin((3.14 / 180) * ((step * i) + angle))) + position.getY();
             vertices[(i * 3) + 2] = 0;
         }
 

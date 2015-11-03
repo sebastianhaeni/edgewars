@@ -1,5 +1,6 @@
 package ch.sebastianhaeni.edgewars.graphics.drawables.shapes;
 
+import android.graphics.Matrix;
 import android.opengl.GLES20;
 
 import java.nio.ByteBuffer;
@@ -31,27 +32,51 @@ public class Line extends Shape {
     public Line(Position src, Position dst, float[] color) {
         super(src, color, 2);
 
-        float[] mCoordinates = new float[]{
-                // in counterclockwise order:
-                0f, (WIDTH * .5f), 0f, // top left
-                0f, -(WIDTH * .5f), 0f, // bottom left
-                src.getX() - dst.getX(), src.getY() - dst.getY() - (WIDTH * .5f), 0f, // bottom right
-                src.getX() - dst.getX(), src.getY() - dst.getY() + (WIDTH * .5f), 0f  // top right
+        float distance = (float) Math.sqrt(
+                Math.pow((double) dst.getX() - src.getX(), 2.0)
+                        + Math.pow((double) dst.getY() - src.getY(), 2.0));
+
+        float angle = (float) Math.toDegrees(Math.asin((dst.getY() - src.getY()) / distance));
+
+        if (angle < 0) {
+            angle += 360;
+        }
+
+        Matrix m = new Matrix();
+
+        float half = WIDTH * .5f;
+        float[] coordinates = new float[]{
+                0, -half,
+                0, half,
+                distance, -half,
+                distance, +half,
         };
 
-        vertexCount = mCoordinates.length / GameRenderer.COORDS_PER_VERTEX;
+        m.setRotate(Math.abs(angle), 0, 0);
+        m.mapPoints(coordinates);
+        m.setTranslate(src.getX(), src.getY());
+        m.mapPoints(coordinates);
+
+        coordinates = new float[]{
+                coordinates[0], coordinates[1], 0,
+                coordinates[2], coordinates[3], 0,
+                coordinates[4], coordinates[5], 0,
+                coordinates[6], coordinates[7], 0,
+        };
+
+        vertexCount = coordinates.length / GameRenderer.COORDS_PER_VERTEX;
 
         // initialize vertex byte buffer for shape coordinates
         ByteBuffer bb = ByteBuffer.allocateDirect(
                 // (number of coordinate values * 4 bytes per float)
-                mCoordinates.length * 4);
+                coordinates.length * 4);
 
         // use the device hardware's native byte order
         bb.order(ByteOrder.nativeOrder());
         // create a floating point buffer from the ByteBuffer
         vertexBuffer = bb.asFloatBuffer();
         // add the coordinates to the FloatBuffer
-        vertexBuffer.put(mCoordinates);
+        vertexBuffer.put(coordinates);
         // set the buffer to read the first coordinate
         vertexBuffer.position(0);
     }

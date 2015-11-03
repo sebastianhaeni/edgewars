@@ -124,27 +124,25 @@ public class GameRenderer implements GLSurfaceView.Renderer {
      * Renders the game state to the surface.
      */
     private void renderState() {
+        Matrix.setLookAtM(
+                mViewMatrix,
+                0,
+                // eye point x,y,z
+                mGameState.getCamera().getX(),
+                mGameState.getCamera().getY(),
+                -EYE_HEIGHT,
+                // center of view x,y,z
+                mGameState.getCamera().getX(),
+                mGameState.getCamera().getY(),
+                0f,
+                // down vector x,y,z
+                0f, -1.0f, 0.0f);
+
+        // Calculate the projection and view transformation
+        Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
+
         // draw drawables
         for (Drawable s : Game.getInstance().getDrawables()) {
-
-            // Set the camera position (View matrix)
-            Matrix.setLookAtM(
-                    mViewMatrix,
-                    0,
-                    // eye point x,y,z
-                    mGameState.getCamera().getX() + s.getShape().getPosition().getX(),
-                    mGameState.getCamera().getY() + s.getShape().getPosition().getY(),
-                    -EYE_HEIGHT,
-                    // center of view x,y,z
-                    mGameState.getCamera().getX() + s.getShape().getPosition().getX(),
-                    mGameState.getCamera().getY() + s.getShape().getPosition().getY(),
-                    0f,
-                    // up vector x,y,z
-                    0f, 1.0f, 0.0f);
-
-            // Calculate the projection and view transformation
-            Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
-
             s.draw(this);
         }
     }

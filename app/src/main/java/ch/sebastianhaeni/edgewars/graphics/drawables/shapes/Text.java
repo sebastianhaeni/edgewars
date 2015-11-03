@@ -213,12 +213,12 @@ public class Text extends Shape {
             int c_val = (int) c;
 
             int index = convertCharToIndex(c_val);
-            textWidth += ((LETTER_WIDTHS[index] / 2) * -UNIFORM_SCALE);
+            textWidth += ((LETTER_WIDTHS[index] / 2) * UNIFORM_SCALE);
         }
 
         // Get attributes from text object
-        float x = -(textWidth * .5f);
-        float y = -.25f;
+        float x = -(textWidth * .5f) + getPosition().getX();
+        float y = .25f + getPosition().getY();
 
         // Create
         for (int j = 0; j < mText.length(); j++) {
@@ -230,7 +230,7 @@ public class Text extends Shape {
 
             if (index == -1) {
                 // unknown character, we will add a space for it to be save.
-                x += ((RI_TEXT_SPACE_SIZE) * -UNIFORM_SCALE);
+                x += ((RI_TEXT_SPACE_SIZE) * UNIFORM_SCALE);
                 continue;
             }
 
@@ -249,16 +249,16 @@ public class Text extends Shape {
             float[] colors;
 
             vertices[0] = x;
-            vertices[1] = y + (RI_TEXT_WIDTH * UNIFORM_SCALE);
+            vertices[1] = y + (RI_TEXT_WIDTH * -UNIFORM_SCALE);
             vertices[2] = 0;
             vertices[3] = x;
             vertices[4] = y;
             vertices[5] = 0;
-            vertices[6] = x + (RI_TEXT_WIDTH * -UNIFORM_SCALE);
+            vertices[6] = x + (RI_TEXT_WIDTH * UNIFORM_SCALE);
             vertices[7] = y;
             vertices[8] = 0;
-            vertices[9] = x + (RI_TEXT_WIDTH * -UNIFORM_SCALE);
-            vertices[10] = y + (RI_TEXT_WIDTH * UNIFORM_SCALE);
+            vertices[9] = x + (RI_TEXT_WIDTH * UNIFORM_SCALE);
+            vertices[10] = y + (RI_TEXT_WIDTH * -UNIFORM_SCALE);
             vertices[11] = 0;
 
             float[] color = getColor();
@@ -286,7 +286,7 @@ public class Text extends Shape {
             addCharRenderInformation(vertices, colors, textureCoordinates, indices);
 
             // Calculate the new position
-            x += ((LETTER_WIDTHS[index] / 2) * -UNIFORM_SCALE);
+            x += ((LETTER_WIDTHS[index] / 2) * UNIFORM_SCALE);
         }
     }
 
