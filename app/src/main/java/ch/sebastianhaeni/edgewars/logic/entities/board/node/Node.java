@@ -4,6 +4,7 @@ import android.databinding.Bindable;
 import android.util.Log;
 
 import ch.sebastianhaeni.edgewars.BR;
+import ch.sebastianhaeni.edgewars.EUnitType;
 import ch.sebastianhaeni.edgewars.graphics.drawables.decorators.DeathParticleDecorator;
 import ch.sebastianhaeni.edgewars.graphics.drawables.decorators.TextDecorator;
 import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Polygon;
@@ -61,7 +62,6 @@ public class Node extends BoardEntity {
     private final Position mPosition;
 
     private NodeState mState;
-    private DeathParticleDecorator mParticles;
     //endregion
 
     /**
@@ -90,6 +90,10 @@ public class Node extends BoardEntity {
     public void initialize() {
         mCircle.register();
         mHealthLabel.register();
+
+        Game.getInstance().register(mMeleeFactory);
+        Game.getInstance().register(mTankFactory);
+        Game.getInstance().register(mSprinterFactory);
     }
 
     //region actions
@@ -147,7 +151,6 @@ public class Node extends BoardEntity {
             return;
         }
         mHealthLevel++;
-        repair();
         notifyPropertyChanged(BR.healthLevel);
     }
 
@@ -178,11 +181,11 @@ public class Node extends BoardEntity {
      */
     public void sendMeleeUnits(Node node) {
         Game.getInstance().register(new MoveUnitCommand(
-                new MeleeUnit(mMeleeUnits, node, ((OwnedState) this.getState()).getOwner()),
+                mMeleeUnits,
+                EUnitType.MELEE,
                 node,
-                Game.getInstance().getEdgeBetween(this, node)));
-        mMeleeUnits = 0;
-        notifyPropertyChanged(BR.meleeCount);
+                Game.getInstance().getEdgeBetween(this, node),
+                ((OwnedState) getState()).getOwner()));
     }
 
     /**
@@ -192,11 +195,11 @@ public class Node extends BoardEntity {
      */
     public void sendTankUnits(Node node) {
         Game.getInstance().register(new MoveUnitCommand(
-                new TankUnit(mTankUnits, node, ((OwnedState) this.getState()).getOwner()),
+                mTankUnits,
+                EUnitType.TANK,
                 node,
-                Game.getInstance().getEdgeBetween(this, node)));
-        mTankUnits = 0;
-        notifyPropertyChanged(BR.tankCount);
+                Game.getInstance().getEdgeBetween(this, node),
+                ((OwnedState) getState()).getOwner()));
     }
 
     /**
@@ -206,11 +209,44 @@ public class Node extends BoardEntity {
      */
     public void sendSprinterUnits(Node node) {
         Game.getInstance().register(new MoveUnitCommand(
-                new SprinterUnit(mSprinterUnits, node, ((OwnedState) this.getState()).getOwner()),
+                mSprinterUnits,
+                EUnitType.SPRINTER,
                 node,
-                Game.getInstance().getEdgeBetween(this, node)));
+                Game.getInstance().getEdgeBetween(this, node),
+                ((OwnedState) getState()).getOwner()));
+    }
+
+    /**
+     * Clears the unit count.
+     *
+     * @param unit the unit to be cleared
+     */
+    public void clearUnit(Unit unit) {
+        if (unit instanceof MeleeUnit) {
+            mMeleeUnits = 0;
+            notifyPropertyChanged(BR.meleeCount);
+            return;
+        }
+        if (unit instanceof TankUnit) {
+            mTankUnits = 0;
+            notifyPropertyChanged(BR.tankCount);
+            return;
+        }
+        if (unit instanceof SprinterUnit) {
+            mSprinterUnits = 0;
+            notifyPropertyChanged(BR.sprinterCount);
+        }
+    }
+
+    /**
+     * Resets the node by removing all units and resetting the levels.
+     */
+    public void clearUnitsAndLevels() {
+        mDamageLevel = 1;
+        mHealthLevel = 1;
+        mMeleeUnits = 0;
         mSprinterUnits = 0;
-        notifyPropertyChanged(BR.sprinterCount);
+        mTankUnits = 0;
     }
 
     /**
@@ -227,8 +263,8 @@ public class Node extends BoardEntity {
             }
 
             setState(new NeutralState(this));
-            mParticles = new DeathParticleDecorator(mCircle, 9);
-            mParticles.register();
+            DeathParticleDecorator particles = new DeathParticleDecorator(mCircle, 9);
+            particles.register();
 
             mHealth = 0;
         } else {
@@ -431,14 +467,6 @@ public class Node extends BoardEntity {
      */
     public float getRadius() {
         return .7f;
-    }
-
-    public void clearUnitsAndLevels() {
-        mDamageLevel = 1;
-        mHealthLevel = 1;
-        mMeleeUnits = 0;
-        mSprinterUnits = 0;
-        mTankUnits = 0;
     }
 
     //endregion

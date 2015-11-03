@@ -89,7 +89,7 @@ public class LevelDeserializer implements JsonDeserializer {
             Player player;
 
             if (playerNature.equals(nature)) {
-                player = new Player(color);
+                player = new Player(color, nature.equals("human"));
             } else {
                 continue;
             }

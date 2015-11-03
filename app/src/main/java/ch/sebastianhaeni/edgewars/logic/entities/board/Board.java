@@ -54,4 +54,11 @@ public class Board extends Entity {
             entity.initialize();
         }
     }
+
+    /**
+     * @return gets list of board entities
+     */
+    public ArrayList<BoardEntity> getEntities() {
+        return mEntities;
+    }
 }

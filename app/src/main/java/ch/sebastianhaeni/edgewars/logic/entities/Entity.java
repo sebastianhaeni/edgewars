@@ -2,8 +2,6 @@ package ch.sebastianhaeni.edgewars.logic.entities;
 
 import android.databinding.BaseObservable;
 
-import ch.sebastianhaeni.edgewars.logic.Game;
-
 /**
  * An entity is a thing in the game and it may wants to be updated.
  */
@@ -24,7 +22,6 @@ public abstract class Entity extends BaseObservable {
      * Constructor for entities that don't want to be updated.
      */
     protected Entity() {
-        Game.getInstance().register(this);
     }
 
     /**
@@ -41,7 +38,6 @@ public abstract class Entity extends BaseObservable {
      */
     protected void setUpdateInterval(long interval) {
         mInterval = interval;
-        Game.getInstance().register(this);
     }
 
     /**

@@ -3,10 +3,10 @@ package ch.sebastianhaeni.edgewars.logic;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
+import java.util.concurrent.ConcurrentHashMap;
 
 import ch.sebastianhaeni.edgewars.graphics.drawables.Drawable;
 import ch.sebastianhaeni.edgewars.graphics.drawables.RenderQueue;
@@ -23,7 +23,7 @@ public class Game {
     private static Game mGame;
 
     private final Stack<Command> mCommandStack = new Stack<>();
-    private final HashMap<Entity, Long> mEntities = new HashMap<>();
+    private final ConcurrentHashMap<Entity, Long> mEntities = new ConcurrentHashMap<>();
     private final RenderQueue mDrawables = new RenderQueue();
 
     /**
@@ -65,14 +65,12 @@ public class Game {
      * @param entity the entity to be updated
      */
     public void register(Entity entity) {
-        synchronized (mEntities) {
-            if (mEntities.containsKey(entity)) {
-                return;
-            }
-
-            Log.d("Game", "Registering entity: " + entity);
-            mEntities.put(entity, 0L);
+        if (mEntities.containsKey(entity)) {
+            return;
         }
+
+        Log.d("Game", "Registering entity: " + entity);
+        mEntities.put(entity, 0L);
     }
 
     /**
@@ -108,17 +106,16 @@ public class Game {
             mCommandStack.pop().execute();
         }
 
-        synchronized (mEntities) {
-            for (Map.Entry<Entity, Long> pair : mEntities.entrySet()) {
-                if (pair.getKey().getInterval() < 0) {
-                    continue;
-                }
-                pair.setValue(pair.getValue() + millis);
+        for (Map.Entry<Entity, Long> pair : mEntities.entrySet()) {
+            if (pair.getKey().getInterval() < 0) {
+                continue;
+            }
+            pair.setValue(pair.getValue() + millis);
+            mEntities.put(pair.getKey(), pair.getValue());
 
-                if (pair.getValue() > pair.getKey().getInterval()) {
-                    pair.getKey().update(pair.getValue());
-                    pair.setValue(0L);
-                }
+            if (pair.getValue() > pair.getKey().getInterval()) {
+                pair.getKey().update(pair.getValue());
+                pair.setValue(0L);
             }
         }
     }
@@ -134,13 +131,16 @@ public class Game {
         for (Entity entity : mEntities.keySet()) {
             if (entity instanceof Edge) {
                 Edge edge = (Edge) entity;
-                if ((edge.getSourceNode().equals(node1) && edge.getTargetNode().equals(node2)) || (edge.getTargetNode().equals(node1) && edge.getSourceNode().equals(node2))) {
+
+                if ((edge.getSourceNode().equals(node1) && edge.getTargetNode().equals(node2))
+                        || (edge.getTargetNode().equals(node1) && edge.getSourceNode().equals(node2))) {
                     return edge;
                 }
             }
         }
 
-        throw new RuntimeException("No edge between these two nodes.");
+        throw new RuntimeException("No edge between these two nodes: "
+                + node1.getPosition() + ", " + node2.getPosition());
     }
 
     /**

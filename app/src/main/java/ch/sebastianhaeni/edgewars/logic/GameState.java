@@ -3,6 +3,7 @@ package ch.sebastianhaeni.edgewars.logic;
 import java.util.ArrayList;
 
 import ch.sebastianhaeni.edgewars.logic.entities.Camera;
+import ch.sebastianhaeni.edgewars.logic.entities.Entity;
 import ch.sebastianhaeni.edgewars.logic.entities.Player;
 import ch.sebastianhaeni.edgewars.logic.entities.board.Board;
 
@@ -48,16 +49,22 @@ public class GameState {
     }
 
     /**
-     * @return gets a list of players
-     */
-    public ArrayList<Player> getPlayers() {
-        return mPlayers;
-    }
-
-    /**
      * @return gets the human player
      */
     public Player getHuman() {
         return mHuman;
+    }
+
+    /**
+     * Initialize the state and register all entities.
+     */
+    public void init() {
+        Game.getInstance().register(mCamera);
+        for (Entity e : mBoard.getEntities()) {
+            Game.getInstance().register(e);
+        }
+        for (Player p : mPlayers) {
+            Game.getInstance().register(p);
+        }
     }
 }

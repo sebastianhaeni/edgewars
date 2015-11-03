@@ -1,5 +1,7 @@
 package ch.sebastianhaeni.edgewars.logic.entities;
 
+import java.util.UUID;
+
 import ch.sebastianhaeni.edgewars.logic.ai.AI;
 import ch.sebastianhaeni.edgewars.logic.ai.RuleBasedAI;
 
@@ -7,6 +9,8 @@ import ch.sebastianhaeni.edgewars.logic.ai.RuleBasedAI;
  * A player in the game can take action and issue commands. At least 1 player is always human.
  */
 public class Player extends Entity {
+    private final UUID mId;
+    private final boolean mIsHuman;
     private AI mAi;
     private final float[] mColor;
     private int mEnergy;
@@ -14,11 +18,14 @@ public class Player extends Entity {
     /**
      * Constructor
      *
-     * @param color color for this player
+     * @param color   color for this player
+     * @param isHuman if this player is human
      */
-    public Player(float[] color) {
+    public Player(float[] color, boolean isHuman) {
         super(1000);
+        mId = UUID.randomUUID();
         mColor = color;
+        mIsHuman = isHuman;
     }
 
     @Override
@@ -78,6 +85,14 @@ public class Player extends Entity {
      * @return true if this player is human or some other sort of organic life form, false otherwise
      */
     public boolean isHuman() {
-        return mAi == null;
+        return mIsHuman;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other instanceof Player) {
+            return mId.equals(((Player) other).mId);
+        }
+        return equals(other);
     }
 }

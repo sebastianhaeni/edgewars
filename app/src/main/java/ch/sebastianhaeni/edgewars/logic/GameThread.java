@@ -24,12 +24,11 @@ public class GameThread extends Thread {
     @Override
     public void run() {
         long delta = System.currentTimeMillis();
-
         while (mRunning) {
-            // updateState game state
-            delta = System.currentTimeMillis() - delta;
+            // update game state
+            Game.getInstance().update(System.currentTimeMillis() - delta);
 
-            Game.getInstance().update(delta);
+            delta = System.currentTimeMillis();
 
             try {
                 Thread.sleep(12);
