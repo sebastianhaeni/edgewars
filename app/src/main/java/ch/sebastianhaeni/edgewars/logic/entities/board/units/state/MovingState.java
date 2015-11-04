@@ -122,6 +122,7 @@ public class MovingState extends UnitState {
 
         mShape.getPosition().set(x, y);
         mShape.calculateVertexBuffer();
+        mText.calculateVertexBuffer();
     }
 
     /**

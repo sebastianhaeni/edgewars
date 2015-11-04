@@ -48,4 +48,12 @@ public class TextDecorator extends DrawableDecorator {
         super.destroy();
         mText.destroy();
     }
+
+    /**
+     * Recalculates the object to accommodate to new position.
+     */
+    public void calculateVertexBuffer() {
+        mText.getPosition().set(getShape().getPosition().getX(), getShape().getPosition().getY());
+        mText.calculateVertexBuffer();
+    }
 }

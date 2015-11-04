@@ -406,4 +406,13 @@ public class Text extends Shape {
         return index;
     }
 
+    /**
+     * Recalculates the object to accommodate to new position.
+     */
+    public void calculateVertexBuffer() {
+        synchronized (this) {
+            prepareDrawInfo();
+            convertTextToTriangleInfo();
+        }
+    }
 }
