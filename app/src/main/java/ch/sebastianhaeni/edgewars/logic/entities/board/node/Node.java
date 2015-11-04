@@ -277,6 +277,23 @@ public class Node extends BoardEntity {
         notifyPropertyChanged(BR.repairCost);
     }
 
+    /**
+     * Adds health to the node.
+     *
+     * @param healthGain amount of health gained
+     */
+    public void addHealth(int healthGain) {
+        if (mHealth + healthGain > getMaxHealth()) {
+            mHealth = getMaxHealth();
+        } else {
+            mHealth += healthGain;
+        }
+
+        mHealthLabel.setText(String.valueOf(mHealth));
+        notifyPropertyChanged(BR.health);
+        notifyPropertyChanged(BR.repairCost);
+    }
+
     //endregion
 
     //region databinding
@@ -286,7 +303,7 @@ public class Node extends BoardEntity {
      */
     @Bindable
     public int getRepairCost() {
-        return getMaxHealth() - getHealth() * 10;
+        return (getMaxHealth() - getHealth()) * 10;
     }
 
     /**

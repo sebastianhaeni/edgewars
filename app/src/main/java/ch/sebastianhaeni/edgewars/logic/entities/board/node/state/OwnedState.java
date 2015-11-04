@@ -9,7 +9,8 @@ import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
  * The state a node is in when it is owned by a player.
  */
 public class OwnedState extends NodeState {
-    private static final int ENERGY_GAIN = 10;
+    private static final int ENERGY_GAIN = 2;
+    private static final int HEALTH_GAIN = 1;
     private final Player mOwner;
 
     /**
@@ -28,11 +29,12 @@ public class OwnedState extends NodeState {
     @Override
     public void update(long millis) {
         mOwner.addEnergy(ENERGY_GAIN);
+        getNode().addHealth(HEALTH_GAIN);
     }
 
     @Override
     public long getUpdateInterval() {
-        return 50;
+        return 1000;
     }
 
     @Override
