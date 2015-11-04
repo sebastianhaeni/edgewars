@@ -31,6 +31,6 @@ public class DefendingState extends UnitState {
 
     @Override
     public long getUpdateInterval() {
-        return 1000;
+        return DEFENDING_STATE_UPDATE_INTERVAL;
     }
 }

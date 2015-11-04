@@ -13,8 +13,6 @@ import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
  */
 public abstract class Factory extends Entity {
 
-    public final static int MAX_LEVEL = 3;
-
     private final Node mNode;
 
     private int mLevel = 1;
@@ -37,6 +35,7 @@ public abstract class Factory extends Entity {
     /**
      * @return gets the level
      */
+    @Bindable
     public int getLevel() {
         return mLevel;
     }
@@ -45,13 +44,12 @@ public abstract class Factory extends Entity {
      * Upgrades the factory's level.
      */
     public void upgrade() {
-        if (mLevel >= MAX_LEVEL) {
+        if (mLevel >= FACTORY_MAX_LEVEL) {
             return;
         }
         mLevel++;
         setUpdateInterval(getProducingDuration());
-        // TODO handle in child class
-        notifyPropertyChanged(BR._all);
+        notifyPropertyChanged(BR.level);
     }
 
     /**
@@ -128,6 +126,6 @@ public abstract class Factory extends Entity {
     protected abstract long getProducingDuration();
 
     public boolean maxLevelReached() {
-        return mLevel == MAX_LEVEL;
+        return mLevel == FACTORY_MAX_LEVEL;
     }
 }

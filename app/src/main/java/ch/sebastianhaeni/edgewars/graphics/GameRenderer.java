@@ -44,7 +44,7 @@ public class GameRenderer implements GLSurfaceView.Renderer {
     private final float[] mMVPMatrix = new float[16];
     private final float[] mProjectionMatrix = new float[16];
     private final float[] mViewMatrix = new float[16];
-    private final float[] mStaticMVPMatrix=new float[16];
+    private final float[] mStaticMVPMatrix = new float[16];
 
     private final Context mContext;
 

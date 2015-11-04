@@ -1,5 +1,6 @@
 package ch.sebastianhaeni.edgewars.logic.commands;
 
+import ch.sebastianhaeni.edgewars.logic.Constants;
 import ch.sebastianhaeni.edgewars.logic.entities.Player;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.state.NodeState;
@@ -29,14 +30,14 @@ public class UpgradeNodeDamageCommand extends Command {
         }
 
         Player owner = ((OwnedState) state).getOwner();
-        if (owner.getEnergy() - mNode.getDamageLevelUpgradeCost() < 0) {
+        if (owner.getEnergy() - Constants.NODE_DAMAGE_LEVEL_UPGRADE_COST < 0) {
             return;
         }
 
         if (mNode.maxDamageLevelReached()) {
             return;
         }
-        owner.removeEnergy(mNode.getDamageLevelUpgradeCost());
+        owner.removeEnergy(Constants.NODE_DAMAGE_LEVEL_UPGRADE_COST);
 
         mNode.upgradeDamage();
     }

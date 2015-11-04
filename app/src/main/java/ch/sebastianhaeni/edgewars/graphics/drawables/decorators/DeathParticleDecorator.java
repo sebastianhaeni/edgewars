@@ -1,6 +1,5 @@
 package ch.sebastianhaeni.edgewars.graphics.drawables.decorators;
 
-import android.graphics.Matrix;
 import android.opengl.GLES20;
 import android.os.SystemClock;
 

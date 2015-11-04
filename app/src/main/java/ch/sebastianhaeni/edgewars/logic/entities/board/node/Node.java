@@ -43,9 +43,6 @@ import ch.sebastianhaeni.edgewars.util.Position;
 public class Node extends BoardEntity {
 
     //region members
-    private static final int DAMAGE_LEVEL_UPGRADE_COST = 50;
-    private static final int HEALTH_LEVEL_UPGRADE_COST = 50;
-    private static final float RADIUS = .7f;
     private final Polygon mCircle;
     private final TextDecorator mHealthLabel;
     private int mMeleeUnits;
@@ -75,7 +72,7 @@ public class Node extends BoardEntity {
         mPosition = position;
         mHealth = getMaxHealth();
 
-        mCircle = new Polygon(mPosition, Colors.NODE_NEUTRAL, 3, 80, 0, RADIUS);
+        mCircle = new Polygon(mPosition, Colors.NODE_NEUTRAL, NODE_LAYER, NODE_CORNERS, 0, NODE_RADIUS);
         mHealthLabel = new TextDecorator(mCircle, String.valueOf(getHealth()), 6);
 
         setState(new NeutralState(this));
@@ -148,7 +145,7 @@ public class Node extends BoardEntity {
      * Upgrades the health level to a max of 3.
      */
     public void upgradeHealth() {
-        if (mHealthLevel >= 3) {
+        if (mHealthLevel >= NODE_HEALTH_MAX_LEVEL) {
             return;
         }
         mHealthLevel++;
@@ -159,7 +156,7 @@ public class Node extends BoardEntity {
      * Upgrades the damage level to a max of 3.
      */
     public void upgradeDamage() {
-        if (mDamageLevel >= 3) {
+        if (mDamageLevel >= NODE_DAMAGE_MAX_LEVEL) {
             return;
         }
         mDamageLevel++;
@@ -303,7 +300,7 @@ public class Node extends BoardEntity {
      */
     @Bindable
     public int getRepairCost() {
-        return (getMaxHealth() - getHealth()) * 10;
+        return (getMaxHealth() - getHealth()) * NODE_REPAIR_COST_MULTIPLIER;
     }
 
     /**
@@ -321,11 +318,11 @@ public class Node extends BoardEntity {
     public int getMaxHealth() {
         switch (mHealthLevel) {
             case 1:
-                return 100;
+                return NODE_MAX_HEALTH_1;
             case 2:
-                return 150;
+                return NODE_MAX_HEALTH_2;
             case 3:
-                return 300;
+                return NODE_MAX_HEALTH_3;
             default:
                 throw new IllegalStateException("Level must be 1, 2 or 3");
         }
@@ -440,28 +437,14 @@ public class Node extends BoardEntity {
      * @return gets if the maximum health level has been reached
      */
     public boolean maxHealthLevelReached() {
-        return mHealthLevel >= 3;
+        return mHealthLevel >= NODE_HEALTH_MAX_LEVEL;
     }
 
     /**
      * @return gets if the maximum damage level has been reached
      */
     public boolean maxDamageLevelReached() {
-        return mDamageLevel >= 3;
-    }
-
-    /**
-     * @return gets the cost of upgrading the damage level
-     */
-    public int getDamageLevelUpgradeCost() {
-        return DAMAGE_LEVEL_UPGRADE_COST;
-    }
-
-    /**
-     * @return gets the cost of upgrading the health level
-     */
-    public int getHealthLevelUpgradeCost() {
-        return HEALTH_LEVEL_UPGRADE_COST;
+        return mDamageLevel >= NODE_DAMAGE_MAX_LEVEL;
     }
 
     /**
@@ -470,21 +453,14 @@ public class Node extends BoardEntity {
     public int getDamage() {
         switch (mDamageLevel) {
             case 1:
-                return 30;
+                return NODE_DAMAGE_1;
             case 2:
-                return 50;
+                return NODE_DAMAGE_2;
             case 3:
-                return 80;
+                return NODE_DAMAGE_3;
             default:
                 throw new IllegalArgumentException("Damage level " + mDamageLevel + " is not allowed");
         }
-    }
-
-    /**
-     * @return gets the circle radius
-     */
-    public float getRadius() {
-        return .7f;
     }
 
     //endregion
