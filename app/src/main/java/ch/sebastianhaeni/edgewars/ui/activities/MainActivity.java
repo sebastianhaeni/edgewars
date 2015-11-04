@@ -3,8 +3,10 @@ package ch.sebastianhaeni.edgewars.ui.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 
 import ch.sebastianhaeni.edgewars.R;
 import ch.sebastianhaeni.edgewars.databinding.ActivityMainBinding;
@@ -23,6 +25,10 @@ public class MainActivity extends Activity {
                 false);
         binding.setActivity(this);
         setContentView(binding.getRoot());
+
+        Typeface typeface = Typeface.createFromAsset(getAssets(), "DISTGRG.ttf");
+        TextView appName = (TextView) findViewById(R.id.appName);
+        appName.setTypeface(typeface);
     }
 
     public void start(View view) {
