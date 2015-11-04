@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import ch.sebastianhaeni.edgewars.logic.LevelLoader;
 import ch.sebastianhaeni.edgewars.logic.entities.Player;
 import ch.sebastianhaeni.edgewars.logic.entities.board.Edge;
 import ch.sebastianhaeni.edgewars.logic.entities.board.factories.Factory;
@@ -31,23 +32,25 @@ public class LevelDeserializer implements JsonDeserializer {
     private Map<Integer, Node> mNodeMap;
 
     @Override
-    public Levels deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+    public Level deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
 
-        Levels levels = new Levels();
-        ArrayList<Level> levelList = new ArrayList<>();
+        Level level = new Level();
         mPlayerMap = new HashMap<>();
         mNodeMap = new HashMap<>();
 
-        JsonObject jsonObject = json.getAsJsonObject();
-        JsonArray levelsArray = jsonObject.get("levels").getAsJsonArray();
+        JsonObject levelsObject = json.getAsJsonObject();
+        JsonArray levelArray = levelsObject.get("levels").getAsJsonArray();
 
-        // iterate through all mLevels of json file and create level objects
-        for (int i = 0; i < levelsArray.size(); i++) {
-            JsonObject levelObject = levelsArray.get(i).getAsJsonObject();
-
-            // create level
-            Level level = new Level();
+        // iterate through all mLevels of json file and create level object of wanted level
+        for (int i = 0; i < levelArray.size(); i++) {
+            JsonObject levelObject = levelArray.get(i).getAsJsonObject();
             int levelNumber = levelObject.get("level_number").getAsInt();
+
+            // if this level is not the wanted one, skip to next level
+            if (levelNumber != LevelLoader.levelNumber) {
+                continue;
+            }
+
             level.setLevelNumber(levelNumber);
 
             // add computer players to level
@@ -68,12 +71,9 @@ public class LevelDeserializer implements JsonDeserializer {
             JsonArray edgesArray = levelObject.get("edges").getAsJsonArray();
             ArrayList<Edge> edgesList = this.createEdges(edgesArray);
             level.setEdges(edgesList);
-
-            levelList.add(level);
         }
 
-        levels.setLevels(levelList);
-        return levels;
+        return level;
     }
 
     private ArrayList<Player> createPlayers(JsonArray playersArray, String nature, float[] color) throws JsonParseException {

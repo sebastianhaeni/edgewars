@@ -20,40 +20,43 @@ import ch.sebastianhaeni.edgewars.logic.entities.board.Edge;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
 import ch.sebastianhaeni.edgewars.logic.levels.Level;
 import ch.sebastianhaeni.edgewars.logic.levels.LevelDeserializer;
-import ch.sebastianhaeni.edgewars.logic.levels.Levels;
+import ch.sebastianhaeni.edgewars.logic.levels.LevelNumberDeserializer;
 
 public class LevelLoader {
 
+    public static int levelNumber = 1;
+
     private final Context mContext;
-    private Levels mLevels;
+    private Level mLevel;
+    private ArrayList<Integer> mLevelNumbers;
 
     public LevelLoader(Context context) {
 
         mContext = context;
 
-        // load levels from json file to mLevels
-        this.loadLevelsFromJsonFile();
-
+        // load level numbers from json file to mLevelNumbers
+        this.loadLevelNumbersFromJsonFile();
     }
 
     public ArrayList<Integer> getLevelNumbers() {
-        return mLevels.getAllLevelNumbers();
+        return mLevelNumbers;
     }
 
-    public GameState build(int levelNumber) throws IllegalArgumentException {
+    public GameState build(int levelNr) throws IllegalArgumentException {
 
         // ensure that the specified level number does exist
-        if (!mLevels.getAllLevelNumbers().contains(levelNumber)) {
-            throw new IllegalArgumentException("A level with the specified number (" + levelNumber + ") was not found!");
+        if (!mLevelNumbers.contains(levelNr)) {
+            throw new IllegalArgumentException("A level with the specified number (" + levelNr + ") was not found!");
         }
 
-        Level level = mLevels.getLevels().get(levelNumber - 1);
+        levelNumber = levelNr;
+        this.loadLevelFromJsonFile();
 
         Board board = new Board();
         Camera camera = new Camera();
 
-        ArrayList<Node> nodes = level.getNodes();
-        ArrayList<Edge> edges = level.getEdges();
+        ArrayList<Node> nodes = mLevel.getNodes();
+        ArrayList<Edge> edges = mLevel.getEdges();
 
         // first add edges to board, so that they are drawn under nodes
         for (Edge edge : edges) {
@@ -66,11 +69,11 @@ public class LevelLoader {
         }
 
         // get human player
-        Player humanPlayer = level.getHumanPlayers().get(0);
+        Player humanPlayer = mLevel.getHumanPlayers().get(0);
 
         // get all players of level and add to array list
         ArrayList<Player> allPlayers = new ArrayList<>();
-        ArrayList<Player> computerPlayers = level.getComputerPlayers();
+        ArrayList<Player> computerPlayers = mLevel.getComputerPlayers();
         allPlayers.addAll(computerPlayers);
         allPlayers.add(humanPlayer);
 
@@ -84,16 +87,29 @@ public class LevelLoader {
         return state;
     }
 
-    private void loadLevelsFromJsonFile() {
+    private void loadLevelNumbersFromJsonFile() {
         // initialize gson
         GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(Levels.class, new LevelDeserializer());
+        gsonBuilder.registerTypeAdapter(ArrayList.class, new LevelNumberDeserializer());
         Gson gson = gsonBuilder.create();
 
         InputStream is = mContext.getApplicationContext().getResources().openRawResource(R.raw.levels);
         Reader r = new BufferedReader(new InputStreamReader(is));
 
-        mLevels = gson.fromJson(r, Levels.class);
+        //noinspection unchecked
+        mLevelNumbers = gson.fromJson(r, ArrayList.class);
+    }
+
+    private void loadLevelFromJsonFile() {
+        // initialize gson
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(Level.class, new LevelDeserializer());
+        Gson gson = gsonBuilder.create();
+
+        InputStream is = mContext.getApplicationContext().getResources().openRawResource(R.raw.levels);
+        Reader r = new BufferedReader(new InputStreamReader(is));
+
+        mLevel = gson.fromJson(r, Level.class);
     }
 
 }
