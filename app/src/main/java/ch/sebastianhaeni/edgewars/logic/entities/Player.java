@@ -26,7 +26,7 @@ public class Player extends Entity {
      * @param isHuman if this player is human
      */
     public Player(float[] color, boolean isHuman) {
-        super(1000);
+        super(PLAYER_UPDATE_INTERVAL);
         mId = UUID.randomUUID();
         mColor = color;
         mIsHuman = isHuman;

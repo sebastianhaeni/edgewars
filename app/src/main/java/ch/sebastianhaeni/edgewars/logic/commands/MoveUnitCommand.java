@@ -3,7 +3,6 @@ package ch.sebastianhaeni.edgewars.logic.commands;
 import android.util.Log;
 
 import ch.sebastianhaeni.edgewars.EUnitType;
-import ch.sebastianhaeni.edgewars.logic.Game;
 import ch.sebastianhaeni.edgewars.logic.entities.Player;
 import ch.sebastianhaeni.edgewars.logic.entities.board.Edge;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;

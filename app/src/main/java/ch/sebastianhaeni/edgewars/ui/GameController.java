@@ -9,6 +9,7 @@ import ch.sebastianhaeni.edgewars.EUnitType;
 import ch.sebastianhaeni.edgewars.graphics.GameRenderer;
 import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Polygon;
 import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Shape;
+import ch.sebastianhaeni.edgewars.logic.Constants;
 import ch.sebastianhaeni.edgewars.logic.Game;
 import ch.sebastianhaeni.edgewars.logic.GameState;
 import ch.sebastianhaeni.edgewars.logic.SoundEngine;
@@ -106,7 +107,7 @@ public class GameController {
         // loop through all nodes and test if one is positioned at the coordinates of the user touch
         for (Node node : mGameState.getBoard().getNodes()) {
             // calculate node radius in pixels
-            float nodeRadiusGL = node.getRadius();
+            float nodeRadiusGL = Constants.NODE_RADIUS;
             float nodeRadiusX = mRenderer.getAndroidLengthX(nodeRadiusGL);
             float nodeRadiusY = mRenderer.getAndroidLengthY(nodeRadiusGL);
 

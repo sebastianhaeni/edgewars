@@ -1,5 +1,6 @@
 package ch.sebastianhaeni.edgewars.logic.commands;
 
+import ch.sebastianhaeni.edgewars.logic.Constants;
 import ch.sebastianhaeni.edgewars.logic.entities.Player;
 import ch.sebastianhaeni.edgewars.logic.entities.board.factories.Factory;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.state.NodeState;
@@ -33,7 +34,7 @@ public class UpgradeFactoryCommand extends Command {
             return;
         }
 
-        if (mFactory.getLevel() >= Factory.MAX_LEVEL) {
+        if (mFactory.getLevel() >= Constants.FACTORY_MAX_LEVEL) {
             return;
         }
 

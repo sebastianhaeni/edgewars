@@ -17,7 +17,6 @@ import ch.sebastianhaeni.edgewars.util.Position;
  * The state of a unit moving along an edge.
  */
 public class MovingState extends UnitState {
-    private static final float UNIT_RADIUS = .5f;
     private final Node mNode;
     private final Player mPlayer;
     private final Position mStartingPosition;
@@ -48,8 +47,8 @@ public class MovingState extends UnitState {
         mStartingPosition = startingNode.getPosition();
 
         mShape = new Polygon(new Position(startingNode.getPosition()),
-                startingNode.getCircle().getColor(), 6, unit.getPolygonCorners(), 0, UNIT_RADIUS);
-        mText = new TextDecorator(mShape, String.valueOf(unit.getCount()), 7);
+                startingNode.getCircle().getColor(), UNIT_SHAPE_LAYER, unit.getPolygonCorners(), 0, UNIT_RADIUS);
+        mText = new TextDecorator(mShape, String.valueOf(unit.getCount()), UNIT_TEXT_LAYER);
 
         mShape.register();
         mText.register();
@@ -107,7 +106,7 @@ public class MovingState extends UnitState {
      * Moves the unit along the edge.
      */
     private void move() {
-        mTravelledDistance += getUnit().getSpeed() / 2000f;
+        mTravelledDistance += getUnit().getSpeed() / UNIT_SPEED_DIVISOR;
 
         double dx = mTargetPosition.getX() - mStartingPosition.getX();
         double dy = mTargetPosition.getY() - mStartingPosition.getY();
@@ -136,7 +135,7 @@ public class MovingState extends UnitState {
 
     @Override
     public long getUpdateInterval() {
-        return 10;
+        return MOVING_STATE_UPDATE_INTERVAL;
     }
 
 }

@@ -51,6 +51,6 @@ public class AttackNodeState extends UnitState {
 
     @Override
     public long getUpdateInterval() {
-        return 70;
+        return ATTACK_NODE_UPDATE_INTERVAL;
     }
 }

@@ -27,11 +27,11 @@ public class MeleeFactory extends Factory {
     public int getUpgradeCost() {
         switch (getLevel()) {
             case 1:
-                return 50;
+                return FACTORY_MELEE_UPGRADE_1;
             case 2:
-                return 60;
+                return FACTORY_MELEE_UPGRADE_2;
             case 3:
-                return 80;
+                return FACTORY_MELEE_UPGRADE_3;
             default:
                 throw new IllegalStateException("Level is not 1, 2 or 3");
         }
@@ -39,18 +39,18 @@ public class MeleeFactory extends Factory {
 
     @Override
     public int getUnitCost() {
-        return 10;
+        return FACTORY_MELEE_UNIT_COST;
     }
 
     @Override
     protected long getProducingDuration() {
         switch (getLevel()) {
             case 1:
-                return 2000;
+                return FACTORY_MELEE_PRODUCING_DURATION_1;
             case 2:
-                return 1000;
+                return FACTORY_MELEE_PRODUCING_DURATION_2;
             case 3:
-                return 400;
+                return FACTORY_MELEE_PRODUCING_DURATION_3;
             default:
                 throw new IllegalStateException("Level is not 1, 2 or 3");
         }

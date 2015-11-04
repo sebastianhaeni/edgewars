@@ -7,11 +7,6 @@ import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
  * A melee unit.
  */
 public class MeleeUnit extends Unit {
-    // TODO adjust values
-    private static final int ATTACK_DAMAGE = 5;
-    private static final int HEALTH = 5;
-    private static final float ACCURACY = 1;
-    private static final int SPEED = 55;
 
     /**
      * Constructor
@@ -31,26 +26,26 @@ public class MeleeUnit extends Unit {
 
     @Override
     public int getAttackDamage() {
-        return ATTACK_DAMAGE;
+        return UNIT_MELEE_ATTACK_DAMAGE;
     }
 
     @Override
     public int getMaxHealth() {
-        return HEALTH;
+        return UNIT_MELEE_HEALTH;
     }
 
     @Override
     public float getAccuracy() {
-        return ACCURACY;
+        return UNIT_MELEE_ACCURACY;
     }
 
     @Override
     public long getSpeed() {
-        return SPEED;
+        return UNIT_MELEE_SPEED;
     }
 
     @Override
     public int getPolygonCorners() {
-        return 3;
+        return UNIT_MELEE_CORNERS;
     }
 }

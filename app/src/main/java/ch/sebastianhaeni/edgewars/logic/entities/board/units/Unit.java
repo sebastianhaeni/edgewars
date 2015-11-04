@@ -31,7 +31,7 @@ public abstract class Unit extends BoardEntity {
      */
     Unit(int count, Node node, Player player) {
         super(-1);
-        setUpdateInterval(10);
+        setUpdateInterval(UNIT_UPDATE_INTERVAL);
 
         mHealth = getMaxHealth();
         mCount = count;

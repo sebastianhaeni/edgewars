@@ -43,6 +43,6 @@ public class FightUnitState extends UnitState {
 
     @Override
     public long getUpdateInterval() {
-        return 1000;
+        return FIGHT_UNIT_STATE_UPDATE_INTERVAL;
     }
 }

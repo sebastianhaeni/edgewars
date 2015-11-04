@@ -4,9 +4,6 @@ package ch.sebastianhaeni.edgewars.logic.entities;
  * The camera entity updates the view that the human player sees.
  */
 public class Camera extends Entity {
-    private static final float CAMERA_FRICTION = .1f;
-    private static final float TOUCH_SCALE_FACTOR = -.006f;
-    private static final float CAMERA_PRECISION = .001f;
 
     private boolean mIsPlayerControlled = false;
 
@@ -37,7 +34,7 @@ public class Camera extends Entity {
             mCameraDy *= 1f - CAMERA_FRICTION;
         }
 
-        moveCamera(mCameraDx / TOUCH_SCALE_FACTOR, mCameraDy / TOUCH_SCALE_FACTOR);
+        moveCamera(mCameraDx / CAMERA_TOUCH_SCALE_FACTOR, mCameraDy / CAMERA_TOUCH_SCALE_FACTOR);
     }
 
     /**
@@ -49,8 +46,8 @@ public class Camera extends Entity {
     public void moveCamera(float dx, float dy) {
         mCameraScreenX += dx;
         mCameraScreenY += dy;
-        dx = dx * TOUCH_SCALE_FACTOR;
-        dy = dy * TOUCH_SCALE_FACTOR;
+        dx = dx * CAMERA_TOUCH_SCALE_FACTOR;
+        dy = dy * CAMERA_TOUCH_SCALE_FACTOR;
         mCameraDx = dx;
         mCameraDy = dy;
         mCameraX += dx;
