@@ -15,8 +15,10 @@ import ch.sebastianhaeni.edgewars.util.Position;
  */
 public class Polygon extends Shape {
 
-    private final FloatBuffer mVertexBuffer;
     private final int mCorners;
+    private final float mRadius;
+    private final int mAngle;
+    private FloatBuffer mVertexBuffer;
 
     /**
      * Sets up the drawing object data for use in an OpenGL ES context.
@@ -32,13 +34,22 @@ public class Polygon extends Shape {
         super(position, color, layer);
 
         mCorners = corners;
+        mRadius = radius;
+        mAngle = angle;
 
-        float[] vertices = new float[corners * 3];
+        calculateVertexBuffer();
+    }
 
-        float step = 360f / corners;
-        for (int i = 0; i < corners; i++) {
-            vertices[(i * 3)] = (float) (radius * Math.cos((3.14 / 180) * ((step * i) + angle))) + position.getX();
-            vertices[(i * 3) + 1] = (float) (radius * Math.sin((3.14 / 180) * ((step * i) + angle))) + position.getY();
+    /**
+     * Calculates the vertexes. Needs to be called after a position update.
+     */
+    public void calculateVertexBuffer() {
+        float[] vertices = new float[mCorners * 3];
+
+        float step = 360f / mCorners;
+        for (int i = 0; i < mCorners; i++) {
+            vertices[(i * 3)] = (float) (mRadius * Math.cos((3.14 / 180) * ((step * i) + mAngle))) + getPosition().getX();
+            vertices[(i * 3) + 1] = (float) (mRadius * Math.sin((3.14 / 180) * ((step * i) + mAngle))) + getPosition().getY();
             vertices[(i * 3) + 2] = 0;
         }
 

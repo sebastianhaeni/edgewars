@@ -87,13 +87,14 @@ public class Node extends BoardEntity {
     }
 
     @Override
-    public void initialize() {
+    public void register() {
+        super.register();
         mCircle.register();
         mHealthLabel.register();
 
-        Game.getInstance().register(mMeleeFactory);
-        Game.getInstance().register(mTankFactory);
-        Game.getInstance().register(mSprinterFactory);
+        mMeleeFactory.register();
+        mTankFactory.register();
+        mSprinterFactory.register();
     }
 
     //region actions

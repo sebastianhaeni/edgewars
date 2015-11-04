@@ -59,12 +59,12 @@ public class GameState {
      * Initialize the state and register all entities.
      */
     public void init() {
-        Game.getInstance().register(mCamera);
+        mCamera.register();
         for (Entity e : mBoard.getEntities()) {
-            Game.getInstance().register(e);
+            e.register();
         }
         for (Player p : mPlayers) {
-            Game.getInstance().register(p);
+            p.register();
         }
     }
 }

@@ -51,7 +51,7 @@ public class Board extends Entity {
      */
     public void initialize() {
         for (BoardEntity entity : mEntities) {
-            entity.initialize();
+            entity.register();
         }
     }
 

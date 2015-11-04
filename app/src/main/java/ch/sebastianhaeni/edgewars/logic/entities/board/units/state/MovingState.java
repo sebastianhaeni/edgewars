@@ -121,6 +121,7 @@ public class MovingState extends UnitState {
         float y = (float) (mStartingPosition.getY() + (mTravelledDistance * dy));
 
         mShape.getPosition().set(x, y);
+        mShape.calculateVertexBuffer();
     }
 
     /**

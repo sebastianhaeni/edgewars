@@ -45,7 +45,8 @@ public class Edge extends BoardEntity {
     }
 
     @Override
-    public void initialize() {
+    public void register() {
+        super.register();
         mLine.register();
     }
 }
