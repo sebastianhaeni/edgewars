@@ -1,12 +1,11 @@
 package ch.sebastianhaeni.edgewars.logic.entities.board.node.state;
 
-import ch.sebastianhaeni.edgewars.logic.Constants;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
 
 /**
  * Represents the state of a node.
  */
-public abstract class NodeState implements Constants {
+public abstract class NodeState {
     private final Node mNode;
 
     /**

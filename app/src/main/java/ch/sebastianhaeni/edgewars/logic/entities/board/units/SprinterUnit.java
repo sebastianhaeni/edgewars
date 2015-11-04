@@ -1,5 +1,6 @@
 package ch.sebastianhaeni.edgewars.logic.entities.board.units;
 
+import ch.sebastianhaeni.edgewars.logic.Constants;
 import ch.sebastianhaeni.edgewars.logic.entities.Player;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
 
@@ -26,27 +27,27 @@ public class SprinterUnit extends Unit {
 
     @Override
     public int getAttackDamage() {
-        return UNIT_SPRINTER_ATTACK_DAMAGE;
+        return Constants.UNIT_SPRINTER_ATTACK_DAMAGE;
     }
 
     @Override
     public int getMaxHealth() {
-        return UNIT_SPRINTER_HEALTH;
+        return Constants.UNIT_SPRINTER_HEALTH;
     }
 
     @Override
     public float getAccuracy() {
-        return UNIT_SPRINTER_ACCURACY;
+        return Constants.UNIT_SPRINTER_ACCURACY;
     }
 
     @Override
     public long getSpeed() {
-        return UNIT_SPRINTER_SPEED;
+        return Constants.UNIT_SPRINTER_SPEED;
     }
 
     @Override
     public int getPolygonCorners() {
-        return UNIT_SPRINTER_CORNERS;
+        return Constants.UNIT_SPRINTER_CORNERS;
     }
 
 }

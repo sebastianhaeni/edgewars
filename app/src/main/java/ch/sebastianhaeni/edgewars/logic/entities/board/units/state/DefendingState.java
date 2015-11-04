@@ -2,6 +2,7 @@ package ch.sebastianhaeni.edgewars.logic.entities.board.units.state;
 
 import java.util.Random;
 
+import ch.sebastianhaeni.edgewars.logic.Constants;
 import ch.sebastianhaeni.edgewars.logic.entities.board.units.Unit;
 
 /**
@@ -31,6 +32,6 @@ public class DefendingState extends UnitState {
 
     @Override
     public long getUpdateInterval() {
-        return DEFENDING_STATE_UPDATE_INTERVAL;
+        return Constants.DEFENDING_STATE_UPDATE_INTERVAL;
     }
 }

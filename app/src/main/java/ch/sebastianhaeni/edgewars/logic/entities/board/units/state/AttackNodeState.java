@@ -2,6 +2,7 @@ package ch.sebastianhaeni.edgewars.logic.entities.board.units.state;
 
 import java.util.Random;
 
+import ch.sebastianhaeni.edgewars.logic.Constants;
 import ch.sebastianhaeni.edgewars.logic.SoundEngine;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.state.NeutralState;
@@ -51,6 +52,6 @@ public class AttackNodeState extends UnitState {
 
     @Override
     public long getUpdateInterval() {
-        return ATTACK_NODE_UPDATE_INTERVAL;
+        return Constants.ATTACK_NODE_UPDATE_INTERVAL;
     }
 }

@@ -1,12 +1,11 @@
 package ch.sebastianhaeni.edgewars.logic.entities.board.units.state;
 
-import ch.sebastianhaeni.edgewars.logic.Constants;
 import ch.sebastianhaeni.edgewars.logic.entities.board.units.Unit;
 
 /**
  * State of a unit.
  */
-public abstract class UnitState implements Constants {
+public abstract class UnitState {
     private final Unit mUnit;
 
     /**

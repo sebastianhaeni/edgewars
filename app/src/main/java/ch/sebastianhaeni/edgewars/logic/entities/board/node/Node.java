@@ -9,6 +9,7 @@ import ch.sebastianhaeni.edgewars.graphics.drawables.decorators.DeathParticleDec
 import ch.sebastianhaeni.edgewars.graphics.drawables.decorators.TextDecorator;
 import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Polygon;
 import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Shape;
+import ch.sebastianhaeni.edgewars.logic.Constants;
 import ch.sebastianhaeni.edgewars.logic.Game;
 import ch.sebastianhaeni.edgewars.logic.SoundEngine;
 import ch.sebastianhaeni.edgewars.logic.commands.MoveUnitCommand;
@@ -72,7 +73,7 @@ public class Node extends BoardEntity {
         mPosition = position;
         mHealth = getMaxHealth();
 
-        mCircle = new Polygon(mPosition, Colors.NODE_NEUTRAL, NODE_LAYER, NODE_CORNERS, 0, NODE_RADIUS);
+        mCircle = new Polygon(mPosition, Colors.NODE_NEUTRAL, Constants.NODE_LAYER, Constants.NODE_CORNERS, 0, Constants.NODE_RADIUS);
         mHealthLabel = new TextDecorator(mCircle, String.valueOf(getHealth()), 6);
 
         setState(new NeutralState(this));
@@ -145,7 +146,7 @@ public class Node extends BoardEntity {
      * Upgrades the health level to a max of 3.
      */
     public void upgradeHealth() {
-        if (mHealthLevel >= NODE_HEALTH_MAX_LEVEL) {
+        if (mHealthLevel >= Constants.NODE_HEALTH_MAX_LEVEL) {
             return;
         }
         mHealthLevel++;
@@ -156,7 +157,7 @@ public class Node extends BoardEntity {
      * Upgrades the damage level to a max of 3.
      */
     public void upgradeDamage() {
-        if (mDamageLevel >= NODE_DAMAGE_MAX_LEVEL) {
+        if (mDamageLevel >= Constants.NODE_DAMAGE_MAX_LEVEL) {
             return;
         }
         mDamageLevel++;
@@ -300,7 +301,7 @@ public class Node extends BoardEntity {
      */
     @Bindable
     public int getRepairCost() {
-        return (getMaxHealth() - getHealth()) * NODE_REPAIR_COST_MULTIPLIER;
+        return (getMaxHealth() - getHealth()) * Constants.NODE_REPAIR_COST_MULTIPLIER;
     }
 
     /**
@@ -318,11 +319,11 @@ public class Node extends BoardEntity {
     public int getMaxHealth() {
         switch (mHealthLevel) {
             case 1:
-                return NODE_MAX_HEALTH_1;
+                return Constants.NODE_MAX_HEALTH_1;
             case 2:
-                return NODE_MAX_HEALTH_2;
+                return Constants.NODE_MAX_HEALTH_2;
             case 3:
-                return NODE_MAX_HEALTH_3;
+                return Constants.NODE_MAX_HEALTH_3;
             default:
                 throw new IllegalStateException("Level must be 1, 2 or 3");
         }
@@ -437,14 +438,14 @@ public class Node extends BoardEntity {
      * @return gets if the maximum health level has been reached
      */
     public boolean maxHealthLevelReached() {
-        return mHealthLevel >= NODE_HEALTH_MAX_LEVEL;
+        return mHealthLevel >= Constants.NODE_HEALTH_MAX_LEVEL;
     }
 
     /**
      * @return gets if the maximum damage level has been reached
      */
     public boolean maxDamageLevelReached() {
-        return mDamageLevel >= NODE_DAMAGE_MAX_LEVEL;
+        return mDamageLevel >= Constants.NODE_DAMAGE_MAX_LEVEL;
     }
 
     /**
@@ -453,11 +454,11 @@ public class Node extends BoardEntity {
     public int getDamage() {
         switch (mDamageLevel) {
             case 1:
-                return NODE_DAMAGE_1;
+                return Constants.NODE_DAMAGE_1;
             case 2:
-                return NODE_DAMAGE_2;
+                return Constants.NODE_DAMAGE_2;
             case 3:
-                return NODE_DAMAGE_3;
+                return Constants.NODE_DAMAGE_3;
             default:
                 throw new IllegalArgumentException("Damage level " + mDamageLevel + " is not allowed");
         }

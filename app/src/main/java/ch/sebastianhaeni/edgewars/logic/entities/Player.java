@@ -3,6 +3,7 @@ package ch.sebastianhaeni.edgewars.logic.entities;
 import java.util.UUID;
 
 import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Text;
+import ch.sebastianhaeni.edgewars.logic.Constants;
 import ch.sebastianhaeni.edgewars.logic.ai.AI;
 import ch.sebastianhaeni.edgewars.logic.ai.RuleBasedAI;
 import ch.sebastianhaeni.edgewars.util.Colors;
@@ -26,7 +27,7 @@ public class Player extends Entity {
      * @param isHuman if this player is human
      */
     public Player(float[] color, boolean isHuman) {
-        super(PLAYER_UPDATE_INTERVAL);
+        super(Constants.PLAYER_UPDATE_INTERVAL);
         mId = UUID.randomUUID();
         mColor = color;
         mIsHuman = isHuman;

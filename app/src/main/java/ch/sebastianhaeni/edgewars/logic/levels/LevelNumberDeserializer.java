@@ -1,6 +1,5 @@
 package ch.sebastianhaeni.edgewars.logic.levels;
 
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
