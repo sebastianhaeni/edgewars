@@ -20,14 +20,20 @@ public class GameActivity extends Activity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
+        mGLView = new GameSurfaceView(this);
+        setContentView(mGLView);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
         int levelNr = 1;
         if (getIntent().getExtras() != null) {
             levelNr = getIntent().getExtras().getInt(LevelDetailActivity.LEVEL_ID);
         }
 
-        mGLView = new GameSurfaceView(this);
         mGLView.startLevel(levelNr);
-        setContentView(mGLView);
     }
 
     @Override
@@ -45,15 +51,9 @@ public class GameActivity extends Activity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        mGLView.onResume();
-    }
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mGLView.onPause();
+        ///outState.putSerializable("glView", mGLView.getState());
     }
-
 }

@@ -10,7 +10,17 @@ package ch.sebastianhaeni.edgewars.logic;
  * </ol>
  */
 public class GameThread extends Thread {
+    private final Object mPauseLock;
+
     private boolean mRunning;
+    private boolean mPaused;
+
+    /**
+     * Constructor
+     */
+    public GameThread() {
+        mPauseLock = new Object();
+    }
 
     /**
      * Set the game to run or not to run. That's the question.
@@ -36,6 +46,33 @@ public class GameThread extends Thread {
                 e.printStackTrace();
             }
 
+            synchronized (mPauseLock) {
+                while (mPaused) {
+                    try {
+                        mPauseLock.wait();
+                    } catch (InterruptedException ignored) {
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Call this on pause.
+     */
+    public void onPause() {
+        synchronized (mPauseLock) {
+            mPaused = true;
+        }
+    }
+
+    /**
+     * Call this on resume.
+     */
+    public void onResume() {
+        synchronized (mPauseLock) {
+            mPaused = false;
+            mPauseLock.notifyAll();
         }
     }
 }

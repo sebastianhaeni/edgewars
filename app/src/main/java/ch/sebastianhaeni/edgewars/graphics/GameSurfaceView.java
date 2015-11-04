@@ -7,6 +7,8 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 
+import java.io.Serializable;
+
 import ch.sebastianhaeni.edgewars.logic.Game;
 import ch.sebastianhaeni.edgewars.logic.GameState;
 import ch.sebastianhaeni.edgewars.logic.GameThread;
@@ -18,7 +20,7 @@ import ch.sebastianhaeni.edgewars.ui.GameController;
  * This view can also be used to capture touch events, such as a user
  * interacting with drawn objects.
  */
-public class GameSurfaceView extends GLSurfaceView {
+public class GameSurfaceView extends GLSurfaceView implements Serializable {
 
     private GameThread mThread;
     private GameController mController;
@@ -83,6 +85,18 @@ public class GameSurfaceView extends GLSurfaceView {
     public boolean onTouchEvent(@NonNull MotionEvent e) {
         mController.onTouchEvent(e);
         return true;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mThread.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mThread.onResume();
     }
 
 }
