@@ -2,6 +2,7 @@ package ch.sebastianhaeni.edgewars.logic.entities.board.units;
 
 import android.util.Log;
 
+import ch.sebastianhaeni.edgewars.logic.Constants;
 import ch.sebastianhaeni.edgewars.logic.entities.Player;
 import ch.sebastianhaeni.edgewars.logic.entities.board.BoardEntity;
 import ch.sebastianhaeni.edgewars.logic.entities.board.Edge;
@@ -31,7 +32,7 @@ public abstract class Unit extends BoardEntity {
      */
     Unit(int count, Node node, Player player) {
         super(-1);
-        setUpdateInterval(UNIT_UPDATE_INTERVAL);
+        setUpdateInterval(Constants.UNIT_UPDATE_INTERVAL);
 
         mHealth = getMaxHealth();
         mCount = count;

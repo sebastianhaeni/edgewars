@@ -4,6 +4,7 @@ import android.util.Log;
 
 import ch.sebastianhaeni.edgewars.graphics.drawables.decorators.TextDecorator;
 import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Polygon;
+import ch.sebastianhaeni.edgewars.logic.Constants;
 import ch.sebastianhaeni.edgewars.logic.SoundEngine;
 import ch.sebastianhaeni.edgewars.logic.entities.Player;
 import ch.sebastianhaeni.edgewars.logic.entities.board.Edge;
@@ -47,8 +48,8 @@ public class MovingState extends UnitState {
         mStartingPosition = startingNode.getPosition();
 
         mShape = new Polygon(new Position(startingNode.getPosition()),
-                startingNode.getCircle().getColor(), UNIT_SHAPE_LAYER, unit.getPolygonCorners(), 0, UNIT_RADIUS);
-        mText = new TextDecorator(mShape, String.valueOf(unit.getCount()), UNIT_TEXT_LAYER);
+                startingNode.getCircle().getColor(), Constants.UNIT_SHAPE_LAYER, unit.getPolygonCorners(), 0, Constants.UNIT_RADIUS);
+        mText = new TextDecorator(mShape, String.valueOf(unit.getCount()), Constants.UNIT_TEXT_LAYER);
 
         mShape.register();
         mText.register();
@@ -106,7 +107,7 @@ public class MovingState extends UnitState {
      * Moves the unit along the edge.
      */
     private void move() {
-        mTravelledDistance += getUnit().getSpeed() / UNIT_SPEED_DIVISOR;
+        mTravelledDistance += getUnit().getSpeed() / Constants.UNIT_SPEED_DIVISOR;
 
         double dx = mTargetPosition.getX() - mStartingPosition.getX();
         double dy = mTargetPosition.getY() - mStartingPosition.getY();
@@ -135,7 +136,7 @@ public class MovingState extends UnitState {
 
     @Override
     public long getUpdateInterval() {
-        return MOVING_STATE_UPDATE_INTERVAL;
+        return Constants.MOVING_STATE_UPDATE_INTERVAL;
     }
 
 }

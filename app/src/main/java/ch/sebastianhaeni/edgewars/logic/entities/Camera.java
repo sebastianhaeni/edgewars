@@ -1,5 +1,7 @@
 package ch.sebastianhaeni.edgewars.logic.entities;
 
+import ch.sebastianhaeni.edgewars.logic.Constants;
+
 /**
  * The camera entity updates the view that the human player sees.
  */
@@ -23,18 +25,18 @@ public class Camera extends Entity {
 
     @Override
     public void update(long millis) {
-        if (mIsPlayerControlled || (Math.abs(mCameraDx) < CAMERA_PRECISION && Math.abs(mCameraDy) < CAMERA_PRECISION)) {
+        if (mIsPlayerControlled || (Math.abs(mCameraDx) < Constants.CAMERA_PRECISION && Math.abs(mCameraDy) < Constants.CAMERA_PRECISION)) {
             return;
         }
 
-        if (Math.abs(mCameraDx) > CAMERA_PRECISION) {
-            mCameraDx *= 1f - CAMERA_FRICTION;
+        if (Math.abs(mCameraDx) > Constants.CAMERA_PRECISION) {
+            mCameraDx *= 1f - Constants.CAMERA_FRICTION;
         }
-        if (Math.abs(mCameraDy) > CAMERA_PRECISION) {
-            mCameraDy *= 1f - CAMERA_FRICTION;
+        if (Math.abs(mCameraDy) > Constants.CAMERA_PRECISION) {
+            mCameraDy *= 1f - Constants.CAMERA_FRICTION;
         }
 
-        moveCamera(mCameraDx / CAMERA_TOUCH_SCALE_FACTOR, mCameraDy / CAMERA_TOUCH_SCALE_FACTOR);
+        moveCamera(mCameraDx / Constants.CAMERA_TOUCH_SCALE_FACTOR, mCameraDy / Constants.CAMERA_TOUCH_SCALE_FACTOR);
     }
 
     /**
@@ -46,8 +48,8 @@ public class Camera extends Entity {
     public void moveCamera(float dx, float dy) {
         mCameraScreenX += dx;
         mCameraScreenY += dy;
-        dx = dx * CAMERA_TOUCH_SCALE_FACTOR;
-        dy = dy * CAMERA_TOUCH_SCALE_FACTOR;
+        dx = dx * Constants.CAMERA_TOUCH_SCALE_FACTOR;
+        dy = dy * Constants.CAMERA_TOUCH_SCALE_FACTOR;
         mCameraDx = dx;
         mCameraDy = dy;
         mCameraX += dx;

@@ -2,6 +2,7 @@ package ch.sebastianhaeni.edgewars.logic.entities.board.node.state;
 
 import java.util.Arrays;
 
+import ch.sebastianhaeni.edgewars.logic.Constants;
 import ch.sebastianhaeni.edgewars.logic.entities.Player;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
 
@@ -26,13 +27,13 @@ public class OwnedState extends NodeState {
 
     @Override
     public void update(long millis) {
-        mOwner.addEnergy(OWNED_STATE_ENERGY_GAIN);
-        getNode().addHealth(OWNED_STATE_HEALTH_GAIN);
+        mOwner.addEnergy(Constants.OWNED_STATE_ENERGY_GAIN);
+        getNode().addHealth(Constants.OWNED_STATE_HEALTH_GAIN);
     }
 
     @Override
     public long getUpdateInterval() {
-        return OWNED_STATE_UPDATE_INTERVAL;
+        return Constants.OWNED_STATE_UPDATE_INTERVAL;
     }
 
     @Override
