@@ -8,25 +8,10 @@ import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
 
 public class Level {
 
-    private int mLevelNumber;
     private ArrayList<Player> mHumanPlayers = new ArrayList<>();
     private ArrayList<Player> mComputerPlayers = new ArrayList<>();
     private ArrayList<Node> mNodes = new ArrayList<>();
     private ArrayList<Edge> mEdges = new ArrayList<>();
-
-    /**
-     * @return The number of the level
-     */
-    public int getLevelNumber() {
-        return mLevelNumber;
-    }
-
-    /**
-     * @param levelNumber The number of the level
-     */
-    public void setLevelNumber(int levelNumber) {
-        this.mLevelNumber = levelNumber;
-    }
 
     public ArrayList<Player> getHumanPlayers() {
         return mHumanPlayers;
