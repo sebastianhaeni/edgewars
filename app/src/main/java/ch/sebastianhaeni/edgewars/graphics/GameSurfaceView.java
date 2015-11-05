@@ -41,15 +41,15 @@ public class GameSurfaceView extends GLSurfaceView {
     /**
      * Loads and starts the level.
      *
-     * @param levelId level id
+     * @param levelNr level number
      */
-    public void startLevel(int levelId) {
-        Log.d("GameSurfaceView", "Starting level " + levelId);
+    public void startLevel(int levelNr) {
+        Log.d("GameSurfaceView", "Starting level " + levelNr);
         Game.getInstance().reset();
 
         LevelLoader levelLoader = new LevelLoader(mContext);
         // load game state and level number
-        GameState gameState = levelLoader.build(levelId);
+        GameState gameState = levelLoader.build(levelNr);
 
         gameState.init();
 

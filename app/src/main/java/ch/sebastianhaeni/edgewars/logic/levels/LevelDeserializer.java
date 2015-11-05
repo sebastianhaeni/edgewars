@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import ch.sebastianhaeni.edgewars.logic.LevelLoader;
 import ch.sebastianhaeni.edgewars.logic.entities.Player;
 import ch.sebastianhaeni.edgewars.logic.entities.board.Edge;
 import ch.sebastianhaeni.edgewars.logic.entities.board.factories.Factory;
@@ -38,40 +37,27 @@ public class LevelDeserializer implements JsonDeserializer {
         mPlayerMap = new HashMap<>();
         mNodeMap = new HashMap<>();
 
-        JsonObject levelsObject = json.getAsJsonObject();
-        JsonArray levelArray = levelsObject.get("levels").getAsJsonArray();
+        JsonObject levelObject = json.getAsJsonObject();
 
-        // iterate through all mLevels of json file and create level object of wanted level
-        for (int i = 0; i < levelArray.size(); i++) {
-            JsonObject levelObject = levelArray.get(i).getAsJsonObject();
-            int levelNumber = levelObject.get("level_number").getAsInt();
+        // add computer players to level
+        JsonArray playersArray = levelObject.get("players").getAsJsonArray();
+        ArrayList<Player> computerPlayersList = this.createPlayers(playersArray, "computer", Colors.NODE_OPPONENT);
+        level.setComputerPlayers(computerPlayersList);
 
-            // if this level is not the wanted one, skip to next level
-            if (levelNumber != LevelLoader.levelNumber) {
-                continue;
-            }
+        // add human player(s) to level
+        ArrayList<Player> humanPlayersList = this.createPlayers(playersArray, "human", Colors.NODE_MINE);
+        level.setHumanPlayers(humanPlayersList);
 
-            level.setLevelNumber(levelNumber);
+        // add nodes to level
+        JsonArray nodesArray = levelObject.get("nodes").getAsJsonArray();
+        ArrayList<Node> nodesList = this.createNodes(nodesArray);
+        level.setNodes(nodesList);
 
-            // add computer players to level
-            JsonArray playersArray = levelObject.get("players").getAsJsonArray();
-            ArrayList<Player> computerPlayersList = this.createPlayers(playersArray, "computer", Colors.NODE_OPPONENT);
-            level.setComputerPlayers(computerPlayersList);
+        // add edges to level
+        JsonArray edgesArray = levelObject.get("edges").getAsJsonArray();
+        ArrayList<Edge> edgesList = this.createEdges(edgesArray);
+        level.setEdges(edgesList);
 
-            // add human player(s) to level
-            ArrayList<Player> humanPlayersList = this.createPlayers(playersArray, "human", Colors.NODE_MINE);
-            level.setHumanPlayers(humanPlayersList);
-
-            // add nodes to level
-            JsonArray nodesArray = levelObject.get("nodes").getAsJsonArray();
-            ArrayList<Node> nodesList = this.createNodes(nodesArray);
-            level.setNodes(nodesList);
-
-            // add edges to level
-            JsonArray edgesArray = levelObject.get("edges").getAsJsonArray();
-            ArrayList<Edge> edgesList = this.createEdges(edgesArray);
-            level.setEdges(edgesList);
-        }
 
         return level;
     }
