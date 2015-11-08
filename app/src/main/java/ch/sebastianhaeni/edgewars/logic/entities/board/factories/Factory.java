@@ -18,7 +18,6 @@ public abstract class Factory extends Entity {
 
     private int mLevel = 1;
 
-    private boolean mIsBuilt;
     private int mProducingStack;
     private long mBuildStartTime;
 
@@ -51,20 +50,6 @@ public abstract class Factory extends Entity {
         mLevel++;
         setUpdateInterval(getProducingDuration());
         notifyPropertyChanged(BR.level);
-    }
-
-    /**
-     * Sets built state to true.
-     */
-    public void build() {
-        mIsBuilt = true;
-    }
-
-    /**
-     * @return gets if the factory has been built
-     */
-    public boolean isBuilt() {
-        return mIsBuilt;
     }
 
     /**

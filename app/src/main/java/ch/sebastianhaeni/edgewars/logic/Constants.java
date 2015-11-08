@@ -81,7 +81,7 @@ public final class Constants {
     public static final int UNIT_TANK_CORNERS = 5;
 
     public static final int ATTACK_NODE_UPDATE_INTERVAL = 70;
-    public static final int DEFENDING_STATE_UPDATE_INTERVAL = 70;
-    public static final int FIGHT_UNIT_STATE_UPDATE_INTERVAL = 70;
+    public static final int FIGHT_UNIT_STATE_UPDATE_INTERVAL = 200;
     public static final int MOVING_STATE_UPDATE_INTERVAL = 10;
+    public static final int WAIT_STATE_UPDATE_INTERVAL = 200;
 }

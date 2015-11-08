@@ -100,7 +100,7 @@ public abstract class Unit extends BoardEntity {
      * @param edge the edge the unit moves on
      */
     public void move(Node node, Edge edge) {
-        setState(new MovingState(this, node, getPlayer(), edge));
+        setState(new MovingState(this, node, getPlayer(), edge, 0));
     }
 
     /**
@@ -117,9 +117,10 @@ public abstract class Unit extends BoardEntity {
                 Log.d("Unit", "Unit died!");
                 setState(new DeadState(this));
             }
-            return;
+            mHealth = getMaxHealth();
+        } else {
+            mHealth = newHealth;
         }
-        mHealth = newHealth;
     }
 
     /**

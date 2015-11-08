@@ -20,21 +20,18 @@
         "state": "owned",
         "owner_id": 1,
         "units": {
-          "melee_count": 10,
+          "melee_count": 1,
           "sprinter_count": 10,
           "tank_count": 10
         },
         "factories": {
           "melee_factory": {
-            "is_built": true,
             "level": 1
           },
           "sprinter_factory": {
-            "is_built": true,
             "level": 1
           },
           "tank_factory": {
-            "is_built": true,
             "level": 1
           }
         }
@@ -60,21 +57,18 @@
         "state": "owned",
         "owner_id": 2,
         "units": {
-          "melee_count": 10,
+          "melee_count": 1,
           "sprinter_count": 10,
           "tank_count": 10
         },
         "factories": {
           "melee_factory": {
-            "is_built": true,
             "level": 1
           },
           "sprinter_factory": {
-            "is_built": true,
             "level": 1
           },
           "tank_factory": {
-            "is_built": true,
             "level": 1
           }
         }

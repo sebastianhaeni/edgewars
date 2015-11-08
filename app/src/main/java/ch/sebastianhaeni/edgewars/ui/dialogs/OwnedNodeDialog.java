@@ -10,12 +10,7 @@ import ch.sebastianhaeni.edgewars.EUnitType;
 import ch.sebastianhaeni.edgewars.R;
 import ch.sebastianhaeni.edgewars.databinding.DialogOwnedNodeBinding;
 import ch.sebastianhaeni.edgewars.logic.Game;
-import ch.sebastianhaeni.edgewars.logic.commands.BuildMeleeFactoryCommand;
-import ch.sebastianhaeni.edgewars.logic.commands.BuildMeleeUnitCommand;
-import ch.sebastianhaeni.edgewars.logic.commands.BuildSprinterFactoryCommand;
-import ch.sebastianhaeni.edgewars.logic.commands.BuildSprinterUnitCommand;
-import ch.sebastianhaeni.edgewars.logic.commands.BuildTankFactoryCommand;
-import ch.sebastianhaeni.edgewars.logic.commands.BuildTankUnitCommand;
+import ch.sebastianhaeni.edgewars.logic.commands.BuildUnitCommand;
 import ch.sebastianhaeni.edgewars.logic.commands.RepairNodeCommand;
 import ch.sebastianhaeni.edgewars.logic.commands.UpgradeFactoryCommand;
 import ch.sebastianhaeni.edgewars.logic.commands.UpgradeNodeDamageCommand;
@@ -79,20 +74,12 @@ public class OwnedNodeDialog extends Dialog {
         dismiss();
     }
 
-    public void buildMeleeFactory() {
-        Game.getInstance().register(new BuildMeleeFactoryCommand(mNode));
-    }
-
     public void upgradeMeleeFactory(View view) {
         Game.getInstance().register(new UpgradeFactoryCommand(mNode.getMeleeFactory()));
     }
 
     public void buildMeleeUnit(View view) {
-        Game.getInstance().register(new BuildMeleeUnitCommand(mNode.getMeleeFactory()));
-    }
-
-    public void buildTankFactory() {
-        Game.getInstance().register(new BuildTankFactoryCommand(mNode));
+        Game.getInstance().register(new BuildUnitCommand(mNode.getMeleeFactory()));
     }
 
     public void upgradeTankFactory(View view) {
@@ -100,11 +87,7 @@ public class OwnedNodeDialog extends Dialog {
     }
 
     public void buildTankUnit(View view) {
-        Game.getInstance().register(new BuildTankUnitCommand(mNode.getTankFactory()));
-    }
-
-    public void buildSprinterFactory() {
-        Game.getInstance().register(new BuildSprinterFactoryCommand(mNode));
+        Game.getInstance().register(new BuildUnitCommand(mNode.getTankFactory()));
     }
 
     public void upgradeSprinterFactory(View view) {
@@ -112,7 +95,7 @@ public class OwnedNodeDialog extends Dialog {
     }
 
     public void buildSprinterUnit(View view) {
-        Game.getInstance().register(new BuildSprinterUnitCommand(mNode.getSprinterFactory()));
+        Game.getInstance().register(new BuildUnitCommand(mNode.getSprinterFactory()));
     }
 
     public void repairNode(View view) {

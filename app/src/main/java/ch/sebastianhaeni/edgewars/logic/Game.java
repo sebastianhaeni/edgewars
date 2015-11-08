@@ -14,6 +14,8 @@ import ch.sebastianhaeni.edgewars.logic.commands.Command;
 import ch.sebastianhaeni.edgewars.logic.entities.Entity;
 import ch.sebastianhaeni.edgewars.logic.entities.board.Edge;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
+import ch.sebastianhaeni.edgewars.logic.entities.board.units.Unit;
+import ch.sebastianhaeni.edgewars.logic.entities.board.units.state.OnEdgeState;
 
 /**
  * This class controls the game.
@@ -173,5 +175,30 @@ public class Game {
         return neighbors;
     }
 
+    /**
+     * Gets all units that are traversing an edge.
+     *
+     * @param edge the edge traversed
+     * @return list of units on the edge
+     */
+    public List<Unit> getUnitsOnEdge(Edge edge) {
+        List<Unit> units = new ArrayList<>();
+
+        for (Entity entity : mEntities.keySet()) {
+            if (!(entity instanceof Unit)) {
+                continue;
+            }
+            Unit u = (Unit) entity;
+            if (!(u.getState() instanceof OnEdgeState)) {
+                continue;
+            }
+            OnEdgeState state = (OnEdgeState) u.getState();
+            if (state.getEdge().equals(edge)) {
+                units.add(u);
+            }
+        }
+
+        return units;
+    }
 }
 

@@ -60,12 +60,12 @@ public class Position {
     }
 
     /**
-     * Determines if the positions are about the same with a precision of .01.
+     * Determines if the positions are about the same with a precision of 0.1.
      *
      * @param position the other position to compare with
      * @return if this is about the same
      */
     public boolean isAboutTheSame(Position position) {
-        return Math.abs(mX - position.getX()) < .01f && Math.abs(mY - position.getY()) < .01f;
+        return Math.abs(mX - position.getX()) < .1f && Math.abs(mY - position.getY()) < .1f;
     }
 }

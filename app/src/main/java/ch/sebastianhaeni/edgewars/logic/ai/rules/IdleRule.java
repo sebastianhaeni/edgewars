@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import ch.sebastianhaeni.edgewars.EUnitType;
 import ch.sebastianhaeni.edgewars.logic.Game;
 import ch.sebastianhaeni.edgewars.logic.GameState;
-import ch.sebastianhaeni.edgewars.logic.commands.BuildMeleeUnitCommand;
+import ch.sebastianhaeni.edgewars.logic.commands.BuildUnitCommand;
 import ch.sebastianhaeni.edgewars.logic.commands.Command;
 import ch.sebastianhaeni.edgewars.logic.commands.MoveUnitCommand;
 import ch.sebastianhaeni.edgewars.logic.entities.Player;
@@ -69,14 +69,14 @@ public class IdleRule extends Rule {
     public ArrayList<Command> getCommands() {
         ArrayList<Command> commands = new ArrayList<>();
 
-        if (mNode.getMeleeCount() >= 10) {
+        if (mNode.getMeleeCount() >= 1) {
             commands.add(new MoveUnitCommand(mNode.getMeleeCount(), EUnitType.MELEE,
                     mTarget,
                     Game.getInstance().getEdgeBetween(mNode, mTarget),
                     getPlayer()));
         }
 
-        commands.add(new BuildMeleeUnitCommand(mNode.getMeleeFactory()));
+        commands.add(new BuildUnitCommand(mNode.getMeleeFactory()));
 
         return commands;
     }

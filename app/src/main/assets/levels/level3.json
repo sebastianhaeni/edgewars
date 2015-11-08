@@ -26,15 +26,12 @@
         },
         "factories": {
           "melee_factory": {
-            "is_built": true,
             "level": 1
           },
           "sprinter_factory": {
-            "is_built": true,
             "level": 1
           },
           "tank_factory": {
-            "is_built": true,
             "level": 1
           }
         }
@@ -76,15 +73,12 @@
         },
         "factories": {
           "melee_factory": {
-            "is_built": true,
             "level": 1
           },
           "sprinter_factory": {
-            "is_built": true,
             "level": 1
           },
           "tank_factory": {
-            "is_built": true,
             "level": 1
           }
         }

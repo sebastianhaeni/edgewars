@@ -49,6 +49,9 @@ public class Node extends BoardEntity {
     private int mMeleeUnits;
     private int mTankUnits;
     private int mSprinterUnits;
+    private int mMeleeHealth = Constants.UNIT_MELEE_HEALTH;
+    private int mTankHealth = Constants.UNIT_TANK_HEALTH;
+    private int mSprinterHealth = Constants.UNIT_SPRINTER_HEALTH;
 
     private final MeleeFactory mMeleeFactory = new MeleeFactory(this);
     private final TankFactory mTankFactory = new TankFactory(this);
@@ -256,6 +259,11 @@ public class Node extends BoardEntity {
     public void deductHealth(int attackDamage) {
         int newHealth = mHealth - attackDamage;
         if (newHealth <= 0) {
+
+            if (deductUnitHealth(attackDamage)) {
+                return;
+            }
+
             Log.d("Node", "Node died!");
             if (getState() instanceof OwnedState && ((OwnedState) getState()).getOwner().isHuman()) {
                 SoundEngine.getInstance().play(SoundEngine.Sounds.NODE_LOST);
@@ -273,6 +281,54 @@ public class Node extends BoardEntity {
         mHealthLabel.setText(String.valueOf(mHealth));
         notifyPropertyChanged(BR.health);
         notifyPropertyChanged(BR.repairCost);
+    }
+
+    /**
+     * Deducts the attack damage from the defending unit. If the units absorbed the
+     * damaged <code>true</code> is returned.
+     *
+     * @param attackDamage amount of damage
+     * @return true if damage was absorbed, false otherwise
+     */
+    private boolean deductUnitHealth(int attackDamage) {
+        int newHealth;
+        if (mMeleeUnits > 0) {
+            newHealth = mMeleeHealth - attackDamage;
+            if (newHealth <= 0) {
+                mMeleeUnits--;
+                mMeleeHealth = Constants.UNIT_MELEE_HEALTH;
+                notifyPropertyChanged(BR.meleeCount);
+                return true;
+            }
+            mMeleeHealth = newHealth;
+            return true;
+        }
+
+        if (mTankUnits > 0) {
+            newHealth = mTankHealth - attackDamage;
+            if (newHealth <= 0) {
+                mTankUnits--;
+                mTankHealth = Constants.UNIT_TANK_HEALTH;
+                notifyPropertyChanged(BR.tankCount);
+                return true;
+            }
+            mTankHealth = newHealth;
+            return true;
+        }
+
+        if (mSprinterUnits > 0) {
+            newHealth = mSprinterHealth - attackDamage;
+            if (newHealth <= 0) {
+                mSprinterUnits--;
+                mSprinterHealth = Constants.UNIT_SPRINTER_HEALTH;
+                notifyPropertyChanged(BR.sprinterCount);
+                return true;
+            }
+            mSprinterUnits = newHealth;
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -452,6 +508,20 @@ public class Node extends BoardEntity {
      * @return gets the amount of damage the node inflicts to intruders
      */
     public int getDamage() {
+        // if health is zero, the units are defending until their last breath
+        if (mHealth == 0) {
+            if (mMeleeUnits > 0) {
+                return Constants.UNIT_MELEE_ATTACK_DAMAGE;
+            }
+            if (mTankUnits > 0) {
+                return Constants.UNIT_TANK_ATTACK_DAMAGE;
+            }
+            if (mSprinterUnits > 0) {
+                return Constants.UNIT_SPRINTER_ATTACK_DAMAGE;
+            }
+            return 0;
+        }
+
         switch (mDamageLevel) {
             case 1:
                 return Constants.NODE_DAMAGE_1;
