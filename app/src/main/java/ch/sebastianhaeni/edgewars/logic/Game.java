@@ -70,8 +70,6 @@ public class Game {
         if (mEntities.containsKey(entity)) {
             return;
         }
-
-        Log.d("Game", "Registering entity: " + entity);
         mEntities.put(entity, 0L);
     }
 
@@ -83,7 +81,6 @@ public class Game {
      */
     public void register(Drawable drawable, int layer) {
         mDrawables.add(drawable, layer);
-        Log.d("Game", "Registering drawable: " + drawable);
     }
 
     /**
@@ -93,7 +90,6 @@ public class Game {
      */
     public void unregister(Drawable drawable) {
         mDrawables.remove(drawable);
-        Log.d("Game", "Unregistering drawable: " + drawable);
     }
 
     /**

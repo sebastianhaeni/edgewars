@@ -98,5 +98,7 @@ public final class Constants {
     public static final int FIGHT_UNIT_STATE_UPDATE_INTERVAL = 200;
     public static final int MOVING_STATE_UPDATE_INTERVAL = 10;
     public static final int WAIT_STATE_UPDATE_INTERVAL = 200;
+    public static final float UNIT_NODE_ATTACK_DISTANCE = .2f;
+    public static final float UNIT_FIGHT_DISTANCE = .5f;
     //endregion
 }

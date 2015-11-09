@@ -41,9 +41,18 @@ public class MovingState extends OnEdgeState {
             return;
         }
 
-        if (entity instanceof Unit && !(((Unit) entity).getState() instanceof DeadState)) {
-            fight((Unit) entity);
+        if (!(entity instanceof Unit)) {
+            return;
         }
+
+        OnEdgeState state = (OnEdgeState) ((Unit) entity).getState();
+
+        if (state.getPlayer().equals(getPlayer())) {
+            getUnit().setState(new WaitState(getUnit(), getNode(), getPlayer(), getEdge(), getTravelledDistance()));
+            return;
+        }
+
+        fight((Unit) entity);
     }
 
     /**
@@ -97,7 +106,6 @@ public class MovingState extends OnEdgeState {
      */
     private void move() {
         setTravelledDistance(getTravelledDistance() + getUnit().getSpeed() / Constants.UNIT_SPEED_DIVISOR);
-
         getUnit().updatePosition(getPosition());
     }
 

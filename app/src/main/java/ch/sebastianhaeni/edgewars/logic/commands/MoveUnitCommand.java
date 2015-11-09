@@ -1,7 +1,5 @@
 package ch.sebastianhaeni.edgewars.logic.commands;
 
-import android.util.Log;
-
 import ch.sebastianhaeni.edgewars.EUnitType;
 import ch.sebastianhaeni.edgewars.logic.entities.Player;
 import ch.sebastianhaeni.edgewars.logic.entities.board.Edge;
@@ -49,7 +47,6 @@ public class MoveUnitCommand extends Command {
 
     @Override
     public void execute() {
-        Log.d("MoveUnitCommand", "Sending " + mUnit.getCount() + " units");
         if (mEdge.getTargetNode().equals(mNode)) {
             mEdge.getSourceNode().clearUnit(mUnit);
         } else {

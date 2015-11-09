@@ -1,6 +1,7 @@
 package ch.sebastianhaeni.edgewars.logic.entities.board.units.state;
 
 import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Shape;
+import ch.sebastianhaeni.edgewars.logic.Constants;
 import ch.sebastianhaeni.edgewars.logic.Game;
 import ch.sebastianhaeni.edgewars.logic.entities.Entity;
 import ch.sebastianhaeni.edgewars.logic.entities.Player;
@@ -19,6 +20,8 @@ public abstract class OnEdgeState extends UnitState {
     private final Position mTargetPosition;
     private final Position mStartingPosition;
     private float mTravelledDistance;
+    private double mDx;
+    private double mDy;
 
     /**
      * Constructor
@@ -44,6 +47,9 @@ public abstract class OnEdgeState extends UnitState {
         mTargetPosition = mNode.getPosition();
         mStartingPosition = mStartingNode.getPosition();
 
+        mDx = mTargetPosition.getX() - mStartingPosition.getX();
+        mDy = mTargetPosition.getY() - mStartingPosition.getY();
+
         unit.show(getPosition(), player.getColor());
     }
 
@@ -51,16 +57,13 @@ public abstract class OnEdgeState extends UnitState {
      * @return gets the position of the unit
      */
     protected Position getPosition() {
-        double dx = getTargetPosition().getX() - getStartingPosition().getX();
-        double dy = getTargetPosition().getY() - getStartingPosition().getY();
+        double distance = Math.sqrt(Math.pow(mDx, 2.0) + Math.pow(mDy, 2.0));
 
-        double distance = Math.sqrt(Math.pow(dx, 2.0) + Math.pow(dy, 2.0));
+        mDx /= distance;
+        mDy /= distance;
 
-        dx /= distance;
-        dy /= distance;
-
-        float x = (float) (getStartingPosition().getX() + (mTravelledDistance * dx));
-        float y = (float) (getStartingPosition().getY() + (mTravelledDistance * dy));
+        float x = (float) (getStartingPosition().getX() + (mTravelledDistance * mDx));
+        float y = (float) (getStartingPosition().getY() + (mTravelledDistance * mDy));
 
         return new Position(x, y);
     }
@@ -105,7 +108,13 @@ public abstract class OnEdgeState extends UnitState {
      * @return the reached node or <code>null</code> if nothing reached yet
      */
     private Node getReachedNode() {
-        return getUnit().getShape().getPosition().isAboutTheSame(mTargetPosition) ? mNode : null;
+        return getUnit().getShape().getPosition().isAboutTheSame(
+                mTargetPosition,
+                mDx > 0,
+                mDy > 0,
+                Constants.UNIT_NODE_ATTACK_DISTANCE)
+                ? mNode
+                : null;
     }
 
     /**
@@ -124,7 +133,12 @@ public abstract class OnEdgeState extends UnitState {
             if (otherShape == null) {
                 continue;
             }
-            if (otherShape.getPosition().isAboutTheSame(getUnit().getShape().getPosition())) {
+
+            if (otherShape.getPosition().isAboutTheSame(
+                    getUnit().getShape().getPosition(),
+                    mDx < 0,
+                    mDy < 0,
+                    Constants.UNIT_FIGHT_DISTANCE)) {
                 return u;
             }
         }
@@ -151,13 +165,6 @@ public abstract class OnEdgeState extends UnitState {
      */
     protected Node getNode() {
         return mNode;
-    }
-
-    /**
-     * @return gets target position
-     */
-    protected Position getTargetPosition() {
-        return mTargetPosition;
     }
 
     /**

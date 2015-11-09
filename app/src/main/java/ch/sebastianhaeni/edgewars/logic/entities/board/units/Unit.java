@@ -118,6 +118,7 @@ public abstract class Unit extends BoardEntity {
         int newHealth = mHealth - attackDamage;
         if (newHealth <= 0) {
             mCount--;
+            updateCount();
             if (mCount <= 0) {
                 setState(new DeadState(this));
                 DeathParticleDecorator particles = new DeathParticleDecorator(mShape, Constants.DEATH_PARTICLE_LAYER);
