@@ -20,7 +20,7 @@
         "state": "owned",
         "owner_id": 1,
         "units": {
-          "melee_count": 1,
+          "melee_count": 10,
           "sprinter_count": 10,
           "tank_count": 10
         },
@@ -57,7 +57,7 @@
         "state": "owned",
         "owner_id": 2,
         "units": {
-          "melee_count": 1,
+          "melee_count": 10,
           "sprinter_count": 10,
           "tank_count": 10
         },

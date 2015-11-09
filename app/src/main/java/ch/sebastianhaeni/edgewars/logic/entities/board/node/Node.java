@@ -270,7 +270,7 @@ public class Node extends BoardEntity {
             }
 
             setState(new NeutralState(this));
-            DeathParticleDecorator particles = new DeathParticleDecorator(mCircle, 9);
+            DeathParticleDecorator particles = new DeathParticleDecorator(mCircle, Constants.DEATH_PARTICLE_LAYER);
             particles.register();
 
             mHealth = 0;

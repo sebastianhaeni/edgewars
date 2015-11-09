@@ -19,17 +19,6 @@ public class Position {
     }
 
     /**
-     * Copy constructor.
-     *
-     * @param position the position to be copied
-     */
-    public Position(Position position) {
-        this.mX = position.getX();
-        this.mY = position.getY();
-
-    }
-
-    /**
      * @return gets x
      */
     public float getX() {
@@ -44,14 +33,13 @@ public class Position {
     }
 
     /**
-     * Sets new coordinates.
+     * Sets a new position
      *
-     * @param x coordinate
-     * @param y coordinate
+     * @param other the new position
      */
-    public void set(float x, float y) {
-        mX = x;
-        mY = y;
+    public void set(Position other) {
+        mX = other.getX();
+        mY = other.getY();
     }
 
     @Override

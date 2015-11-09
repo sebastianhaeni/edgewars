@@ -1,9 +1,6 @@
 package ch.sebastianhaeni.edgewars.logic.entities.board.units.state;
 
-import ch.sebastianhaeni.edgewars.graphics.drawables.decorators.TextDecorator;
-import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Polygon;
 import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Shape;
-import ch.sebastianhaeni.edgewars.logic.Constants;
 import ch.sebastianhaeni.edgewars.logic.Game;
 import ch.sebastianhaeni.edgewars.logic.entities.Entity;
 import ch.sebastianhaeni.edgewars.logic.entities.Player;
@@ -21,15 +18,16 @@ public abstract class OnEdgeState extends UnitState {
     private final Edge mEdge;
     private final Position mTargetPosition;
     private final Position mStartingPosition;
-    private final Polygon mShape;
-    private final TextDecorator mText;
-    private boolean mIsStateInvalid;
     private float mTravelledDistance;
 
     /**
      * Constructor
      *
-     * @param unit the unit having this state
+     * @param unit              the unit having this state
+     * @param node              target node
+     * @param player            owning player
+     * @param edge              edge this unit is on
+     * @param travelledDistance distance travelled on edge
      */
     OnEdgeState(Unit unit, Node node, Player player, Edge edge, float travelledDistance) {
         super(unit);
@@ -46,18 +44,7 @@ public abstract class OnEdgeState extends UnitState {
         mTargetPosition = mNode.getPosition();
         mStartingPosition = mStartingNode.getPosition();
 
-        mShape = new Polygon(
-                getPosition(),
-                mStartingNode.getCircle().getColor(),
-                Constants.UNIT_SHAPE_LAYER,
-                unit.getPolygonCorners(),
-                0,
-                Constants.UNIT_RADIUS);
-
-        mText = new TextDecorator(mShape, String.valueOf(unit.getCount()), Constants.UNIT_TEXT_LAYER);
-
-        mShape.register();
-        mText.register();
+        unit.show(getPosition(), player.getColor());
     }
 
     /**
@@ -80,10 +67,6 @@ public abstract class OnEdgeState extends UnitState {
 
     @Override
     public void update(long millis) {
-        if (mIsStateInvalid) {
-            return;
-        }
-
         Node reached = getReachedNode();
 
         if (reached != null) {
@@ -117,21 +100,12 @@ public abstract class OnEdgeState extends UnitState {
     }
 
     /**
-     * Invalidates this state and update is no longer happening.
-     */
-    protected void invalidate() {
-        mShape.destroy();
-        mText.destroy();
-        mIsStateInvalid = true;
-    }
-
-    /**
      * Checks if the target node is reached and returns it.
      *
      * @return the reached node or <code>null</code> if nothing reached yet
      */
     private Node getReachedNode() {
-        return mShape.getPosition().isAboutTheSame(mTargetPosition) ? mNode : null;
+        return getUnit().getShape().getPosition().isAboutTheSame(mTargetPosition) ? mNode : null;
     }
 
     /**
@@ -146,8 +120,11 @@ public abstract class OnEdgeState extends UnitState {
                 continue;
             }
 
-            Shape otherShape = ((OnEdgeState) u.getState()).getShape();
-            if (otherShape.getPosition().isAboutTheSame(mShape.getPosition())) {
+            Shape otherShape = u.getShape();
+            if (otherShape == null) {
+                continue;
+            }
+            if (otherShape.getPosition().isAboutTheSame(getUnit().getShape().getPosition())) {
                 return u;
             }
         }
@@ -156,24 +133,10 @@ public abstract class OnEdgeState extends UnitState {
     }
 
     /**
-     * @return gets shape
-     */
-    protected Polygon getShape() {
-        return mShape;
-    }
-
-    /**
      * @return gets the edge
      */
     public Edge getEdge() {
         return mEdge;
-    }
-
-    /**
-     * @return gets the text decorator displaying the unit count
-     */
-    protected TextDecorator getText() {
-        return mText;
     }
 
     /**

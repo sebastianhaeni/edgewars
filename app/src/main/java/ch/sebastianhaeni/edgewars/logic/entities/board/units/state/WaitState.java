@@ -11,13 +11,21 @@ import ch.sebastianhaeni.edgewars.logic.entities.board.units.Unit;
  */
 public class WaitState extends OnEdgeState {
 
+    /**
+     * Constructor
+     *
+     * @param unit              the unit having this state
+     * @param node              target node
+     * @param player            owning player
+     * @param edge              edge this unit is on
+     * @param travelledDistance distance travelled on edge
+     */
     public WaitState(Unit unit, Node node, Player player, Edge edge, float travelledDistance) {
         super(unit, node, player, edge, travelledDistance);
     }
 
     @Override
     protected void onFreeWay() {
-        invalidate();
         if (getUnit().getState() instanceof WaitState) {
             getUnit().setState(new MovingState(getUnit(), getNode(), getPlayer(), getEdge(), getTravelledDistance()));
         }

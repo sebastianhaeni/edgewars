@@ -37,7 +37,6 @@ public class MovingState extends OnEdgeState {
     @Override
     protected void onEntityReached(Entity entity) {
         if (entity instanceof Node) {
-            invalidate();
             capture((Node) entity);
             return;
         }
@@ -53,11 +52,15 @@ public class MovingState extends OnEdgeState {
      * @param encountered the encountered unit that has to be fought
      */
     private void fight(Unit encountered) {
-        invalidate();
-        ((OnEdgeState) encountered.getState()).invalidate();
-
         getUnit().setState(new FightUnitState(getUnit(), getNode(), getPlayer(), getEdge(), getTravelledDistance(), encountered));
-        encountered.setState(new WaitState(encountered, getNode(), getPlayer(), getEdge(), getTravelledDistance()));
+
+        OnEdgeState encounteredState = (OnEdgeState) encountered.getState();
+        encountered.setState(new WaitState(
+                encountered,
+                encounteredState.getNode(),
+                encounteredState.getPlayer(),
+                getEdge(),
+                encounteredState.getTravelledDistance()));
     }
 
     /**
@@ -69,6 +72,7 @@ public class MovingState extends OnEdgeState {
         if (reached.getState() instanceof NeutralState) {
             reached.setState(new OwnedState(reached, getPlayer()));
             reached.addUnit(getUnit());
+            getUnit().setState(new IdleState(getUnit()));
             if (getPlayer().isHuman()) {
                 SoundEngine.getInstance().play(SoundEngine.Sounds.NODE_CAPTURED);
             }
@@ -94,9 +98,7 @@ public class MovingState extends OnEdgeState {
     private void move() {
         setTravelledDistance(getTravelledDistance() + getUnit().getSpeed() / Constants.UNIT_SPEED_DIVISOR);
 
-        getShape().getPosition().set(getPosition().getX(), getPosition().getY());
-        getShape().calculateVertexBuffer();
-        getText().calculateVertexBuffer();
+        getUnit().updatePosition(getPosition());
     }
 
     @Override
