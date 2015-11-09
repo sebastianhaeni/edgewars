@@ -50,7 +50,7 @@ public abstract class OnEdgeState extends UnitState {
         mDx = mTargetPosition.getX() - mStartingPosition.getX();
         mDy = mTargetPosition.getY() - mStartingPosition.getY();
 
-        unit.show(getPosition(), player.getColor());
+        unit.show(getPosition(), player.getColor(), 0);
     }
 
     /**

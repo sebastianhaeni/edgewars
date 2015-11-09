@@ -161,8 +161,9 @@ public abstract class Unit extends BoardEntity {
      *
      * @param position position of the shape
      * @param color    color of the unit
+     * @param angle    angle of the shape (pointing to the target node)
      */
-    public void show(Position position, float[] color) {
+    public void show(Position position, float[] color, int angle) {
         if (mIsShowing) {
             return;
         }
@@ -172,7 +173,7 @@ public abstract class Unit extends BoardEntity {
                 color,
                 Constants.UNIT_SHAPE_LAYER,
                 getPolygonCorners(),
-                0,
+                angle,
                 Constants.UNIT_RADIUS);
 
         mText = new TextDecorator(mShape, String.valueOf(mCount), Constants.UNIT_TEXT_LAYER);
