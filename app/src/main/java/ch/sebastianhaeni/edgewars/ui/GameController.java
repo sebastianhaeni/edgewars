@@ -1,6 +1,5 @@
 package ch.sebastianhaeni.edgewars.ui;
 
-import android.content.Context;
 import android.view.MotionEvent;
 
 import java.util.ArrayList;
@@ -25,7 +24,6 @@ public class GameController {
 
     private final GameState mGameState;
     private final GameRenderer mRenderer;
-    private final Context mContext;
     private final ArrayList<Shape> mCoronas = new ArrayList<>();
 
     private float mPreviousX;
@@ -40,12 +38,10 @@ public class GameController {
     /**
      * Constructor
      *
-     * @param context   app context
      * @param renderer  game renderer
      * @param gameState game state
      */
-    public GameController(Context context, GameRenderer renderer, GameState gameState) {
-        mContext = context;
+    public GameController(GameRenderer renderer, GameState gameState) {
         mGameState = gameState;
         mRenderer = renderer;
     }
@@ -175,7 +171,7 @@ public class GameController {
      * @param node of which the menu should be opened
      */
     private void showNodeMenu(Node node) {
-        if (node.getState() instanceof NeutralState ||!(node.getState() instanceof OwnedState)) {
+        if (node.getState() instanceof NeutralState || !(node.getState() instanceof OwnedState)) {
             return;
         }
 
@@ -183,11 +179,12 @@ public class GameController {
 
         if (state.getOwner().equals(mGameState.getHuman())) {
             // showing menu for owned node
-
+            // TODO
             return;
         }
 
         // showing menu for opponent's node
+        // TODO
     }
 
     /**
