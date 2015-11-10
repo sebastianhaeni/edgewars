@@ -1,18 +1,12 @@
 package ch.sebastianhaeni.edgewars.logic.entities.board.node;
 
-import java.util.ArrayList;
-
-import ch.sebastianhaeni.edgewars.EUnitType;
 import ch.sebastianhaeni.edgewars.graphics.drawables.decorators.DeathParticleDecorator;
 import ch.sebastianhaeni.edgewars.graphics.drawables.decorators.TextDecorator;
 import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Polygon;
-import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Shape;
 import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Text;
 import ch.sebastianhaeni.edgewars.logic.Constants;
-import ch.sebastianhaeni.edgewars.logic.Game;
 import ch.sebastianhaeni.edgewars.logic.SoundEngine;
 import ch.sebastianhaeni.edgewars.logic.ai.AIAwareness;
-import ch.sebastianhaeni.edgewars.logic.commands.MoveUnitCommand;
 import ch.sebastianhaeni.edgewars.logic.entities.board.BoardEntity;
 import ch.sebastianhaeni.edgewars.logic.entities.board.factories.MeleeFactory;
 import ch.sebastianhaeni.edgewars.logic.entities.board.factories.SprinterFactory;
@@ -47,10 +41,6 @@ public class Node extends BoardEntity implements IClickable {
 
     //region members
     private static NodeMenu mNodeMenu;
-    private static boolean mSelectingNode;
-    private static Node mSourceNode;
-    private static EUnitType mSendingUnitType;
-    private static final ArrayList<Shape> mCoronas = new ArrayList<>();
 
     private final Polygon mCircle;
     private final TextDecorator mHealthLabel;
@@ -142,14 +132,20 @@ public class Node extends BoardEntity implements IClickable {
     public void addUnit(Unit unit) {
         if (unit instanceof MeleeUnit) {
             mMeleeUnits += unit.getCount();
+            setChanged();
+            notifyObservers(this);
             return;
         }
         if (unit instanceof TankUnit) {
             mTankUnits += unit.getCount();
+            setChanged();
+            notifyObservers(this);
             return;
         }
         if (unit instanceof SprinterUnit) {
             mSprinterUnits += unit.getCount();
+            setChanged();
+            notifyObservers(this);
             return;
         }
         throw new IllegalArgumentException("Unit is not handled.");
@@ -184,48 +180,6 @@ public class Node extends BoardEntity implements IClickable {
     }
 
     /**
-     * Issues a command to send all melee units to another node from this node.
-     *
-     * @param node target node
-     */
-    public void sendMeleeUnits(Node node) {
-        Game.getInstance().register(new MoveUnitCommand(
-                mMeleeUnits,
-                EUnitType.MELEE,
-                node,
-                Game.getInstance().getEdgeBetween(this, node),
-                ((OwnedState) getState()).getOwner()));
-    }
-
-    /**
-     * Issues a command to send all tank units to another node from this node.
-     *
-     * @param node target node
-     */
-    public void sendTankUnits(Node node) {
-        Game.getInstance().register(new MoveUnitCommand(
-                mTankUnits,
-                EUnitType.TANK,
-                node,
-                Game.getInstance().getEdgeBetween(this, node),
-                ((OwnedState) getState()).getOwner()));
-    }
-
-    /**
-     * Issues a command to send all sprinter units to another node from this node.
-     *
-     * @param node target node
-     */
-    public void sendSprinterUnits(Node node) {
-        Game.getInstance().register(new MoveUnitCommand(
-                mSprinterUnits,
-                EUnitType.SPRINTER,
-                node,
-                Game.getInstance().getEdgeBetween(this, node),
-                ((OwnedState) getState()).getOwner()));
-    }
-
-    /**
      * Clears the unit count.
      *
      * @param unit the unit to be cleared
@@ -233,15 +187,14 @@ public class Node extends BoardEntity implements IClickable {
     public void clearUnit(Unit unit) {
         if (unit instanceof MeleeUnit) {
             mMeleeUnits = 0;
-            return;
-        }
-        if (unit instanceof TankUnit) {
+        } else if (unit instanceof TankUnit) {
             mTankUnits = 0;
-            return;
-        }
-        if (unit instanceof SprinterUnit) {
+        } else if (unit instanceof SprinterUnit) {
             mSprinterUnits = 0;
         }
+
+        setChanged();
+        notifyObservers(this);
     }
 
     /**
@@ -253,6 +206,9 @@ public class Node extends BoardEntity implements IClickable {
         mMeleeUnits = 0;
         mSprinterUnits = 0;
         mTankUnits = 0;
+
+        setChanged();
+        notifyObservers(this);
     }
 
     /**
@@ -298,6 +254,8 @@ public class Node extends BoardEntity implements IClickable {
             if (newHealth <= 0) {
                 mMeleeUnits--;
                 mMeleeHealth = Constants.UNIT_MELEE_HEALTH;
+                setChanged();
+                notifyObservers(this);
                 return true;
             }
             mMeleeHealth = newHealth;
@@ -309,6 +267,8 @@ public class Node extends BoardEntity implements IClickable {
             if (newHealth <= 0) {
                 mTankUnits--;
                 mTankHealth = Constants.UNIT_TANK_HEALTH;
+                setChanged();
+                notifyObservers(this);
                 return true;
             }
             mTankHealth = newHealth;
@@ -320,6 +280,8 @@ public class Node extends BoardEntity implements IClickable {
             if (newHealth <= 0) {
                 mSprinterUnits--;
                 mSprinterHealth = Constants.UNIT_SPRINTER_HEALTH;
+                setChanged();
+                notifyObservers(this);
                 return true;
             }
             mSprinterUnits = newHealth;
@@ -353,34 +315,11 @@ public class Node extends BoardEntity implements IClickable {
 
     @Override
     public void onClick() {
-        if (mSelectingNode) {
-            if (this.equals(mSourceNode)
-                    || !Game.getInstance().getConnectedNodes(mSourceNode).contains(this)) {
-                showNodeMenu();
-                return;
-            }
-
-            switch (mSendingUnitType) {
-                case MELEE:
-                    mSourceNode.sendMeleeUnits(this);
-                    break;
-                case SPRINTER:
-                    mSourceNode.sendSprinterUnits(this);
-                    break;
-                case TANK:
-                    mSourceNode.sendTankUnits(this);
-                    break;
-            }
-            SoundEngine.getInstance().play(SoundEngine.Sounds.UNIT_SENT);
-        } else {
-            showNodeMenu();
-        }
-
+        showNodeMenu();
     }
 
     @Override
     public void onUnhandledClick() {
-        clearCoronas();
         if (mNodeMenu != null && mNodeMenu.isVisible()) {
             mNodeMenu.hide();
         }
@@ -413,33 +352,6 @@ public class Node extends BoardEntity implements IClickable {
 
         mNodeMenu = new NodeMenu(this, state.getOwner().isHuman());
         mNodeMenu.show();
-    }
-
-    /**
-     * Asks the player the player for the units to be sent to.
-     *
-     * @param type type of unit
-     */
-    public void askPlayerForTargetNode(EUnitType type) {
-        mSelectingNode = true;
-        mSourceNode = this;
-        mSendingUnitType = type;
-        mCoronas.clear();
-
-        for (Node neighbor : Game.getInstance().getConnectedNodes(this)) {
-            Polygon corona = new Polygon(neighbor.getPosition(), Colors.CORONA, 1, 300, 0, .75f);
-            corona.register();
-            mCoronas.add(corona);
-        }
-    }
-
-    /**
-     * Clears coronas off nodes.
-     */
-    private void clearCoronas() {
-        for (Shape corona : mCoronas) {
-            corona.destroy();
-        }
     }
 
     //endregion
@@ -494,7 +406,7 @@ public class Node extends BoardEntity implements IClickable {
      * @return gets count of sprinter units
      */
     public int getSprinterCount() {
-        return mTankUnits;
+        return mSprinterUnits;
     }
 
     /**

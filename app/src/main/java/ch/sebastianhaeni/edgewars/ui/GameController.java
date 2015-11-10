@@ -19,6 +19,7 @@ public class GameController {
     private float mPreviousY;
     private float mStartX;
     private float mStartY;
+    private IDraggable _dragging;
 
     /**
      * Constructor
@@ -56,15 +57,34 @@ public class GameController {
             case MotionEvent.ACTION_DOWN:
                 mStartX = x;
                 mStartY = y;
+
+                IClickable clicked = isHit(x, y);
+                if (clicked != null && clicked instanceof IDraggable) {
+                    // start drag
+                    _dragging = (IDraggable) clicked;
+                    _dragging.startDrag(x, y);
+                    return;
+                }
+
                 mGameState.getCamera().takeCamera();
                 break;
             case MotionEvent.ACTION_MOVE:
                 float dx = x - mPreviousX;
                 float dy = y - mPreviousY;
 
+                if (_dragging != null) {
+                    _dragging.moveDrag(x, y);
+                    return;
+                }
+
                 mGameState.getCamera().moveCamera(dx, dy);
                 break;
             case MotionEvent.ACTION_UP:
+                if (_dragging != null) {
+                    _dragging.stopDrag(x, y);
+                    _dragging = null;
+                }
+
                 // detect single click (not moving the camera)
                 if (e.getEventTime() - e.getDownTime() < 200
                         && Math.abs(x - mStartX) < 5
@@ -87,7 +107,26 @@ public class GameController {
      * @param touchY y coordinate
      */
     private void click(float touchX, float touchY) {
+        IClickable clicked = isHit(touchX, touchY);
+        if (clicked != null) {
+            clicked.onClick();
+            return;
+        }
 
+        // nothing was clicked, send that info to all clickables
+        for (IClickable clickable : Game.getInstance().getClickables()) {
+            clickable.onUnhandledClick();
+        }
+    }
+
+    /**
+     * Detects if a clickable is hit and returns it.
+     *
+     * @param touchX x coordinate
+     * @param touchY y coordinate
+     * @return the clicked clickable, or <code>null</code> if nothing hit
+     */
+    public IClickable isHit(float touchX, float touchY) {
         // get camera position and multiply it by factor 2/3 (why? I dunno..)
         float cameraX = mGameState.getCamera().getScreenX() * (2f / 3f);
         float cameraY = mGameState.getCamera().getScreenY() * (2f / 3f);
@@ -105,15 +144,9 @@ public class GameController {
                     Math.abs(y + cameraY - touchY) < height)) {
                 continue;
             }
-
-            clickable.onClick();
-            return;
+            return clickable;
         }
 
-        // nothing was clicked, send that info to all clickables
-        for (IClickable clickable : Game.getInstance().getClickables()) {
-            clickable.onUnhandledClick();
-        }
+        return null;
     }
-
 }

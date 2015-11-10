@@ -1,10 +1,10 @@
 package ch.sebastianhaeni.edgewars.logic.entities.board.factories;
 
-import android.databinding.Bindable;
-
 import ch.sebastianhaeni.edgewars.logic.Constants;
 import ch.sebastianhaeni.edgewars.logic.entities.Entity;
+import ch.sebastianhaeni.edgewars.logic.entities.Player;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
+import ch.sebastianhaeni.edgewars.logic.entities.board.node.state.OwnedState;
 
 /**
  * A factory can build units inside a node. A factory always exists but has a flag that states if
@@ -17,8 +17,9 @@ public abstract class Factory extends Entity {
 
     private int mLevel = 1;
 
-    private int mProducingStack;
     private long mBuildStartTime;
+
+    private boolean mActive;
 
     /**
      * Constructor
@@ -34,7 +35,6 @@ public abstract class Factory extends Entity {
     /**
      * @return gets the level
      */
-    @Bindable
     public int getLevel() {
         return mLevel;
     }
@@ -51,18 +51,6 @@ public abstract class Factory extends Entity {
     }
 
     /**
-     * Schedules a new unit to be built by increasing the stack size. A unit needs a certain time
-     * to be produced, this is handled in the update method.
-     */
-    public void buildUnit() {
-        if (mProducingStack == 0) {
-            mBuildStartTime = System.currentTimeMillis();
-        }
-
-        mProducingStack++;
-    }
-
-    /**
      * @return gets the node this factory is at
      */
     public Node getNode() {
@@ -71,12 +59,19 @@ public abstract class Factory extends Entity {
 
     @Override
     public void update(long millis) {
-        if (mProducingStack <= 0 || mBuildStartTime + getProducingDuration() > System.currentTimeMillis()) {
+        if (!mActive || mBuildStartTime + getProducingDuration() > System.currentTimeMillis()) {
             return;
         }
         mBuildStartTime = System.currentTimeMillis();
-        mProducingStack--;
+        Player owner = ((OwnedState) getNode().getState()).getOwner();
+        if (owner.getEnergy() < getUnitCost()) {
+            return;
+        }
+        owner.removeEnergy(getUnitCost());
         produceUnit();
+
+        setChanged();
+        notifyObservers(getNode());
     }
 
     /**
@@ -104,5 +99,26 @@ public abstract class Factory extends Entity {
      */
     public boolean maxLevelReached() {
         return mLevel >= Constants.FACTORY_MAX_LEVEL;
+    }
+
+    /**
+     * Deactivates this factory so it stops building units.
+     */
+    public void deactivate() {
+        mActive = false;
+    }
+
+    /**
+     * Activates this factory to start building units.
+     */
+    public void activate() {
+        mActive = true;
+    }
+
+    /**
+     * @return gets if this factory is active
+     */
+    public boolean isActivated() {
+        return mActive;
     }
 }
