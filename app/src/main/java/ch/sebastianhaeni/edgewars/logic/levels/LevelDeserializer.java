@@ -58,7 +58,6 @@ public class LevelDeserializer implements JsonDeserializer {
         ArrayList<Edge> edgesList = this.createEdges(edgesArray);
         level.setEdges(edgesList);
 
-
         return level;
     }
 
@@ -178,39 +177,25 @@ public class LevelDeserializer implements JsonDeserializer {
         JsonObject sprinterFactoryObj = factories.get("sprinter_factory").getAsJsonObject();
         JsonObject tankFactoryObj = factories.get("tank_factory").getAsJsonObject();
 
-        // check if factories are built
-        boolean meleeFactoryBuilt = meleeFactoryObj.get("is_built").getAsBoolean();
-        boolean sprinterFactoryBuilt = sprinterFactoryObj.get("is_built").getAsBoolean();
-        boolean tankFactoryBuilt = tankFactoryObj.get("is_built").getAsBoolean();
-
         // get reference to node factories
         Factory meleeFactory = node.getMeleeFactory();
         Factory sprinterFactory = node.getSprinterFactory();
         Factory tankFactory = node.getTankFactory();
 
         // build factories and set levels_schema, if present
-        if (meleeFactoryBuilt) {
-            meleeFactory.build();
-            int level = meleeFactoryObj.get("level").getAsInt();
-            while (meleeFactory.getLevel() < level) {
-                meleeFactory.upgrade();
-            }
+        int level = meleeFactoryObj.get("level").getAsInt();
+        while (meleeFactory.getLevel() < level) {
+            meleeFactory.upgrade();
         }
 
-        if (sprinterFactoryBuilt) {
-            sprinterFactory.build();
-            int level = sprinterFactoryObj.get("level").getAsInt();
-            while (sprinterFactory.getLevel() < level) {
-                sprinterFactory.upgrade();
-            }
+        level = sprinterFactoryObj.get("level").getAsInt();
+        while (sprinterFactory.getLevel() < level) {
+            sprinterFactory.upgrade();
         }
 
-        if (tankFactoryBuilt) {
-            tankFactory.build();
-            int level = tankFactoryObj.get("level").getAsInt();
-            while (tankFactory.getLevel() < level) {
-                tankFactory.upgrade();
-            }
+        level = tankFactoryObj.get("level").getAsInt();
+        while (tankFactory.getLevel() < level) {
+            tankFactory.upgrade();
         }
 
     }

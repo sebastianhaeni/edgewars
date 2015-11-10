@@ -48,8 +48,8 @@ public class Line extends Shape {
         float[] coordinates = new float[]{
                 0, -half,
                 0, half,
+                distance, half,
                 distance, -half,
-                distance, +half,
         };
 
         m.setRotate(Math.abs(angle), 0, 0);

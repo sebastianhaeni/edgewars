@@ -14,6 +14,8 @@ public class DeadState extends UnitState {
      */
     public DeadState(Unit unit) {
         super(unit);
+
+        unit.hide();
     }
 
     @Override

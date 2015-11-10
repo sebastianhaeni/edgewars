@@ -1,7 +1,8 @@
 package ch.sebastianhaeni.edgewars.logic.entities.board.units;
 
-import android.util.Log;
-
+import ch.sebastianhaeni.edgewars.graphics.drawables.decorators.DeathParticleDecorator;
+import ch.sebastianhaeni.edgewars.graphics.drawables.decorators.TextDecorator;
+import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Polygon;
 import ch.sebastianhaeni.edgewars.logic.Constants;
 import ch.sebastianhaeni.edgewars.logic.entities.Player;
 import ch.sebastianhaeni.edgewars.logic.entities.board.BoardEntity;
@@ -11,6 +12,7 @@ import ch.sebastianhaeni.edgewars.logic.entities.board.units.state.DeadState;
 import ch.sebastianhaeni.edgewars.logic.entities.board.units.state.IdleState;
 import ch.sebastianhaeni.edgewars.logic.entities.board.units.state.MovingState;
 import ch.sebastianhaeni.edgewars.logic.entities.board.units.state.UnitState;
+import ch.sebastianhaeni.edgewars.util.Position;
 
 /**
  * A unit owned by a player and produced at a node from a factory.
@@ -22,6 +24,9 @@ public abstract class Unit extends BoardEntity {
     private UnitState mState;
     private int mCount;
     private int mHealth;
+    private Polygon mShape;
+    private TextDecorator mText;
+    private boolean mIsShowing;
 
     /**
      * Constructor
@@ -31,8 +36,8 @@ public abstract class Unit extends BoardEntity {
      * @param player the owning player
      */
     Unit(int count, Node node, Player player) {
-        super(-1);
-        setUpdateInterval(Constants.UNIT_UPDATE_INTERVAL);
+        super(-1); // we don't know the interval yet
+        setUpdateInterval(Constants.UNIT_UPDATE_INTERVAL); // now we know it
 
         mHealth = getMaxHealth();
         mCount = count;
@@ -100,7 +105,7 @@ public abstract class Unit extends BoardEntity {
      * @param edge the edge the unit moves on
      */
     public void move(Node node, Edge edge) {
-        setState(new MovingState(this, node, getPlayer(), edge));
+        setState(new MovingState(this, node, getPlayer(), edge, 0));
     }
 
     /**
@@ -113,13 +118,16 @@ public abstract class Unit extends BoardEntity {
         int newHealth = mHealth - attackDamage;
         if (newHealth <= 0) {
             mCount--;
+            updateCount();
             if (mCount <= 0) {
-                Log.d("Unit", "Unit died!");
                 setState(new DeadState(this));
+                DeathParticleDecorator particles = new DeathParticleDecorator(mShape, Constants.DEATH_PARTICLE_LAYER);
+                particles.register();
             }
-            return;
+            mHealth = getMaxHealth();
+        } else {
+            mHealth = newHealth;
         }
-        mHealth = newHealth;
     }
 
     /**
@@ -146,5 +154,74 @@ public abstract class Unit extends BoardEntity {
      */
     public Player getPlayer() {
         return mPlayer;
+    }
+
+    /**
+     * Creates the shape of this unit and registers it.
+     *
+     * @param position position of the shape
+     * @param color    color of the unit
+     * @param angle    angle of the shape (pointing to the target node)
+     */
+    public void show(Position position, float[] color, int angle) {
+        if (mIsShowing) {
+            return;
+        }
+        mIsShowing = true;
+        mShape = new Polygon(
+                position,
+                color,
+                Constants.UNIT_SHAPE_LAYER,
+                getPolygonCorners(),
+                angle,
+                Constants.UNIT_RADIUS);
+
+        mText = new TextDecorator(mShape, String.valueOf(mCount), Constants.UNIT_TEXT_LAYER);
+
+        mShape.register();
+        mText.register();
+    }
+
+    /**
+     * @return gets the shape of this unit or <code>null</code> if this unit is not rendered
+     */
+    public Polygon getShape() {
+        return mShape;
+    }
+
+    /**
+     * @return gets text decorator
+     */
+    public TextDecorator getText() {
+        return mText;
+    }
+
+    public void updateCount() {
+        mText.setText(String.valueOf(mCount));
+        mText.calculateVertexBuffer();
+    }
+
+    /**
+     * Hides the unit and removes all rendering shapes.
+     */
+    public void hide() {
+        if (mShape != null) {
+            mShape.destroy();
+        }
+        if (mText != null) {
+            mText.destroy();
+        }
+        mIsShowing = false;
+    }
+
+    /**
+     * Updates the position of the unit and forces the render components to update.
+     *
+     * @param position the new position
+     */
+    public void updatePosition(Position position) {
+        mShape.getPosition().set(position);
+        mShape.calculateVertexBuffer();
+        mText.calculateVertexBuffer();
     }
 }
