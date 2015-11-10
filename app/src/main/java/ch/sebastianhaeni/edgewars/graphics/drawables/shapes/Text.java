@@ -17,6 +17,16 @@ import ch.sebastianhaeni.edgewars.util.Position;
  */
 public class Text extends Shape {
 
+    // Icon characters
+    public static final char PAUSE = '[';
+    public static final char ENERGY = '\\';
+    public static final char DAMAGE = ']';
+    public static final char HEALTH = '^';
+    public static final char ACCURACY = '_';
+    public static final char SPEED = '`';
+    public static final char CANCEL = '{';
+    public static final char WRENCH = '|';
+
     /**
      * Width of a box of a single character.
      */
@@ -33,9 +43,9 @@ public class Text extends Shape {
                     42, 31, 27, 31, 34, 35, 46, 35,
                     31, 27, 30, 26, 28, 26, 31, 28,
                     28, 28, 29, 29, 14, 24, 30, 18,
-                    26, 14, 14, 14, 25, 28, 31, 0,
-                    0, 38, 39, 12, 36, 34, 0, 0,
-                    0, 38, 0, 0, 0, 0, 0, 0
+                    26, 14, 14, 14, 25, 28, 31, 64,
+                    64, 64, 64, 64, 64, 64, 64, 0,
+                    0, 0, 0, 0, 0, 0, 0, 0
             };
     private final boolean mIsStatic;
 
@@ -401,6 +411,33 @@ public class Text extends Shape {
             index = 44;
         } else if (characterValue == 36) { // $
             index = 45;
+        }
+
+        switch ((char) characterValue) {
+            case PAUSE:
+                index = 47;
+                break;
+            case ENERGY:
+                index = 48;
+                break;
+            case DAMAGE:
+                index = 49;
+                break;
+            case HEALTH:
+                index = 50;
+                break;
+            case ACCURACY:
+                index = 51;
+                break;
+            case SPEED:
+                index = 52;
+                break;
+            case CANCEL:
+                index = 53;
+                break;
+            case WRENCH:
+                index = 54;
+                break;
         }
 
         return index;

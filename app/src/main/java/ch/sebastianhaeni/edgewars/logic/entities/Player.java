@@ -43,7 +43,7 @@ public class Player extends Entity {
             mAi.update(millis);
         }
         if (mEnergyLabel != null) {
-            mEnergyLabel.setText(mEnergy + " energy");
+            mEnergyLabel.setText(String.valueOf(mEnergy) + Text.ENERGY);
         }
     }
 
@@ -53,7 +53,7 @@ public class Player extends Entity {
         if (mIsHuman) {
             mEnergyLabel = new Text(
                     new Position(1, .4f),
-                    Colors.ENERGY_TEXT, mEnergy + " energy",
+                    Colors.ENERGY_TEXT, String.valueOf(mEnergy) + Text.ENERGY,
                     10, true);
             mEnergyLabel.register();
         }
