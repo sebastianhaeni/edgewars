@@ -1,14 +1,9 @@
 package ch.sebastianhaeni.edgewars.logic.entities.board.node;
 
-import android.databinding.Bindable;
-import android.util.Log;
-
-import ch.sebastianhaeni.edgewars.BR;
 import ch.sebastianhaeni.edgewars.EUnitType;
 import ch.sebastianhaeni.edgewars.graphics.drawables.decorators.DeathParticleDecorator;
 import ch.sebastianhaeni.edgewars.graphics.drawables.decorators.TextDecorator;
 import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Polygon;
-import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Shape;
 import ch.sebastianhaeni.edgewars.logic.Constants;
 import ch.sebastianhaeni.edgewars.logic.Game;
 import ch.sebastianhaeni.edgewars.logic.SoundEngine;
@@ -111,7 +106,6 @@ public class Node extends BoardEntity {
      */
     public void addMeleeUnit() {
         mMeleeUnits++;
-        notifyPropertyChanged(BR.meleeCount);
     }
 
     /**
@@ -119,7 +113,6 @@ public class Node extends BoardEntity {
      */
     public void addTankUnit() {
         mTankUnits++;
-        notifyPropertyChanged(BR.tankCount);
     }
 
     /**
@@ -127,7 +120,6 @@ public class Node extends BoardEntity {
      */
     public void addSprinterUnit() {
         mSprinterUnits++;
-        notifyPropertyChanged(BR.sprinterCount);
     }
 
     /**
@@ -159,7 +151,6 @@ public class Node extends BoardEntity {
             return;
         }
         mHealthLevel++;
-        notifyPropertyChanged(BR.healthLevel);
     }
 
     /**
@@ -170,7 +161,6 @@ public class Node extends BoardEntity {
             return;
         }
         mDamageLevel++;
-        notifyPropertyChanged(BR.damageLevel);
     }
 
     /**
@@ -179,7 +169,6 @@ public class Node extends BoardEntity {
     public void repair() {
         mHealth = getMaxHealth();
         mHealthLabel.setText(String.valueOf(mHealth));
-        notifyPropertyChanged(BR.health);
     }
 
     /**
@@ -232,17 +221,14 @@ public class Node extends BoardEntity {
     public void clearUnit(Unit unit) {
         if (unit instanceof MeleeUnit) {
             mMeleeUnits = 0;
-            notifyPropertyChanged(BR.meleeCount);
             return;
         }
         if (unit instanceof TankUnit) {
             mTankUnits = 0;
-            notifyPropertyChanged(BR.tankCount);
             return;
         }
         if (unit instanceof SprinterUnit) {
             mSprinterUnits = 0;
-            notifyPropertyChanged(BR.sprinterCount);
         }
     }
 
@@ -270,7 +256,6 @@ public class Node extends BoardEntity {
                 return;
             }
 
-            Log.d("Node", "Node died!");
             if (getState() instanceof OwnedState && ((OwnedState) getState()).getOwner().isHuman()) {
                 SoundEngine.getInstance().play(SoundEngine.Sounds.NODE_LOST);
             }
@@ -285,8 +270,6 @@ public class Node extends BoardEntity {
         }
 
         mHealthLabel.setText(String.valueOf(mHealth));
-        notifyPropertyChanged(BR.health);
-        notifyPropertyChanged(BR.repairCost);
     }
 
     /**
@@ -303,7 +286,6 @@ public class Node extends BoardEntity {
             if (newHealth <= 0) {
                 mMeleeUnits--;
                 mMeleeHealth = Constants.UNIT_MELEE_HEALTH;
-                notifyPropertyChanged(BR.meleeCount);
                 return true;
             }
             mMeleeHealth = newHealth;
@@ -315,7 +297,6 @@ public class Node extends BoardEntity {
             if (newHealth <= 0) {
                 mTankUnits--;
                 mTankHealth = Constants.UNIT_TANK_HEALTH;
-                notifyPropertyChanged(BR.tankCount);
                 return true;
             }
             mTankHealth = newHealth;
@@ -327,7 +308,6 @@ public class Node extends BoardEntity {
             if (newHealth <= 0) {
                 mSprinterUnits--;
                 mSprinterHealth = Constants.UNIT_SPRINTER_HEALTH;
-                notifyPropertyChanged(BR.sprinterCount);
                 return true;
             }
             mSprinterUnits = newHealth;
@@ -350,18 +330,15 @@ public class Node extends BoardEntity {
         }
 
         mHealthLabel.setText(String.valueOf(mHealth));
-        notifyPropertyChanged(BR.health);
-        notifyPropertyChanged(BR.repairCost);
     }
 
     //endregion
 
-    //region databinding
+    //region data binding
 
     /**
      * @return gets the cost to repair the node with the current health
      */
-    @Bindable
     public int getRepairCost() {
         return (getMaxHealth() - getHealth()) * Constants.NODE_REPAIR_COST_MULTIPLIER;
     }
@@ -369,7 +346,6 @@ public class Node extends BoardEntity {
     /**
      * @return gets the current health
      */
-    @Bindable
     public int getHealth() {
         return mHealth;
     }
@@ -377,7 +353,6 @@ public class Node extends BoardEntity {
     /**
      * @return gets the current maximum of health (depends on health level)
      */
-    @Bindable
     public int getMaxHealth() {
         switch (mHealthLevel) {
             case 1:
@@ -392,55 +367,15 @@ public class Node extends BoardEntity {
     }
 
     /**
-     * @return gets health level
-     */
-    @Bindable
-    public int getHealthLevel() {
-        return mHealthLevel;
-    }
-
-    /**
-     * @return gets damage level
-     */
-    @Bindable
-    public int getDamageLevel() {
-        return mDamageLevel;
-    }
-
-    /**
      * @return gets melee unit count
      */
-    @Bindable
     public int getMeleeCount() {
         return mMeleeUnits;
-    }
-
-    /**
-     * @return gets tank unit count
-     */
-    @Bindable
-    public int getTankCount() {
-        return mTankUnits;
-    }
-
-    /**
-     * @return gets sprinter unit count
-     */
-    @Bindable
-    public int getSprinterCount() {
-        return mSprinterUnits;
     }
 
     //endregion
 
     //region getters/setters
-
-    /**
-     * @return gets the circle representing this node
-     */
-    public Shape getCircle() {
-        return mCircle;
-    }
 
     /**
      * @return gets the node's position

@@ -16,9 +16,6 @@ import ch.sebastianhaeni.edgewars.logic.SoundEngine;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.state.NeutralState;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.state.OwnedState;
-import ch.sebastianhaeni.edgewars.ui.dialogs.NeutralNodeDialog;
-import ch.sebastianhaeni.edgewars.ui.dialogs.OpponentNodeDialog;
-import ch.sebastianhaeni.edgewars.ui.dialogs.OwnedNodeDialog;
 import ch.sebastianhaeni.edgewars.util.Colors;
 
 /**
@@ -29,11 +26,12 @@ public class GameController {
     private final GameState mGameState;
     private final GameRenderer mRenderer;
     private final Context mContext;
+    private final ArrayList<Shape> mCoronas = new ArrayList<>();
+
     private float mPreviousX;
     private float mPreviousY;
     private float mStartX;
     private float mStartY;
-    private final ArrayList<Shape> mCoronas = new ArrayList<>();
 
     private boolean mSelectingNode;
     private Node mSourceNode;
@@ -136,7 +134,7 @@ public class GameController {
             if (mSelectingNode) {
                 if (node.equals(mSourceNode)
                         || !Game.getInstance().getConnectedNodes(mSourceNode).contains(node)) {
-                    showNodeDialog(node);
+                    showNodeMenu(node);
                     break;
                 }
 
@@ -153,7 +151,7 @@ public class GameController {
                 }
                 SoundEngine.getInstance().play(SoundEngine.Sounds.UNIT_SENT);
             } else {
-                showNodeDialog(node);
+                showNodeMenu(node);
             }
             break;
         }
@@ -172,31 +170,24 @@ public class GameController {
     }
 
     /**
-     * Shows the appropriate dialog of a node. These are 'neutral', 'owned' or 'opponent'.
+     * Shows the appropriate menu of a node.
      *
-     * @param node of which the dialog should be opened
+     * @param node of which the menu should be opened
      */
-    private void showNodeDialog(Node node) {
-        if (node.getState() instanceof NeutralState) {
-            NeutralNodeDialog dialog = new NeutralNodeDialog(mContext, node);
-            dialog.show();
-            return;
-        }
-
-        if (!(node.getState() instanceof OwnedState)) {
+    private void showNodeMenu(Node node) {
+        if (node.getState() instanceof NeutralState ||!(node.getState() instanceof OwnedState)) {
             return;
         }
 
         OwnedState state = (OwnedState) node.getState();
 
         if (state.getOwner().equals(mGameState.getHuman())) {
-            OwnedNodeDialog dialog = new OwnedNodeDialog(mContext, node, this);
-            dialog.show();
+            // showing menu for owned node
+
             return;
         }
 
-        OpponentNodeDialog dialog = new OpponentNodeDialog(mContext, node);
-        dialog.show();
+        // showing menu for opponent's node
     }
 
     /**

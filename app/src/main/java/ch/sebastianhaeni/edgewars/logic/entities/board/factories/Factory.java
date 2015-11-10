@@ -2,7 +2,6 @@ package ch.sebastianhaeni.edgewars.logic.entities.board.factories;
 
 import android.databinding.Bindable;
 
-import ch.sebastianhaeni.edgewars.BR;
 import ch.sebastianhaeni.edgewars.logic.Constants;
 import ch.sebastianhaeni.edgewars.logic.entities.Entity;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
@@ -49,15 +48,6 @@ public abstract class Factory extends Entity {
         }
         mLevel++;
         setUpdateInterval(getProducingDuration());
-        notifyPropertyChanged(BR.level);
-    }
-
-    /**
-     * @return gets the producing stack/queue size of units
-     */
-    @Bindable
-    public int getStackSize() {
-        return mProducingStack;
     }
 
     /**
@@ -70,7 +60,6 @@ public abstract class Factory extends Entity {
         }
 
         mProducingStack++;
-        notifyPropertyChanged(BR.stackSize);
     }
 
     /**
@@ -88,7 +77,6 @@ public abstract class Factory extends Entity {
         mBuildStartTime = System.currentTimeMillis();
         mProducingStack--;
         produceUnit();
-        notifyPropertyChanged(BR.stackSize);
     }
 
     /**
@@ -111,7 +99,4 @@ public abstract class Factory extends Entity {
      */
     protected abstract long getProducingDuration();
 
-    public boolean maxLevelReached() {
-        return mLevel == Constants.FACTORY_MAX_LEVEL;
-    }
 }
