@@ -85,15 +85,15 @@ public class GameController {
 
         // loop through all nodes and test if one is positioned at the coordinates of the user touch
         for (IClickable clickable : Game.getInstance().getClickables()) {
-            float width = clickable.getWidth() * .5f;
-            float height = clickable.getHeight() * .5f;
+            float width = mRenderer.getAndroidLengthX(clickable.getWidth() * .5f);
+            float height = mRenderer.getAndroidLengthY(clickable.getHeight() * .5f);
 
             // convert node coordinates to Android coordinates
-            float nodeX = mRenderer.getAndroidCoordinateX(clickable.getPosition().getX());
-            float nodeY = mRenderer.getAndroidCoordinateY(clickable.getPosition().getY());
+            float x = mRenderer.getAndroidCoordinateX(clickable.getPosition().getX());
+            float y = mRenderer.getAndroidCoordinateY(clickable.getPosition().getY());
 
-            if (!(Math.abs(nodeX + cameraX - touchX) < width &&
-                    Math.abs(nodeY + cameraY - touchY) < height)) {
+            if (!(Math.abs(x + cameraX - touchX) < width &&
+                    Math.abs(y + cameraY - touchY) < height)) {
                 continue;
             }
 
@@ -101,7 +101,7 @@ public class GameController {
             return;
         }
 
-        // nothing was clicked, sent that info to all clickables
+        // nothing was clicked, send that info to all clickables
         for (IClickable clickable : Game.getInstance().getClickables()) {
             clickable.onUnhandledClick();
         }

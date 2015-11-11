@@ -7,6 +7,7 @@ import ch.sebastianhaeni.edgewars.graphics.drawables.decorators.DeathParticleDec
 import ch.sebastianhaeni.edgewars.graphics.drawables.decorators.TextDecorator;
 import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Polygon;
 import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Shape;
+import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Text;
 import ch.sebastianhaeni.edgewars.logic.Constants;
 import ch.sebastianhaeni.edgewars.logic.Game;
 import ch.sebastianhaeni.edgewars.logic.SoundEngine;
@@ -15,6 +16,7 @@ import ch.sebastianhaeni.edgewars.logic.entities.board.BoardEntity;
 import ch.sebastianhaeni.edgewars.logic.entities.board.factories.MeleeFactory;
 import ch.sebastianhaeni.edgewars.logic.entities.board.factories.SprinterFactory;
 import ch.sebastianhaeni.edgewars.logic.entities.board.factories.TankFactory;
+import ch.sebastianhaeni.edgewars.logic.entities.board.node.menu.NodeMenu;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.state.NeutralState;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.state.NodeState;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.state.OwnedState;
@@ -23,7 +25,6 @@ import ch.sebastianhaeni.edgewars.logic.entities.board.units.SprinterUnit;
 import ch.sebastianhaeni.edgewars.logic.entities.board.units.TankUnit;
 import ch.sebastianhaeni.edgewars.logic.entities.board.units.Unit;
 import ch.sebastianhaeni.edgewars.ui.IClickable;
-import ch.sebastianhaeni.edgewars.logic.entities.board.node.menu.NodeMenu;
 import ch.sebastianhaeni.edgewars.util.Colors;
 import ch.sebastianhaeni.edgewars.util.Position;
 
@@ -83,7 +84,7 @@ public class Node extends BoardEntity implements IClickable {
         mHealth = getMaxHealth();
 
         mCircle = new Polygon(mPosition, Colors.NODE_NEUTRAL, Constants.NODE_LAYER, Constants.NODE_CORNERS, 0, Constants.NODE_RADIUS);
-        mHealthLabel = new TextDecorator(mCircle, String.valueOf(getHealth()), 6);
+        mHealthLabel = new TextDecorator(mCircle, String.valueOf(getHealth()) + Text.HEALTH, 6);
 
         setState(new NeutralState(this));
     }
@@ -173,7 +174,7 @@ public class Node extends BoardEntity implements IClickable {
      */
     public void repair() {
         mHealth = getMaxHealth();
-        mHealthLabel.setText(String.valueOf(mHealth));
+        updateLabel();
     }
 
     /**
@@ -274,7 +275,7 @@ public class Node extends BoardEntity implements IClickable {
             mHealth = newHealth;
         }
 
-        mHealthLabel.setText(String.valueOf(mHealth));
+        updateLabel();
     }
 
     /**
@@ -334,7 +335,14 @@ public class Node extends BoardEntity implements IClickable {
             mHealth += healthGain;
         }
 
-        mHealthLabel.setText(String.valueOf(mHealth));
+        updateLabel();
+    }
+
+    /**
+     * Updates the health label of this node.
+     */
+    private void updateLabel() {
+        mHealthLabel.setText(String.valueOf(mHealth) + Text.HEALTH);
     }
 
     @Override
@@ -374,12 +382,12 @@ public class Node extends BoardEntity implements IClickable {
 
     @Override
     public float getWidth() {
-        return Constants.NODE_RADIUS * 2.66f; // including some imprecision
+        return Constants.NODE_RADIUS * 2;
     }
 
     @Override
     public float getHeight() {
-        return Constants.NODE_RADIUS * 2.66f; // including some imprecision
+        return Constants.NODE_RADIUS * 2;
     }
 
     /**
@@ -397,30 +405,22 @@ public class Node extends BoardEntity implements IClickable {
 
         OwnedState state = (OwnedState) getState();
 
-        if (state.getOwner().isHuman()) {
-            // showing menu for owned node
-            mNodeMenu = new NodeMenu(this, true);
-            mNodeMenu.show();
-            return;
-        }
-
-        // showing menu for opponent's node
-        mNodeMenu = new NodeMenu(this, false);
+        mNodeMenu = new NodeMenu(this, state.getOwner().isHuman());
+        mNodeMenu.show();
     }
 
     /**
      * Asks the player the player for the units to be sent to.
      *
-     * @param node source node
      * @param type type of unit
      */
-    public void askPlayerForTargetNode(Node node, EUnitType type) {
+    public void askPlayerForTargetNode(EUnitType type) {
         mSelectingNode = true;
-        mSourceNode = node;
+        mSourceNode = this;
         mSendingUnitType = type;
         mCoronas.clear();
 
-        for (Node neighbor : Game.getInstance().getConnectedNodes(node)) {
+        for (Node neighbor : Game.getInstance().getConnectedNodes(this)) {
             Polygon corona = new Polygon(neighbor.getPosition(), Colors.CORONA, 1, 300, 0, .75f);
             corona.register();
             mCoronas.add(corona);
@@ -438,7 +438,7 @@ public class Node extends BoardEntity implements IClickable {
 
     //endregion
 
-    //region data binding
+    //region getters/setters
 
     /**
      * @return gets the cost to repair the node with the current health
@@ -477,9 +477,19 @@ public class Node extends BoardEntity implements IClickable {
         return mMeleeUnits;
     }
 
-    //endregion
+    /**
+     * @return gets count of tank units
+     */
+    public int getTankCount() {
+        return mTankUnits;
+    }
 
-    //region getters/setters
+    /**
+     * @return gets count of sprinter units
+     */
+    public int getSprinterCount() {
+        return mTankUnits;
+    }
 
     /**
      * @return gets the node's position
