@@ -69,7 +69,9 @@ public class Game {
         mGameController = gameController;
     }
 
-    public void setGLView(GameSurfaceView view) { mGLView = view; }
+    public void setGLView(GameSurfaceView view) {
+        mGLView = view;
+    }
 
     /**
      * Resets the singleton and thus a new game is born.
@@ -161,6 +163,7 @@ public class Game {
             }
         }
     }
+
     /**
      * Checkes if Game is over.
      *
@@ -172,13 +175,12 @@ public class Game {
         Player owner = null;
         boolean gameOver = true;
         for (Node node : nodes) {
-            if(node.getState() instanceof OwnedState) {
+            if (node.getState() instanceof OwnedState) {
                 Player currentOwner = ((OwnedState) node.getState()).getOwner();
-                if(owner == null) {
+                if (owner == null) {
                     owner = currentOwner;
-                }
-                else {
-                    if(!owner.equals(currentOwner)) {
+                } else {
+                    if (!owner.equals(currentOwner)) {
                         gameOver = false;
                         break;
                     }
@@ -283,6 +285,5 @@ public class Game {
 
         return clickables;
     }
-
 }
 
