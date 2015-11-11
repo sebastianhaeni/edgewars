@@ -285,5 +285,6 @@ public class Game {
 
         return clickables;
     }
+
 }
 
