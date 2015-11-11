@@ -1,6 +1,7 @@
 package ch.sebastianhaeni.edgewars.logic.entities.board;
 
 import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Line;
+import ch.sebastianhaeni.edgewars.logic.Constants;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
 import ch.sebastianhaeni.edgewars.util.Colors;
 
@@ -22,7 +23,7 @@ public class Edge extends BoardEntity {
         super();
         mSourceNode = sourceNode;
         mTargetNode = targetNode;
-        mLine = new Line(sourceNode.getPosition(), targetNode.getPosition(), Colors.EDGE);
+        mLine = new Line(sourceNode.getPosition(), targetNode.getPosition(), Colors.EDGE, Constants.EDGE_WIDTH);
     }
 
     @Override

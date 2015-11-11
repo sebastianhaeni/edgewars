@@ -56,4 +56,11 @@ public abstract class Entity extends BaseObservable {
         Game.getInstance().register(this);
     }
 
+    /**
+     * Unregisters this entity from the game.
+     */
+    public void unregister() {
+        Game.getInstance().unregister(this);
+    }
+
 }
