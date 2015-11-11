@@ -23,11 +23,36 @@
             android:id="@+id/textLevel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="60sp"
             android:text="@{`Level ` + activity.getLevel}"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_centerInParent="true">
+
+            <TextView
+                android:id="@+id/score"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="30sp"
+                android:textSize="30sp"
+                android:text="@{`Score ` + activity.getScore}"/>
+
+            <TextView
+                android:id="@+id/time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="30sp"
+                android:text="@{`Time ` + activity.getTime}"/>
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
             android:layout_alignParentBottom="true">
 
             <Button
