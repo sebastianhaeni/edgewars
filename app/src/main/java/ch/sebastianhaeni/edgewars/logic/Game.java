@@ -120,6 +120,15 @@ public class Game {
     }
 
     /**
+     * Unregister an entity.
+     *
+     * @param entity the entity to be unregistered
+     */
+    public void unregister(Entity entity) {
+        mEntities.remove(entity);
+    }
+
+    /**
      * Executes commands (but not too many at once) and updates entities.
      *
      * @param millis time passed since last update
@@ -274,5 +283,6 @@ public class Game {
 
         return clickables;
     }
+
 }
 

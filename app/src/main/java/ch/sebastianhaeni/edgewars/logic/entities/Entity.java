@@ -58,4 +58,11 @@ public abstract class Entity extends BaseObservable implements Serializable {
         Game.getInstance().register(this);
     }
 
+    /**
+     * Unregisters this entity from the game.
+     */
+    public void unregister() {
+        Game.getInstance().unregister(this);
+    }
+
 }

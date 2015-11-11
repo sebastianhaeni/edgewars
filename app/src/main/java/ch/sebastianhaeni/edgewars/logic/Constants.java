@@ -63,13 +63,14 @@ public final class Constants {
     public static final int NODE_DAMAGE_1 = 30;
     public static final int NODE_DAMAGE_2 = 50;
     public static final int NODE_DAMAGE_3 = 70;
+    public static final float EDGE_WIDTH = .2f;
     //endregion
 
     //region node menu
-    public static final int MENU_BUTTON_CORNERS = 120;
     public static final int MENU_BUTTON_LAYER = 10;
     public static final int MENU_BUTTON_TEXT_LAYER = 11;
-    public static final float MENU_BUTTON_RADIUS = .5f;
+    public static final float MENU_BUTTON_RADIUS = .35f;
+    public static final float MENU_BUTTON_LINE_WIDTH = .1f;
     //endregion
 
     //region node states

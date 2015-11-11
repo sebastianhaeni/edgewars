@@ -16,9 +16,7 @@ import ch.sebastianhaeni.edgewars.util.Position;
  */
 public class Line extends Shape {
 
-    private static final float WIDTH = 0.2f;
-
-    private final transient FloatBuffer vertexBuffer;
+    private final FloatBuffer vertexBuffer;
     private final int vertexCount;
 
     /**
@@ -28,8 +26,9 @@ public class Line extends Shape {
      * @param src   where the line starts
      * @param dst   where the line ends
      * @param color the color of the edge
+     * @param width width of the line
      */
-    public Line(Position src, Position dst, float[] color) {
+    public Line(Position src, Position dst, float[] color, float width) {
         super(src, color, 2);
 
         float distance = (float) Math.sqrt(
@@ -44,7 +43,7 @@ public class Line extends Shape {
 
         Matrix m = new Matrix();
 
-        float half = WIDTH * .5f;
+        float half = width * .5f;
         float[] coordinates = new float[]{
                 0, -half,
                 0, half,
