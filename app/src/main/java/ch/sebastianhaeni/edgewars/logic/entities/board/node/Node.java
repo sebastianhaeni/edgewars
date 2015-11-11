@@ -1,9 +1,12 @@
 package ch.sebastianhaeni.edgewars.logic.entities.board.node;
 
+import java.util.ArrayList;
+
 import ch.sebastianhaeni.edgewars.EUnitType;
 import ch.sebastianhaeni.edgewars.graphics.drawables.decorators.DeathParticleDecorator;
 import ch.sebastianhaeni.edgewars.graphics.drawables.decorators.TextDecorator;
 import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Polygon;
+import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Shape;
 import ch.sebastianhaeni.edgewars.logic.Constants;
 import ch.sebastianhaeni.edgewars.logic.Game;
 import ch.sebastianhaeni.edgewars.logic.SoundEngine;
@@ -20,6 +23,8 @@ import ch.sebastianhaeni.edgewars.logic.entities.board.units.MeleeUnit;
 import ch.sebastianhaeni.edgewars.logic.entities.board.units.SprinterUnit;
 import ch.sebastianhaeni.edgewars.logic.entities.board.units.TankUnit;
 import ch.sebastianhaeni.edgewars.logic.entities.board.units.Unit;
+import ch.sebastianhaeni.edgewars.ui.IClickable;
+import ch.sebastianhaeni.edgewars.logic.entities.board.node.menu.NodeMenu;
 import ch.sebastianhaeni.edgewars.util.Colors;
 import ch.sebastianhaeni.edgewars.util.Position;
 
@@ -37,9 +42,15 @@ import ch.sebastianhaeni.edgewars.util.Position;
  * <li>scheduled commands to move units to another node</li>
  * </ul>
  */
-public class Node extends BoardEntity {
+public class Node extends BoardEntity implements IClickable {
 
     //region members
+    private static NodeMenu mNodeMenu;
+    private static boolean mSelectingNode;
+    private static Node mSourceNode;
+    private static EUnitType mSendingUnitType;
+    private static final ArrayList<Shape> mCoronas = new ArrayList<>();
+
     private final Polygon mCircle;
     private final TextDecorator mHealthLabel;
     private int mMeleeUnits;
@@ -330,6 +341,105 @@ public class Node extends BoardEntity {
         }
 
         mHealthLabel.setText(String.valueOf(mHealth));
+    }
+
+    @Override
+    public void onClick() {
+        if (mSelectingNode) {
+            if (this.equals(mSourceNode)
+                    || !Game.getInstance().getConnectedNodes(mSourceNode).contains(this)) {
+                showNodeMenu();
+                return;
+            }
+
+            switch (mSendingUnitType) {
+                case MELEE:
+                    mSourceNode.sendMeleeUnits(this);
+                    break;
+                case SPRINTER:
+                    mSourceNode.sendSprinterUnits(this);
+                    break;
+                case TANK:
+                    mSourceNode.sendTankUnits(this);
+                    break;
+            }
+            SoundEngine.getInstance().play(SoundEngine.Sounds.UNIT_SENT);
+        } else {
+            showNodeMenu();
+        }
+
+    }
+
+    @Override
+    public void onUnhandledClick() {
+        clearCoronas();
+        if (mNodeMenu != null && mNodeMenu.isVisible()) {
+            mNodeMenu.hide();
+        }
+    }
+
+    @Override
+    public float getWidth() {
+        return Constants.NODE_RADIUS * 2.66f; // including some imprecision
+    }
+
+    @Override
+    public float getHeight() {
+        return Constants.NODE_RADIUS * 2.66f; // including some imprecision
+    }
+
+    /**
+     *
+     */
+    private void showNodeMenu() {
+        if (mNodeMenu != null && mNodeMenu.isVisible()) {
+            mNodeMenu.hide();
+            return;
+        }
+
+        if (getState() instanceof NeutralState || !(getState() instanceof OwnedState)) {
+            return;
+        }
+
+        OwnedState state = (OwnedState) getState();
+
+        if (state.getOwner().isHuman()) {
+            // showing menu for owned node
+            mNodeMenu = new NodeMenu(this, true);
+            mNodeMenu.show();
+            return;
+        }
+
+        // showing menu for opponent's node
+        mNodeMenu = new NodeMenu(this, false);
+    }
+
+    /**
+     * Asks the player the player for the units to be sent to.
+     *
+     * @param node source node
+     * @param type type of unit
+     */
+    public void askPlayerForTargetNode(Node node, EUnitType type) {
+        mSelectingNode = true;
+        mSourceNode = node;
+        mSendingUnitType = type;
+        mCoronas.clear();
+
+        for (Node neighbor : Game.getInstance().getConnectedNodes(node)) {
+            Polygon corona = new Polygon(neighbor.getPosition(), Colors.CORONA, 1, 300, 0, .75f);
+            corona.register();
+            mCoronas.add(corona);
+        }
+    }
+
+    /**
+     * Clears coronas off nodes.
+     */
+    private void clearCoronas() {
+        for (Shape corona : mCoronas) {
+            corona.destroy();
+        }
     }
 
     //endregion
