@@ -65,6 +65,13 @@ public final class Constants {
     public static final int NODE_DAMAGE_3 = 70;
     //endregion
 
+    //region node menu
+    public static final int MENU_BUTTON_CORNERS = 120;
+    public static final int MENU_BUTTON_LAYER = 10;
+    public static final int MENU_BUTTON_TEXT_LAYER = 11;
+    public static final float MENU_BUTTON_RADIUS = .5f;
+    //endregion
+
     //region node states
     public static final int OWNED_STATE_HEALTH_GAIN = 2;
     public static final int OWNED_STATE_ENERGY_GAIN = 10;

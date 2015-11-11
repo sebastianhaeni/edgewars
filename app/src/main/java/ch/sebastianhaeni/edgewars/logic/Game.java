@@ -16,6 +16,7 @@ import ch.sebastianhaeni.edgewars.logic.entities.board.Edge;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
 import ch.sebastianhaeni.edgewars.logic.entities.board.units.Unit;
 import ch.sebastianhaeni.edgewars.logic.entities.board.units.state.OnEdgeState;
+import ch.sebastianhaeni.edgewars.ui.IClickable;
 
 /**
  * This class controls the game.
@@ -195,6 +196,23 @@ public class Game {
         }
 
         return units;
+    }
+
+    /**
+     * @return gets a list of clickable elements.
+     */
+    public List<IClickable> getClickables() {
+        List<IClickable> clickables = new ArrayList<>();
+
+        for (Entity entity : mEntities.keySet()) {
+            if (!(entity instanceof IClickable)) {
+                continue;
+            }
+
+            clickables.add((IClickable) entity);
+        }
+
+        return clickables;
     }
 }
 
