@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.View;
+import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -35,6 +37,21 @@ public class LevelDetailActivity extends Activity {
                 false);
         binding.setActivity(this);
         setContentView(binding.getRoot());
+
+        displayScore();
+        displayTime();
+    }
+
+    private void displayTime() {
+        TextView view = (TextView) findViewById(R.id.time);
+        String text = "<b>Time</b> " + getTime();
+        view.setText(Html.fromHtml(text));
+    }
+
+    private void displayScore() {
+        TextView view = (TextView) findViewById(R.id.score);
+        String text = "<b>Score</b> " + getScore();
+        view.setText(Html.fromHtml(text));
     }
 
     public void startLevel(View view) {
