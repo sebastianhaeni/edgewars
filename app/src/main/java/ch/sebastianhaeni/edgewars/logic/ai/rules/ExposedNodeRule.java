@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import ch.sebastianhaeni.edgewars.logic.GameState;
 import ch.sebastianhaeni.edgewars.logic.commands.Command;
 import ch.sebastianhaeni.edgewars.logic.entities.Player;
+import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
 
 public class ExposedNodeRule extends Rule {
     public ExposedNodeRule(GameState state, Player player) {
@@ -12,7 +13,7 @@ public class ExposedNodeRule extends Rule {
     }
 
     @Override
-    public boolean applies(long millis) {
+    public boolean applies(Node node, long millis) {
         return false;
     }
 

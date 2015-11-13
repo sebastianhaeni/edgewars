@@ -1,11 +1,13 @@
 package ch.sebastianhaeni.edgewars.logic.entities;
 
+import java.util.ArrayList;
 import java.util.UUID;
 
 import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Text;
 import ch.sebastianhaeni.edgewars.logic.Constants;
 import ch.sebastianhaeni.edgewars.logic.ai.AI;
 import ch.sebastianhaeni.edgewars.logic.ai.RuleBasedAI;
+import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
 import ch.sebastianhaeni.edgewars.util.Colors;
 import ch.sebastianhaeni.edgewars.util.Position;
 
@@ -36,6 +38,7 @@ public class Player extends Entity {
 
     @Override
     public void update(long millis) {
+
         if (mAi != null) {
             mAi.update(millis);
         }
