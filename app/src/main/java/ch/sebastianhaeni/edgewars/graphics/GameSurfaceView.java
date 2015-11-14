@@ -25,6 +25,7 @@ public class GameSurfaceView extends GLSurfaceView implements Serializable {
     private GameThread mThread;
     private GameController mController;
     private final Context mContext;
+    private GameState mGameState;
 
     /**
      * Constructor
@@ -51,14 +52,13 @@ public class GameSurfaceView extends GLSurfaceView implements Serializable {
 
         LevelLoader levelLoader = new LevelLoader(mContext);
         // load game state and level number
-        GameState gameState = levelLoader.build(levelNr);
+        mGameState = levelLoader.build(levelNr);
 
-        gameState.init();
+        mGameState.init();
 
         mThread = new GameThread();
-        GameRenderer renderer = new GameRenderer(mContext, mThread, gameState);
-        mController = new GameController(mContext, renderer, gameState);
-        Game.getInstance().setGameController(mController);
+        GameRenderer renderer = new GameRenderer(mContext, mThread, mGameState);
+        mController = new GameController(mContext, renderer, mGameState);
 
         // Set the Renderer for drawing on the GLSurfaceView
         setRenderer(renderer);
@@ -98,5 +98,7 @@ public class GameSurfaceView extends GLSurfaceView implements Serializable {
         super.onResume();
         mThread.onResume();
     }
+
+    public GameState getState() { return mGameState; }
 
 }

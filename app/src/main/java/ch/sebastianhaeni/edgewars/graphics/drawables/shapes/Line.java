@@ -18,7 +18,7 @@ public class Line extends Shape {
 
     private static final float WIDTH = 0.2f;
 
-    private final FloatBuffer vertexBuffer;
+    private final transient FloatBuffer vertexBuffer;
     private final int vertexCount;
 
     /**

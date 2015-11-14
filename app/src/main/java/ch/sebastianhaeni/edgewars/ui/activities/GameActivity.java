@@ -7,6 +7,7 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import ch.sebastianhaeni.edgewars.graphics.GameSurfaceView;
+import ch.sebastianhaeni.edgewars.logic.GameState;
 
 public class GameActivity extends Activity {
 
@@ -21,6 +22,13 @@ public class GameActivity extends Activity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         mGLView = new GameSurfaceView(this);
+
+        if(savedInstanceState != null) {
+            GameState state = (GameState) savedInstanceState.getSerializable("gameState");
+            mGLView.setState(state);
+//        System.out.println(state.getHuman().getEnergy());
+        }
+
         setContentView(mGLView);
     }
 
@@ -54,6 +62,6 @@ public class GameActivity extends Activity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        ///outState.putSerializable("glView", mGLView.getState());
+        outState.putSerializable("gameState", mGLView.getState());
     }
 }

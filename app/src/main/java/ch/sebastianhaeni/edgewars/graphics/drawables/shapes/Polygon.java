@@ -18,7 +18,7 @@ public class Polygon extends Shape {
     private final int mCorners;
     private final float mRadius;
     private final int mAngle;
-    private FloatBuffer mVertexBuffer;
+    private transient FloatBuffer mVertexBuffer;
 
     /**
      * Sets up the drawing object data for use in an OpenGL ES context.

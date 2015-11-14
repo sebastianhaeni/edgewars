@@ -1,13 +1,13 @@
 package ch.sebastianhaeni.edgewars.logic.entities;
 
-import java.util.ArrayList;
+
+import java.io.Serializable;
 import java.util.UUID;
 
 import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Text;
 import ch.sebastianhaeni.edgewars.logic.Constants;
 import ch.sebastianhaeni.edgewars.logic.ai.AI;
 import ch.sebastianhaeni.edgewars.logic.ai.RuleBasedAI;
-import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
 import ch.sebastianhaeni.edgewars.util.Colors;
 import ch.sebastianhaeni.edgewars.util.Position;
 
@@ -17,8 +17,8 @@ import ch.sebastianhaeni.edgewars.util.Position;
 public class Player extends Entity {
     private final UUID mId;
     private final boolean mIsHuman;
-    private Text mEnergyLabel;
-    private AI mAi;
+    private transient Text mEnergyLabel;
+    private transient AI mAi;
     private final float[] mColor;
     private int mEnergy;
 

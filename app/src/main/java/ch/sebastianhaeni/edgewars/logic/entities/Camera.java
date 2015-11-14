@@ -1,5 +1,7 @@
 package ch.sebastianhaeni.edgewars.logic.entities;
 
+import java.io.Serializable;
+
 import ch.sebastianhaeni.edgewars.graphics.GameRenderer;
 import ch.sebastianhaeni.edgewars.logic.Constants;
 import ch.sebastianhaeni.edgewars.logic.Game;
