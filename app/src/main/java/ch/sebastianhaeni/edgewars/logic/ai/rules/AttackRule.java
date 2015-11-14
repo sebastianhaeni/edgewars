@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import ch.sebastianhaeni.edgewars.EUnitType;
 import ch.sebastianhaeni.edgewars.logic.Game;
 import ch.sebastianhaeni.edgewars.logic.GameState;
-import ch.sebastianhaeni.edgewars.logic.ai.AIHelper;
+import ch.sebastianhaeni.edgewars.logic.ai.AIAwareness;
 import ch.sebastianhaeni.edgewars.logic.commands.Command;
 import ch.sebastianhaeni.edgewars.logic.commands.MoveUnitCommand;
 import ch.sebastianhaeni.edgewars.logic.entities.Player;
@@ -31,14 +31,14 @@ public class AttackRule extends Rule {
 
         mNode = node;
 
-        return AIHelper.getDistanceToEnemy(mNode) < 2 && (mNode.getTankCount() >= 5 || mNode.getSprinterCount() >= 5 || mNode.getMeleeCount() >= 5);
+        return AIAwareness.getDistanceToEnemy(getPlayer(), mNode) < 2 && (mNode.getTankCount() >= 5 || mNode.getSprinterCount() >= 5 || mNode.getMeleeCount() >= 5);
 
     }
 
     @Override
     public ArrayList<Command> getCommands() {
 
-        Node targetNode = AIHelper.getNodeTowardsEnemy(mNode);
+        Node targetNode = AIAwareness.getGatewayToEnemy(getPlayer(), mNode);
 
         ArrayList<Command> commands = new ArrayList<>();
 

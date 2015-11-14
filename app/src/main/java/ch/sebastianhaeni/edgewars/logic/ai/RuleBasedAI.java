@@ -1,6 +1,10 @@
 package ch.sebastianhaeni.edgewars.logic.ai;
 
+import android.util.Log;
+
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Vector;
 
 import ch.sebastianhaeni.edgewars.logic.GameState;
 import ch.sebastianhaeni.edgewars.logic.ai.rules.AttackRule;
@@ -18,8 +22,11 @@ public class RuleBasedAI extends AI {
     private final ArrayList<Rule> mRules;
     private final ArrayList<Command> mCommands = new ArrayList<>();
 
+
     public RuleBasedAI(GameState state, Player player) {
         super(state, player);
+
+        Log.d("debug", "create new rule based AI");
 
         mRules = new ArrayList<>();
         mRules.add(new BuildUpRule(state, getPlayer()));
@@ -30,9 +37,15 @@ public class RuleBasedAI extends AI {
 
     @Override
     public void update(long millis) {
+        if (!AIAwareness.isInitialized()) {
+            return;
+        }
+
         mCommands.clear();
 
-        ArrayList<Node> nodes = getMyNodes(getPlayer());
+        Log.d("debug", "rule based AI update");
+
+        ArrayList<Node> nodes = AIAwareness.getMyNodes(getPlayer());
 
         for (Node node : nodes) {
             setNodeCommands(node, millis);
@@ -43,10 +56,18 @@ public class RuleBasedAI extends AI {
         }
     }
 
-    private void setNodeCommands (Node node, long millis) {
+    private synchronized void setNodeCommands (Node node, long millis) {
+
+        Log.d("debug", "setting node commands");
 
         for (Rule r : mRules) {
+
+            Log.d("debug", "assessing rule " + r.toString());
+
             if (r.applies(node, millis)) {
+
+                Log.d("debug", "rule "+r.toString()+" applies");
+
                 for (Command c : r.getCommands()) {
                     mCommands.add(c);
                 }
@@ -55,20 +76,4 @@ public class RuleBasedAI extends AI {
 
     }
 
-    private ArrayList<Node> getMyNodes (Player player) {
-        ArrayList<Node> nodes = new ArrayList<>();
-
-        // get all nodes controlled by player
-        for (Node n : getState().getBoard().getNodes()) {
-            if (n.getState() instanceof OwnedState) {
-                OwnedState state = (OwnedState) n.getState();
-                Player owner = state.getOwner();
-                if (owner.equals(player)) {
-                    nodes.add(n);
-                }
-            }
-        }
-
-        return nodes;
-    }
 }

@@ -119,4 +119,8 @@ public class Player extends Entity {
         }
         return equals(other);
     }
+
+    public String toString () {
+        return super.toString() + "[UUID="+mId+", color="+mColor;
+    }
 }
