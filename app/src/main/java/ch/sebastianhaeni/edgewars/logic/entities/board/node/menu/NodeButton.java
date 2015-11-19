@@ -32,7 +32,7 @@ public class NodeButton extends Button {
                 text,
                 Constants.MENU_BUTTON_TEXT_LAYER);
 
-        mLine = new Line(base, mShape.getPosition(), Colors.NODE_NEUTRAL, Constants.MENU_BUTTON_LINE_WIDTH);
+        mLine = new Line(base, getPosition(), Colors.NODE_NEUTRAL, Constants.MENU_BUTTON_LINE_WIDTH);
 
         mShape.register();
         mText.register();
