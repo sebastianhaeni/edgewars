@@ -99,4 +99,10 @@ public abstract class Factory extends Entity {
      */
     protected abstract long getProducingDuration();
 
+    /**
+     * @return true if the max level has been reached for this factory
+     */
+    public boolean maxLevelReached() {
+        return mLevel >= Constants.FACTORY_MAX_LEVEL;
+    }
 }

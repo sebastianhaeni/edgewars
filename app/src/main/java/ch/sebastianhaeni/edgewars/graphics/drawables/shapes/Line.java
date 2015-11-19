@@ -37,6 +37,14 @@ public class Line extends Shape {
 
         float angle = (float) Math.toDegrees(Math.asin((dst.getY() - src.getY()) / distance));
 
+        if (src.getX() > dst.getX() && src.getY() > dst.getY()) {
+            angle -= 90;
+        }
+
+        if (src.getX() > dst.getX() && src.getY() < dst.getY()) {
+            angle += 90;
+        }
+
         if (angle < 0) {
             angle += 360;
         }

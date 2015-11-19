@@ -1,6 +1,7 @@
 package ch.sebastianhaeni.edgewars.logic.entities.board.node.menu;
 
 import ch.sebastianhaeni.edgewars.EUnitType;
+import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Text;
 import ch.sebastianhaeni.edgewars.logic.Constants;
 import ch.sebastianhaeni.edgewars.logic.entities.Button;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
@@ -15,6 +16,12 @@ public class NodeMenu {
     private NodeButton mMeleeButton;
     private NodeButton mTankButton;
     private NodeButton mSprinterButton;
+    private NodeButton mMeleeFactoryButton;
+    private NodeButton mSprinterFactoryButton;
+    private NodeButton mTankFactoryButton;
+    private NodeButton mRepairButton;
+    private NodeButton mHealthButton;
+    private NodeButton mDamageButton;
 
     /**
      * Constructor
@@ -35,11 +42,88 @@ public class NodeMenu {
     }
 
     private void showUpgrades() {
+        if (!mIsOwned) {
+            return;
+        }
+
+        mRepairButton = new NodeButton(mNode.getPosition(), -1, 1, String.valueOf(Text.WRENCH), Constants.NODE_CORNERS);
+        mRepairButton.register();
+        mRepairButton.addListener(new Button.OnGameClickListener() {
+            @Override
+            public void onClick() {
+                mNode.repair();
+            }
+        });
+
+        mHealthButton = new NodeButton(mNode.getPosition(), 0, 1.5f, String.valueOf(Text.HEALTH), Constants.NODE_CORNERS);
+        mHealthButton.register();
+        mHealthButton.addListener(new Button.OnGameClickListener() {
+            @Override
+            public void onClick() {
+                mNode.upgradeHealth();
+            }
+        });
+
+        mDamageButton = new NodeButton(mNode.getPosition(), 1, 1, String.valueOf(Text.DAMAGE), Constants.NODE_CORNERS);
+        mDamageButton.register();
+        mDamageButton.addListener(new Button.OnGameClickListener() {
+            @Override
+            public void onClick() {
+                mNode.upgradeDamage();
+            }
+        });
 
     }
 
     private void showFactories() {
+        if (!mIsOwned) {
+            return;
+        }
 
+        if (!mNode.getMeleeFactory().maxLevelReached()) {
+            mMeleeFactoryButton = new NodeButton(mMeleeButton.getPosition(), -.7f, -.7f, String.valueOf(Constants.FACTORY_MELEE_UPGRADE_1) + Text.ENERGY, Constants.NODE_CORNERS);
+            mMeleeFactoryButton.register();
+            mMeleeFactoryButton.addListener(new Button.OnGameClickListener() {
+                @Override
+                public void onClick() {
+                    mNode.getMeleeFactory().upgrade();
+                    if (mNode.getMeleeFactory().maxLevelReached()) {
+                        mMeleeFactoryButton.hide();
+                        mMeleeFactoryButton.unregister();
+                    }
+                }
+            });
+        }
+
+        if (!mNode.getTankFactory().maxLevelReached()) {
+            mTankFactoryButton = new NodeButton(mTankButton.getPosition(), 0, -1, String.valueOf(Constants.FACTORY_TANK_UPGRADE_1) + Text.ENERGY, Constants.NODE_CORNERS);
+            mTankFactoryButton.register();
+            mTankFactoryButton.addListener(new Button.OnGameClickListener() {
+                @Override
+                public void onClick() {
+                    mNode.getTankFactory().upgrade();
+                    if (mNode.getTankFactory().maxLevelReached()) {
+                        mTankFactoryButton.hide();
+                        mTankFactoryButton.unregister();
+                    }
+                }
+            });
+        }
+
+        if (!mNode.getSprinterFactory().maxLevelReached()) {
+            mSprinterFactoryButton = new NodeButton(mSprinterButton.getPosition(), .7f, -.7f, String.valueOf(Constants.FACTORY_SPRINTER_UPGRADE_1) + Text.ENERGY, Constants.NODE_CORNERS);
+            mSprinterFactoryButton.register();
+            mSprinterFactoryButton.addListener(new Button.OnGameClickListener() {
+                @Override
+                public void onClick() {
+                    mNode.getSprinterFactory().upgrade();
+                    if (mNode.getSprinterFactory().maxLevelReached()) {
+                        mSprinterFactoryButton.hide();
+                        mSprinterFactoryButton.unregister();
+                    }
+                }
+            });
+        }
     }
 
     private void showUnits() {
@@ -81,14 +165,27 @@ public class NodeMenu {
     }
 
     public void hide() {
-        mMeleeButton.hide();
-        mTankButton.hide();
-        mSprinterButton.hide();
+        hide(mMeleeButton);
+        hide(mTankButton);
+        hide(mSprinterButton);
 
-        mMeleeButton.unregister();
-        mTankButton.unregister();
-        mSprinterButton.register();
+        hide(mMeleeFactoryButton);
+        hide(mTankFactoryButton);
+        hide(mSprinterFactoryButton);
+
+        hide(mRepairButton);
+        hide(mHealthButton);
+        hide(mDamageButton);
 
         mVisible = false;
+    }
+
+    private static void hide(NodeButton button) {
+        if (button == null) {
+            return;
+        }
+
+        button.hide();
+        button.unregister();
     }
 }
