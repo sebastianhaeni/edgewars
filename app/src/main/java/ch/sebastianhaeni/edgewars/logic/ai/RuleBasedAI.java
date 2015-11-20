@@ -1,45 +1,70 @@
 package ch.sebastianhaeni.edgewars.logic.ai;
 
+import android.util.Log;
+
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Vector;
 
 import ch.sebastianhaeni.edgewars.logic.GameState;
-import ch.sebastianhaeni.edgewars.logic.ai.rules.AttackingRule;
+import ch.sebastianhaeni.edgewars.logic.ai.rules.AttackRule;
+import ch.sebastianhaeni.edgewars.logic.ai.rules.ConquerRule;
 import ch.sebastianhaeni.edgewars.logic.ai.rules.ExposedNodeRule;
-import ch.sebastianhaeni.edgewars.logic.ai.rules.IdleRule;
+import ch.sebastianhaeni.edgewars.logic.ai.rules.BuildUpRule;
+import ch.sebastianhaeni.edgewars.logic.ai.rules.NodeRules;
 import ch.sebastianhaeni.edgewars.logic.ai.rules.Rule;
 import ch.sebastianhaeni.edgewars.logic.ai.rules.UnderAttackRule;
 import ch.sebastianhaeni.edgewars.logic.commands.Command;
 import ch.sebastianhaeni.edgewars.logic.entities.Player;
+import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
+import ch.sebastianhaeni.edgewars.logic.entities.board.node.state.OwnedState;
 
 public class RuleBasedAI extends AI {
 
-    private final ArrayList<Rule> mRules;
-    private final ArrayList<Command> mCommands = new ArrayList<>();
+    private HashMap<Node, NodeRules> mNodeRules = new HashMap<>();
+
 
     public RuleBasedAI(GameState state, Player player) {
         super(state, player);
-
-        mRules = new ArrayList<>();
-        mRules.add(new IdleRule(state, getPlayer()));
-        mRules.add(new UnderAttackRule(state, getPlayer()));
-        mRules.add(new AttackingRule(state, getPlayer()));
-        mRules.add(new ExposedNodeRule(state, getPlayer()));
     }
 
     @Override
     public void update(long millis) {
-        mCommands.clear();
-
-        for (Rule r : mRules) {
-            if (r.applies(millis)) {
-                for (Command c : r.getCommands()) {
-                    mCommands.add(c);
-                }
-            }
+        if (!AIAwareness.isInitialized()) {
+            return;
         }
 
-        for (Command c : mCommands) {
+        Log.d("debug", "rule based AI update");
+
+        // test if my nodes have changed (gained new ones or lost some)
+        ArrayList<Node> nodes = AIAwareness.getMyNodes(getPlayer());
+        if (!mNodeRules.keySet().containsAll(nodes) || !nodes.containsAll(mNodeRules.keySet())) {
+            updateNodes(nodes);
+        }
+
+        ArrayList<Command> commands = new ArrayList<>();
+        for (Node node : mNodeRules.keySet()) {
+            commands.addAll(mNodeRules.get(node).getCommands(millis));
+        }
+
+        for (Command c : commands) {
             c.execute();
         }
     }
+
+    private void updateNodes (ArrayList<Node> nodes) {
+        // add new nodes
+        for (Node node : nodes) {
+            if (!mNodeRules.keySet().contains(node))
+                mNodeRules.put(node, new NodeRules(getState(), getPlayer(), node));
+        }
+
+        // remove old nodes
+        for (Node node: mNodeRules.keySet()) {
+            if (!nodes.contains(node))
+                mNodeRules.remove(node);
+        }
+    }
+
+
 }

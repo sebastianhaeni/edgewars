@@ -11,6 +11,7 @@ import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Text;
 import ch.sebastianhaeni.edgewars.logic.Constants;
 import ch.sebastianhaeni.edgewars.logic.Game;
 import ch.sebastianhaeni.edgewars.logic.SoundEngine;
+import ch.sebastianhaeni.edgewars.logic.ai.AIAwareness;
 import ch.sebastianhaeni.edgewars.logic.commands.MoveUnitCommand;
 import ch.sebastianhaeni.edgewars.logic.entities.board.BoardEntity;
 import ch.sebastianhaeni.edgewars.logic.entities.board.factories.MeleeFactory;
@@ -103,6 +104,11 @@ public class Node extends BoardEntity implements IClickable {
         mMeleeFactory.register();
         mTankFactory.register();
         mSprinterFactory.register();
+    }
+
+    @Override
+    public String toString () {
+        return super.toString() + "[x="+mPosition.getX()+", y="+mPosition.getY()+"]";
     }
 
     //region actions
@@ -543,6 +549,9 @@ public class Node extends BoardEntity implements IClickable {
     public void setState(NodeState state) {
         mState = state;
         setUpdateInterval(state.getUpdateInterval());
+
+        // notify AI that a new node was conquered
+        AIAwareness.update();
     }
 
     /**
