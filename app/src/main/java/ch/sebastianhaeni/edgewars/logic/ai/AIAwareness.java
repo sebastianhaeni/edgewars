@@ -99,6 +99,8 @@ public class AIAwareness {
 
         for (Node node : mPlayerNodes.get(player)) {
             Pair<Integer, Node> result = bfs(player, node);
+            if (result==null)   // no connected enemy node was found
+                return;
             distancesToEnemy.put(node, result.first);
             gatewaysToEnemy.put(node, result.second);
         }
