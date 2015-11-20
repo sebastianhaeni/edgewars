@@ -1,7 +1,10 @@
 package ch.sebastianhaeni.edgewars.logic;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 
+import ch.sebastianhaeni.edgewars.logic.ai.AIAwareness;
 import ch.sebastianhaeni.edgewars.logic.entities.Camera;
 import ch.sebastianhaeni.edgewars.logic.entities.Entity;
 import ch.sebastianhaeni.edgewars.logic.entities.Player;
@@ -32,6 +35,16 @@ public class GameState {
         mHuman = human;
 
         mBoard.initialize();
+
+        ArrayList<Player> computerPlayers = new ArrayList<>();
+        for (Player player : mPlayers) {
+            Log.d("debug", "assessing player "+player.toString());
+            if (!player.isHuman()) {
+                Log.d("debug", "adding player "+player.toString());
+                computerPlayers.add(player);
+            }
+        }
+        AIAwareness.initialize(this, computerPlayers);
     }
 
     /**
