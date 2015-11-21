@@ -1,6 +1,7 @@
 package ch.sebastianhaeni.edgewars.logic.entities.board;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import ch.sebastianhaeni.edgewars.logic.entities.Entity;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
@@ -10,6 +11,14 @@ import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
  * drawables.
  */
 public class Board extends Entity {
+
+    // position constants to define outer node positions for getOuterNode() method
+    public final static int TOP = 0;
+    public final static int RIGHT = 1;
+    public final static int BOTTOM = 2;
+    public final static int LEFT = 3;
+    private final static HashMap<Integer, Node> outerNodes = new HashMap<>();
+
     private final ArrayList<BoardEntity> mEntities = new ArrayList<>();
 
     /**
@@ -41,6 +50,31 @@ public class Board extends Entity {
         return nodes;
     }
 
+    /**
+     * This function returns one of the four outer nodes specified by the parameter position
+     *
+     * @param position specifies which node to return
+     * @return gets one of the four outermost nodes on the board
+     */
+    public Node getOuterNode(int position) {
+        switch (position) {
+            case TOP:
+                return getTopMostNode();
+
+            case RIGHT:
+                return getRightMostNode();
+
+            case BOTTOM:
+                return getBottomMostNode();
+
+            case LEFT:
+                return getLeftMostNode();
+
+            default:
+                throw new IllegalArgumentException("I do not know this position!");
+        }
+    }
+
     @Override
     public void update(long millis) {
         // no op
@@ -60,5 +94,61 @@ public class Board extends Entity {
      */
     public ArrayList<BoardEntity> getEntities() {
         return mEntities;
+    }
+
+    private Node getTopMostNode() {
+        if (outerNodes.containsKey(TOP))
+            return outerNodes.get(TOP);
+
+        Node theNode = getNodes().get(0);
+        for (Node node : getNodes()) {
+            if (node.getPosition().getY() < theNode.getPosition().getY())
+                theNode = node;
+        }
+
+        outerNodes.put(TOP, theNode);
+        return theNode;
+    }
+
+    private Node getBottomMostNode() {
+        if (outerNodes.containsKey(BOTTOM))
+            return outerNodes.get(BOTTOM);
+
+        Node theNode = getNodes().get(0);
+        for (Node node : getNodes()) {
+            if (node.getPosition().getY() > theNode.getPosition().getY())
+                theNode = node;
+        }
+
+        outerNodes.put(BOTTOM, theNode);
+        return theNode;
+    }
+
+    private Node getRightMostNode() {
+        if (outerNodes.containsKey(RIGHT))
+            return outerNodes.get(RIGHT);
+
+        Node theNode = getNodes().get(0);
+        for (Node node : getNodes()) {
+            if (node.getPosition().getX() > theNode.getPosition().getX())
+                theNode = node;
+        }
+
+        outerNodes.put(RIGHT, theNode);
+        return theNode;
+    }
+
+    private Node getLeftMostNode() {
+        if (outerNodes.containsKey(LEFT))
+            return outerNodes.get(LEFT);
+
+        Node theNode = getNodes().get(0);
+        for (Node node : getNodes()) {
+            if (node.getPosition().getX() < theNode.getPosition().getX())
+                theNode = node;
+        }
+
+        outerNodes.put(LEFT, theNode);
+        return theNode;
     }
 }

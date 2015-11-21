@@ -1,6 +1,9 @@
 package ch.sebastianhaeni.edgewars.logic.entities;
 
+import ch.sebastianhaeni.edgewars.graphics.GameRenderer;
 import ch.sebastianhaeni.edgewars.logic.Constants;
+import ch.sebastianhaeni.edgewars.logic.Game;
+import ch.sebastianhaeni.edgewars.logic.entities.board.Board;
 
 /**
  * The camera entity updates the view that the human player sees.
@@ -46,6 +49,9 @@ public class Camera extends Entity {
      * @param dy delta y
      */
     public void moveCamera(float dx, float dy) {
+        dx = (boundaryIsReached('x', dx)) ? 0 : dx;
+        dy = (boundaryIsReached('y', dy)) ? 0 : dy;
+
         mCameraScreenX += dx;
         mCameraScreenY += dy;
         dx = dx * Constants.CAMERA_TOUCH_SCALE_FACTOR;
@@ -98,5 +104,33 @@ public class Camera extends Entity {
      */
     public float getScreenY() {
         return mCameraScreenY;
+    }
+
+    private boolean boundaryIsReached(char xy, float delta) {
+        Board board = Game.getInstance().getGameState().getBoard();
+        GameRenderer renderer = Game.getInstance().getGameController().getRenderer();
+
+        float topMostNodeY = renderer.getAndroidCoordinateY(board.getOuterNode(Board.TOP).getPosition().getY());
+        float bottomMostNodeY = renderer.getAndroidCoordinateY(board.getOuterNode(Board.BOTTOM).getPosition().getY());
+        float rightMostNodeX = renderer.getAndroidCoordinateX(board.getOuterNode(Board.RIGHT).getPosition().getX());
+        float leftMostNodeX = renderer.getAndroidCoordinateX(board.getOuterNode(Board.LEFT).getPosition().getX());
+
+        topMostNodeY += mCameraScreenY * (2f / 3f);
+        bottomMostNodeY += mCameraScreenY * (2f / 3f);
+        rightMostNodeX += mCameraScreenX * (2f / 3f);
+        leftMostNodeX += mCameraScreenX * (2f / 3f);
+
+        switch (xy) {
+            case 'x':
+
+                return leftMostNodeX + delta > (renderer.getMaxScreenX() * .6f) || rightMostNodeX + delta < (renderer.getMaxScreenX() * .4f);
+
+            case 'y':
+
+                return bottomMostNodeY + delta < (renderer.getMaxScreenY() * .4f) || topMostNodeY + delta > (renderer.getMaxScreenY() * .6f);
+
+            default:
+                throw new IllegalArgumentException("I do not know this coordinate!");
+        }
     }
 }
