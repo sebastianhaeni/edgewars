@@ -34,13 +34,15 @@ public class GameState {
         mPlayers = players;
         mHuman = human;
 
+        Game.getInstance().setGameState(this);
+
         mBoard.initialize();
 
         ArrayList<Player> computerPlayers = new ArrayList<>();
         for (Player player : mPlayers) {
-            Log.d("debug", "assessing player "+player.toString());
+            Log.d("debug", "assessing player " + player.toString());
             if (!player.isHuman()) {
-                Log.d("debug", "adding player "+player.toString());
+                Log.d("debug", "adding player " + player.toString());
                 computerPlayers.add(player);
             }
         }

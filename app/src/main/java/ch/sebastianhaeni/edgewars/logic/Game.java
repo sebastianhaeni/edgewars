@@ -16,6 +16,7 @@ import ch.sebastianhaeni.edgewars.logic.entities.board.Edge;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
 import ch.sebastianhaeni.edgewars.logic.entities.board.units.Unit;
 import ch.sebastianhaeni.edgewars.logic.entities.board.units.state.OnEdgeState;
+import ch.sebastianhaeni.edgewars.ui.GameController;
 
 /**
  * This class controls the game.
@@ -24,6 +25,8 @@ public class Game {
 
     private static Game mGame;
 
+    private GameState mGameState;
+    private GameController mGameController;
     private final Stack<Command> mCommandStack = new Stack<>();
     private final ConcurrentHashMap<Entity, Long> mEntities = new ConcurrentHashMap<>();
     private final RenderQueue mDrawables = new RenderQueue();
@@ -42,6 +45,22 @@ public class Game {
             mGame = new Game();
         }
         return mGame;
+    }
+
+    public GameState getGameState() {
+        return mGameState;
+    }
+
+    public void setGameState(GameState gameState) {
+        mGameState = gameState;
+    }
+
+    public GameController getGameController() {
+        return mGameController;
+    }
+
+    public void setGameController(GameController gameController) {
+        mGameController = gameController;
     }
 
     /**

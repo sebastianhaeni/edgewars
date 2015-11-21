@@ -252,17 +252,37 @@ public class GameRenderer implements GLSurfaceView.Renderer {
     }
 
     /**
-     * @return gets max y coordinate drawn on screen
+     * @return gets max openGL X coordinate drawn on screen
      */
-    public float getMaxX() {
+    public float getMaxGLX() {
         return mMaxX;
     }
 
     /**
-     * @return gets max y coordinate drawn on screen
+     * @return gets max openGL Y coordinate drawn on screen
      */
-    public float getMaxY() {
+    public float getMaxGLY() {
         return mMaxY;
+    }
+
+    /**
+     * The Android X axis ranges from 0 (left) to pixel width of device (right)
+     *
+     * @return gets max Android X coordinate of screen (equals pixel width of device)
+     */
+    public float getMaxScreenX() {
+        return mScreenWidth;
+    }
+
+    /**
+     * The Android Y axis ranges from 0 (top) to pixel height of device (bottom)
+     * <p/>
+     * Note: the Android Y axis is inverted!
+     *
+     * @return gets max Android Y coordinate of screen (equals pixel height of device)
+     */
+    public float getMaxScreenY() {
+        return mScreenHeight;
     }
 
     /**
