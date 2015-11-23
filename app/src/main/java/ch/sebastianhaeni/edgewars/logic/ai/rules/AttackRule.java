@@ -18,7 +18,6 @@ public class AttackRule extends Rule {
     private long mTimePassed;
     private Node mNode;
 
-
     public AttackRule(GameState state, Player player) {
         super(state, player);
     }
@@ -33,8 +32,7 @@ public class AttackRule extends Rule {
 
         mNode = node;
 
-        Log.d("debug.attackrule", "my distance to enemy: "+AIAwareness.getDistanceToEnemy(getPlayer(), mNode)+"; tankCount: "+mNode.getTankCount());
-
+        Log.d("debug.attackrule", "my distance to enemy: " + AIAwareness.getDistanceToEnemy(getPlayer(), mNode) + "; tankCount: " + mNode.getTankCount());
 
         return AIAwareness.getDistanceToEnemy(getPlayer(), mNode) < 2 && (mNode.getTankCount() >= 5 || mNode.getSprinterCount() >= 5 || mNode.getMeleeCount() >= 5);
 

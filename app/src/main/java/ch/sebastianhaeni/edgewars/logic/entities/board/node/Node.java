@@ -107,8 +107,8 @@ public class Node extends BoardEntity implements IClickable {
     }
 
     @Override
-    public String toString () {
-        return super.toString() + "[x="+mPosition.getX()+", y="+mPosition.getY()+"]";
+    public String toString() {
+        return super.toString() + "[x=" + mPosition.getX() + ", y=" + mPosition.getY() + "]";
     }
 
     //region actions

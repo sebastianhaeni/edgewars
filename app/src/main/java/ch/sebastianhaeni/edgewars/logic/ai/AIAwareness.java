@@ -23,8 +23,7 @@ public class AIAwareness {
     private static HashMap<Player, HashMap<Node, Integer>> mPlayerDistancesToEnemy;
     private static HashMap<Player, HashMap<Node, Node>> mPlayerGatewaysToEnemy;
 
-
-    public static void initialize (GameState gameState, ArrayList<Player> computerPlayers) {
+    public static void initialize(GameState gameState, ArrayList<Player> computerPlayers) {
         mGameState = gameState;
         mComputerPlayers = computerPlayers;
         mPlayerNodes = new HashMap<>();
@@ -34,11 +33,11 @@ public class AIAwareness {
         isInitialized = true;
     }
 
-    public static boolean isInitialized () {
+    public static boolean isInitialized() {
         return isInitialized;
     }
 
-    public static void update () {
+    public static void update() {
         if (!isInitialized) {
             return;
         }
@@ -46,11 +45,11 @@ public class AIAwareness {
         recalculate();
     }
 
-    public static ArrayList<Node> getMyNodes (Player player) {
+    public static ArrayList<Node> getMyNodes(Player player) {
         return mPlayerNodes.get(player);
     }
 
-    public static int getDistanceToEnemy (Player player, Node node) {
+    public static int getDistanceToEnemy(Player player, Node node) {
         if (!mPlayerDistancesToEnemy.get(player).containsKey(node)) {
             throw new IllegalArgumentException("I am not aware that I own this node!");
         }
@@ -58,7 +57,7 @@ public class AIAwareness {
         return mPlayerDistancesToEnemy.get(player).get(node);
     }
 
-    public static Node getGatewayToEnemy (Player player, Node node) {
+    public static Node getGatewayToEnemy(Player player, Node node) {
         if (!mPlayerGatewaysToEnemy.get(player).containsKey(node)) {
             throw new IllegalArgumentException("I am not aware that I own this node!");
         }
@@ -66,7 +65,7 @@ public class AIAwareness {
         return mPlayerGatewaysToEnemy.get(player).get(node);
     }
 
-    private static void recalculate () {
+    private static void recalculate() {
         mPlayerNodes.clear();
         mPlayerDistancesToEnemy.clear();
         mPlayerGatewaysToEnemy.clear();
@@ -77,7 +76,7 @@ public class AIAwareness {
         }
     }
 
-    private static void prepareNodes (Player player) {
+    private static void prepareNodes(Player player) {
         ArrayList<Node> nodes = new ArrayList<>();
         // get all nodes controlled by player
         for (Node n : mGameState.getBoard().getNodes()) {
@@ -93,13 +92,13 @@ public class AIAwareness {
         mPlayerNodes.put(player, nodes);
     }
 
-    private static void prepareDistances (Player player) {
+    private static void prepareDistances(Player player) {
         HashMap<Node, Integer> distancesToEnemy = new HashMap<>();
         HashMap<Node, Node> gatewaysToEnemy = new HashMap<>();
 
         for (Node node : mPlayerNodes.get(player)) {
             Pair<Integer, Node> result = bfs(player, node);
-            if (result==null)   // no connected enemy node was found
+            if (result == null)   // no connected enemy node was found
                 return;
             distancesToEnemy.put(node, result.first);
             gatewaysToEnemy.put(node, result.second);
@@ -109,9 +108,8 @@ public class AIAwareness {
         mPlayerGatewaysToEnemy.put(player, gatewaysToEnemy);
     }
 
-
     // BFS
-    private static Pair<Integer, Node> bfs (Player player, Node node) {
+    private static Pair<Integer, Node> bfs(Player player, Node node) {
 
         Log.d("debug", "calculating bfs");
 
@@ -146,13 +144,11 @@ public class AIAwareness {
                     if (neighborNode.getState() instanceof OwnedState) {
                         OwnedState state = (OwnedState) neighborNode.getState();
                         if (!player.equals(state.getOwner())) {
-                            Node closestEnemyNode = neighborNode;
-                            int distance = currentDistance;
-                            Node gatewayTowardsEnemy = getGatewayTowardsEnemy(node, closestEnemyNode, discoveryEdges);
-                            Pair<Integer, Node> result = new Pair<>(distance, gatewayTowardsEnemy);
+                            Node gatewayTowardsEnemy = getGatewayTowardsEnemy(node, neighborNode, discoveryEdges);
+                            Pair<Integer, Node> result = new Pair<>(currentDistance, gatewayTowardsEnemy);
 
-                            Log.d("debug", "distance to enemy "+currentDistance);
-                            Log.d("debug", "closest enemy node"+closestEnemyNode.toString());
+                            Log.d("debug", "distance to enemy " + currentDistance);
+                            Log.d("debug", "closest enemy node" + neighborNode.toString());
                             return result;
                         }
                     }
