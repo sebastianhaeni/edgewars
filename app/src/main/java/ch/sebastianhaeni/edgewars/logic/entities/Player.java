@@ -1,7 +1,6 @@
 package ch.sebastianhaeni.edgewars.logic.entities;
 
-
-import java.io.Serializable;
+import java.util.Arrays;
 import java.util.UUID;
 
 import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Text;
@@ -93,6 +92,7 @@ public class Player extends Entity {
 
     /**
      * Removes energy from the player. If the subtraction results in an energy amount below zero,
+     * <p>
      * the action is not executed and an exception is thrown instead.
      *
      * @param cost amount to deduct
@@ -120,7 +120,8 @@ public class Player extends Entity {
         return equals(other);
     }
 
-    public String toString () {
-        return super.toString() + "[UUID="+mId+", color="+mColor;
+    @Override
+    public String toString() {
+        return super.toString() + "{UUID=" + mId + ", color=" + Arrays.toString(mColor) + "}";
     }
 }

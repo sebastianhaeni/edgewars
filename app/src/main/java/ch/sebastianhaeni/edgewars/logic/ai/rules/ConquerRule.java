@@ -31,7 +31,7 @@ public class ConquerRule extends Rule {
 
         mNeutralNeighbor = AIAwareness.getNeutralNeighbor(mNode);
 
-        return AIAwareness.getDistanceToEnemy(mNode) >= 2 && mNeutralNeighbor != null && (mNode.getTankCount() >= 3 || mNode.getSprinterCount() >= 3 || mNode.getMeleeCount() >= 3);
+        return AIAwareness.getDistanceToEnemy(getPlayer(), mNode) >= 2 && mNeutralNeighbor != null && (mNode.getTankCount() >= 3 || mNode.getSprinterCount() >= 3 || mNode.getMeleeCount() >= 3);
     }
 
     @Override

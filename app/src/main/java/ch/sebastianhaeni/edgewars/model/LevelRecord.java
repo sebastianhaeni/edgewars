@@ -2,8 +2,6 @@ package ch.sebastianhaeni.edgewars.model;
 
 import com.orm.SugarRecord;
 
-import java.sql.Time;
-
 public class LevelRecord extends SugarRecord<LevelRecord> {
     int levelNr;
     int score;
@@ -18,7 +16,12 @@ public class LevelRecord extends SugarRecord<LevelRecord> {
         this.time = time;
     }
 
-    public int getScore() { return score; }
-    public long getTime() { return time; }
+    public int getScore() {
+        return score;
+    }
+
+    public long getTime() {
+        return time;
+    }
 
 }

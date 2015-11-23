@@ -26,7 +26,7 @@ public class BuildUpRule extends Rule {
         mNode = node;
 
         // rule does not apply if node has already many units
-        return !(node.getMeleeCount() > 30 && node.getSprinterCount() > 30 && node.getTankCount() > 30);
+        return !(node.getMeleeCount() > 20 && node.getSprinterCount() > 20 && node.getTankCount() > 20);
     }
 
     @Override
