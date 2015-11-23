@@ -12,6 +12,7 @@ public class RuleBasedAI extends AI {
 
     private ConcurrentHashMap<Node, NodeRules> mNodeRules = new ConcurrentHashMap<>();
 
+
     public RuleBasedAI(Player player) {
         super(player);
     }
@@ -41,9 +42,8 @@ public class RuleBasedAI extends AI {
     private void updateNodes(ArrayList<Node> nodes) {
         // add new nodes
         for (Node node : nodes) {
-            if (!mNodeRules.keySet().contains(node)) {
+            if (!mNodeRules.keySet().contains(node))
                 mNodeRules.put(node, new NodeRules(getPlayer(), node));
-            }
         }
 
         // remove old nodes
@@ -52,5 +52,6 @@ public class RuleBasedAI extends AI {
                 mNodeRules.remove(node);
         }
     }
+
 
 }

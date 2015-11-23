@@ -92,7 +92,6 @@ public class Player extends Entity {
 
     /**
      * Removes energy from the player. If the subtraction results in an energy amount below zero,
-     * <p>
      * the action is not executed and an exception is thrown instead.
      *
      * @param cost amount to deduct

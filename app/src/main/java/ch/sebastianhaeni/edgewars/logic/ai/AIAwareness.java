@@ -125,13 +125,16 @@ public class AIAwareness {
         return backupTarget;
     }
 
+
     /**
      * Returns a node's distance to the closest enemy node
      *
      * @param node the node to be assessed
      * @return integer indicating the distance to the closest enemy node
      */
-    public static int getDistanceToEnemy(Player player, Node node) {
+    public static int getDistanceToEnemy(Node node) {
+        Player player = getPlayer(node);
+
         if (!mPlayerDistancesToEnemy.get(player).containsKey(node)) {
             throw new IllegalArgumentException("I am not aware that I own this node!");
         }
@@ -145,7 +148,9 @@ public class AIAwareness {
      * @param node the node to be assessed
      * @return a node connected to the assessed node which is closer to the next enemy node
      */
-    public static Node getGatewayToEnemy(Player player, Node node) {
+    public static Node getGatewayToEnemy(Node node) {
+        Player player = getPlayer(node);
+
         if (!mPlayerGatewaysToEnemy.get(player).containsKey(node)) {
             throw new IllegalArgumentException("I am not aware that I own this node!");
         }
@@ -253,8 +258,10 @@ public class AIAwareness {
         mPlayerGatewaysToEnemy.put(player, gatewaysToEnemy);
     }
 
+
     // BFS
     private static Pair<Integer, Node> bfs(Player player, Node node) {
+
         int currentDistance = 0;
         ArrayList<Node> visitedNodes = new ArrayList<>();
         ArrayList<Edge> discoveryEdges = new ArrayList<>();
@@ -292,9 +299,11 @@ public class AIAwareness {
                     }
                 }
             }
+
         }
 
         return null;
+
     }
 
     private static Node getGatewayTowardsEnemy(Node node, Node closestEnemyNode, ArrayList<Edge> discoveryEdges) {
@@ -303,6 +312,7 @@ public class AIAwareness {
         boolean done = false;
 
         while (!done) {
+
             for (Edge edge : discoveryEdges) {
                 if (edge.getTargetNode().equals(currentNode)) {
                     if (edge.getSourceNode().equals(node)) {
