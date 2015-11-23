@@ -55,6 +55,8 @@ public class GameSurfaceView extends GLSurfaceView {
 
         mThread = new GameThread();
         GameRenderer renderer = new GameRenderer(mContext, mThread, gameState);
+        mController = new GameController(mContext, renderer, gameState);
+        Game.getInstance().setGameController(mController);
         mController = new GameController(renderer, gameState);
 
         // Set the Renderer for drawing on the GLSurfaceView

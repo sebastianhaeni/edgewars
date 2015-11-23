@@ -32,6 +32,15 @@ public class GameController {
     }
 
     /**
+     * Returns the current GameRenderer of the Game
+     *
+     * @return The current GameRenderer object
+     */
+    public GameRenderer getRenderer() {
+        return mRenderer;
+    }
+
+    /**
      * Handles touch events on the OpenGL ES surface.
      *
      * @param e the motion event

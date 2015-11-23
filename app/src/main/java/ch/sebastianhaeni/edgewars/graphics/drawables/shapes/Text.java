@@ -122,12 +122,12 @@ public class Text extends Shape {
 
         if (mIsStatic && !mStaticPositionInitialized) {
 
-            if (renderer.getMaxX() <= 0) {
+            if (renderer.getMaxGLX() <= 0) {
                 // values not ready yet
                 return;
             }
 
-            setPosition(new Position(getPosition().getX() - renderer.getMaxX(), getPosition().getY() - renderer.getMaxY()));
+            setPosition(new Position(getPosition().getX() - renderer.getMaxGLX(), getPosition().getY() - renderer.getMaxGLY()));
             prepareDrawInfo();
             convertTextToTriangleInfo();
             mStaticPositionInitialized = true;
