@@ -16,8 +16,8 @@ import ch.sebastianhaeni.edgewars.logic.entities.board.Edge;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
 import ch.sebastianhaeni.edgewars.logic.entities.board.units.Unit;
 import ch.sebastianhaeni.edgewars.logic.entities.board.units.state.OnEdgeState;
-import ch.sebastianhaeni.edgewars.ui.IClickable;
 import ch.sebastianhaeni.edgewars.ui.GameController;
+import ch.sebastianhaeni.edgewars.ui.IClickable;
 
 /**
  * This class controls the game.

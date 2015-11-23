@@ -4,25 +4,16 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Vector;
 
 import ch.sebastianhaeni.edgewars.logic.GameState;
-import ch.sebastianhaeni.edgewars.logic.ai.rules.AttackRule;
-import ch.sebastianhaeni.edgewars.logic.ai.rules.ConquerRule;
-import ch.sebastianhaeni.edgewars.logic.ai.rules.ExposedNodeRule;
-import ch.sebastianhaeni.edgewars.logic.ai.rules.BuildUpRule;
 import ch.sebastianhaeni.edgewars.logic.ai.rules.NodeRules;
-import ch.sebastianhaeni.edgewars.logic.ai.rules.Rule;
-import ch.sebastianhaeni.edgewars.logic.ai.rules.UnderAttackRule;
 import ch.sebastianhaeni.edgewars.logic.commands.Command;
 import ch.sebastianhaeni.edgewars.logic.entities.Player;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
-import ch.sebastianhaeni.edgewars.logic.entities.board.node.state.OwnedState;
 
 public class RuleBasedAI extends AI {
 
     private HashMap<Node, NodeRules> mNodeRules = new HashMap<>();
-
 
     public RuleBasedAI(GameState state, Player player) {
         super(state, player);
@@ -52,7 +43,7 @@ public class RuleBasedAI extends AI {
         }
     }
 
-    private void updateNodes (ArrayList<Node> nodes) {
+    private void updateNodes(ArrayList<Node> nodes) {
         // add new nodes
         for (Node node : nodes) {
             if (!mNodeRules.keySet().contains(node))
@@ -60,11 +51,10 @@ public class RuleBasedAI extends AI {
         }
 
         // remove old nodes
-        for (Node node: mNodeRules.keySet()) {
+        for (Node node : mNodeRules.keySet()) {
             if (!nodes.contains(node))
                 mNodeRules.remove(node);
         }
     }
-
 
 }

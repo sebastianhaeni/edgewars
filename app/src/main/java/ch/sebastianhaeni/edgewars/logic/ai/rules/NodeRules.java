@@ -14,7 +14,7 @@ public class NodeRules {
     private final ArrayList<Rule> mRules = new ArrayList<>();
     private final Node mNode;
 
-    public NodeRules (GameState state, Player player, Node node) {
+    public NodeRules(GameState state, Player player, Node node) {
         mNode = node;
 
         mRules.add(new BuildUpRule(state, player));
@@ -24,7 +24,7 @@ public class NodeRules {
         mRules.add(new ExposedNodeRule(state, player));
     }
 
-    public ArrayList<Command> getCommands (long millis) {
+    public ArrayList<Command> getCommands(long millis) {
 
         ArrayList<Command> commands = new ArrayList<>();
         for (Rule r : mRules) {
@@ -33,7 +33,7 @@ public class NodeRules {
 
             if (r.applies(mNode, millis)) {
 
-                Log.d("debug", "rule "+r.toString()+" applies");
+                Log.d("debug", "rule " + r.toString() + " applies");
 
                 for (Command c : r.getCommands()) {
                     commands.add(c);
@@ -44,6 +44,5 @@ public class NodeRules {
         return commands;
 
     }
-
 
 }
