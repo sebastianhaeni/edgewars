@@ -5,7 +5,8 @@ import android.opengl.GLSurfaceView;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.MotionEvent;
-import android.view.SurfaceHolder;
+
+import java.io.Serializable;
 
 import ch.sebastianhaeni.edgewars.logic.Game;
 import ch.sebastianhaeni.edgewars.logic.GameState;
@@ -18,11 +19,12 @@ import ch.sebastianhaeni.edgewars.ui.GameController;
  * This view can also be used to capture touch events, such as a user
  * interacting with drawn objects.
  */
-public class GameSurfaceView extends GLSurfaceView {
+public class GameSurfaceView extends GLSurfaceView implements Serializable {
 
     private GameThread mThread;
     private GameController mController;
     private final Context mContext;
+    private GameState mGameState;
 
     /**
      * Constructor
@@ -49,13 +51,13 @@ public class GameSurfaceView extends GLSurfaceView {
 
         LevelLoader levelLoader = new LevelLoader(mContext);
         // load game state and level number
-        GameState gameState = levelLoader.build(levelNr);
+        mGameState = levelLoader.build(levelNr);
 
-        gameState.init();
+        mGameState.init();
 
         mThread = new GameThread();
-        GameRenderer renderer = new GameRenderer(mContext, mThread, gameState);
-        mController = new GameController(mContext, renderer, gameState);
+        GameRenderer renderer = new GameRenderer(mContext, mThread, mGameState);
+        mController = new GameController(mContext, renderer, mGameState);
         Game.getInstance().setGameController(mController);
 
         // Set the Renderer for drawing on the GLSurfaceView
@@ -63,20 +65,10 @@ public class GameSurfaceView extends GLSurfaceView {
 
         // Render the view continuously
         setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
-    }
 
-    @Override
-    public void surfaceDestroyed(SurfaceHolder holder) {
-        boolean retry = true;
-        mThread.setRunning(false);
-        while (retry) {
-            try {
-                mThread.join();
-                retry = false;
-            } catch (InterruptedException e) {
-                // Try again
-            }
-        }
+        // start Thread only once (onCreate)
+        mThread.setRunning(true);
+        mThread.start();
     }
 
     @Override
@@ -84,5 +76,20 @@ public class GameSurfaceView extends GLSurfaceView {
         mController.onTouchEvent(e);
         return true;
     }
+
+    @Override
+    public void onPause() {
+        mThread.onPause();
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        mThread.onResume();
+        super.onResume();
+    }
+
+    public GameState getState() { return mGameState; }
+    public void setState(GameState state) { mGameState = state; }
 
 }

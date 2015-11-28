@@ -2,6 +2,7 @@ package ch.sebastianhaeni.edgewars.logic;
 
 import android.util.Log;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import ch.sebastianhaeni.edgewars.logic.ai.AIAwareness;
@@ -14,7 +15,7 @@ import ch.sebastianhaeni.edgewars.logic.entities.board.Board;
  * The game state contains everything we know about the game. This class allows other classes
  * to gather data for decisions. It's basically a bag.
  */
-public class GameState {
+public class GameState implements Serializable {
     private final Camera mCamera;
     private final Board mBoard;
     private final ArrayList<Player> mPlayers;

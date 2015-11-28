@@ -1,5 +1,6 @@
 package ch.sebastianhaeni.edgewars.logic.entities.board;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -10,16 +11,16 @@ import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
  * The board is the controller of everything visible on the game board. It has board entities and
  * drawables.
  */
-public class Board extends Entity {
+public class Board extends Entity implements Serializable {
 
     // position constants to define outer node positions for getOuterNode() method
     public final static int TOP = 0;
     public final static int RIGHT = 1;
     public final static int BOTTOM = 2;
     public final static int LEFT = 3;
-    private final static HashMap<Integer, Node> outerNodes = new HashMap<>();
+    private final static transient HashMap<Integer, Node> outerNodes = new HashMap<>();
 
-    private final ArrayList<BoardEntity> mEntities = new ArrayList<>();
+    private final transient ArrayList<BoardEntity> mEntities = new ArrayList<>();
 
     /**
      * Constructor

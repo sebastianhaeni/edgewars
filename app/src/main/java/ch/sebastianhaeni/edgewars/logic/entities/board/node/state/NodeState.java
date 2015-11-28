@@ -1,11 +1,13 @@
 package ch.sebastianhaeni.edgewars.logic.entities.board.node.state;
 
+import java.io.Serializable;
+
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
 
 /**
  * Represents the state of a node.
  */
-public abstract class NodeState {
+public abstract class NodeState implements Serializable {
     private final Node mNode;
 
     /**
