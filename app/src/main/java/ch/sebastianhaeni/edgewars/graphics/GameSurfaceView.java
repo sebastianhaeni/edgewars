@@ -5,7 +5,6 @@ import android.opengl.GLSurfaceView;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.MotionEvent;
-import android.view.SurfaceHolder;
 
 import java.io.Serializable;
 
@@ -65,20 +64,10 @@ public class GameSurfaceView extends GLSurfaceView implements Serializable {
 
         // Render the view continuously
         setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
-    }
 
-    @Override
-    public void surfaceDestroyed(SurfaceHolder holder) {
-        boolean retry = true;
-        mThread.setRunning(false);
-        while (retry) {
-            try {
-                mThread.join();
-                retry = false;
-            } catch (InterruptedException e) {
-                // Try again
-            }
-        }
+        // start Thread only once (onCreate)
+        mThread.setRunning(true);
+        mThread.start();
     }
 
     @Override
@@ -89,16 +78,17 @@ public class GameSurfaceView extends GLSurfaceView implements Serializable {
 
     @Override
     public void onPause() {
-        super.onPause();
         mThread.onPause();
+        super.onPause();
     }
 
     @Override
     public void onResume() {
-        super.onResume();
         mThread.onResume();
+        super.onResume();
     }
 
     public GameState getState() { return mGameState; }
+    public void setState(GameState state) { mGameState = state; }
 
 }
