@@ -12,6 +12,7 @@ import ch.sebastianhaeni.edgewars.logic.GameState;
 import ch.sebastianhaeni.edgewars.logic.entities.Player;
 import ch.sebastianhaeni.edgewars.logic.entities.board.Edge;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
+import ch.sebastianhaeni.edgewars.logic.entities.board.node.state.NeutralState;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.state.OwnedState;
 
 public class AIAwareness {
@@ -23,8 +24,13 @@ public class AIAwareness {
     private static HashMap<Player, HashMap<Node, Integer>> mPlayerDistancesToEnemy;
     private static HashMap<Player, HashMap<Node, Node>> mPlayerGatewaysToEnemy;
 
-
-    public static void initialize (GameState gameState, ArrayList<Player> computerPlayers) {
+    /**
+     * This method sets up the AI Awareness of the game. Other methods should only be called after call to initialize().
+     *
+     * @param gameState       the current GameState object
+     * @param computerPlayers the current computer players
+     */
+    public static void initialize(GameState gameState, ArrayList<Player> computerPlayers) {
         mGameState = gameState;
         mComputerPlayers = computerPlayers;
         mPlayerNodes = new HashMap<>();
@@ -34,11 +40,19 @@ public class AIAwareness {
         isInitialized = true;
     }
 
-    public static boolean isInitialized () {
+    /**
+     * This method checks whether AI Awareness has already been initialized
+     *
+     * @return true if initialized, false if not
+     */
+    public static boolean isInitialized() {
         return isInitialized;
     }
 
-    public static void update () {
+    /**
+     * This method updates the internals of AI Awareness. Should be called, when a node state has changed.
+     */
+    public static void update() {
         if (!isInitialized) {
             return;
         }
@@ -46,11 +60,66 @@ public class AIAwareness {
         recalculate();
     }
 
-    public static ArrayList<Node> getMyNodes (Player player) {
+    /**
+     * This method returns all the player's current nodes
+     *
+     * @param player the player whose nodes shall be returned
+     * @return a list of all the player's current nodes
+     */
+    public static ArrayList<Node> getMyNodes(Player player) {
         return mPlayerNodes.get(player);
     }
 
-    public static int getDistanceToEnemy (Player player, Node node) {
+    public static Node getNeutralNeighbor(Node node) {
+        Node neighbor = null;
+
+        for (Node n : Game.getInstance().getConnectedNodes(node)) {
+            if (n.getState() instanceof NeutralState) {
+                neighbor = n;
+                break;
+            }
+        }
+
+        return neighbor;
+    }
+
+    /**
+     * This method checks whether the player has neighbor nodes that are closer to the enemy.
+     * If yes, it returns the one with fewer total unit count.
+     *
+     * @param player the player whom the assessed node belongs to
+     * @param node   the node to be assessed
+     * @return the node towards the enemy with the smallest unit count, or null
+     */
+    public static Node getBackupTargetNode(Player player, Node node) {
+        Node backupTarget = null;
+
+        for (Node n : Game.getInstance().getConnectedNodes(node)) {
+            if (n.getState() instanceof OwnedState) {
+                OwnedState state = (OwnedState) n.getState();
+                Player owner = state.getOwner();
+                if (owner.equals(player) && mPlayerDistancesToEnemy.get(player).get(n) < mPlayerDistancesToEnemy.get(player).get(node)) {
+                    if (backupTarget == null)
+                        backupTarget = n;
+                    int newUnitCount = n.getMeleeCount() + n.getSprinterCount() + n.getTankCount();
+                    int tempUnitCount = backupTarget.getMeleeCount() + backupTarget.getSprinterCount() + backupTarget.getTankCount();
+                    if (newUnitCount < tempUnitCount)
+                        backupTarget = n;
+                }
+            }
+        }
+
+        return backupTarget;
+    }
+
+    /**
+     * This method returns a node's distance to the closest enemy node
+     *
+     * @param player the player whom the assessed node belongs to
+     * @param node   the node to be assessed
+     * @return integer indicating the distance to the closest enemy node
+     */
+    public static int getDistanceToEnemy(Player player, Node node) {
         if (!mPlayerDistancesToEnemy.get(player).containsKey(node)) {
             throw new IllegalArgumentException("I am not aware that I own this node!");
         }
@@ -58,7 +127,14 @@ public class AIAwareness {
         return mPlayerDistancesToEnemy.get(player).get(node);
     }
 
-    public static Node getGatewayToEnemy (Player player, Node node) {
+    /**
+     * Returns a node that is connected to the assessed node and is closer to the next enemy node
+     *
+     * @param player the player whom the assessed node belongs to
+     * @param node   the node to be assessed
+     * @return a node connected to the assessed node which is closer to the next enemy node
+     */
+    public static Node getGatewayToEnemy(Player player, Node node) {
         if (!mPlayerGatewaysToEnemy.get(player).containsKey(node)) {
             throw new IllegalArgumentException("I am not aware that I own this node!");
         }
@@ -66,7 +142,7 @@ public class AIAwareness {
         return mPlayerGatewaysToEnemy.get(player).get(node);
     }
 
-    private static void recalculate () {
+    private static void recalculate() {
         mPlayerNodes.clear();
         mPlayerDistancesToEnemy.clear();
         mPlayerGatewaysToEnemy.clear();
@@ -77,7 +153,7 @@ public class AIAwareness {
         }
     }
 
-    private static void prepareNodes (Player player) {
+    private static void prepareNodes(Player player) {
         ArrayList<Node> nodes = new ArrayList<>();
         // get all nodes controlled by player
         for (Node n : mGameState.getBoard().getNodes()) {
@@ -93,13 +169,13 @@ public class AIAwareness {
         mPlayerNodes.put(player, nodes);
     }
 
-    private static void prepareDistances (Player player) {
+    private static void prepareDistances(Player player) {
         HashMap<Node, Integer> distancesToEnemy = new HashMap<>();
         HashMap<Node, Node> gatewaysToEnemy = new HashMap<>();
 
         for (Node node : mPlayerNodes.get(player)) {
             Pair<Integer, Node> result = bfs(player, node);
-            if (result==null)   // no connected enemy node was found
+            if (result == null)   // no connected enemy node was found
                 return;
             distancesToEnemy.put(node, result.first);
             gatewaysToEnemy.put(node, result.second);
@@ -111,7 +187,7 @@ public class AIAwareness {
 
 
     // BFS
-    private static Pair<Integer, Node> bfs (Player player, Node node) {
+    private static Pair<Integer, Node> bfs(Player player, Node node) {
 
         Log.d("debug", "calculating bfs");
 
@@ -146,14 +222,8 @@ public class AIAwareness {
                     if (neighborNode.getState() instanceof OwnedState) {
                         OwnedState state = (OwnedState) neighborNode.getState();
                         if (!player.equals(state.getOwner())) {
-                            Node closestEnemyNode = neighborNode;
-                            int distance = currentDistance;
-                            Node gatewayTowardsEnemy = getGatewayTowardsEnemy(node, closestEnemyNode, discoveryEdges);
-                            Pair<Integer, Node> result = new Pair<>(distance, gatewayTowardsEnemy);
-
-                            Log.d("debug", "distance to enemy "+currentDistance);
-                            Log.d("debug", "closest enemy node"+closestEnemyNode.toString());
-                            return result;
+                            Node gatewayTowardsEnemy = getGatewayTowardsEnemy(node, neighborNode, discoveryEdges);
+                            return new Pair<>(currentDistance, gatewayTowardsEnemy);
                         }
                     }
                 }

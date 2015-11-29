@@ -1,5 +1,6 @@
 package ch.sebastianhaeni.edgewars.logic.ai.rules;
 
+
 import java.util.ArrayList;
 
 import ch.sebastianhaeni.edgewars.EUnitType;
@@ -11,13 +12,13 @@ import ch.sebastianhaeni.edgewars.logic.commands.MoveUnitCommand;
 import ch.sebastianhaeni.edgewars.logic.entities.Player;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
 
-public class ConquerRule extends Rule {
+public class BackupRule extends Rule {
 
     private long mTimePassed;
     private Node mNode;
-    private Node mNeutralNeighbor;
+    private Node mBackupTarget;
 
-    public ConquerRule(GameState state, Player player) {
+    public BackupRule(GameState state, Player player) {
         super(state, player);
     }
 
@@ -30,13 +31,14 @@ public class ConquerRule extends Rule {
         mTimePassed = 0;
         mNode = node;
 
-        mNeutralNeighbor = AIAwareness.getNeutralNeighbor(mNode);
+        mBackupTarget = AIAwareness.getBackupTargetNode(getPlayer(), mNode);
 
-        return AIAwareness.getDistanceToEnemy(getPlayer(), mNode) >= 2 && mNeutralNeighbor != null && (mNode.getTankCount() >= 3 || mNode.getSprinterCount() >= 3 || mNode.getMeleeCount() >= 3);
+        return AIAwareness.getDistanceToEnemy(getPlayer(), mNode) >= 2 && mBackupTarget != null && (mNode.getTankCount() >= 5 || mNode.getSprinterCount() >= 5 || mNode.getMeleeCount() >= 5);
     }
 
     @Override
     public ArrayList<Command> getCommands() {
+
         ArrayList<Command> commands = new ArrayList<>();
 
         int sprinterCount = mNode.getSprinterCount();
@@ -44,13 +46,14 @@ public class ConquerRule extends Rule {
         int tankCount = mNode.getTankCount();
 
         if (sprinterCount >= meleeCount && sprinterCount >= tankCount) {
-            commands.add(new MoveUnitCommand(3, EUnitType.SPRINTER, mNeutralNeighbor, Game.getInstance().getEdgeBetween(mNode, mNeutralNeighbor), getPlayer()));
+            commands.add(new MoveUnitCommand(mNode.getSprinterCount(), EUnitType.SPRINTER, mBackupTarget, Game.getInstance().getEdgeBetween(mNode, mBackupTarget), getPlayer()));
         } else if (meleeCount >= sprinterCount && meleeCount >= tankCount) {
-            commands.add(new MoveUnitCommand(3, EUnitType.MELEE, mNeutralNeighbor, Game.getInstance().getEdgeBetween(mNode, mNeutralNeighbor), getPlayer()));
+            commands.add(new MoveUnitCommand(mNode.getMeleeCount(), EUnitType.MELEE, mBackupTarget, Game.getInstance().getEdgeBetween(mNode, mBackupTarget), getPlayer()));
         } else {
-            commands.add(new MoveUnitCommand(3, EUnitType.TANK, mNeutralNeighbor, Game.getInstance().getEdgeBetween(mNode, mNeutralNeighbor), getPlayer()));
+            commands.add(new MoveUnitCommand(mNode.getTankCount(), EUnitType.TANK, mBackupTarget, Game.getInstance().getEdgeBetween(mNode, mBackupTarget), getPlayer()));
         }
 
         return commands;
+
     }
 }
