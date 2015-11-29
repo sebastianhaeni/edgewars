@@ -1,7 +1,5 @@
 package ch.sebastianhaeni.edgewars.logic.entities;
 
-import java.io.Serializable;
-
 import ch.sebastianhaeni.edgewars.graphics.GameRenderer;
 import ch.sebastianhaeni.edgewars.logic.Constants;
 import ch.sebastianhaeni.edgewars.logic.Game;
@@ -124,11 +122,9 @@ public class Camera extends Entity {
 
         switch (xy) {
             case 'x':
-
                 return leftMostNodeX + delta > (renderer.getMaxScreenX() * .6f) || rightMostNodeX + delta < (renderer.getMaxScreenX() * .4f);
 
             case 'y':
-
                 return bottomMostNodeY + delta < (renderer.getMaxScreenY() * .4f) || topMostNodeY + delta > (renderer.getMaxScreenY() * .6f);
 
             default:

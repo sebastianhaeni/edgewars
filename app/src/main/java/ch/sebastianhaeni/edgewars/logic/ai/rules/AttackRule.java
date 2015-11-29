@@ -1,7 +1,5 @@
 package ch.sebastianhaeni.edgewars.logic.ai.rules;
 
-import android.util.Log;
-
 import java.util.ArrayList;
 
 import ch.sebastianhaeni.edgewars.EUnitType;
@@ -30,14 +28,9 @@ public class AttackRule extends Rule {
             return false;
         }
         mTimePassed = 0;
-
         mNode = node;
 
-        Log.d("debug.attackrule", "my distance to enemy: "+AIAwareness.getDistanceToEnemy(getPlayer(), mNode)+"; tankCount: "+mNode.getTankCount());
-
-
         return AIAwareness.getDistanceToEnemy(getPlayer(), mNode) < 2 && (mNode.getTankCount() >= 5 || mNode.getSprinterCount() >= 5 || mNode.getMeleeCount() >= 5);
-
     }
 
     @Override
