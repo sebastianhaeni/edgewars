@@ -18,7 +18,7 @@ public abstract class Button extends Entity implements IClickable {
         mPosition = position;
     }
 
-    public void addListener(OnGameClickListener listener) {
+    public void addClickListener(OnGameClickListener listener) {
         mListeners.add(listener);
     }
 

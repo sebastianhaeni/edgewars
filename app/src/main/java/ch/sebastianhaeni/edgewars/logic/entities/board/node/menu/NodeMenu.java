@@ -13,9 +13,9 @@ public class NodeMenu {
     private final Node mNode;
     private final boolean mIsOwned;
     private boolean mVisible;
-    private NodeButton mMeleeButton;
-    private NodeButton mTankButton;
-    private NodeButton mSprinterButton;
+    private DraggableButton mMeleeButton;
+    private DraggableButton mTankButton;
+    private DraggableButton mSprinterButton;
     private NodeButton mMeleeFactoryButton;
     private NodeButton mSprinterFactoryButton;
     private NodeButton mTankFactoryButton;
@@ -48,7 +48,7 @@ public class NodeMenu {
 
         mRepairButton = new NodeButton(mNode.getPosition(), -1, 1, String.valueOf(Text.WRENCH), Constants.NODE_CORNERS);
         mRepairButton.register();
-        mRepairButton.addListener(new Button.OnGameClickListener() {
+        mRepairButton.addClickListener(new Button.OnGameClickListener() {
             @Override
             public void onClick() {
                 mNode.repair();
@@ -57,7 +57,7 @@ public class NodeMenu {
 
         mHealthButton = new NodeButton(mNode.getPosition(), 0, 1.5f, String.valueOf(Text.HEALTH), Constants.NODE_CORNERS);
         mHealthButton.register();
-        mHealthButton.addListener(new Button.OnGameClickListener() {
+        mHealthButton.addClickListener(new Button.OnGameClickListener() {
             @Override
             public void onClick() {
                 mNode.upgradeHealth();
@@ -66,7 +66,7 @@ public class NodeMenu {
 
         mDamageButton = new NodeButton(mNode.getPosition(), 1, 1, String.valueOf(Text.DAMAGE), Constants.NODE_CORNERS);
         mDamageButton.register();
-        mDamageButton.addListener(new Button.OnGameClickListener() {
+        mDamageButton.addClickListener(new Button.OnGameClickListener() {
             @Override
             public void onClick() {
                 mNode.upgradeDamage();
@@ -83,7 +83,7 @@ public class NodeMenu {
         if (!mNode.getMeleeFactory().maxLevelReached()) {
             mMeleeFactoryButton = new NodeButton(mMeleeButton.getPosition(), -.7f, -.7f, String.valueOf(Constants.FACTORY_MELEE_UPGRADE_1) + Text.ENERGY, Constants.NODE_CORNERS);
             mMeleeFactoryButton.register();
-            mMeleeFactoryButton.addListener(new Button.OnGameClickListener() {
+            mMeleeFactoryButton.addClickListener(new Button.OnGameClickListener() {
                 @Override
                 public void onClick() {
                     mNode.getMeleeFactory().upgrade();
@@ -98,7 +98,7 @@ public class NodeMenu {
         if (!mNode.getTankFactory().maxLevelReached()) {
             mTankFactoryButton = new NodeButton(mTankButton.getPosition(), 0, -1, String.valueOf(Constants.FACTORY_TANK_UPGRADE_1) + Text.ENERGY, Constants.NODE_CORNERS);
             mTankFactoryButton.register();
-            mTankFactoryButton.addListener(new Button.OnGameClickListener() {
+            mTankFactoryButton.addClickListener(new Button.OnGameClickListener() {
                 @Override
                 public void onClick() {
                     mNode.getTankFactory().upgrade();
@@ -113,7 +113,7 @@ public class NodeMenu {
         if (!mNode.getSprinterFactory().maxLevelReached()) {
             mSprinterFactoryButton = new NodeButton(mSprinterButton.getPosition(), .7f, -.7f, String.valueOf(Constants.FACTORY_SPRINTER_UPGRADE_1) + Text.ENERGY, Constants.NODE_CORNERS);
             mSprinterFactoryButton.register();
-            mSprinterFactoryButton.addListener(new Button.OnGameClickListener() {
+            mSprinterFactoryButton.addClickListener(new Button.OnGameClickListener() {
                 @Override
                 public void onClick() {
                     mNode.getSprinterFactory().upgrade();
@@ -127,9 +127,10 @@ public class NodeMenu {
     }
 
     private void showUnits() {
-        mMeleeButton = new NodeButton(mNode.getPosition(), -1, -1, String.valueOf(mNode.getMeleeCount()), Constants.UNIT_MELEE_CORNERS);
-        mTankButton = new NodeButton(mNode.getPosition(), 0, -1.5f, String.valueOf(mNode.getTankCount()), Constants.UNIT_TANK_CORNERS);
-        mSprinterButton = new NodeButton(mNode.getPosition(), 1, -1, String.valueOf(mNode.getSprinterCount()), Constants.UNIT_SPRINTER_CORNERS);
+        mMeleeButton = new DraggableButton(mNode.getPosition(), -1, -1, String.valueOf(mNode.getMeleeCount()), Constants.UNIT_MELEE_CORNERS);
+        mTankButton = new DraggableButton(mNode.getPosition(), 0, -1.5f, String.valueOf(mNode.getTankCount()), Constants.UNIT_TANK_CORNERS);
+        mSprinterButton = new DraggableButton(mNode.getPosition(), 1, -1, String.valueOf(mNode.getSprinterCount()), Constants.UNIT_SPRINTER_CORNERS);
+
 
         mMeleeButton.register();
         mTankButton.register();
@@ -139,22 +140,34 @@ public class NodeMenu {
             return;
         }
 
+        // TODO on drag start, display neighboring nodes
+
+        mMeleeButton.addDropListener(new DraggableButton.IDropListener() {
+            @Override
+            public void drop(float x, float y) {
+                // TODO issue a send command
+            }
+        });
+
         // adding click listeners
-        mMeleeButton.addListener(new Button.OnGameClickListener() {
+        mMeleeButton.addClickListener(new Button.OnGameClickListener() {
             @Override
             public void onClick() {
+                // TODO change to unit build selection
                 mNode.askPlayerForTargetNode(EUnitType.MELEE);
             }
         });
-        mTankButton.addListener(new Button.OnGameClickListener() {
+        mTankButton.addClickListener(new Button.OnGameClickListener() {
             @Override
             public void onClick() {
+                // TODO change to unit build selection
                 mNode.askPlayerForTargetNode(EUnitType.TANK);
             }
         });
-        mSprinterButton.addListener(new Button.OnGameClickListener() {
+        mSprinterButton.addClickListener(new Button.OnGameClickListener() {
             @Override
             public void onClick() {
+                // TODO change to unit build selection
                 mNode.askPlayerForTargetNode(EUnitType.SPRINTER);
             }
         });

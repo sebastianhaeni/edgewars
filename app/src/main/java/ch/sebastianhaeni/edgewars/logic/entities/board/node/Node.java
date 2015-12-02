@@ -1,5 +1,6 @@
 package ch.sebastianhaeni.edgewars.logic.entities.board.node;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 import ch.sebastianhaeni.edgewars.EUnitType;
@@ -64,6 +65,11 @@ public class Node extends BoardEntity implements IClickable {
     private final MeleeFactory mMeleeFactory = new MeleeFactory(this);
     private final TankFactory mTankFactory = new TankFactory(this);
     private final SprinterFactory mSprinterFactory = new SprinterFactory(this);
+
+    /**
+     * Defines the currently selected unit to build. Can be <code>null</code>.
+     */
+    private Type mUnitBuildSelection = null;
 
     private int mHealth;
     private int mHealthLevel = 1;
