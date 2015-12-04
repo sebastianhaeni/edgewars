@@ -56,4 +56,8 @@ public class GameActivity extends Activity {
                             | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
         }
     }
+
+    public void back(View view) {
+        finish();
+    }
 }
