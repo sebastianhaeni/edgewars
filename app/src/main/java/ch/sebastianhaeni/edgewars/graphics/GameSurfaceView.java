@@ -57,7 +57,7 @@ public class GameSurfaceView extends GLSurfaceView implements Serializable {
 
         mThread = new GameThread();
         GameRenderer renderer = new GameRenderer(mContext, mThread, mGameState);
-        mController = new GameController(mContext, renderer, mGameState);
+        mController = new GameController(renderer, mGameState);
         Game.getInstance().setGameController(mController);
 
         // Set the Renderer for drawing on the GLSurfaceView
