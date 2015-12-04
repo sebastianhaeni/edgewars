@@ -11,13 +11,13 @@ import ch.sebastianhaeni.edgewars.logic.commands.MoveUnitCommand;
 import ch.sebastianhaeni.edgewars.logic.entities.Player;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
 
-public class ConquerRule extends Rule {
+public class DefenseRule extends Rule {
 
     private long mTimePassed;
     private Node mNode;
-    private Node mNeutralNeighbor;
+    private Node mDefenseTarget;
 
-    public ConquerRule(GameState state, Player player) {
+    public DefenseRule(GameState state, Player player) {
         super(state, player);
     }
 
@@ -30,9 +30,8 @@ public class ConquerRule extends Rule {
         mTimePassed = 0;
         mNode = node;
 
-        mNeutralNeighbor = AIAwareness.getNeutralNeighbor(mNode);
-
-        return AIAwareness.getDistanceToEnemy(getPlayer(), mNode) >= 2 && mNeutralNeighbor != null && (mNode.getTankCount() >= 3 || mNode.getSprinterCount() >= 3 || mNode.getMeleeCount() >= 3);
+        mDefenseTarget = AIAwareness.getDefenseTargetNode(getPlayer(), mNode);
+        return mDefenseTarget != null && (mNode.getTankCount() >= 1 || mNode.getSprinterCount() >= 1 || mNode.getMeleeCount() >= 1);
     }
 
     @Override
@@ -44,11 +43,11 @@ public class ConquerRule extends Rule {
         int tankCount = mNode.getTankCount();
 
         if (sprinterCount >= meleeCount && sprinterCount >= tankCount) {
-            commands.add(new MoveUnitCommand(mNode.getSprinterCount(), EUnitType.SPRINTER, mNeutralNeighbor, Game.getInstance().getEdgeBetween(mNode, mNeutralNeighbor), getPlayer()));
+            commands.add(new MoveUnitCommand(mNode.getSprinterCount(), EUnitType.SPRINTER, mDefenseTarget, Game.getInstance().getEdgeBetween(mNode, mDefenseTarget), getPlayer()));
         } else if (meleeCount >= sprinterCount && meleeCount >= tankCount) {
-            commands.add(new MoveUnitCommand(mNode.getMeleeCount(), EUnitType.MELEE, mNeutralNeighbor, Game.getInstance().getEdgeBetween(mNode, mNeutralNeighbor), getPlayer()));
+            commands.add(new MoveUnitCommand(mNode.getMeleeCount(), EUnitType.MELEE, mDefenseTarget, Game.getInstance().getEdgeBetween(mNode, mDefenseTarget), getPlayer()));
         } else {
-            commands.add(new MoveUnitCommand(mNode.getTankCount(), EUnitType.TANK, mNeutralNeighbor, Game.getInstance().getEdgeBetween(mNode, mNeutralNeighbor), getPlayer()));
+            commands.add(new MoveUnitCommand(mNode.getTankCount(), EUnitType.TANK, mDefenseTarget, Game.getInstance().getEdgeBetween(mNode, mDefenseTarget), getPlayer()));
         }
 
         return commands;

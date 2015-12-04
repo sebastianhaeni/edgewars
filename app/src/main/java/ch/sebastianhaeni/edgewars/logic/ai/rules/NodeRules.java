@@ -18,7 +18,9 @@ public class NodeRules {
         mRules.add(new BuildUpRule(state, player));
         mRules.add(new BackupRule(state, player));
         mRules.add(new AttackRule(state, player));
+        mRules.add(new DefenseRule(state, player));
         mRules.add(new ConquerRule(state, player));
+        mRules.add(new RepairRule(state, player));
     }
 
     public ArrayList<Command> getCommands(long millis) {
@@ -37,6 +39,4 @@ public class NodeRules {
         return commands;
 
     }
-
-
 }
