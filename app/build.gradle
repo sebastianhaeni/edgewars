@@ -2,10 +2,10 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    buildToolsVersion '23.0.2'
 
     defaultConfig {
-        applicationId "ch.sebastianhaeni.edgewars"
+        applicationId 'ch.sebastianhaeni.edgewars'
         minSdkVersion 21
         targetSdkVersion 23
         versionCode 1
