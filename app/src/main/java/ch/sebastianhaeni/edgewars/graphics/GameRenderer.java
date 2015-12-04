@@ -186,6 +186,14 @@ public class GameRenderer implements GLSurfaceView.Renderer {
         return (objectCoordinateY + mMaxY) * (mScreenHeight / (2 * mMaxY));
     }
 
+    public float getGameCoordinateX(float x) {
+        return (x / (mScreenWidth / (2 * mMaxX))) - mMaxX;
+    }
+
+    public float getGameCoordinateY(float y) {
+        return (y / (mScreenHeight / (2 * mMaxY))) - mMaxY;
+    }
+
     /**
      * @param objectLengthX length of object in X direction based on OpenGL coordinates
      * @return the length of object in X direction in screen pixels
