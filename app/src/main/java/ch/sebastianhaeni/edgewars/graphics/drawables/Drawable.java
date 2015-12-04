@@ -1,5 +1,7 @@
 package ch.sebastianhaeni.edgewars.graphics.drawables;
 
+import java.io.Serializable;
+
 import ch.sebastianhaeni.edgewars.graphics.GameRenderer;
 import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Shape;
 import ch.sebastianhaeni.edgewars.logic.Game;
@@ -7,7 +9,7 @@ import ch.sebastianhaeni.edgewars.logic.Game;
 /**
  * This interface describes things that can be drawn on the surface.
  */
-public abstract class Drawable {
+public abstract class Drawable implements Serializable {
 
     private final int mLayer;
 

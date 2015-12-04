@@ -122,11 +122,9 @@ public class Camera extends Entity {
 
         switch (xy) {
             case 'x':
-
                 return leftMostNodeX + delta > (renderer.getMaxScreenX() * .6f) || rightMostNodeX + delta < (renderer.getMaxScreenX() * .4f);
 
             case 'y':
-
                 return bottomMostNodeY + delta < (renderer.getMaxScreenY() * .4f) || topMostNodeY + delta > (renderer.getMaxScreenY() * .6f);
 
             default:

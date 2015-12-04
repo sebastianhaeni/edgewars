@@ -1,7 +1,5 @@
 package ch.sebastianhaeni.edgewars.logic.ai.rules;
 
-import android.util.Log;
-
 import java.util.ArrayList;
 
 import ch.sebastianhaeni.edgewars.logic.GameState;
@@ -18,10 +16,11 @@ public class NodeRules {
         mNode = node;
 
         mRules.add(new BuildUpRule(state, player));
-        mRules.add(new ConquerRule(state, player));
-        mRules.add(new UnderAttackRule(state, player));
+        mRules.add(new BackupRule(state, player));
         mRules.add(new AttackRule(state, player));
-        mRules.add(new ExposedNodeRule(state, player));
+        mRules.add(new DefenseRule(state, player));
+        mRules.add(new ConquerRule(state, player));
+        mRules.add(new RepairRule(state, player));
     }
 
     public ArrayList<Command> getCommands(long millis) {
@@ -29,11 +28,7 @@ public class NodeRules {
         ArrayList<Command> commands = new ArrayList<>();
         for (Rule r : mRules) {
 
-            Log.d("debug", "assessing rule " + r.toString());
-
             if (r.applies(mNode, millis)) {
-
-                Log.d("debug", "rule " + r.toString() + " applies");
 
                 for (Command c : r.getCommands()) {
                     commands.add(c);
@@ -44,5 +39,4 @@ public class NodeRules {
         return commands;
 
     }
-
 }

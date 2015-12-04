@@ -1,9 +1,7 @@
 package ch.sebastianhaeni.edgewars.logic.ai;
 
-import android.util.Log;
-
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 import ch.sebastianhaeni.edgewars.logic.GameState;
 import ch.sebastianhaeni.edgewars.logic.ai.rules.NodeRules;
@@ -13,7 +11,8 @@ import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
 
 public class RuleBasedAI extends AI {
 
-    private HashMap<Node, NodeRules> mNodeRules = new HashMap<>();
+    private ConcurrentHashMap<Node, NodeRules> mNodeRules = new ConcurrentHashMap<>();
+
 
     public RuleBasedAI(GameState state, Player player) {
         super(state, player);
@@ -24,8 +23,6 @@ public class RuleBasedAI extends AI {
         if (!AIAwareness.isInitialized()) {
             return;
         }
-
-        Log.d("debug", "rule based AI update");
 
         // test if my nodes have changed (gained new ones or lost some)
         ArrayList<Node> nodes = AIAwareness.getMyNodes(getPlayer());
@@ -56,5 +53,6 @@ public class RuleBasedAI extends AI {
                 mNodeRules.remove(node);
         }
     }
+
 
 }

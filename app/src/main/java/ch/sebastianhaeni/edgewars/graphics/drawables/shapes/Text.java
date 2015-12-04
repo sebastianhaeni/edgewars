@@ -52,13 +52,13 @@ public class Text extends Shape {
     private String mText;
 
     @SuppressWarnings("FieldCanBeLocal")
-    private FloatBuffer mVertexBuffer;
+    private transient FloatBuffer mVertexBuffer;
     @SuppressWarnings("FieldCanBeLocal")
-    private FloatBuffer mTextureBuffer;
+    private transient FloatBuffer mTextureBuffer;
     @SuppressWarnings("FieldCanBeLocal")
-    private FloatBuffer mColorBuffer;
+    private transient FloatBuffer mColorBuffer;
     @SuppressWarnings("FieldCanBeLocal")
-    private ShortBuffer mDrawListBuffer;
+    private transient ShortBuffer mDrawListBuffer;
 
     private float[] mVectors;
     private float[] mTextureCoordinates;

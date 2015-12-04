@@ -1,11 +1,13 @@
 package ch.sebastianhaeni.edgewars.logic.entities.board.units.state;
 
+import java.io.Serializable;
+
 import ch.sebastianhaeni.edgewars.logic.entities.board.units.Unit;
 
 /**
  * State of a unit.
  */
-public abstract class UnitState {
+public abstract class UnitState implements Serializable {
     private final Unit mUnit;
 
     /**

@@ -1,9 +1,11 @@
 package ch.sebastianhaeni.edgewars.util;
 
+import java.io.Serializable;
+
 /**
  * Position helper class.
  */
-public class Position {
+public class Position implements Serializable {
     private float mX;
     private float mY;
 

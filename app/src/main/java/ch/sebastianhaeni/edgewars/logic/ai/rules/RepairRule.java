@@ -1,18 +1,20 @@
 package ch.sebastianhaeni.edgewars.logic.ai.rules;
 
+
 import java.util.ArrayList;
 
 import ch.sebastianhaeni.edgewars.logic.GameState;
-import ch.sebastianhaeni.edgewars.logic.commands.BuildUnitCommand;
 import ch.sebastianhaeni.edgewars.logic.commands.Command;
+import ch.sebastianhaeni.edgewars.logic.commands.RepairNodeCommand;
 import ch.sebastianhaeni.edgewars.logic.entities.Player;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
 
-public class BuildUpRule extends Rule {
-    private Node mNode;
-    private long mTimePassed;
+public class RepairRule extends Rule {
 
-    public BuildUpRule(GameState state, Player player) {
+    private long mTimePassed;
+    private Node mNode;
+
+    public RepairRule(GameState state, Player player) {
         super(state, player);
     }
 
@@ -23,21 +25,15 @@ public class BuildUpRule extends Rule {
             return false;
         }
         mTimePassed = 0;
-
         mNode = node;
 
-        // rule does not apply if node has already many units
-        return !(node.getMeleeCount() > 30 && node.getSprinterCount() > 30 && node.getTankCount() > 30);
+        return node.getHealth() <= 0.25f * node.getMaxHealth() && node.getRepairCost() <= getPlayer().getEnergy();
     }
 
     @Override
     public ArrayList<Command> getCommands() {
         ArrayList<Command> commands = new ArrayList<>();
-
-        commands.add(new BuildUnitCommand(mNode.getMeleeFactory()));
-        commands.add(new BuildUnitCommand(mNode.getSprinterFactory()));
-        commands.add(new BuildUnitCommand(mNode.getTankFactory()));
-
+        commands.add(new RepairNodeCommand(mNode));
         return commands;
     }
 }

@@ -20,14 +20,27 @@ public class GameActivity extends Activity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
+        mGLView = new GameSurfaceView(this);
+
+        setContentView(mGLView);
+
         int levelNr = 1;
         if (getIntent().getExtras() != null) {
             levelNr = getIntent().getExtras().getInt(LevelDetailActivity.LEVEL_ID);
         }
-
-        mGLView = new GameSurfaceView(this);
         mGLView.startLevel(levelNr);
-        setContentView(mGLView);
+    }
+
+    @Override
+    protected void onResume() {
+        mGLView.onResume();
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        mGLView.onPause();
+        super.onPause();
     }
 
     @Override
@@ -43,17 +56,4 @@ public class GameActivity extends Activity {
                             | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
         }
     }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mGLView.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mGLView.onPause();
-    }
-
 }

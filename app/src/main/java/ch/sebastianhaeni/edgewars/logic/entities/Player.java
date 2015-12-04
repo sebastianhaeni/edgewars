@@ -1,6 +1,7 @@
 package ch.sebastianhaeni.edgewars.logic.entities;
 
-import java.util.Arrays;
+
+import java.io.Serializable;
 import java.util.UUID;
 
 import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Text;
@@ -16,8 +17,8 @@ import ch.sebastianhaeni.edgewars.util.Position;
 public class Player extends Entity {
     private final UUID mId;
     private final boolean mIsHuman;
-    private Text mEnergyLabel;
-    private AI mAi;
+    private transient Text mEnergyLabel;
+    private transient AI mAi;
     private final float[] mColor;
     private int mEnergy;
 
@@ -42,7 +43,7 @@ public class Player extends Entity {
             mAi.update(millis);
         }
         if (mEnergyLabel != null) {
-            mEnergyLabel.setText(String.valueOf(mEnergy) + Text.ENERGY);
+            mEnergyLabel.setText(mEnergy + " energy");
         }
     }
 
@@ -52,7 +53,7 @@ public class Player extends Entity {
         if (mIsHuman) {
             mEnergyLabel = new Text(
                     new Position(1, .4f),
-                    Colors.ENERGY_TEXT, String.valueOf(mEnergy) + Text.ENERGY,
+                    Colors.ENERGY_TEXT, mEnergy + " energy",
                     10, true);
             mEnergyLabel.register();
         }
@@ -92,7 +93,6 @@ public class Player extends Entity {
 
     /**
      * Removes energy from the player. If the subtraction results in an energy amount below zero,
-     * <p/>
      * the action is not executed and an exception is thrown instead.
      *
      * @param cost amount to deduct
@@ -120,8 +120,7 @@ public class Player extends Entity {
         return equals(other);
     }
 
-    @Override
-    public String toString() {
-        return super.toString() + "{UUID=" + mId + ", color=" + Arrays.toString(mColor) + "}";
+    public String toString () {
+        return super.toString() + "[UUID="+mId+", color="+mColor;
     }
 }
