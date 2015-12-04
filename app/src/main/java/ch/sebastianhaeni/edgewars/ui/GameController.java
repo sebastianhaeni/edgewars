@@ -53,6 +53,9 @@ public class GameController {
         float x = e.getX();
         float y = e.getY();
 
+        float rendererX = mRenderer.getGameCoordinateX(x);
+        float rendererY = mRenderer.getGameCoordinateY(y);
+
         switch (e.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 mStartX = x;
@@ -62,7 +65,7 @@ public class GameController {
                 if (clicked != null && clicked instanceof IDraggable) {
                     // start drag
                     _dragging = (IDraggable) clicked;
-                    _dragging.startDrag(x, y);
+                    _dragging.startDrag(rendererX, rendererY);
                     return;
                 }
 
@@ -73,7 +76,7 @@ public class GameController {
                 float dy = y - mPreviousY;
 
                 if (_dragging != null) {
-                    _dragging.moveDrag(x, y);
+                    _dragging.moveDrag(rendererX, rendererY);
                     return;
                 }
 
@@ -81,7 +84,7 @@ public class GameController {
                 break;
             case MotionEvent.ACTION_UP:
                 if (_dragging != null) {
-                    _dragging.stopDrag(x, y);
+                    _dragging.stopDrag(rendererX, rendererY);
                     _dragging = null;
                 }
 
