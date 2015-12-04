@@ -54,6 +54,5 @@ public class BackupRule extends Rule {
         }
 
         return commands;
-
     }
 }

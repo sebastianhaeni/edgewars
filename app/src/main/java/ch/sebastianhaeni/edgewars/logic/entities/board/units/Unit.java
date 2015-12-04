@@ -4,6 +4,7 @@ import ch.sebastianhaeni.edgewars.graphics.drawables.decorators.DeathParticleDec
 import ch.sebastianhaeni.edgewars.graphics.drawables.decorators.TextDecorator;
 import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Polygon;
 import ch.sebastianhaeni.edgewars.logic.Constants;
+import ch.sebastianhaeni.edgewars.logic.ai.AIAwareness;
 import ch.sebastianhaeni.edgewars.logic.entities.Player;
 import ch.sebastianhaeni.edgewars.logic.entities.board.BoardEntity;
 import ch.sebastianhaeni.edgewars.logic.entities.board.Edge;
@@ -11,6 +12,7 @@ import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
 import ch.sebastianhaeni.edgewars.logic.entities.board.units.state.DeadState;
 import ch.sebastianhaeni.edgewars.logic.entities.board.units.state.IdleState;
 import ch.sebastianhaeni.edgewars.logic.entities.board.units.state.MovingState;
+import ch.sebastianhaeni.edgewars.logic.entities.board.units.state.OnEdgeState;
 import ch.sebastianhaeni.edgewars.logic.entities.board.units.state.UnitState;
 import ch.sebastianhaeni.edgewars.util.Position;
 
@@ -86,8 +88,19 @@ public abstract class Unit extends BoardEntity {
      * @param state the new state
      */
     public void setState(UnitState state) {
+        // unit is not on edge any more, notify AIAwareness
+        if (mState instanceof OnEdgeState && !(state instanceof OnEdgeState)) {
+            AIAwareness.removeUnitOnEdge(this);
+        }
+        // unit is now on an edge, notify AIAwareness
+        if (!(mState instanceof OnEdgeState) && state instanceof OnEdgeState) {
+            OnEdgeState onEdgeState = (OnEdgeState) state;
+            AIAwareness.addUnitOnEdge(onEdgeState.getEdge(), this);
+        }
         mState = state;
         setUpdateInterval(state.getUpdateInterval());
+
+
     }
 
     @Override
@@ -123,6 +136,8 @@ public abstract class Unit extends BoardEntity {
                 setState(new DeadState(this));
                 DeathParticleDecorator particles = new DeathParticleDecorator(mShape, Constants.DEATH_PARTICLE_LAYER);
                 particles.register();
+                // inform AI Awareness of death
+                AIAwareness.removeUnitOnEdge(this);
             }
             mHealth = getMaxHealth();
         } else {
