@@ -10,14 +10,16 @@ import ch.sebastianhaeni.edgewars.logic.entities.board.node.state.OwnedState;
  */
 public class BuildUnitCommand extends Command {
     private final Factory mFactory;
+    private final int mAmount;
 
     /**
      * Constructor
      *
      * @param factory the factory that builds the unit
      */
-    public BuildUnitCommand(Factory factory) {
+    public BuildUnitCommand(Factory factory, int amount) {
         mFactory = factory;
+        mAmount = amount;
     }
 
     @Override
@@ -28,11 +30,13 @@ public class BuildUnitCommand extends Command {
         }
 
         Player owner = ((OwnedState) state).getOwner();
-        if (owner.getEnergy() - mFactory.getUnitCost() < 0) {
-            return;
-        }
+        for (int i = 0; i < mAmount; i++) {
+            if (owner.getEnergy() - mFactory.getUnitCost() < 0) {
+                return;
+            }
 
-        owner.removeEnergy(mFactory.getUnitCost());
-        mFactory.buildUnit();
+            owner.removeEnergy(mFactory.getUnitCost());
+            mFactory.buildUnit();
+        }
     }
 }

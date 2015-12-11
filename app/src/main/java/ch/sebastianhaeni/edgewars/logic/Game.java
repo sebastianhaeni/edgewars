@@ -87,7 +87,6 @@ public class Game {
      */
     public void register(Command command) {
         mCommandStack.push(command);
-        Log.d("Game", "Registering command: " + command);
     }
 
     /**
