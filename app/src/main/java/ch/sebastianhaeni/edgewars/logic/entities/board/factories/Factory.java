@@ -1,6 +1,7 @@
 package ch.sebastianhaeni.edgewars.logic.entities.board.factories;
 
 import android.databinding.Bindable;
+import android.util.Log;
 
 import ch.sebastianhaeni.edgewars.logic.Constants;
 import ch.sebastianhaeni.edgewars.logic.entities.Entity;
@@ -77,6 +78,13 @@ public abstract class Factory extends Entity {
         mBuildStartTime = System.currentTimeMillis();
         mProducingStack--;
         produceUnit();
+    }
+
+    /**
+     * @return the size of the units in the producing stack
+     */
+    public int getProducingStack() {
+        return mProducingStack;
     }
 
     /**

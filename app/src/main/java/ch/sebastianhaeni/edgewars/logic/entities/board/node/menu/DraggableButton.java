@@ -4,15 +4,15 @@ import java.util.ArrayList;
 
 import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Line;
 import ch.sebastianhaeni.edgewars.ui.IDraggable;
-import ch.sebastianhaeni.edgewars.util.Colors;
 import ch.sebastianhaeni.edgewars.util.Position;
 
 /**
  * A draggable node menu button used to send units.
  */
 public class DraggableButton extends NodeButton implements IDraggable {
+    private final float[] mColor;
     private Line mLine;
-    private ArrayList<IDropListener> mDropHandlers = new ArrayList<>();
+    private ArrayList<IDragListener> mDropHandlers = new ArrayList<>();
 
     /**
      * Initializes a new draggable button.
@@ -23,8 +23,9 @@ public class DraggableButton extends NodeButton implements IDraggable {
      * @param text           displayed text
      * @param polygonCorners count of corners for polygon
      */
-    public DraggableButton(Position base, float offsetX, float offsetY, String text, int polygonCorners) {
+    public DraggableButton(Position base, float offsetX, float offsetY, String text, int polygonCorners, float[] color) {
         super(base, offsetX, offsetY, text, polygonCorners);
+        mColor = color;
     }
 
     @Override
@@ -33,7 +34,7 @@ public class DraggableButton extends NodeButton implements IDraggable {
     }
 
     private void createLine(float x, float y) {
-        mLine = new Line(getPosition(), new Position(x, y), Colors.EDGE, .4f);
+        mLine = new Line(getPosition(), new Position(x, y), mColor, .1f);
         mLine.register();
     }
 
@@ -41,12 +42,17 @@ public class DraggableButton extends NodeButton implements IDraggable {
     public void moveDrag(float x, float y) {
         mLine.unregister();
         createLine(x, y);
+
+        for (IDragListener handler : mDropHandlers) {
+            handler.move(x, y);
+        }
     }
 
     @Override
     public void stopDrag(float x, float y) {
         mLine.unregister();
-        for (IDropListener handler : mDropHandlers) {
+
+        for (IDragListener handler : mDropHandlers) {
             handler.drop(x, y);
         }
     }
@@ -56,14 +62,19 @@ public class DraggableButton extends NodeButton implements IDraggable {
      *
      * @param handler new handler
      */
-    public void addDropListener(IDropListener handler) {
+    public void addDragListener(IDragListener handler) {
         mDropHandlers.add(handler);
     }
 
     /**
      * A handler that acts upon a drop event.
      */
-    interface IDropListener {
+    interface IDragListener {
+
+        /**
+         * Called when the drag action starts.
+         */
+        void start();
 
         /**
          * The bomb has been dropped!
@@ -72,5 +83,13 @@ public class DraggableButton extends NodeButton implements IDraggable {
          * @param y y coordinate
          */
         void drop(float x, float y);
+
+        /**
+         * Called when moving the finger around.
+         *
+         * @param x x coordinate
+         * @param y y coordinate
+         */
+        void move(float x, float y);
     }
 }

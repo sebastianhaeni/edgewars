@@ -15,9 +15,12 @@ public class NodeButton extends Button {
     private final Polygon mShape;
     private final TextDecorator mText;
     private final Line mLine;
+    private final int mPolygonCorners;
 
     public NodeButton(Position base, float offsetX, float offsetY, String text, int polygonCorners) {
         super(new Position(base.getX() + offsetX, base.getY() + offsetY));
+
+        mPolygonCorners = polygonCorners;
 
         mShape = new Polygon(
                 getPosition(),
@@ -53,5 +56,12 @@ public class NodeButton extends Button {
     @Override
     public float getHeight() {
         return Constants.MENU_BUTTON_RADIUS * 2;
+    }
+
+    /**
+     * @return gets polygon corners
+     */
+    public int getPolygonCorners(){
+        return mPolygonCorners;
     }
 }

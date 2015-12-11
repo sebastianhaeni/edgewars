@@ -1,10 +1,18 @@
 package ch.sebastianhaeni.edgewars.logic.entities.board.node.menu;
 
+import java.lang.reflect.Type;
+
 import ch.sebastianhaeni.edgewars.EUnitType;
+import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Polygon;
 import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Text;
 import ch.sebastianhaeni.edgewars.logic.Constants;
 import ch.sebastianhaeni.edgewars.logic.entities.Button;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
+import ch.sebastianhaeni.edgewars.logic.entities.board.node.state.OwnedState;
+import ch.sebastianhaeni.edgewars.logic.entities.board.units.MeleeUnit;
+import ch.sebastianhaeni.edgewars.logic.entities.board.units.SprinterUnit;
+import ch.sebastianhaeni.edgewars.logic.entities.board.units.TankUnit;
+import ch.sebastianhaeni.edgewars.util.Colors;
 
 /**
  *
@@ -22,6 +30,7 @@ public class NodeMenu {
     private NodeButton mRepairButton;
     private NodeButton mHealthButton;
     private NodeButton mDamageButton;
+    private Polygon mUnitCorona;
 
     /**
      * Constructor
@@ -34,6 +43,9 @@ public class NodeMenu {
         mIsOwned = isOwned;
     }
 
+    /**
+     * Shows this menu.
+     */
     public void show() {
         showUnits();
         showFactories();
@@ -41,6 +53,9 @@ public class NodeMenu {
         mVisible = true;
     }
 
+    /**
+     * Shows upgrade buttons.
+     */
     private void showUpgrades() {
         if (!mIsOwned) {
             return;
@@ -72,9 +87,11 @@ public class NodeMenu {
                 mNode.upgradeDamage();
             }
         });
-
     }
 
+    /**
+     * Shows factory buttons.
+     */
     private void showFactories() {
         if (!mIsOwned) {
             return;
@@ -126,11 +143,17 @@ public class NodeMenu {
         }
     }
 
+    /**
+     * Shows unit buttons.
+     */
     private void showUnits() {
-        mMeleeButton = new DraggableButton(mNode.getPosition(), -1, -1, String.valueOf(mNode.getMeleeCount()), Constants.UNIT_MELEE_CORNERS);
-        mTankButton = new DraggableButton(mNode.getPosition(), 0, -1.5f, String.valueOf(mNode.getTankCount()), Constants.UNIT_TANK_CORNERS);
-        mSprinterButton = new DraggableButton(mNode.getPosition(), 1, -1, String.valueOf(mNode.getSprinterCount()), Constants.UNIT_SPRINTER_CORNERS);
+        // fetching color of player
+        float[] color = mNode.getState() instanceof OwnedState ? ((OwnedState) mNode.getState()).getOwner().getColor() : Colors.EDGE;
 
+        // creating buttons
+        mMeleeButton = new DraggableButton(mNode.getPosition(), -1, -1, String.valueOf(mNode.getMeleeCount()), Constants.UNIT_MELEE_CORNERS, color);
+        mTankButton = new DraggableButton(mNode.getPosition(), 0, -1.5f, String.valueOf(mNode.getTankCount()), Constants.UNIT_TANK_CORNERS, color);
+        mSprinterButton = new DraggableButton(mNode.getPosition(), 1, -1, String.valueOf(mNode.getSprinterCount()), Constants.UNIT_SPRINTER_CORNERS, color);
 
         mMeleeButton.register();
         mTankButton.register();
@@ -140,43 +163,51 @@ public class NodeMenu {
             return;
         }
 
-        // TODO on drag start, display neighboring nodes
+        // showing the selected unit that is built
+        if (mNode.getBuildUnitType() == MeleeUnit.class) {
+            setUnitBuildType(MeleeUnit.class, mMeleeButton);
+        } else if (mNode.getBuildUnitType() == TankUnit.class) {
+            setUnitBuildType(MeleeUnit.class, mTankButton);
+        } else if (mNode.getBuildUnitType() == SprinterUnit.class) {
+            setUnitBuildType(MeleeUnit.class, mSprinterButton);
+        }
 
-        mMeleeButton.addDropListener(new DraggableButton.IDropListener() {
-            @Override
-            public void drop(float x, float y) {
-                // TODO issue a send command
-            }
-        });
+        // add drag listener that sends unit
+        mMeleeButton.addDragListener(new SendUnitDragListener(mNode, EUnitType.MELEE));
+        mTankButton.addDragListener(new SendUnitDragListener(mNode, EUnitType.TANK));
+        mSprinterButton.addDragListener(new SendUnitDragListener(mNode, EUnitType.SPRINTER));
 
         // adding click listeners
         mMeleeButton.addClickListener(new Button.OnGameClickListener() {
             @Override
             public void onClick() {
-                // TODO change to unit build selection
-                mNode.askPlayerForTargetNode(EUnitType.MELEE);
+                setUnitBuildType(MeleeUnit.class, mMeleeButton);
             }
         });
         mTankButton.addClickListener(new Button.OnGameClickListener() {
             @Override
             public void onClick() {
-                // TODO change to unit build selection
-                mNode.askPlayerForTargetNode(EUnitType.TANK);
+                setUnitBuildType(TankUnit.class, mTankButton);
             }
         });
         mSprinterButton.addClickListener(new Button.OnGameClickListener() {
             @Override
             public void onClick() {
-                // TODO change to unit build selection
-                mNode.askPlayerForTargetNode(EUnitType.SPRINTER);
+                setUnitBuildType(SprinterUnit.class, mSprinterButton);
             }
         });
     }
 
+    /**
+     * @return if this menu is visible or not
+     */
     public boolean isVisible() {
         return mVisible;
     }
 
+    /**
+     * Hides the node menu by hiding all drawables.
+     */
     public void hide() {
         hide(mMeleeButton);
         hide(mTankButton);
@@ -190,9 +221,16 @@ public class NodeMenu {
         hide(mHealthButton);
         hide(mDamageButton);
 
+        if (mUnitCorona != null) {
+            mUnitCorona.unregister();
+        }
+
         mVisible = false;
     }
 
+    /**
+     * @param button the button to hide
+     */
     private static void hide(NodeButton button) {
         if (button == null) {
             return;
@@ -200,5 +238,25 @@ public class NodeMenu {
 
         button.hide();
         button.unregister();
+    }
+
+    /**
+     * @param unitClass  class of the unit that's the new build selection
+     * @param nodeButton the button that must be highlighted
+     */
+    public void setUnitBuildType(Type unitClass, NodeButton nodeButton) {
+        if (mUnitCorona != null) {
+            mUnitCorona.unregister();
+        }
+
+        if (unitClass == mNode.getBuildUnitType()) {
+            mNode.setBuildUnitType(null);
+            return;
+        }
+
+        mUnitCorona = new Polygon(nodeButton.getPosition(), Colors.CORONA, 2, nodeButton.getPolygonCorners(), 0, .45f);
+        mUnitCorona.register();
+
+        mNode.setBuildUnitType(unitClass);
     }
 }

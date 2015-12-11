@@ -34,9 +34,9 @@ public class BuildUpRule extends Rule {
     public ArrayList<Command> getCommands() {
         ArrayList<Command> commands = new ArrayList<>();
 
-        commands.add(new BuildUnitCommand(mNode.getMeleeFactory()));
-        commands.add(new BuildUnitCommand(mNode.getSprinterFactory()));
-        commands.add(new BuildUnitCommand(mNode.getTankFactory()));
+        commands.add(new BuildUnitCommand(mNode.getMeleeFactory(), 1));
+        commands.add(new BuildUnitCommand(mNode.getSprinterFactory(), 1));
+        commands.add(new BuildUnitCommand(mNode.getTankFactory(), 1));
 
         return commands;
     }

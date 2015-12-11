@@ -129,7 +129,7 @@ public class GameController {
      * @param touchY y coordinate
      * @return the clicked clickable, or <code>null</code> if nothing hit
      */
-    private IClickable isHit(float touchX, float touchY) {
+    public IClickable isHit(float touchX, float touchY) {
         // get camera position and multiply it by factor 2/3 (why? I dunno..)
         float cameraX = mGameState.getCamera().getScreenX() * (2f / 3f);
         float cameraY = mGameState.getCamera().getScreenY() * (2f / 3f);
