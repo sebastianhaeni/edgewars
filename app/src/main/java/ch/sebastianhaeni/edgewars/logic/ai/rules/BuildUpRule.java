@@ -2,7 +2,6 @@ package ch.sebastianhaeni.edgewars.logic.ai.rules;
 
 import java.util.ArrayList;
 
-import ch.sebastianhaeni.edgewars.logic.GameState;
 import ch.sebastianhaeni.edgewars.logic.commands.BuildUnitCommand;
 import ch.sebastianhaeni.edgewars.logic.commands.Command;
 import ch.sebastianhaeni.edgewars.logic.entities.Player;
@@ -12,8 +11,8 @@ public class BuildUpRule extends Rule {
     private Node mNode;
     private long mTimePassed;
 
-    public BuildUpRule(GameState state, Player player) {
-        super(state, player);
+    public BuildUpRule(Player player) {
+        super(player);
     }
 
     @Override

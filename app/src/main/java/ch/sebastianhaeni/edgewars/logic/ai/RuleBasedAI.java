@@ -3,7 +3,6 @@ package ch.sebastianhaeni.edgewars.logic.ai;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
-import ch.sebastianhaeni.edgewars.logic.GameState;
 import ch.sebastianhaeni.edgewars.logic.ai.rules.NodeRules;
 import ch.sebastianhaeni.edgewars.logic.commands.Command;
 import ch.sebastianhaeni.edgewars.logic.entities.Player;
@@ -14,8 +13,8 @@ public class RuleBasedAI extends AI {
     private ConcurrentHashMap<Node, NodeRules> mNodeRules = new ConcurrentHashMap<>();
 
 
-    public RuleBasedAI(GameState state, Player player) {
-        super(state, player);
+    public RuleBasedAI(Player player) {
+        super(player);
     }
 
     @Override
@@ -44,7 +43,7 @@ public class RuleBasedAI extends AI {
         // add new nodes
         for (Node node : nodes) {
             if (!mNodeRules.keySet().contains(node))
-                mNodeRules.put(node, new NodeRules(getState(), getPlayer(), node));
+                mNodeRules.put(node, new NodeRules(getPlayer(), node));
         }
 
         // remove old nodes

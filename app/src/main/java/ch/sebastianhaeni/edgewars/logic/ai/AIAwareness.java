@@ -25,6 +25,10 @@ public class AIAwareness {
     private static ConcurrentHashMap<Player, ConcurrentHashMap<Node, Node>> mPlayerGatewaysToEnemy;
     private static ConcurrentHashMap<Edge, Unit> mUnitsOnEdges;
 
+    // private constructor to avoid instantiation of the class
+    private AIAwareness() {
+    }
+
     /**
      * This method sets up the AI Awareness of the game. Other methods should only be called after call to initialize().
      *
@@ -96,12 +100,12 @@ public class AIAwareness {
      * Checks whether the player has neighbor nodes that are closer to the enemy.
      * If yes, it returns the one with fewer total unit count.
      *
-     * @param player the player whom the assessed node belongs to
-     * @param node   the node to be assessed
+     * @param node the node to be assessed
      * @return the node towards the enemy with the smallest unit count, or null
      */
-    public static Node getBackupTargetNode(Player player, Node node) {
+    public static Node getBackupTargetNode(Node node) {
         Node backupTarget = null;
+        Player player = getPlayer(node);
 
         for (Node n : Game.getInstance().getConnectedNodes(node)) {
             if (n.getState() instanceof OwnedState) {
@@ -125,11 +129,12 @@ public class AIAwareness {
     /**
      * Returns a node's distance to the closest enemy node
      *
-     * @param player the player whom the assessed node belongs to
-     * @param node   the node to be assessed
+     * @param node the node to be assessed
      * @return integer indicating the distance to the closest enemy node
      */
-    public static int getDistanceToEnemy(Player player, Node node) {
+    public static int getDistanceToEnemy(Node node) {
+        Player player = getPlayer(node);
+
         if (!mPlayerDistancesToEnemy.get(player).containsKey(node)) {
             throw new IllegalArgumentException("I am not aware that I own this node!");
         }
@@ -140,11 +145,12 @@ public class AIAwareness {
     /**
      * Returns a node that is connected to the assessed node and is closer to the next enemy node
      *
-     * @param player the player whom the assessed node belongs to
-     * @param node   the node to be assessed
+     * @param node the node to be assessed
      * @return a node connected to the assessed node which is closer to the next enemy node
      */
-    public static Node getGatewayToEnemy(Player player, Node node) {
+    public static Node getGatewayToEnemy(Node node) {
+        Player player = getPlayer(node);
+
         if (!mPlayerGatewaysToEnemy.get(player).containsKey(node)) {
             throw new IllegalArgumentException("I am not aware that I own this node!");
         }
@@ -156,12 +162,12 @@ public class AIAwareness {
      * Checks whether the player's node is being attacked by enemy units.
      * If yes, it returns the enemy node the units originate from (the first that is found).
      *
-     * @param player the player whom the assessed node belongs to
-     * @param node   the node to be assessed
+     * @param node the node to be assessed
      * @return the first node found where attacking enemy units originate from, or null
      */
-    public static Node getDefenseTargetNode(Player player, Node node) {
+    public static Node getDefenseTargetNode(Node node) {
         Node defenseTarget = null;
+        Player player = getPlayer(node);
 
         for (Node n : Game.getInstance().getConnectedNodes(node)) {
             Edge edge = Game.getInstance().getEdgeBetween(node, n);
@@ -207,6 +213,17 @@ public class AIAwareness {
             prepareNodes(player);
             prepareDistances(player);
         }
+    }
+
+    private static Player getPlayer(Node node) {
+        for (Player player : mPlayerNodes.keySet()) {
+            ArrayList<Node> playerNodes = mPlayerNodes.get(player);
+            for (Node playerNode : playerNodes) {
+                if (node.equals(playerNode))
+                    return player;
+            }
+        }
+        throw new IllegalArgumentException("This node belongs to no computer player!"); // no AI player found to which the node belongs
     }
 
     private static void prepareNodes(Player player) {

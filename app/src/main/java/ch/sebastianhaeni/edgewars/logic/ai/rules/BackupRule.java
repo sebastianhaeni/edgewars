@@ -5,7 +5,6 @@ import java.util.ArrayList;
 
 import ch.sebastianhaeni.edgewars.EUnitType;
 import ch.sebastianhaeni.edgewars.logic.Game;
-import ch.sebastianhaeni.edgewars.logic.GameState;
 import ch.sebastianhaeni.edgewars.logic.ai.AIAwareness;
 import ch.sebastianhaeni.edgewars.logic.commands.Command;
 import ch.sebastianhaeni.edgewars.logic.commands.MoveUnitCommand;
@@ -18,8 +17,8 @@ public class BackupRule extends Rule {
     private Node mNode;
     private Node mBackupTarget;
 
-    public BackupRule(GameState state, Player player) {
-        super(state, player);
+    public BackupRule(Player player) {
+        super(player);
     }
 
     @Override
@@ -31,9 +30,9 @@ public class BackupRule extends Rule {
         mTimePassed = 0;
         mNode = node;
 
-        mBackupTarget = AIAwareness.getBackupTargetNode(getPlayer(), mNode);
+        mBackupTarget = AIAwareness.getBackupTargetNode(mNode);
 
-        return AIAwareness.getDistanceToEnemy(getPlayer(), mNode) >= 2 && mBackupTarget != null && (mNode.getTankCount() >= 5 || mNode.getSprinterCount() >= 5 || mNode.getMeleeCount() >= 5);
+        return AIAwareness.getDistanceToEnemy(mNode) >= 2 && mBackupTarget != null && (mNode.getTankCount() >= 5 || mNode.getSprinterCount() >= 5 || mNode.getMeleeCount() >= 5);
     }
 
     @Override

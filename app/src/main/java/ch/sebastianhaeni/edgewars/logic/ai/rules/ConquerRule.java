@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import ch.sebastianhaeni.edgewars.EUnitType;
 import ch.sebastianhaeni.edgewars.logic.Game;
-import ch.sebastianhaeni.edgewars.logic.GameState;
 import ch.sebastianhaeni.edgewars.logic.ai.AIAwareness;
 import ch.sebastianhaeni.edgewars.logic.commands.Command;
 import ch.sebastianhaeni.edgewars.logic.commands.MoveUnitCommand;
@@ -17,8 +16,8 @@ public class ConquerRule extends Rule {
     private Node mNode;
     private Node mNeutralNeighbor;
 
-    public ConquerRule(GameState state, Player player) {
-        super(state, player);
+    public ConquerRule(Player player) {
+        super(player);
     }
 
     @Override
@@ -32,7 +31,7 @@ public class ConquerRule extends Rule {
 
         mNeutralNeighbor = AIAwareness.getNeutralNeighbor(mNode);
 
-        return AIAwareness.getDistanceToEnemy(getPlayer(), mNode) >= 2 && mNeutralNeighbor != null && (mNode.getTankCount() >= 3 || mNode.getSprinterCount() >= 3 || mNode.getMeleeCount() >= 3);
+        return AIAwareness.getDistanceToEnemy(mNode) >= 2 && mNeutralNeighbor != null && (mNode.getTankCount() >= 3 || mNode.getSprinterCount() >= 3 || mNode.getMeleeCount() >= 3);
     }
 
     @Override
