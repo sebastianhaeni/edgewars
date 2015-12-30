@@ -101,7 +101,7 @@ public class LevelLoader {
 
         // add AI to computer players
         for (Player computerPlayer : computerPlayers) {
-            computerPlayer.setAI(new RuleBasedAI(state, computerPlayer));
+            computerPlayer.setAI(new RuleBasedAI(computerPlayer));
         }
 
         return state;
