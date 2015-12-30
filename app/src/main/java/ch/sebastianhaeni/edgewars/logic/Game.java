@@ -8,12 +8,15 @@ import java.util.Map;
 import java.util.Stack;
 import java.util.concurrent.ConcurrentHashMap;
 
+import ch.sebastianhaeni.edgewars.graphics.GameSurfaceView;
 import ch.sebastianhaeni.edgewars.graphics.drawables.Drawable;
 import ch.sebastianhaeni.edgewars.graphics.drawables.RenderQueue;
 import ch.sebastianhaeni.edgewars.logic.commands.Command;
 import ch.sebastianhaeni.edgewars.logic.entities.Entity;
+import ch.sebastianhaeni.edgewars.logic.entities.Player;
 import ch.sebastianhaeni.edgewars.logic.entities.board.Edge;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
+import ch.sebastianhaeni.edgewars.logic.entities.board.node.state.OwnedState;
 import ch.sebastianhaeni.edgewars.logic.entities.board.units.Unit;
 import ch.sebastianhaeni.edgewars.logic.entities.board.units.state.OnEdgeState;
 import ch.sebastianhaeni.edgewars.ui.GameController;
@@ -30,6 +33,8 @@ public class Game {
     private final Stack<Command> mCommandStack = new Stack<>();
     private final ConcurrentHashMap<Entity, Long> mEntities = new ConcurrentHashMap<>();
     private final RenderQueue mDrawables = new RenderQueue();
+    private GameSurfaceView mGLView;
+    private long mTimePassed = 0;
 
     /**
      * Privatised constructor. Because singleton.
@@ -62,6 +67,8 @@ public class Game {
     public void setGameController(GameController gameController) {
         mGameController = gameController;
     }
+
+    public void setGLView(GameSurfaceView view) { mGLView = view; }
 
     /**
      * Resets the singleton and thus a new game is born.
@@ -117,6 +124,14 @@ public class Game {
      * @param millis time passed since last update
      */
     public void update(long millis) {
+
+        mTimePassed += millis;
+        if (mTimePassed > 1000) {
+            if (isGameOver()) {
+                mGLView.stopLevel();
+            }
+            mTimePassed = 0;
+        }
         // Executing commands, but not more than 5 per cycle
         int commandCount = mCommandStack.size();
         while (mCommandStack.size() > 0 && mCommandStack.size() - commandCount < 5) {
@@ -135,6 +150,31 @@ public class Game {
                 pair.setValue(0L);
             }
         }
+    }
+    /**
+     * Checkes if Game is over.
+     *
+     * @return gameOver true if game is lost or won.
+     */
+    private boolean isGameOver() {
+        // check if game is over
+        ArrayList<Node> nodes = mGameState.getBoard().getNodes();
+        Player owner = null;
+        boolean gameOver = true;
+        for (Node node : nodes) {
+            if(node.getState() instanceof OwnedState) {
+                Player currentOwner = ((OwnedState) node.getState()).getOwner();
+                if(owner == null) {
+                    owner = currentOwner;
+                }
+                else {
+                    if(!owner.equals(currentOwner)) {
+                        gameOver = false;
+                    }
+                }
+            }
+        }
+        return gameOver;
     }
 
     /**

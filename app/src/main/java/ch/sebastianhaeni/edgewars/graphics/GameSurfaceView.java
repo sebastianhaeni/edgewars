@@ -1,5 +1,6 @@
 package ch.sebastianhaeni.edgewars.graphics;
 
+import android.app.Activity;
 import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.support.annotation.NonNull;
@@ -13,6 +14,7 @@ import ch.sebastianhaeni.edgewars.logic.GameState;
 import ch.sebastianhaeni.edgewars.logic.GameThread;
 import ch.sebastianhaeni.edgewars.logic.LevelLoader;
 import ch.sebastianhaeni.edgewars.ui.GameController;
+import ch.sebastianhaeni.edgewars.ui.activities.GameActivity;
 
 /**
  * A view container where OpenGL ES graphics can be drawn on screen.
@@ -60,6 +62,9 @@ public class GameSurfaceView extends GLSurfaceView implements Serializable {
         mController = new GameController(mContext, renderer, mGameState);
         Game.getInstance().setGameController(mController);
 
+        // set view, to be able to stop Game
+        Game.getInstance().setGLView(this);
+
         // Set the Renderer for drawing on the GLSurfaceView
         setRenderer(renderer);
 
@@ -69,6 +74,13 @@ public class GameSurfaceView extends GLSurfaceView implements Serializable {
         // start Thread only once (onCreate)
         mThread.setRunning(true);
         mThread.start();
+    }
+
+    public void stopLevel() {
+        Game.getInstance().reset();
+        mThread.setRunning(false);
+        GameActivity gameActivity = (GameActivity) mContext;
+        gameActivity.back(this);
     }
 
     @Override
