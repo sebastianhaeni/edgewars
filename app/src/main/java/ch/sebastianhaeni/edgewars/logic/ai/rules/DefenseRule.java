@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import ch.sebastianhaeni.edgewars.EUnitType;
 import ch.sebastianhaeni.edgewars.logic.Game;
-import ch.sebastianhaeni.edgewars.logic.GameState;
 import ch.sebastianhaeni.edgewars.logic.ai.AIAwareness;
 import ch.sebastianhaeni.edgewars.logic.commands.Command;
 import ch.sebastianhaeni.edgewars.logic.commands.MoveUnitCommand;
@@ -17,8 +16,8 @@ public class DefenseRule extends Rule {
     private Node mNode;
     private Node mDefenseTarget;
 
-    public DefenseRule(GameState state, Player player) {
-        super(state, player);
+    public DefenseRule(Player player) {
+        super(player);
     }
 
     @Override
@@ -30,7 +29,7 @@ public class DefenseRule extends Rule {
         mTimePassed = 0;
         mNode = node;
 
-        mDefenseTarget = AIAwareness.getDefenseTargetNode(getPlayer(), mNode);
+        mDefenseTarget = AIAwareness.getDefenseTargetNode(mNode);
         return mDefenseTarget != null && (mNode.getTankCount() >= 1 || mNode.getSprinterCount() >= 1 || mNode.getMeleeCount() >= 1);
     }
 

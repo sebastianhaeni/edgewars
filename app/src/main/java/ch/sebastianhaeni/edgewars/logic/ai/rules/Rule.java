@@ -2,17 +2,14 @@ package ch.sebastianhaeni.edgewars.logic.ai.rules;
 
 import java.util.ArrayList;
 
-import ch.sebastianhaeni.edgewars.logic.GameState;
 import ch.sebastianhaeni.edgewars.logic.commands.Command;
 import ch.sebastianhaeni.edgewars.logic.entities.Player;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
 
 public abstract class Rule {
-    private final GameState mState;
     private final Player mPlayer;
 
-    Rule(GameState state, Player player) {
-        mState = state;
+    Rule(Player player) {
         mPlayer = player;
     }
 
@@ -32,10 +29,6 @@ public abstract class Rule {
      * @return list of commands associated with this rule
      */
     public abstract ArrayList<Command> getCommands();
-
-    protected GameState getState() {
-        return mState;
-    }
 
     Player getPlayer() {
         return mPlayer;
