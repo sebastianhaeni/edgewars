@@ -1,7 +1,5 @@
 package ch.sebastianhaeni.edgewars.logic.entities.board.node;
 
-import java.lang.reflect.Type;
-
 import ch.sebastianhaeni.edgewars.graphics.drawables.decorators.DeathParticleDecorator;
 import ch.sebastianhaeni.edgewars.graphics.drawables.decorators.TextDecorator;
 import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Polygon;
@@ -56,11 +54,6 @@ public class Node extends BoardEntity implements IClickable {
     private final MeleeFactory mMeleeFactory = new MeleeFactory(this);
     private final TankFactory mTankFactory = new TankFactory(this);
     private final SprinterFactory mSprinterFactory = new SprinterFactory(this);
-
-    /**
-     * Defines the currently selected unit to build. Can be <code>null</code>.
-     */
-    private Type mUnitBuildSelection = null;
 
     private int mHealth;
     private int mHealthLevel = 1;
@@ -350,22 +343,6 @@ public class Node extends BoardEntity implements IClickable {
     //endregion
 
     //region getters/setters
-
-    /**
-     * Sets the type of unit to be built. Set to null when no units should be built.
-     *
-     * @param type Unit type
-     */
-    public void setBuildUnitType(Type type) {
-        mUnitBuildSelection = type;
-    }
-
-    /**
-     * @return gets selected unit that is mass produced
-     */
-    public Type getBuildUnitType(){
-        return mUnitBuildSelection;
-    }
 
     /**
      * @return gets the cost to repair the node with the current health

@@ -1,7 +1,5 @@
 package ch.sebastianhaeni.edgewars.logic.entities;
 
-
-import java.io.Serializable;
 import java.util.UUID;
 
 import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Text;
@@ -120,7 +118,4 @@ public class Player extends Entity {
         return equals(other);
     }
 
-    public String toString () {
-        return super.toString() + "[UUID="+mId+", color="+mColor;
-    }
 }

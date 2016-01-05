@@ -1,21 +1,21 @@
 package ch.sebastianhaeni.edgewars.logic.entities.board.node.menu;
 
-import java.lang.reflect.Type;
-
 import ch.sebastianhaeni.edgewars.EUnitType;
 import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Polygon;
 import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Text;
 import ch.sebastianhaeni.edgewars.logic.Constants;
+import ch.sebastianhaeni.edgewars.logic.Game;
+import ch.sebastianhaeni.edgewars.logic.commands.ActivateFactoryCommand;
+import ch.sebastianhaeni.edgewars.logic.commands.DeactivateFactoriesCommand;
 import ch.sebastianhaeni.edgewars.logic.entities.Button;
+import ch.sebastianhaeni.edgewars.logic.entities.board.factories.Factory;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.state.OwnedState;
-import ch.sebastianhaeni.edgewars.logic.entities.board.units.MeleeUnit;
-import ch.sebastianhaeni.edgewars.logic.entities.board.units.SprinterUnit;
-import ch.sebastianhaeni.edgewars.logic.entities.board.units.TankUnit;
 import ch.sebastianhaeni.edgewars.util.Colors;
 
 /**
- *
+ * The menu around a node. Depending if the node is owned or not by the current player, it shows
+ * more or less buttons.
  */
 public class NodeMenu {
     private final Node mNode;
@@ -164,12 +164,12 @@ public class NodeMenu {
         }
 
         // showing the selected unit that is built
-        if (mNode.getBuildUnitType() == MeleeUnit.class) {
-            setUnitBuildType(MeleeUnit.class, mMeleeButton);
-        } else if (mNode.getBuildUnitType() == TankUnit.class) {
-            setUnitBuildType(MeleeUnit.class, mTankButton);
-        } else if (mNode.getBuildUnitType() == SprinterUnit.class) {
-            setUnitBuildType(MeleeUnit.class, mSprinterButton);
+        if (mNode.getMeleeFactory().isActivated()) {
+            markFactoryAsActive(mMeleeButton);
+        } else if (mNode.getTankFactory().isActivated()) {
+            markFactoryAsActive(mTankButton);
+        } else if (mNode.getSprinterFactory().isActivated()) {
+            markFactoryAsActive(mSprinterButton);
         }
 
         // add drag listener that sends unit
@@ -181,19 +181,19 @@ public class NodeMenu {
         mMeleeButton.addClickListener(new Button.OnGameClickListener() {
             @Override
             public void onClick() {
-                setUnitBuildType(MeleeUnit.class, mMeleeButton);
+                activateFactory(mNode.getMeleeFactory(), mMeleeButton);
             }
         });
         mTankButton.addClickListener(new Button.OnGameClickListener() {
             @Override
             public void onClick() {
-                setUnitBuildType(TankUnit.class, mTankButton);
+                activateFactory(mNode.getTankFactory(), mTankButton);
             }
         });
         mSprinterButton.addClickListener(new Button.OnGameClickListener() {
             @Override
             public void onClick() {
-                setUnitBuildType(SprinterUnit.class, mSprinterButton);
+                activateFactory(mNode.getSprinterFactory(), mSprinterButton);
             }
         });
     }
@@ -241,22 +241,31 @@ public class NodeMenu {
     }
 
     /**
-     * @param unitClass  class of the unit that's the new build selection
+     * @param factory    the unit factory to be activated
      * @param nodeButton the button that must be highlighted
      */
-    public void setUnitBuildType(Type unitClass, NodeButton nodeButton) {
+    public void activateFactory(Factory factory, NodeButton nodeButton) {
         if (mUnitCorona != null) {
             mUnitCorona.unregister();
         }
 
-        if (unitClass == mNode.getBuildUnitType()) {
-            mNode.setBuildUnitType(null);
+        if (factory.isActivated()) {
+            Game.getInstance().register(new DeactivateFactoriesCommand(factory.getNode()));
             return;
         }
 
+        markFactoryAsActive(nodeButton);
+
+        Game.getInstance().register(new ActivateFactoryCommand(factory));
+    }
+
+    /**
+     * Marks the node button as active by adding a glowing border.
+     *
+     * @param nodeButton the button that must be highlighted
+     */
+    private void markFactoryAsActive(NodeButton nodeButton) {
         mUnitCorona = new Polygon(nodeButton.getPosition(), Colors.CORONA, 2, nodeButton.getPolygonCorners(), 0, .45f);
         mUnitCorona.register();
-
-        mNode.setBuildUnitType(unitClass);
     }
 }

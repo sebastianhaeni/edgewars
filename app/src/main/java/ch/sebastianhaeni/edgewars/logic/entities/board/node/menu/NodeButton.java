@@ -9,7 +9,7 @@ import ch.sebastianhaeni.edgewars.util.Colors;
 import ch.sebastianhaeni.edgewars.util.Position;
 
 /**
- *
+ * A button that hangs around a node.
  */
 public class NodeButton extends Button {
     private final Polygon mShape;
@@ -17,6 +17,15 @@ public class NodeButton extends Button {
     private final Line mLine;
     private final int mPolygonCorners;
 
+    /**
+     * Constructor
+     *
+     * @param base           base position of the node
+     * @param offsetX        the x offset of the button to the base position
+     * @param offsetY        the y offset of the button to the base position
+     * @param text           displayed text
+     * @param polygonCorners corner count of polygon
+     */
     public NodeButton(Position base, float offsetX, float offsetY, String text, int polygonCorners) {
         super(new Position(base.getX() + offsetX, base.getY() + offsetY));
 
@@ -42,6 +51,9 @@ public class NodeButton extends Button {
         mLine.register();
     }
 
+    /**
+     * Hides the button with it's components.
+     */
     public void hide() {
         mShape.destroy();
         mText.destroy();
@@ -61,7 +73,7 @@ public class NodeButton extends Button {
     /**
      * @return gets polygon corners
      */
-    public int getPolygonCorners(){
+    public int getPolygonCorners() {
         return mPolygonCorners;
     }
 }

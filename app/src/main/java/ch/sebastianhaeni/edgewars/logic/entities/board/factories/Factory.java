@@ -1,7 +1,6 @@
 package ch.sebastianhaeni.edgewars.logic.entities.board.factories;
 
 import android.databinding.Bindable;
-import android.util.Log;
 
 import ch.sebastianhaeni.edgewars.logic.Constants;
 import ch.sebastianhaeni.edgewars.logic.entities.Entity;
@@ -18,8 +17,9 @@ public abstract class Factory extends Entity {
 
     private int mLevel = 1;
 
-    private int mProducingStack;
     private long mBuildStartTime;
+
+    private boolean mActive;
 
     /**
      * Constructor
@@ -52,18 +52,6 @@ public abstract class Factory extends Entity {
     }
 
     /**
-     * Schedules a new unit to be built by increasing the stack size. A unit needs a certain time
-     * to be produced, this is handled in the update method.
-     */
-    public void buildUnit() {
-        if (mProducingStack == 0) {
-            mBuildStartTime = System.currentTimeMillis();
-        }
-
-        mProducingStack++;
-    }
-
-    /**
      * @return gets the node this factory is at
      */
     public Node getNode() {
@@ -72,19 +60,11 @@ public abstract class Factory extends Entity {
 
     @Override
     public void update(long millis) {
-        if (mProducingStack <= 0 || mBuildStartTime + getProducingDuration() > System.currentTimeMillis()) {
+        if (!mActive || mBuildStartTime + getProducingDuration() > System.currentTimeMillis()) {
             return;
         }
         mBuildStartTime = System.currentTimeMillis();
-        mProducingStack--;
         produceUnit();
-    }
-
-    /**
-     * @return the size of the units in the producing stack
-     */
-    public int getProducingStack() {
-        return mProducingStack;
     }
 
     /**
@@ -112,5 +92,26 @@ public abstract class Factory extends Entity {
      */
     public boolean maxLevelReached() {
         return mLevel >= Constants.FACTORY_MAX_LEVEL;
+    }
+
+    /**
+     * Deactivates this factory so it stops building units.
+     */
+    public void deactivate() {
+        mActive = false;
+    }
+
+    /**
+     * Activates this factory to start building units.
+     */
+    public void activate() {
+        mActive = true;
+    }
+
+    /**
+     * @return gets if this factory is active
+     */
+    public boolean isActivated() {
+        return mActive;
     }
 }
