@@ -126,7 +126,7 @@ public class Game {
     public void update(long millis) {
 
         mTimePassed += millis;
-        if (mTimePassed > 1000) {
+        if (mTimePassed > Constants.DETECT_WIN_INTERVAL) {
             if (isGameOver()) {
                 mGLView.stopLevel();
             }
@@ -170,6 +170,7 @@ public class Game {
                 else {
                     if(!owner.equals(currentOwner)) {
                         gameOver = false;
+                        break;
                     }
                 }
             }
