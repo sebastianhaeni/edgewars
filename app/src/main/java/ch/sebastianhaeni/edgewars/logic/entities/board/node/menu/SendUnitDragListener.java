@@ -14,7 +14,7 @@ import ch.sebastianhaeni.edgewars.ui.IClickable;
 import ch.sebastianhaeni.edgewars.util.Colors;
 
 /**
- *
+ * Listener for drag actions when a player wants to send units.
  */
 class SendUnitDragListener implements DraggableButton.IDragListener {
 
@@ -24,8 +24,10 @@ class SendUnitDragListener implements DraggableButton.IDragListener {
     private final Node mNode;
 
     /**
-     * @param node
-     * @param unitType
+     * Constructor
+     *
+     * @param node     the base node starting the drag action
+     * @param unitType type of the unit to be sent
      */
     public SendUnitDragListener(Node node, EUnitType unitType) {
         mNode = node;
@@ -54,13 +56,13 @@ class SendUnitDragListener implements DraggableButton.IDragListener {
 
         switch (mUnitType) {
             case TANK:
-                Game.getInstance().register(new MoveUnitCommand(mNode.getTankCount(), mUnitType, mNode, Game.getInstance().getEdgeBetween(mNode, target), player));
+                Game.getInstance().register(new MoveUnitCommand(mNode.getTankCount(), mUnitType, target, Game.getInstance().getEdgeBetween(mNode, target), player));
                 break;
             case SPRINTER:
-                Game.getInstance().register(new MoveUnitCommand(mNode.getSprinterCount(), mUnitType, mNode, Game.getInstance().getEdgeBetween(mNode, target), player));
+                Game.getInstance().register(new MoveUnitCommand(mNode.getSprinterCount(), mUnitType, target, Game.getInstance().getEdgeBetween(mNode, target), player));
                 break;
             case MELEE:
-                Game.getInstance().register(new MoveUnitCommand(mNode.getMeleeCount(), mUnitType, mNode, Game.getInstance().getEdgeBetween(mNode, target), player));
+                Game.getInstance().register(new MoveUnitCommand(mNode.getMeleeCount(), mUnitType, target, Game.getInstance().getEdgeBetween(mNode, target), player));
                 break;
         }
 
@@ -89,9 +91,11 @@ class SendUnitDragListener implements DraggableButton.IDragListener {
     }
 
     /**
-     * @param x
-     * @param y
-     * @return
+     * Gets the target under the finger. If there's no target, <code>null</code> will be returned.
+     *
+     * @param x x coordinate
+     * @param y y coordinate
+     * @return drop target or <code>null</code> if there's none
      */
     private Node getTarget(float x, float y) {
         IClickable clickable = Game.getInstance().getGameController().isHit(x, y);

@@ -15,7 +15,8 @@ import ch.sebastianhaeni.edgewars.util.Colors;
 
 /**
  * The menu around a node. Depending if the node is owned or not by the current player, it shows
- * more or less buttons.
+ * more or less buttons. This class contains a lot of UI building code, so expect spaghetti code.
+ * There's not much one can do to prevent that.
  */
 public class NodeMenu {
     private final Node mNode;
@@ -213,10 +214,6 @@ public class NodeMenu {
         mNode.getTankFactory().addObserver(mTankButton);
         mNode.getSprinterFactory().addObserver(mSprinterButton);
 
-        if (!mIsOwned) {
-            return;
-        }
-
         // showing the selected unit that is built
         if (mNode.getMeleeFactory().isActivated()) {
             markFactoryAsActive(mMeleeButton);
@@ -224,6 +221,10 @@ public class NodeMenu {
             markFactoryAsActive(mTankButton);
         } else if (mNode.getSprinterFactory().isActivated()) {
             markFactoryAsActive(mSprinterButton);
+        }
+
+        if (!mIsOwned) {
+            return;
         }
 
         // add drag listener that sends unit

@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Stack;
 import java.util.concurrent.ConcurrentHashMap;
 
+import ch.sebastianhaeni.edgewars.graphics.GameRenderer;
 import ch.sebastianhaeni.edgewars.graphics.drawables.Drawable;
 import ch.sebastianhaeni.edgewars.graphics.drawables.RenderQueue;
 import ch.sebastianhaeni.edgewars.logic.commands.Command;
@@ -29,6 +30,7 @@ public class Game {
     private final Stack<Command> mCommandStack = new Stack<>();
     private final ConcurrentHashMap<Entity, Long> mEntities = new ConcurrentHashMap<>();
     private final RenderQueue mDrawables = new RenderQueue();
+    private GameRenderer mGameRenderer;
 
     /**
      * Privatised constructor. Because singleton.
@@ -240,5 +242,20 @@ public class Game {
         return clickables;
     }
 
+    /**
+     * Set game renderer
+     *
+     * @param gameRenderer the renderer of the game
+     */
+    public void setGameRenderer(GameRenderer gameRenderer) {
+        mGameRenderer = gameRenderer;
+    }
+
+    /**
+     * @return game renderer
+     */
+    public GameRenderer getGameRenderer() {
+        return mGameRenderer;
+    }
 }
 
