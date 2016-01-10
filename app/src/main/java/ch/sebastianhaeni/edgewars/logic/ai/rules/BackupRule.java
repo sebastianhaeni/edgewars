@@ -31,7 +31,7 @@ public class BackupRule extends Rule {
 
         mBackupTarget = AIAwareness.getBackupTargetNode(mNode);
 
-        return AIAwareness.getDistanceToEnemy(getPlayer(), mNode) >= 2 && mBackupTarget != null && (mNode.getTankCount() >= 5 || mNode.getSprinterCount() >= 5 || mNode.getMeleeCount() >= 5);
+        return AIAwareness.getDistanceToEnemy(mNode) >= 2 && mBackupTarget != null && (mNode.getTankCount() >= 5 || mNode.getSprinterCount() >= 5 || mNode.getMeleeCount() >= 5);
     }
 
     @Override
