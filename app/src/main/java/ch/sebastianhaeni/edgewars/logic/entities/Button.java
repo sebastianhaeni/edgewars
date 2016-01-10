@@ -44,6 +44,9 @@ public abstract class Button extends Entity implements IClickable {
         // no op
     }
 
+    /**
+     * Interface for listeners of the in game button.
+     */
     public interface OnGameClickListener {
         void onClick();
     }

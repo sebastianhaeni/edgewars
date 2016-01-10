@@ -132,14 +132,20 @@ public class Node extends BoardEntity implements IClickable {
     public void addUnit(Unit unit) {
         if (unit instanceof MeleeUnit) {
             mMeleeUnits += unit.getCount();
+            setChanged();
+            notifyObservers(this);
             return;
         }
         if (unit instanceof TankUnit) {
             mTankUnits += unit.getCount();
+            setChanged();
+            notifyObservers(this);
             return;
         }
         if (unit instanceof SprinterUnit) {
             mSprinterUnits += unit.getCount();
+            setChanged();
+            notifyObservers(this);
             return;
         }
         throw new IllegalArgumentException("Unit is not handled.");
@@ -181,15 +187,14 @@ public class Node extends BoardEntity implements IClickable {
     public void clearUnit(Unit unit) {
         if (unit instanceof MeleeUnit) {
             mMeleeUnits = 0;
-            return;
-        }
-        if (unit instanceof TankUnit) {
+        } else if (unit instanceof TankUnit) {
             mTankUnits = 0;
-            return;
-        }
-        if (unit instanceof SprinterUnit) {
+        } else if (unit instanceof SprinterUnit) {
             mSprinterUnits = 0;
         }
+
+        setChanged();
+        notifyObservers(this);
     }
 
     /**
@@ -201,6 +206,9 @@ public class Node extends BoardEntity implements IClickable {
         mMeleeUnits = 0;
         mSprinterUnits = 0;
         mTankUnits = 0;
+
+        setChanged();
+        notifyObservers(this);
     }
 
     /**
@@ -246,6 +254,8 @@ public class Node extends BoardEntity implements IClickable {
             if (newHealth <= 0) {
                 mMeleeUnits--;
                 mMeleeHealth = Constants.UNIT_MELEE_HEALTH;
+                setChanged();
+                notifyObservers(this);
                 return true;
             }
             mMeleeHealth = newHealth;
@@ -257,6 +267,8 @@ public class Node extends BoardEntity implements IClickable {
             if (newHealth <= 0) {
                 mTankUnits--;
                 mTankHealth = Constants.UNIT_TANK_HEALTH;
+                setChanged();
+                notifyObservers(this);
                 return true;
             }
             mTankHealth = newHealth;
@@ -268,6 +280,8 @@ public class Node extends BoardEntity implements IClickable {
             if (newHealth <= 0) {
                 mSprinterUnits--;
                 mSprinterHealth = Constants.UNIT_SPRINTER_HEALTH;
+                setChanged();
+                notifyObservers(this);
                 return true;
             }
             mSprinterUnits = newHealth;
@@ -392,7 +406,7 @@ public class Node extends BoardEntity implements IClickable {
      * @return gets count of sprinter units
      */
     public int getSprinterCount() {
-        return mTankUnits;
+        return mSprinterUnits;
     }
 
     /**

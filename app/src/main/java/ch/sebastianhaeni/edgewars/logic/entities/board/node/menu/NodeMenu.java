@@ -61,7 +61,12 @@ public class NodeMenu {
             return;
         }
 
-        mRepairButton = new NodeButton(mNode.getPosition(), -1, 1, String.valueOf(Text.WRENCH), Constants.NODE_CORNERS);
+        mRepairButton = new NodeButton(mNode.getPosition(), -1, 1, new NodeButton.ButtonTextResolver() {
+            @Override
+            public String getText() {
+                return String.valueOf(Text.WRENCH);
+            }
+        }, Constants.NODE_CORNERS);
         mRepairButton.register();
         mRepairButton.addClickListener(new Button.OnGameClickListener() {
             @Override
@@ -70,7 +75,12 @@ public class NodeMenu {
             }
         });
 
-        mHealthButton = new NodeButton(mNode.getPosition(), 0, 1.5f, String.valueOf(Text.HEALTH), Constants.NODE_CORNERS);
+        mHealthButton = new NodeButton(mNode.getPosition(), 0, 1.5f, new NodeButton.ButtonTextResolver() {
+            @Override
+            public String getText() {
+                return String.valueOf(Text.HEALTH);
+            }
+        }, Constants.NODE_CORNERS);
         mHealthButton.register();
         mHealthButton.addClickListener(new Button.OnGameClickListener() {
             @Override
@@ -79,7 +89,12 @@ public class NodeMenu {
             }
         });
 
-        mDamageButton = new NodeButton(mNode.getPosition(), 1, 1, String.valueOf(Text.DAMAGE), Constants.NODE_CORNERS);
+        mDamageButton = new NodeButton(mNode.getPosition(), 1, 1, new NodeButton.ButtonTextResolver() {
+            @Override
+            public String getText() {
+                return String.valueOf(Text.DAMAGE);
+            }
+        }, Constants.NODE_CORNERS);
         mDamageButton.register();
         mDamageButton.addClickListener(new Button.OnGameClickListener() {
             @Override
@@ -98,7 +113,12 @@ public class NodeMenu {
         }
 
         if (!mNode.getMeleeFactory().maxLevelReached()) {
-            mMeleeFactoryButton = new NodeButton(mMeleeButton.getPosition(), -.7f, -.7f, String.valueOf(Constants.FACTORY_MELEE_UPGRADE_1) + Text.ENERGY, Constants.NODE_CORNERS);
+            mMeleeFactoryButton = new NodeButton(mMeleeButton.getPosition(), -.7f, -.7f, new NodeButton.ButtonTextResolver() {
+                @Override
+                public String getText() {
+                    return String.valueOf(Constants.FACTORY_MELEE_UPGRADE_1) + Text.ENERGY;
+                }
+            }, Constants.NODE_CORNERS);
             mMeleeFactoryButton.register();
             mMeleeFactoryButton.addClickListener(new Button.OnGameClickListener() {
                 @Override
@@ -113,7 +133,12 @@ public class NodeMenu {
         }
 
         if (!mNode.getTankFactory().maxLevelReached()) {
-            mTankFactoryButton = new NodeButton(mTankButton.getPosition(), 0, -1, String.valueOf(Constants.FACTORY_TANK_UPGRADE_1) + Text.ENERGY, Constants.NODE_CORNERS);
+            mTankFactoryButton = new NodeButton(mTankButton.getPosition(), 0, -1, new NodeButton.ButtonTextResolver() {
+                @Override
+                public String getText() {
+                    return String.valueOf(Constants.FACTORY_TANK_UPGRADE_1) + Text.ENERGY;
+                }
+            }, Constants.NODE_CORNERS);
             mTankFactoryButton.register();
             mTankFactoryButton.addClickListener(new Button.OnGameClickListener() {
                 @Override
@@ -128,7 +153,12 @@ public class NodeMenu {
         }
 
         if (!mNode.getSprinterFactory().maxLevelReached()) {
-            mSprinterFactoryButton = new NodeButton(mSprinterButton.getPosition(), .7f, -.7f, String.valueOf(Constants.FACTORY_SPRINTER_UPGRADE_1) + Text.ENERGY, Constants.NODE_CORNERS);
+            mSprinterFactoryButton = new NodeButton(mSprinterButton.getPosition(), .7f, -.7f, new NodeButton.ButtonTextResolver() {
+                @Override
+                public String getText() {
+                    return String.valueOf(Constants.FACTORY_SPRINTER_UPGRADE_1) + Text.ENERGY;
+                }
+            }, Constants.NODE_CORNERS);
             mSprinterFactoryButton.register();
             mSprinterFactoryButton.addClickListener(new Button.OnGameClickListener() {
                 @Override
@@ -151,13 +181,37 @@ public class NodeMenu {
         float[] color = mNode.getState() instanceof OwnedState ? ((OwnedState) mNode.getState()).getOwner().getColor() : Colors.EDGE;
 
         // creating buttons
-        mMeleeButton = new DraggableButton(mNode.getPosition(), -1, -1, String.valueOf(mNode.getMeleeCount()), Constants.UNIT_MELEE_CORNERS, color);
-        mTankButton = new DraggableButton(mNode.getPosition(), 0, -1.5f, String.valueOf(mNode.getTankCount()), Constants.UNIT_TANK_CORNERS, color);
-        mSprinterButton = new DraggableButton(mNode.getPosition(), 1, -1, String.valueOf(mNode.getSprinterCount()), Constants.UNIT_SPRINTER_CORNERS, color);
+        mMeleeButton = new DraggableButton(mNode.getPosition(), -1, -1, new NodeButton.ButtonTextResolver() {
+            @Override
+            public String getText() {
+                return String.valueOf(mNode.getMeleeCount());
+            }
+        }, Constants.UNIT_MELEE_CORNERS, color);
+
+        mTankButton = new DraggableButton(mNode.getPosition(), 0, -1.5f, new NodeButton.ButtonTextResolver() {
+            @Override
+            public String getText() {
+                return String.valueOf(mNode.getTankCount());
+            }
+        }, Constants.UNIT_TANK_CORNERS, color);
+
+        mSprinterButton = new DraggableButton(mNode.getPosition(), 1, -1, new NodeButton.ButtonTextResolver() {
+            @Override
+            public String getText() {
+                return String.valueOf(mNode.getSprinterCount());
+            }
+        }, Constants.UNIT_SPRINTER_CORNERS, color);
 
         mMeleeButton.register();
         mTankButton.register();
         mSprinterButton.register();
+
+        mNode.addObserver(mMeleeButton);
+        mNode.addObserver(mTankButton);
+        mNode.addObserver(mSprinterButton);
+        mNode.getMeleeFactory().addObserver(mMeleeButton);
+        mNode.getTankFactory().addObserver(mTankButton);
+        mNode.getSprinterFactory().addObserver(mSprinterButton);
 
         if (!mIsOwned) {
             return;

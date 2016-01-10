@@ -1,10 +1,10 @@
 package ch.sebastianhaeni.edgewars.logic.entities.board.factories;
 
-import android.databinding.Bindable;
-
 import ch.sebastianhaeni.edgewars.logic.Constants;
 import ch.sebastianhaeni.edgewars.logic.entities.Entity;
+import ch.sebastianhaeni.edgewars.logic.entities.Player;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
+import ch.sebastianhaeni.edgewars.logic.entities.board.node.state.OwnedState;
 
 /**
  * A factory can build units inside a node. A factory always exists but has a flag that states if
@@ -35,7 +35,6 @@ public abstract class Factory extends Entity {
     /**
      * @return gets the level
      */
-    @Bindable
     public int getLevel() {
         return mLevel;
     }
@@ -64,7 +63,15 @@ public abstract class Factory extends Entity {
             return;
         }
         mBuildStartTime = System.currentTimeMillis();
+        Player owner = ((OwnedState) getNode().getState()).getOwner();
+        if (owner.getEnergy() < getUnitCost()) {
+            return;
+        }
+        owner.removeEnergy(getUnitCost());
         produceUnit();
+
+        setChanged();
+        notifyObservers(getNode());
     }
 
     /**

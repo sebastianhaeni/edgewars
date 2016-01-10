@@ -1,15 +1,14 @@
 package ch.sebastianhaeni.edgewars.logic.entities;
 
-import android.databinding.BaseObservable;
-
 import java.io.Serializable;
+import java.util.Observable;
 
 import ch.sebastianhaeni.edgewars.logic.Game;
 
 /**
  * An entity is a thing in the game and it may wants to be updated.
  */
-public abstract class Entity extends BaseObservable implements Serializable {
+public abstract class Entity extends Observable implements Serializable {
     private long mInterval;
 
     /**
@@ -26,6 +25,7 @@ public abstract class Entity extends BaseObservable implements Serializable {
      * Constructor for entities that don't want to be updated.
      */
     protected Entity() {
+        super();
     }
 
     /**
