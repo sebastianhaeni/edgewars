@@ -3,6 +3,7 @@ package ch.sebastianhaeni.edgewars.logic.entities.board.node.menu;
 import java.util.ArrayList;
 
 import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Line;
+import ch.sebastianhaeni.edgewars.logic.Game;
 import ch.sebastianhaeni.edgewars.ui.IDraggable;
 import ch.sebastianhaeni.edgewars.util.Position;
 
@@ -33,7 +34,15 @@ public class DraggableButton extends NodeButton implements IDraggable {
         createLine(x, y);
     }
 
+    /**
+     * Creates the visible line to indicate the dragging action.
+     *
+     * @param x x coordinate
+     * @param y y coordinate
+     */
     private void createLine(float x, float y) {
+        x = Game.getInstance().getGameRenderer().getGameCoordinateX(x);
+        y = Game.getInstance().getGameRenderer().getGameCoordinateY(y);
         mLine = new Line(getPosition(), new Position(x, y), mColor, .1f);
         mLine.register();
     }

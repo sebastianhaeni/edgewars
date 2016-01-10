@@ -57,8 +57,9 @@ public class GameSurfaceView extends GLSurfaceView implements Serializable {
         mGameState.init();
 
         mThread = new GameThread();
-        GameRenderer renderer = new GameRenderer(mContext, mThread, mGameState);
+        GameRenderer renderer = new GameRenderer(mContext, mGameState);
         mController = new GameController(renderer, mGameState);
+        Game.getInstance().setGameRenderer(renderer);
         Game.getInstance().setGameController(mController);
 
         // set view, to be able to stop Game
