@@ -16,6 +16,7 @@ import ch.sebastianhaeni.edgewars.util.Position;
  */
 public class Line extends Shape {
 
+    private static final String TAG = "Line";
     private final FloatBuffer vertexBuffer;
     private final int vertexCount;
 
@@ -35,15 +36,11 @@ public class Line extends Shape {
                 Math.pow((double) dst.getX() - src.getX(), 2.0)
                         + Math.pow((double) dst.getY() - src.getY(), 2.0));
 
+        if (dst.getX() < src.getX()) {
+            distance = -distance;
+        }
+
         float angle = (float) Math.toDegrees(Math.asin((dst.getY() - src.getY()) / distance));
-
-        if (src.getX() > dst.getX() && src.getY() > dst.getY()) {
-            angle -= 90;
-        }
-
-        if (src.getX() > dst.getX() && src.getY() < dst.getY()) {
-            angle += 90;
-        }
 
         if (angle < 0) {
             angle += 360;
