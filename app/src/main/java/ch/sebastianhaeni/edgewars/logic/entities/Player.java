@@ -1,7 +1,6 @@
 package ch.sebastianhaeni.edgewars.logic.entities;
 
-
-import java.io.Serializable;
+import java.util.Arrays;
 import java.util.UUID;
 
 import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Text;
@@ -43,7 +42,7 @@ public class Player extends Entity {
             mAi.update(millis);
         }
         if (mEnergyLabel != null) {
-            mEnergyLabel.setText(mEnergy + " energy");
+            mEnergyLabel.setText(String.valueOf(mEnergy) + Text.ENERGY);
         }
     }
 
@@ -53,7 +52,7 @@ public class Player extends Entity {
         if (mIsHuman) {
             mEnergyLabel = new Text(
                     new Position(1, .4f),
-                    Colors.ENERGY_TEXT, mEnergy + " energy",
+                    Colors.ENERGY_TEXT, String.valueOf(mEnergy) + Text.ENERGY,
                     10, true);
             mEnergyLabel.register();
         }
@@ -120,7 +119,8 @@ public class Player extends Entity {
         return equals(other);
     }
 
-    public String toString () {
-        return super.toString() + "[UUID="+mId+", color="+mColor;
+    @Override
+    public String toString() {
+        return super.toString() + "{UUID=" + mId + ", color=" + Arrays.toString(mColor) + "}";
     }
 }

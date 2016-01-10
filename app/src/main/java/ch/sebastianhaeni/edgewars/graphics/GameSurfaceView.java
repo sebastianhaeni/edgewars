@@ -1,6 +1,5 @@
 package ch.sebastianhaeni.edgewars.graphics;
 
-import android.app.Activity;
 import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.support.annotation.NonNull;
@@ -58,8 +57,9 @@ public class GameSurfaceView extends GLSurfaceView implements Serializable {
         mGameState.init();
 
         mThread = new GameThread();
-        GameRenderer renderer = new GameRenderer(mContext, mThread, mGameState);
-        mController = new GameController(mContext, renderer, mGameState);
+        GameRenderer renderer = new GameRenderer(mContext, mGameState);
+        mController = new GameController(renderer, mGameState);
+        Game.getInstance().setGameRenderer(renderer);
         Game.getInstance().setGameController(mController);
 
         // set view, to be able to stop Game

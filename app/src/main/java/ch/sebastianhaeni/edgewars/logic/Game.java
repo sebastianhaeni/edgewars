@@ -1,13 +1,12 @@
 package ch.sebastianhaeni.edgewars.logic;
 
-import android.util.Log;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 import java.util.concurrent.ConcurrentHashMap;
 
+import ch.sebastianhaeni.edgewars.graphics.GameRenderer;
 import ch.sebastianhaeni.edgewars.graphics.GameSurfaceView;
 import ch.sebastianhaeni.edgewars.graphics.drawables.Drawable;
 import ch.sebastianhaeni.edgewars.graphics.drawables.RenderQueue;
@@ -20,6 +19,7 @@ import ch.sebastianhaeni.edgewars.logic.entities.board.node.state.OwnedState;
 import ch.sebastianhaeni.edgewars.logic.entities.board.units.Unit;
 import ch.sebastianhaeni.edgewars.logic.entities.board.units.state.OnEdgeState;
 import ch.sebastianhaeni.edgewars.ui.GameController;
+import ch.sebastianhaeni.edgewars.ui.IClickable;
 
 /**
  * This class controls the game.
@@ -28,13 +28,15 @@ public class Game {
 
     private static Game mGame;
 
-    private GameState mGameState;
-    private GameController mGameController;
     private final Stack<Command> mCommandStack = new Stack<>();
     private final ConcurrentHashMap<Entity, Long> mEntities = new ConcurrentHashMap<>();
     private final RenderQueue mDrawables = new RenderQueue();
+
+    private GameState mGameState;
+    private GameController mGameController;
     private GameSurfaceView mGLView;
     private long mTimePassed = 0;
+    private GameRenderer mGameRenderer;
 
     /**
      * Privatised constructor. Because singleton.
@@ -68,7 +70,9 @@ public class Game {
         mGameController = gameController;
     }
 
-    public void setGLView(GameSurfaceView view) { mGLView = view; }
+    public void setGLView(GameSurfaceView view) {
+        mGLView = view;
+    }
 
     /**
      * Resets the singleton and thus a new game is born.
@@ -84,7 +88,6 @@ public class Game {
      */
     public void register(Command command) {
         mCommandStack.push(command);
-        Log.d("Game", "Registering command: " + command);
     }
 
     /**
@@ -116,6 +119,15 @@ public class Game {
      */
     public void unregister(Drawable drawable) {
         mDrawables.remove(drawable);
+    }
+
+    /**
+     * Unregister an entity.
+     *
+     * @param entity the entity to be unregistered
+     */
+    public void unregister(Entity entity) {
+        mEntities.remove(entity);
     }
 
     /**
@@ -151,6 +163,7 @@ public class Game {
             }
         }
     }
+
     /**
      * Checkes if Game is over.
      *
@@ -162,13 +175,12 @@ public class Game {
         Player owner = null;
         boolean gameOver = true;
         for (Node node : nodes) {
-            if(node.getState() instanceof OwnedState) {
+            if (node.getState() instanceof OwnedState) {
                 Player currentOwner = ((OwnedState) node.getState()).getOwner();
-                if(owner == null) {
+                if (owner == null) {
                     owner = currentOwner;
-                }
-                else {
-                    if(!owner.equals(currentOwner)) {
+                } else {
+                    if (!owner.equals(currentOwner)) {
                         gameOver = false;
                         break;
                     }
@@ -255,6 +267,39 @@ public class Game {
         }
 
         return units;
+    }
+
+    /**
+     * @return gets a list of clickable elements.
+     */
+    public List<IClickable> getClickables() {
+        List<IClickable> clickables = new ArrayList<>();
+
+        for (Entity entity : mEntities.keySet()) {
+            if (!(entity instanceof IClickable)) {
+                continue;
+            }
+
+            clickables.add((IClickable) entity);
+        }
+
+        return clickables;
+    }
+
+    /**
+     * Set game renderer
+     *
+     * @param gameRenderer the renderer of the game
+     */
+    public void setGameRenderer(GameRenderer gameRenderer) {
+        mGameRenderer = gameRenderer;
+    }
+
+    /**
+     * @return game renderer
+     */
+    public GameRenderer getGameRenderer() {
+        return mGameRenderer;
     }
 }
 

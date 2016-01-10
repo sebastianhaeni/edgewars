@@ -16,9 +16,8 @@ import ch.sebastianhaeni.edgewars.util.Position;
  */
 public class Line extends Shape {
 
-    private static final float WIDTH = 0.2f;
-
-    private final transient FloatBuffer vertexBuffer;
+    private static final String TAG = "Line";
+    private final FloatBuffer vertexBuffer;
     private final int vertexCount;
 
     /**
@@ -28,13 +27,18 @@ public class Line extends Shape {
      * @param src   where the line starts
      * @param dst   where the line ends
      * @param color the color of the edge
+     * @param width width of the line
      */
-    public Line(Position src, Position dst, float[] color) {
+    public Line(Position src, Position dst, float[] color, float width) {
         super(src, color, 2);
 
         float distance = (float) Math.sqrt(
                 Math.pow((double) dst.getX() - src.getX(), 2.0)
                         + Math.pow((double) dst.getY() - src.getY(), 2.0));
+
+        if (dst.getX() < src.getX()) {
+            distance = -distance;
+        }
 
         float angle = (float) Math.toDegrees(Math.asin((dst.getY() - src.getY()) / distance));
 
@@ -44,7 +48,7 @@ public class Line extends Shape {
 
         Matrix m = new Matrix();
 
-        float half = WIDTH * .5f;
+        float half = width * .5f;
         float[] coordinates = new float[]{
                 0, -half,
                 0, half,

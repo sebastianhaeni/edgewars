@@ -1,6 +1,5 @@
 package ch.sebastianhaeni.edgewars.logic.ai.rules;
 
-
 import java.util.ArrayList;
 
 import ch.sebastianhaeni.edgewars.EUnitType;

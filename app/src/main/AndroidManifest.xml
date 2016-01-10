@@ -16,10 +16,18 @@
         android:name="ch.sebastianhaeni.edgewars.GameApplication"
         android:theme="@style/AppTheme">
 
-        <meta-data android:name="DATABASE" android:value="edgewars.db" />
-        <meta-data android:name="VERSION" android:value="2" />
-        <meta-data android:name="QUERY_LOG" android:value="true" />
-        <meta-data android:name="DOMAIN_PACKAGE_NAME" android:value="ch.sebastianhaeni.edgewars" />
+        <meta-data
+            android:name="DATABASE"
+            android:value="edgewars.db"/>
+        <meta-data
+            android:name="VERSION"
+            android:value="2"/>
+        <meta-data
+            android:name="QUERY_LOG"
+            android:value="true"/>
+        <meta-data
+            android:name="DOMAIN_PACKAGE_NAME"
+            android:value="ch.sebastianhaeni.edgewars"/>
 
         <activity
             android:name="ch.sebastianhaeni.edgewars.ui.activities.MainActivity"

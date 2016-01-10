@@ -1,25 +1,11 @@
 package ch.sebastianhaeni.edgewars.ui;
 
-import android.content.Context;
 import android.view.MotionEvent;
 
-import java.util.ArrayList;
-
-import ch.sebastianhaeni.edgewars.EUnitType;
 import ch.sebastianhaeni.edgewars.graphics.GameRenderer;
-import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Polygon;
-import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Shape;
-import ch.sebastianhaeni.edgewars.logic.Constants;
 import ch.sebastianhaeni.edgewars.logic.Game;
 import ch.sebastianhaeni.edgewars.logic.GameState;
 import ch.sebastianhaeni.edgewars.logic.SoundEngine;
-import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
-import ch.sebastianhaeni.edgewars.logic.entities.board.node.state.NeutralState;
-import ch.sebastianhaeni.edgewars.logic.entities.board.node.state.OwnedState;
-import ch.sebastianhaeni.edgewars.ui.dialogs.NeutralNodeDialog;
-import ch.sebastianhaeni.edgewars.ui.dialogs.OpponentNodeDialog;
-import ch.sebastianhaeni.edgewars.ui.dialogs.OwnedNodeDialog;
-import ch.sebastianhaeni.edgewars.util.Colors;
 
 /**
  * The game controller handles inputs from the user and delegates them to the according action.
@@ -28,26 +14,20 @@ public class GameController {
 
     private final GameState mGameState;
     private final GameRenderer mRenderer;
-    private final Context mContext;
+
     private float mPreviousX;
     private float mPreviousY;
     private float mStartX;
     private float mStartY;
-    private final ArrayList<Shape> mCoronas = new ArrayList<>();
-
-    private boolean mSelectingNode;
-    private Node mSourceNode;
-    private EUnitType mSendingUnitType;
+    private IDraggable _dragging;
 
     /**
      * Constructor
      *
-     * @param context   app context
      * @param renderer  game renderer
      * @param gameState game state
      */
-    public GameController(Context context, GameRenderer renderer, GameState gameState) {
-        mContext = context;
+    public GameController(GameRenderer renderer, GameState gameState) {
         mGameState = gameState;
         mRenderer = renderer;
     }
@@ -77,21 +57,40 @@ public class GameController {
             case MotionEvent.ACTION_DOWN:
                 mStartX = x;
                 mStartY = y;
+
+                IClickable clicked = isHit(x, y);
+                if (clicked != null && clicked instanceof IDraggable) {
+                    // start drag
+                    _dragging = (IDraggable) clicked;
+                    _dragging.startDrag(x, y);
+                    return;
+                }
+
                 mGameState.getCamera().takeCamera();
                 break;
             case MotionEvent.ACTION_MOVE:
                 float dx = x - mPreviousX;
                 float dy = y - mPreviousY;
 
+                if (_dragging != null) {
+                    _dragging.moveDrag(x, y);
+                    return;
+                }
+
                 mGameState.getCamera().moveCamera(dx, dy);
                 break;
             case MotionEvent.ACTION_UP:
+                if (_dragging != null) {
+                    _dragging.stopDrag(x, y);
+                    _dragging = null;
+                }
+
                 // detect single click (not moving the camera)
                 if (e.getEventTime() - e.getDownTime() < 200
                         && Math.abs(x - mStartX) < 5
                         && Math.abs(y - mStartY) < 5) {
                     SoundEngine.getInstance().play(SoundEngine.Sounds.CLICK);
-                    clickNode(x, y);
+                    click(x, y);
                 }
                 mGameState.getCamera().freeCamera();
                 break;
@@ -102,120 +101,52 @@ public class GameController {
     }
 
     /**
-     * Figures out if a node is clicked at that coordinate and what to do after.
+     * Figures out if a clickable is clicked at that coordinate and what to do after.
      *
      * @param touchX x coordinate
      * @param touchY y coordinate
      */
-    private void clickNode(float touchX, float touchY) {
+    private void click(float touchX, float touchY) {
+        IClickable clicked = isHit(touchX, touchY);
+        if (clicked != null) {
+            clicked.onClick();
+            return;
+        }
 
+        // nothing was clicked, send that info to all clickables
+        for (IClickable clickable : Game.getInstance().getClickables()) {
+            clickable.onUnhandledClick();
+        }
+    }
+
+    /**
+     * Detects if a clickable is hit and returns it.
+     *
+     * @param touchX x coordinate
+     * @param touchY y coordinate
+     * @return the clicked clickable, or <code>null</code> if nothing hit
+     */
+    public IClickable isHit(float touchX, float touchY) {
         // get camera position and multiply it by factor 2/3 (why? I dunno..)
         float cameraX = mGameState.getCamera().getScreenX() * (2f / 3f);
         float cameraY = mGameState.getCamera().getScreenY() * (2f / 3f);
 
         // loop through all nodes and test if one is positioned at the coordinates of the user touch
-        for (Node node : mGameState.getBoard().getNodes()) {
-            // calculate node radius in pixels
-            float nodeRadiusGL = Constants.NODE_RADIUS;
-            float nodeRadiusX = mRenderer.getAndroidLengthX(nodeRadiusGL);
-            float nodeRadiusY = mRenderer.getAndroidLengthY(nodeRadiusGL);
-
-            // add 33% user imprecision tolerance
-            nodeRadiusX = nodeRadiusX * 1.33f;
-            nodeRadiusY = nodeRadiusY * 1.33f;
+        for (IClickable clickable : Game.getInstance().getClickables()) {
+            float width = mRenderer.getAndroidLengthX(clickable.getWidth() * .5f);
+            float height = mRenderer.getAndroidLengthY(clickable.getHeight() * .5f);
 
             // convert node coordinates to Android coordinates
-            float nodeX = mRenderer.getAndroidCoordinateX(node.getPosition().getX());
-            float nodeY = mRenderer.getAndroidCoordinateY(node.getPosition().getY());
+            float x = mRenderer.getAndroidCoordinateX(clickable.getPosition().getX());
+            float y = mRenderer.getAndroidCoordinateY(clickable.getPosition().getY());
 
-            if (!(Math.abs(nodeX + cameraX - touchX) < nodeRadiusX &&
-                    Math.abs(nodeY + cameraY - touchY) < nodeRadiusY)) {
+            if (!(Math.abs(x + cameraX - touchX) < width &&
+                    Math.abs(y + cameraY - touchY) < height)) {
                 continue;
             }
-
-            if (mSelectingNode) {
-                if (node.equals(mSourceNode)
-                        || !Game.getInstance().getConnectedNodes(mSourceNode).contains(node)) {
-                    showNodeDialog(node);
-                    break;
-                }
-
-                switch (mSendingUnitType) {
-                    case MELEE:
-                        mSourceNode.sendMeleeUnits(node);
-                        break;
-                    case SPRINTER:
-                        mSourceNode.sendSprinterUnits(node);
-                        break;
-                    case TANK:
-                        mSourceNode.sendTankUnits(node);
-                        break;
-                }
-                SoundEngine.getInstance().play(SoundEngine.Sounds.UNIT_SENT);
-            } else {
-                showNodeDialog(node);
-            }
-            break;
+            return clickable;
         }
 
-        mSelectingNode = false;
-        clearCoronas();
+        return null;
     }
-
-    /**
-     * Clears coronas off nodes.
-     */
-    private void clearCoronas() {
-        for (Shape corona : mCoronas) {
-            corona.destroy();
-        }
-    }
-
-    /**
-     * Shows the appropriate dialog of a node. These are 'neutral', 'owned' or 'opponent'.
-     *
-     * @param node of which the dialog should be opened
-     */
-    private void showNodeDialog(Node node) {
-        if (node.getState() instanceof NeutralState) {
-            NeutralNodeDialog dialog = new NeutralNodeDialog(mContext, node);
-            dialog.show();
-            return;
-        }
-
-        if (!(node.getState() instanceof OwnedState)) {
-            return;
-        }
-
-        OwnedState state = (OwnedState) node.getState();
-
-        if (state.getOwner().equals(mGameState.getHuman())) {
-            OwnedNodeDialog dialog = new OwnedNodeDialog(mContext, node, this);
-            dialog.show();
-            return;
-        }
-
-        OpponentNodeDialog dialog = new OpponentNodeDialog(mContext, node);
-        dialog.show();
-    }
-
-    /**
-     * Asks the player the player for the units to be sent to.
-     *
-     * @param node source node
-     * @param type type of unit
-     */
-    public void askPlayerForTargetNode(Node node, EUnitType type) {
-        mSelectingNode = true;
-        mSourceNode = node;
-        mSendingUnitType = type;
-        mCoronas.clear();
-
-        for (Node neighbor : Game.getInstance().getConnectedNodes(node)) {
-            Polygon corona = new Polygon(neighbor.getPosition(), Colors.CORONA, 1, 300, 0, .75f);
-            corona.register();
-            mCoronas.add(corona);
-        }
-    }
-
 }

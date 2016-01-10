@@ -2,7 +2,8 @@ package ch.sebastianhaeni.edgewars.logic.ai.rules;
 
 import java.util.ArrayList;
 
-import ch.sebastianhaeni.edgewars.logic.commands.BuildUnitCommand;
+import ch.sebastianhaeni.edgewars.logic.GameState;
+import ch.sebastianhaeni.edgewars.logic.commands.ActivateFactoryCommand;
 import ch.sebastianhaeni.edgewars.logic.commands.Command;
 import ch.sebastianhaeni.edgewars.logic.entities.Player;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
@@ -33,9 +34,13 @@ public class BuildUpRule extends Rule {
     public ArrayList<Command> getCommands() {
         ArrayList<Command> commands = new ArrayList<>();
 
-        commands.add(new BuildUnitCommand(mNode.getMeleeFactory()));
-        commands.add(new BuildUnitCommand(mNode.getSprinterFactory()));
-        commands.add(new BuildUnitCommand(mNode.getTankFactory()));
+        if (mNode.getMeleeCount() < 30) {
+            commands.add(new ActivateFactoryCommand(mNode.getMeleeFactory()));
+        } else if (mNode.getSprinterCount() < 30) {
+            commands.add(new ActivateFactoryCommand(mNode.getSprinterFactory()));
+        } else if (mNode.getTankCount() < 30) {
+            commands.add(new ActivateFactoryCommand(mNode.getTankFactory()));
+        }
 
         return commands;
     }

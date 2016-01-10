@@ -1,23 +1,17 @@
 package ch.sebastianhaeni.edgewars.logic.entities.board.node;
 
-import android.databinding.Bindable;
-import android.util.Log;
-
-import ch.sebastianhaeni.edgewars.BR;
-import ch.sebastianhaeni.edgewars.EUnitType;
 import ch.sebastianhaeni.edgewars.graphics.drawables.decorators.DeathParticleDecorator;
 import ch.sebastianhaeni.edgewars.graphics.drawables.decorators.TextDecorator;
 import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Polygon;
-import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Shape;
+import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Text;
 import ch.sebastianhaeni.edgewars.logic.Constants;
-import ch.sebastianhaeni.edgewars.logic.Game;
 import ch.sebastianhaeni.edgewars.logic.SoundEngine;
 import ch.sebastianhaeni.edgewars.logic.ai.AIAwareness;
-import ch.sebastianhaeni.edgewars.logic.commands.MoveUnitCommand;
 import ch.sebastianhaeni.edgewars.logic.entities.board.BoardEntity;
 import ch.sebastianhaeni.edgewars.logic.entities.board.factories.MeleeFactory;
 import ch.sebastianhaeni.edgewars.logic.entities.board.factories.SprinterFactory;
 import ch.sebastianhaeni.edgewars.logic.entities.board.factories.TankFactory;
+import ch.sebastianhaeni.edgewars.logic.entities.board.node.menu.NodeMenu;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.state.NeutralState;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.state.NodeState;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.state.OwnedState;
@@ -25,6 +19,7 @@ import ch.sebastianhaeni.edgewars.logic.entities.board.units.MeleeUnit;
 import ch.sebastianhaeni.edgewars.logic.entities.board.units.SprinterUnit;
 import ch.sebastianhaeni.edgewars.logic.entities.board.units.TankUnit;
 import ch.sebastianhaeni.edgewars.logic.entities.board.units.Unit;
+import ch.sebastianhaeni.edgewars.ui.IClickable;
 import ch.sebastianhaeni.edgewars.util.Colors;
 import ch.sebastianhaeni.edgewars.util.Position;
 
@@ -42,9 +37,11 @@ import ch.sebastianhaeni.edgewars.util.Position;
  * <li>scheduled commands to move units to another node</li>
  * </ul>
  */
-public class Node extends BoardEntity {
+public class Node extends BoardEntity implements IClickable {
 
     //region members
+    private static NodeMenu mNodeMenu;
+
     private final Polygon mCircle;
     private final TextDecorator mHealthLabel;
     private int mMeleeUnits;
@@ -78,7 +75,7 @@ public class Node extends BoardEntity {
         mHealth = getMaxHealth();
 
         mCircle = new Polygon(mPosition, Colors.NODE_NEUTRAL, Constants.NODE_LAYER, Constants.NODE_CORNERS, 0, Constants.NODE_RADIUS);
-        mHealthLabel = new TextDecorator(mCircle, String.valueOf(getHealth()), 6);
+        mHealthLabel = new TextDecorator(mCircle, String.valueOf(getHealth()) + Text.HEALTH, 6);
 
         setState(new NeutralState(this));
     }
@@ -100,8 +97,8 @@ public class Node extends BoardEntity {
     }
 
     @Override
-    public String toString () {
-        return super.toString() + "[x="+mPosition.getX()+", y="+mPosition.getY()+"]";
+    public String toString() {
+        return super.toString() + "[x=" + mPosition.getX() + ", y=" + mPosition.getY() + "]";
     }
 
     //region actions
@@ -111,7 +108,6 @@ public class Node extends BoardEntity {
      */
     public void addMeleeUnit() {
         mMeleeUnits++;
-        notifyPropertyChanged(BR.meleeCount);
     }
 
     /**
@@ -119,7 +115,6 @@ public class Node extends BoardEntity {
      */
     public void addTankUnit() {
         mTankUnits++;
-        notifyPropertyChanged(BR.tankCount);
     }
 
     /**
@@ -127,7 +122,6 @@ public class Node extends BoardEntity {
      */
     public void addSprinterUnit() {
         mSprinterUnits++;
-        notifyPropertyChanged(BR.sprinterCount);
     }
 
     /**
@@ -138,14 +132,20 @@ public class Node extends BoardEntity {
     public void addUnit(Unit unit) {
         if (unit instanceof MeleeUnit) {
             mMeleeUnits += unit.getCount();
+            setChanged();
+            notifyObservers(this);
             return;
         }
         if (unit instanceof TankUnit) {
             mTankUnits += unit.getCount();
+            setChanged();
+            notifyObservers(this);
             return;
         }
         if (unit instanceof SprinterUnit) {
             mSprinterUnits += unit.getCount();
+            setChanged();
+            notifyObservers(this);
             return;
         }
         throw new IllegalArgumentException("Unit is not handled.");
@@ -159,7 +159,6 @@ public class Node extends BoardEntity {
             return;
         }
         mHealthLevel++;
-        notifyPropertyChanged(BR.healthLevel);
     }
 
     /**
@@ -170,7 +169,6 @@ public class Node extends BoardEntity {
             return;
         }
         mDamageLevel++;
-        notifyPropertyChanged(BR.damageLevel);
     }
 
     /**
@@ -178,50 +176,7 @@ public class Node extends BoardEntity {
      */
     public void repair() {
         mHealth = getMaxHealth();
-        mHealthLabel.setText(String.valueOf(mHealth));
-        notifyPropertyChanged(BR.health);
-    }
-
-    /**
-     * Issues a command to send all melee units to another node from this node.
-     *
-     * @param node target node
-     */
-    public void sendMeleeUnits(Node node) {
-        Game.getInstance().register(new MoveUnitCommand(
-                mMeleeUnits,
-                EUnitType.MELEE,
-                node,
-                Game.getInstance().getEdgeBetween(this, node),
-                ((OwnedState) getState()).getOwner()));
-    }
-
-    /**
-     * Issues a command to send all tank units to another node from this node.
-     *
-     * @param node target node
-     */
-    public void sendTankUnits(Node node) {
-        Game.getInstance().register(new MoveUnitCommand(
-                mTankUnits,
-                EUnitType.TANK,
-                node,
-                Game.getInstance().getEdgeBetween(this, node),
-                ((OwnedState) getState()).getOwner()));
-    }
-
-    /**
-     * Issues a command to send all sprinter units to another node from this node.
-     *
-     * @param node target node
-     */
-    public void sendSprinterUnits(Node node) {
-        Game.getInstance().register(new MoveUnitCommand(
-                mSprinterUnits,
-                EUnitType.SPRINTER,
-                node,
-                Game.getInstance().getEdgeBetween(this, node),
-                ((OwnedState) getState()).getOwner()));
+        updateLabel();
     }
 
     /**
@@ -232,18 +187,14 @@ public class Node extends BoardEntity {
     public void clearUnit(Unit unit) {
         if (unit instanceof MeleeUnit) {
             mMeleeUnits = 0;
-            notifyPropertyChanged(BR.meleeCount);
-            return;
-        }
-        if (unit instanceof TankUnit) {
+        } else if (unit instanceof TankUnit) {
             mTankUnits = 0;
-            notifyPropertyChanged(BR.tankCount);
-            return;
-        }
-        if (unit instanceof SprinterUnit) {
+        } else if (unit instanceof SprinterUnit) {
             mSprinterUnits = 0;
-            notifyPropertyChanged(BR.sprinterCount);
         }
+
+        setChanged();
+        notifyObservers(this);
     }
 
     /**
@@ -255,6 +206,9 @@ public class Node extends BoardEntity {
         mMeleeUnits = 0;
         mSprinterUnits = 0;
         mTankUnits = 0;
+
+        setChanged();
+        notifyObservers(this);
     }
 
     /**
@@ -270,7 +224,6 @@ public class Node extends BoardEntity {
                 return;
             }
 
-            Log.d("Node", "Node died!");
             if (getState() instanceof OwnedState && ((OwnedState) getState()).getOwner().isHuman()) {
                 SoundEngine.getInstance().play(SoundEngine.Sounds.NODE_LOST);
             }
@@ -284,9 +237,7 @@ public class Node extends BoardEntity {
             mHealth = newHealth;
         }
 
-        mHealthLabel.setText(String.valueOf(mHealth));
-        notifyPropertyChanged(BR.health);
-        notifyPropertyChanged(BR.repairCost);
+        updateLabel();
     }
 
     /**
@@ -303,7 +254,8 @@ public class Node extends BoardEntity {
             if (newHealth <= 0) {
                 mMeleeUnits--;
                 mMeleeHealth = Constants.UNIT_MELEE_HEALTH;
-                notifyPropertyChanged(BR.meleeCount);
+                setChanged();
+                notifyObservers(this);
                 return true;
             }
             mMeleeHealth = newHealth;
@@ -315,7 +267,8 @@ public class Node extends BoardEntity {
             if (newHealth <= 0) {
                 mTankUnits--;
                 mTankHealth = Constants.UNIT_TANK_HEALTH;
-                notifyPropertyChanged(BR.tankCount);
+                setChanged();
+                notifyObservers(this);
                 return true;
             }
             mTankHealth = newHealth;
@@ -327,7 +280,8 @@ public class Node extends BoardEntity {
             if (newHealth <= 0) {
                 mSprinterUnits--;
                 mSprinterHealth = Constants.UNIT_SPRINTER_HEALTH;
-                notifyPropertyChanged(BR.sprinterCount);
+                setChanged();
+                notifyObservers(this);
                 return true;
             }
             mSprinterUnits = newHealth;
@@ -349,19 +303,64 @@ public class Node extends BoardEntity {
             mHealth += healthGain;
         }
 
-        mHealthLabel.setText(String.valueOf(mHealth));
-        notifyPropertyChanged(BR.health);
-        notifyPropertyChanged(BR.repairCost);
+        updateLabel();
+    }
+
+    /**
+     * Updates the health label of this node.
+     */
+    private void updateLabel() {
+        mHealthLabel.setText(String.valueOf(mHealth) + Text.HEALTH);
+    }
+
+    @Override
+    public void onClick() {
+        showNodeMenu();
+    }
+
+    @Override
+    public void onUnhandledClick() {
+        if (mNodeMenu != null && mNodeMenu.isVisible()) {
+            mNodeMenu.hide();
+        }
+    }
+
+    @Override
+    public float getWidth() {
+        return Constants.NODE_RADIUS * 2;
+    }
+
+    @Override
+    public float getHeight() {
+        return Constants.NODE_RADIUS * 2;
+    }
+
+    /**
+     *
+     */
+    private void showNodeMenu() {
+        if (mNodeMenu != null && mNodeMenu.isVisible()) {
+            mNodeMenu.hide();
+            return;
+        }
+
+        if (getState() instanceof NeutralState || !(getState() instanceof OwnedState)) {
+            return;
+        }
+
+        OwnedState state = (OwnedState) getState();
+
+        mNodeMenu = new NodeMenu(this, state.getOwner().isHuman());
+        mNodeMenu.show();
     }
 
     //endregion
 
-    //region databinding
+    //region getters/setters
 
     /**
      * @return gets the cost to repair the node with the current health
      */
-    @Bindable
     public int getRepairCost() {
         return (getMaxHealth() - getHealth()) * Constants.NODE_REPAIR_COST_MULTIPLIER;
     }
@@ -369,7 +368,6 @@ public class Node extends BoardEntity {
     /**
      * @return gets the current health
      */
-    @Bindable
     public int getHealth() {
         return mHealth;
     }
@@ -377,7 +375,6 @@ public class Node extends BoardEntity {
     /**
      * @return gets the current maximum of health (depends on health level)
      */
-    @Bindable
     public int getMaxHealth() {
         switch (mHealthLevel) {
             case 1:
@@ -392,54 +389,24 @@ public class Node extends BoardEntity {
     }
 
     /**
-     * @return gets health level
-     */
-    @Bindable
-    public int getHealthLevel() {
-        return mHealthLevel;
-    }
-
-    /**
-     * @return gets damage level
-     */
-    @Bindable
-    public int getDamageLevel() {
-        return mDamageLevel;
-    }
-
-    /**
      * @return gets melee unit count
      */
-    @Bindable
     public int getMeleeCount() {
         return mMeleeUnits;
     }
 
     /**
-     * @return gets tank unit count
+     * @return gets count of tank units
      */
-    @Bindable
     public int getTankCount() {
         return mTankUnits;
     }
 
     /**
-     * @return gets sprinter unit count
+     * @return gets count of sprinter units
      */
-    @Bindable
     public int getSprinterCount() {
         return mSprinterUnits;
-    }
-
-    //endregion
-
-    //region getters/setters
-
-    /**
-     * @return gets the circle representing this node
-     */
-    public Shape getCircle() {
-        return mCircle;
     }
 
     /**

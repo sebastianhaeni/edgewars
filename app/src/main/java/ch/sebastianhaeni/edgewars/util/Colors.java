@@ -18,6 +18,7 @@ public interface Colors {
 
     // Node selection corona
     float[] CORONA = {1f, 1f, 1f, 1f};
+    float[] CORONA_DROP = {97f, 189f, 79f, 1f};
 
     // Energy label that display the players energy
     float[] ENERGY_TEXT = {1f, 1f, 1f, 1f};

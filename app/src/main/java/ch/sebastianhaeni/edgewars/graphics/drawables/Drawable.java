@@ -56,4 +56,11 @@ public abstract class Drawable implements Serializable {
     public void register() {
         Game.getInstance().register(this, mLayer);
     }
+
+    /**
+     * Unregisters the drawable. This means it's no longer rendered.
+     */
+    public void unregister() {
+        Game.getInstance().unregister(this);
+    }
 }

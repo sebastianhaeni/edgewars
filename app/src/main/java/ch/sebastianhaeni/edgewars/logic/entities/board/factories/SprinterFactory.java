@@ -1,6 +1,5 @@
 package ch.sebastianhaeni.edgewars.logic.entities.board.factories;
 
-import ch.sebastianhaeni.edgewars.BR;
 import ch.sebastianhaeni.edgewars.logic.Constants;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
 
@@ -21,7 +20,6 @@ public class SprinterFactory extends Factory {
     @Override
     public void produceUnit() {
         getNode().addSprinterUnit();
-        notifyPropertyChanged(BR.sprinterCount);
     }
 
     @Override

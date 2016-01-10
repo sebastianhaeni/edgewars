@@ -68,8 +68,7 @@ public class LevelDetailActivity extends Activity {
         List<LevelRecord> records = LevelRecord.find(LevelRecord.class, "level_nr = ?", Integer.toString(mLevelNr));
         if (records.size() > 0) {
             mLevelRecord = records.get(0);
-        }
-        else {
+        } else {
             LevelRecord record = new LevelRecord(mLevelNr, 0, 0);
             record.save();
             mLevelRecord = record;
@@ -80,8 +79,11 @@ public class LevelDetailActivity extends Activity {
         return mLevelNr;
     }
 
-    public int getScore() { return mLevelRecord.getScore(); }
-    public String getTime () {
+    public int getScore() {
+        return mLevelRecord.getScore();
+    }
+
+    public String getTime() {
         long millis = mLevelRecord.getTime();
         SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss", new Locale("de", "CH"));
         df.setTimeZone(TimeZone.getTimeZone("GMT"));

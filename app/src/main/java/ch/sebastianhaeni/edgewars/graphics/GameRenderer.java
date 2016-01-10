@@ -18,7 +18,6 @@ import ch.sebastianhaeni.edgewars.graphics.programs.ShapeProgram;
 import ch.sebastianhaeni.edgewars.graphics.programs.TextProgram;
 import ch.sebastianhaeni.edgewars.logic.Game;
 import ch.sebastianhaeni.edgewars.logic.GameState;
-import ch.sebastianhaeni.edgewars.logic.GameThread;
 
 /**
  * Provides drawing instructions for a GLSurfaceView object. This class
@@ -37,7 +36,6 @@ public class GameRenderer implements GLSurfaceView.Renderer {
     private static final int EYE_HEIGHT = 15;
     private static final int MIN_HEIGHT = 3;
 
-    private final GameThread mThread;
     private final GameState mGameState;
 
     // mMVPMatrix is an abbreviation for "Model View Projection Matrix"
@@ -65,12 +63,10 @@ public class GameRenderer implements GLSurfaceView.Renderer {
      * Constructor
      *
      * @param context   app context
-     * @param thread    game update thread
      * @param gameState game state containing all information about the game
      */
-    public GameRenderer(Context context, GameThread thread, GameState gameState) {
+    public GameRenderer(Context context, GameState gameState) {
         mContext = context;
-        mThread = thread;
         mGameState = gameState;
     }
 
@@ -184,6 +180,14 @@ public class GameRenderer implements GLSurfaceView.Renderer {
      */
     public float getAndroidCoordinateY(float objectCoordinateY) {
         return (objectCoordinateY + mMaxY) * (mScreenHeight / (2 * mMaxY));
+    }
+
+    public float getGameCoordinateX(float x) {
+        return (x / (mScreenWidth / (2 * mMaxX))) - mMaxX;
+    }
+
+    public float getGameCoordinateY(float y) {
+        return (y / (mScreenHeight / (2 * mMaxY))) - mMaxY;
     }
 
     /**
