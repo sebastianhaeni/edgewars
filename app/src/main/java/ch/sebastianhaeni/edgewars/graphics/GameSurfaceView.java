@@ -77,8 +77,8 @@ public class GameSurfaceView extends GLSurfaceView implements Serializable {
     }
 
     public void stopLevel() {
-        Game.getInstance().reset();
         mThread.setRunning(false);
+        Game.getInstance().reset();
         GameActivity gameActivity = (GameActivity) mContext;
         gameActivity.back(this);
     }

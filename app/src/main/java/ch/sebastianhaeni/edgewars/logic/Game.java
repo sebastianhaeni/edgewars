@@ -147,7 +147,7 @@ public class Game {
 
         mTimePassed += millis;
         if (mTimePassed > Constants.DETECT_WIN_INTERVAL) {
-            if (determineGameOver()) {
+            if (isGameOver()) {
                 reportGameOver();
             }
             mTimePassed = 0;
@@ -179,11 +179,11 @@ public class Game {
     }
 
     /**
-     * Checkes if Game is over.
+     * Checks if Game is over.
      *
      * @return gameOver true if game is lost or won.
      */
-    private boolean determineGameOver() {
+    private boolean isGameOver() {
         // check if game is over
         ArrayList<Node> nodes = mGameState.getBoard().getNodes();
         Player owner = null;
