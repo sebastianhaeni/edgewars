@@ -3,6 +3,7 @@ package ch.sebastianhaeni.edgewars.ui;
 import android.view.MotionEvent;
 
 import ch.sebastianhaeni.edgewars.graphics.GameRenderer;
+import ch.sebastianhaeni.edgewars.logic.Constants;
 import ch.sebastianhaeni.edgewars.logic.Game;
 import ch.sebastianhaeni.edgewars.logic.GameState;
 import ch.sebastianhaeni.edgewars.logic.SoundEngine;
@@ -76,8 +77,9 @@ public class GameController {
                     _dragging.moveDrag(x, y);
                     return;
                 }
-
-                mGameState.getCamera().moveCamera(dx, dy);
+                if (Math.abs(dx) > Constants.CAMERA_SENSITIVITY || Math.abs(dy) > Constants.CAMERA_SENSITIVITY) {
+                    mGameState.getCamera().moveCamera(dx, dy);
+                }
                 break;
             case MotionEvent.ACTION_UP:
                 if (_dragging != null) {
