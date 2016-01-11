@@ -19,7 +19,7 @@ public class RuleBasedAI extends AI {
 
     @Override
     public void update(long millis) {
-        if (!AIAwareness.isInitialized()) {
+        if (!AIAwareness.isReady()) {
             return;
         }
 

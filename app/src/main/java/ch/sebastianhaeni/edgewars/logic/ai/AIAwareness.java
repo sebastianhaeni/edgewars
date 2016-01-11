@@ -51,7 +51,7 @@ public class AIAwareness {
      *
      * @return true if initialized, false if not
      */
-    public static boolean isInitialized() {
+    public static boolean isReady() {
         return isInitialized;
     }
 
@@ -228,6 +228,8 @@ public class AIAwareness {
 
     private static void prepareNodes(Player player) {
         ArrayList<Node> nodes = new ArrayList<>();
+        // variable to check if game is already finished (no enemy nodes)
+        boolean finished = true;
         // get all nodes controlled by player
         for (Node n : mGameState.getBoard().getNodes()) {
             if (n.getState() instanceof OwnedState) {
@@ -235,8 +237,15 @@ public class AIAwareness {
                 Player owner = state.getOwner();
                 if (owner.equals(player)) {
                     nodes.add(n);
+                } else {
+                    finished = false;
                 }
             }
+        }
+
+        // report GameOver to Game Class in order to prevent exceptions
+        if (finished) {
+            Game.getInstance().reportGameOver();
         }
 
         mPlayerNodes.put(player, nodes);
