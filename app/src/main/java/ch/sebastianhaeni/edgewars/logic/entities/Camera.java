@@ -144,6 +144,7 @@ public class Camera extends Entity {
         topMostNodeY += mCameraScreenY * cameraFactor;
         float bottomMostNodeY = renderer.getAndroidCoordinateY(board.getOuterNode(Board.BOTTOM).getPosition().getY());
         bottomMostNodeY += mCameraScreenY * cameraFactor;
+
         return bottomMostNodeY + delta < (renderer.getMaxScreenY() * minOffset) || topMostNodeY + delta > (renderer.getMaxScreenY() * maxOffset);
     }
 }

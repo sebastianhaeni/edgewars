@@ -13,6 +13,7 @@ public final class Constants {
     public static final float CAMERA_FRICTION = .1f;
     public static final float CAMERA_TOUCH_SCALE_FACTOR = -.006f;
     public static final float CAMERA_PRECISION = .001f;
+    public static final float CAMERA_SENSITIVITY = 5f;
     //endregion
 
     //region layers
