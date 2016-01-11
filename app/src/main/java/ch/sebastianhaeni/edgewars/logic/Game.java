@@ -131,8 +131,11 @@ public class Game {
         mEntities.remove(entity);
     }
 
+    /**
+     * Report game over from outside (e.g. AIAwareness)
+     */
     public void reportGameOver() {
-        if (!gameOver && mGLView!=null) {
+        if (!gameOver && mGLView != null) {
             gameOver = true;
             mGLView.stopLevel();
         }
