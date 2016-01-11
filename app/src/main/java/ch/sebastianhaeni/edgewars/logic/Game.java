@@ -36,6 +36,7 @@ public class Game {
     private GameController mGameController;
     private GameSurfaceView mGLView;
     private long mTimePassed = 0;
+    private boolean gameOver = false;
     private GameRenderer mGameRenderer;
 
     /**
@@ -131,6 +132,16 @@ public class Game {
     }
 
     /**
+     * Report game over from outside (e.g. AIAwareness)
+     */
+    public void reportGameOver() {
+        if (!gameOver && mGLView != null) {
+            gameOver = true;
+            mGLView.stopLevel();
+        }
+    }
+
+    /**
      * Executes commands (but not too many at once) and updates entities.
      *
      * @param millis time passed since last update
@@ -140,17 +151,23 @@ public class Game {
         mTimePassed += millis;
         if (mTimePassed > Constants.DETECT_WIN_INTERVAL) {
             if (isGameOver()) {
-                mGLView.stopLevel();
+                reportGameOver();
             }
             mTimePassed = 0;
         }
         // Executing commands, but not more than 5 per cycle
         int commandCount = mCommandStack.size();
         while (mCommandStack.size() > 0 && mCommandStack.size() - commandCount < 5) {
+            // do not continue execution of commands if game has stopped meanwhile
+            if (gameOver) return;
+
             mCommandStack.pop().execute();
         }
 
         for (Map.Entry<Entity, Long> pair : mEntities.entrySet()) {
+            // do not continue updates if game has stopped meanwhile
+            if (gameOver) return;
+
             if (pair.getKey().getInterval() < 0) {
                 continue;
             }
@@ -165,7 +182,7 @@ public class Game {
     }
 
     /**
-     * Checkes if Game is over.
+     * Checks if Game is over.
      *
      * @return gameOver true if game is lost or won.
      */
