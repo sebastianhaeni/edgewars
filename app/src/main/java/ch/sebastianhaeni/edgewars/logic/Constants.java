@@ -10,12 +10,12 @@ public final class Constants {
     //endregion
 
     //region AI rules
-    public static final long ATTACK_RULE_UPDATE_INTERVAL = 4000;
-    public static final long BACKUP_RULE_UPDATE_INTERVAL = 4000;
-    public static final long BUILDUP_RULE_UPDATE_INTERVAL = 4000;
-    public static final long CONQUER_RULE_UPDATE_INTERVAL = 4000;
-    public static final long DEFENSE_RULE_UPDATE_INTERVAL = 4000;
-    public static final long REPAIR_RULE_UPDATE_INTERVAL = 4000;
+    public static final long ATTACK_RULE_UPDATE_INTERVAL = 2000;
+    public static final long BACKUP_RULE_UPDATE_INTERVAL = 3000;
+    public static final long BUILDUP_RULE_UPDATE_INTERVAL = 2000;
+    public static final long CONQUER_RULE_UPDATE_INTERVAL = 3000;
+    public static final long DEFENSE_RULE_UPDATE_INTERVAL = 1500;
+    public static final long REPAIR_RULE_UPDATE_INTERVAL = 1500;
     //endregion
 
     //region camera

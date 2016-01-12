@@ -1,5 +1,7 @@
 package ch.sebastianhaeni.edgewars.logic.ai.rules;
 
+import android.util.Pair;
+
 import java.util.ArrayList;
 
 import ch.sebastianhaeni.edgewars.EUnitType;
@@ -15,6 +17,7 @@ public class AttackRule extends Rule {
 
     private long mTimePassed;
     private Node mNode;
+    private Pair<Integer, EUnitType> attacker;
 
     public AttackRule(Player player) {
         super(player);
@@ -29,12 +32,25 @@ public class AttackRule extends Rule {
         mTimePassed = 0;
         mNode = node;
 
-        int maxDistanceToEnemy = 1;
-        int minTankCount = 5;
-        int minSprinterCount = 5;
-        int minMeleeCount = 5;
+        if (AIAwareness.getDistanceToEnemy(mNode) > 1) {
+            return false;
+        }
 
-        return AIAwareness.getDistanceToEnemy(mNode) <= maxDistanceToEnemy && (mNode.getTankCount() >= minTankCount || mNode.getSprinterCount() >= minSprinterCount || mNode.getMeleeCount() >= minMeleeCount);
+        int minTankCount = 5;
+        int minMeleeCount = 7;
+        int minSprinterCount = 12;
+
+        attacker = null;
+
+        if (mNode.getTankCount() >= minTankCount) {
+            attacker = new Pair<>(mNode.getTankCount(), EUnitType.TANK);
+        } else if (mNode.getMeleeCount() >= minMeleeCount) {
+            attacker = new Pair<>(mNode.getMeleeCount(), EUnitType.MELEE);
+        } else if (mNode.getSprinterCount() >= minSprinterCount) {
+            attacker = new Pair<>(mNode.getSprinterCount(), EUnitType.SPRINTER);
+        }
+
+        return attacker != null;
     }
 
     @Override
@@ -43,18 +59,7 @@ public class AttackRule extends Rule {
         Node targetNode = AIAwareness.getGatewayToEnemy(mNode);
 
         ArrayList<Command> commands = new ArrayList<>();
-
-        int sprinterCount = mNode.getSprinterCount();
-        int meleeCount = mNode.getMeleeCount();
-        int tankCount = mNode.getTankCount();
-
-        if (sprinterCount >= meleeCount && sprinterCount >= tankCount) {
-            commands.add(new MoveUnitCommand(mNode.getSprinterCount(), EUnitType.SPRINTER, targetNode, Game.getInstance().getEdgeBetween(mNode, targetNode), getPlayer()));
-        } else if (meleeCount >= sprinterCount && meleeCount >= tankCount) {
-            commands.add(new MoveUnitCommand(mNode.getMeleeCount(), EUnitType.MELEE, targetNode, Game.getInstance().getEdgeBetween(mNode, targetNode), getPlayer()));
-        } else {
-            commands.add(new MoveUnitCommand(mNode.getTankCount(), EUnitType.TANK, targetNode, Game.getInstance().getEdgeBetween(mNode, targetNode), getPlayer()));
-        }
+        commands.add(new MoveUnitCommand(attacker.first, attacker.second, targetNode, Game.getInstance().getEdgeBetween(mNode, targetNode), getPlayer()));
 
         return commands;
     }
