@@ -1,8 +1,11 @@
 package ch.sebastianhaeni.edgewars.logic.ai.rules;
 
+import android.util.Pair;
+
 import java.util.ArrayList;
 
 import ch.sebastianhaeni.edgewars.EUnitType;
+import ch.sebastianhaeni.edgewars.logic.Constants;
 import ch.sebastianhaeni.edgewars.logic.Game;
 import ch.sebastianhaeni.edgewars.logic.ai.AIAwareness;
 import ch.sebastianhaeni.edgewars.logic.commands.Command;
@@ -10,11 +13,11 @@ import ch.sebastianhaeni.edgewars.logic.commands.MoveUnitCommand;
 import ch.sebastianhaeni.edgewars.logic.entities.Player;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
 
-public class AttackRule extends Rule {
+class AttackRule extends Rule {
 
     private long mTimePassed;
     private Node mNode;
-
+    private Pair<Integer, EUnitType> attacker;
 
     public AttackRule(Player player) {
         super(player);
@@ -23,13 +26,27 @@ public class AttackRule extends Rule {
     @Override
     public boolean applies(Node node, long millis) {
         mTimePassed += millis;
-        if (mTimePassed < 4000) {
+        if (mTimePassed < Constants.ATTACK_RULE_UPDATE_INTERVAL) {
             return false;
         }
         mTimePassed = 0;
         mNode = node;
 
-        return AIAwareness.getDistanceToEnemy(mNode) < 2 && (mNode.getTankCount() >= 5 || mNode.getSprinterCount() >= 5 || mNode.getMeleeCount() >= 5);
+        if (AIAwareness.getDistanceToEnemy(mNode) > 1) {
+            return false;
+        }
+
+        attacker = null;
+
+        if (mNode.getTankCount() >= Constants.MIN_TANK_ATTACK_COUNT) {
+            attacker = new Pair<>(mNode.getTankCount(), EUnitType.TANK);
+        } else if (mNode.getMeleeCount() >= Constants.MIN_MELEE_ATTACK_COUNT) {
+            attacker = new Pair<>(mNode.getMeleeCount(), EUnitType.MELEE);
+        } else if (mNode.getSprinterCount() >= Constants.MIN_SPRINTER_ATTACK_COUNT) {
+            attacker = new Pair<>(mNode.getSprinterCount(), EUnitType.SPRINTER);
+        }
+
+        return attacker != null;
     }
 
     @Override
@@ -38,18 +55,7 @@ public class AttackRule extends Rule {
         Node targetNode = AIAwareness.getGatewayToEnemy(mNode);
 
         ArrayList<Command> commands = new ArrayList<>();
-
-        int sprinterCount = mNode.getSprinterCount();
-        int meleeCount = mNode.getMeleeCount();
-        int tankCount = mNode.getTankCount();
-
-        if (sprinterCount >= meleeCount && sprinterCount >= tankCount) {
-            commands.add(new MoveUnitCommand(mNode.getSprinterCount(), EUnitType.SPRINTER, targetNode, Game.getInstance().getEdgeBetween(mNode, targetNode), getPlayer()));
-        } else if (meleeCount >= sprinterCount && meleeCount >= tankCount) {
-            commands.add(new MoveUnitCommand(mNode.getMeleeCount(), EUnitType.MELEE, targetNode, Game.getInstance().getEdgeBetween(mNode, targetNode), getPlayer()));
-        } else {
-            commands.add(new MoveUnitCommand(mNode.getTankCount(), EUnitType.TANK, targetNode, Game.getInstance().getEdgeBetween(mNode, targetNode), getPlayer()));
-        }
+        commands.add(new MoveUnitCommand(attacker.first, attacker.second, targetNode, Game.getInstance().getEdgeBetween(mNode, targetNode), getPlayer()));
 
         return commands;
     }

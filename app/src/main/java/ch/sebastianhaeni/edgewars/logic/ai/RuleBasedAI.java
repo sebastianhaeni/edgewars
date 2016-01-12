@@ -10,7 +10,7 @@ import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
 
 public class RuleBasedAI extends AI {
 
-    private ConcurrentHashMap<Node, NodeRules> mNodeRules = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Node, NodeRules> mNodeRules = new ConcurrentHashMap<>();
 
 
     public RuleBasedAI(Player player) {
@@ -34,8 +34,8 @@ public class RuleBasedAI extends AI {
             commands.addAll(mNodeRules.get(node).getCommands(millis));
         }
 
-        for (Command c : commands) {
-            c.execute();
+        for (Command command : commands) {
+            command.execute();
         }
     }
 

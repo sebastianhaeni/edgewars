@@ -5,6 +5,7 @@ import ch.sebastianhaeni.edgewars.graphics.drawables.decorators.TextDecorator;
 import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Polygon;
 import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Text;
 import ch.sebastianhaeni.edgewars.logic.Constants;
+import ch.sebastianhaeni.edgewars.logic.Game;
 import ch.sebastianhaeni.edgewars.logic.SoundEngine;
 import ch.sebastianhaeni.edgewars.logic.ai.AIAwareness;
 import ch.sebastianhaeni.edgewars.logic.entities.board.BoardEntity;
@@ -462,7 +463,10 @@ public class Node extends BoardEntity implements IClickable {
         mState = state;
         setUpdateInterval(state.getUpdateInterval());
 
-        // notify AI that a new node was conquered
+        // notify Game that a new node was conquered (-> test if game is over)
+        Game.getInstance().checkGameOver();
+
+        // notify AI that a new node was conquered (-> recalculate distances)
         AIAwareness.update();
     }
 

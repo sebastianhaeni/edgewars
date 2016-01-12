@@ -23,19 +23,12 @@ public class NodeRules {
     }
 
     public ArrayList<Command> getCommands(long millis) {
-
         ArrayList<Command> commands = new ArrayList<>();
-        for (Rule r : mRules) {
-
-            if (r.applies(mNode, millis)) {
-
-                for (Command c : r.getCommands()) {
-                    commands.add(c);
-                }
+        for (Rule rule : mRules) {
+            if (rule.applies(mNode, millis)) {
+                commands.addAll(rule.getCommands());
             }
         }
-
         return commands;
-
     }
 }

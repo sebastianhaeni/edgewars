@@ -3,6 +3,7 @@ package ch.sebastianhaeni.edgewars.logic.ai.rules;
 import java.util.ArrayList;
 
 import ch.sebastianhaeni.edgewars.EUnitType;
+import ch.sebastianhaeni.edgewars.logic.Constants;
 import ch.sebastianhaeni.edgewars.logic.Game;
 import ch.sebastianhaeni.edgewars.logic.ai.AIAwareness;
 import ch.sebastianhaeni.edgewars.logic.commands.Command;
@@ -10,11 +11,13 @@ import ch.sebastianhaeni.edgewars.logic.commands.MoveUnitCommand;
 import ch.sebastianhaeni.edgewars.logic.entities.Player;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
 
-public class ConquerRule extends Rule {
+class ConquerRule extends Rule {
 
     private long mTimePassed;
     private Node mNode;
     private Node mNeutralNeighbor;
+
+    private final int minUnitCount = 3;
 
     public ConquerRule(Player player) {
         super(player);
@@ -23,7 +26,7 @@ public class ConquerRule extends Rule {
     @Override
     public boolean applies(Node node, long millis) {
         mTimePassed += millis;
-        if (mTimePassed < 4000) {
+        if (mTimePassed < Constants.CONQUER_RULE_UPDATE_INTERVAL) {
             return false;
         }
         mTimePassed = 0;
@@ -31,7 +34,7 @@ public class ConquerRule extends Rule {
 
         mNeutralNeighbor = AIAwareness.getNeutralNeighbor(mNode);
 
-        return AIAwareness.getDistanceToEnemy(mNode) >= 2 && mNeutralNeighbor != null && (mNode.getTankCount() >= 3 || mNode.getSprinterCount() >= 3 || mNode.getMeleeCount() >= 3);
+        return mNeutralNeighbor != null && (mNode.getTankCount() >= minUnitCount || mNode.getSprinterCount() >= minUnitCount || mNode.getMeleeCount() >= minUnitCount);
     }
 
     @Override

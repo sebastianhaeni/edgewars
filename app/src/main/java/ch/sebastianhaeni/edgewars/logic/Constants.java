@@ -9,6 +9,18 @@ public final class Constants {
     public static final long PLAYER_UPDATE_INTERVAL = 1000;
     //endregion
 
+    //region AI rules
+    public static final long ATTACK_RULE_UPDATE_INTERVAL = 2000;
+    public static final long BACKUP_RULE_UPDATE_INTERVAL = 2000;
+    public static final long BUILDUP_RULE_UPDATE_INTERVAL = 2000;
+    public static final long CONQUER_RULE_UPDATE_INTERVAL = 3000;
+    public static final long DEFENSE_RULE_UPDATE_INTERVAL = 1500;
+    public static final long REPAIR_RULE_UPDATE_INTERVAL = 1500;
+    public static final int MIN_TANK_ATTACK_COUNT = 6;
+    public static final int MIN_MELEE_ATTACK_COUNT = 8;
+    public static final int MIN_SPRINTER_ATTACK_COUNT = 12;
+    //endregion
+
     //region camera
     public static final float CAMERA_FRICTION = .1f;
     public static final float CAMERA_TOUCH_SCALE_FACTOR = -.006f;
@@ -109,9 +121,5 @@ public final class Constants {
     public static final int WAIT_STATE_UPDATE_INTERVAL = 200;
     public static final float UNIT_NODE_ATTACK_DISTANCE = .2f;
     public static final float UNIT_FIGHT_DISTANCE = .5f;
-    //endregion
-
-    //region gameloop
-    public static final long DETECT_WIN_INTERVAL = 1000;
     //endregion
 }
