@@ -55,7 +55,11 @@ public class Game {
     }
 
     public GameState getGameState() {
-        return mGameState;
+        if (!isRunning()) {
+            throw new RuntimeException("The game has not started yet!");
+        } else {
+            return mGameState;
+        }
     }
 
     public void setGameState(GameState gameState) {
@@ -130,14 +134,19 @@ public class Game {
         mEntities.remove(entity);
     }
 
+    public boolean isRunning() {
+        return !gameOver && mGameState != null && mGameState.gameIsRunning();
+    }
+
     /**
      * Initiate check for game over from outside (e.g. when a Node state is updated)
      */
-    public void testGameOver() {
-        if (mGameState == null || !mGameState.gameIsRunning())
+    public void checkGameOver() {
+        if (!isRunning()) {
             return;
+        }
 
-        if (isGameOver() && mGLView != null) {
+        if (mGLView != null && isGameOver()) {
             gameOver = true;
             mGLView.stopLevel();
         }

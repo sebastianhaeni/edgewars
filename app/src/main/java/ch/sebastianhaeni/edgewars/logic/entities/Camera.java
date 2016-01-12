@@ -119,6 +119,10 @@ public class Camera extends Entity {
      * @return true if boundary on the X axis is reached, false if not
      */
     private boolean xBoundaryIsReached(float delta) {
+        if (!Game.getInstance().isRunning()) {
+            return true;
+        }
+
         Board board = Game.getInstance().getGameState().getBoard();
         GameRenderer renderer = Game.getInstance().getGameController().getRenderer();
 
@@ -137,6 +141,10 @@ public class Camera extends Entity {
      * @return true if boundary on the Y axis is reached, false if not
      */
     private boolean yBoundaryIsReached(float delta) {
+        if (!Game.getInstance().isRunning()) {
+            return true;
+        }
+
         Board board = Game.getInstance().getGameState().getBoard();
         GameRenderer renderer = Game.getInstance().getGameController().getRenderer();
 

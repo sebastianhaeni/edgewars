@@ -464,7 +464,7 @@ public class Node extends BoardEntity implements IClickable {
         setUpdateInterval(state.getUpdateInterval());
 
         // notify Game that a new node was conquered (-> test if game is over)
-        Game.getInstance().testGameOver();
+        Game.getInstance().checkGameOver();
 
         // notify AI that a new node was conquered (-> recalculate distances)
         AIAwareness.update();
