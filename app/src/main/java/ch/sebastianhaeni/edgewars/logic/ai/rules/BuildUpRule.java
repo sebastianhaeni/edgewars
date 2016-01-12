@@ -2,22 +2,23 @@ package ch.sebastianhaeni.edgewars.logic.ai.rules;
 
 import java.util.ArrayList;
 
+import ch.sebastianhaeni.edgewars.EUnitType;
 import ch.sebastianhaeni.edgewars.logic.Constants;
 import ch.sebastianhaeni.edgewars.logic.commands.ActivateFactoryCommand;
 import ch.sebastianhaeni.edgewars.logic.commands.Command;
 import ch.sebastianhaeni.edgewars.logic.entities.Player;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
 
-public class BuildUpRule extends Rule {
+class BuildUpRule extends Rule {
     private Node mNode;
     private long mTimePassed;
-
-    private final int maxMeleeCount = 30;
-    private final int maxSprinterCount = 30;
-    private final int maxTankCount = 30;
+    private boolean isInitialized;
+    private EUnitType currentProduction;
+    private ArrayList<Command> commands;
 
     public BuildUpRule(Player player) {
         super(player);
+        isInitialized = false;
     }
 
     @Override
@@ -30,22 +31,41 @@ public class BuildUpRule extends Rule {
 
         mNode = node;
 
-        // rule does not apply if node has already "too many" units
-        return !(node.getMeleeCount() > maxMeleeCount && node.getSprinterCount() > maxSprinterCount && node.getTankCount() > maxTankCount);
+        commands = new ArrayList<>();
+
+        if (!isInitialized) {
+            currentProduction = EUnitType.TANK;
+            commands.add(new ActivateFactoryCommand(mNode.getTankFactory()));
+            isInitialized = true;
+            return true;
+        }
+
+        switch (currentProduction) {
+            case TANK:
+                if (mNode.getTankCount() >= Constants.MIN_TANK_ATTACK_COUNT) {
+                    commands.add(new ActivateFactoryCommand(mNode.getMeleeFactory()));
+                    currentProduction = EUnitType.MELEE;
+                }
+                break;
+            case MELEE:
+                if (mNode.getMeleeCount() >= Constants.MIN_MELEE_ATTACK_COUNT) {
+                    commands.add(new ActivateFactoryCommand(mNode.getSprinterFactory()));
+                    currentProduction = EUnitType.SPRINTER;
+                }
+                break;
+            case SPRINTER:
+                if (mNode.getSprinterCount() >= Constants.MIN_SPRINTER_ATTACK_COUNT) {
+                    commands.add(new ActivateFactoryCommand(mNode.getTankFactory()));
+                    currentProduction = EUnitType.TANK;
+                }
+                break;
+        }
+
+        return !commands.isEmpty();
     }
 
     @Override
     public ArrayList<Command> getCommands() {
-        ArrayList<Command> commands = new ArrayList<>();
-
-        if (mNode.getMeleeCount() < maxMeleeCount) {
-            commands.add(new ActivateFactoryCommand(mNode.getMeleeFactory()));
-        } else if (mNode.getSprinterCount() < maxSprinterCount) {
-            commands.add(new ActivateFactoryCommand(mNode.getSprinterFactory()));
-        } else if (mNode.getTankCount() < maxTankCount) {
-            commands.add(new ActivateFactoryCommand(mNode.getTankFactory()));
-        }
-
         return commands;
     }
 }

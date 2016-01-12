@@ -11,11 +11,13 @@ import ch.sebastianhaeni.edgewars.logic.commands.MoveUnitCommand;
 import ch.sebastianhaeni.edgewars.logic.entities.Player;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
 
-public class ConquerRule extends Rule {
+class ConquerRule extends Rule {
 
     private long mTimePassed;
     private Node mNode;
     private Node mNeutralNeighbor;
+
+    private final int minUnitCount = 3;
 
     public ConquerRule(Player player) {
         super(player);
@@ -32,12 +34,7 @@ public class ConquerRule extends Rule {
 
         mNeutralNeighbor = AIAwareness.getNeutralNeighbor(mNode);
 
-        int minDistanceToEnemy = 2;
-        int minTankCount = 3;
-        int minSprinterCount = 3;
-        int minMeleeCount = 3;
-
-        return AIAwareness.getDistanceToEnemy(mNode) >= minDistanceToEnemy && mNeutralNeighbor != null && (mNode.getTankCount() >= minTankCount || mNode.getSprinterCount() >= minSprinterCount || mNode.getMeleeCount() >= minMeleeCount);
+        return mNeutralNeighbor != null && (mNode.getTankCount() >= minUnitCount || mNode.getSprinterCount() >= minUnitCount || mNode.getMeleeCount() >= minUnitCount);
     }
 
     @Override

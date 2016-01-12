@@ -13,7 +13,7 @@ import ch.sebastianhaeni.edgewars.logic.commands.MoveUnitCommand;
 import ch.sebastianhaeni.edgewars.logic.entities.Player;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
 
-public class AttackRule extends Rule {
+class AttackRule extends Rule {
 
     private long mTimePassed;
     private Node mNode;
@@ -36,17 +36,13 @@ public class AttackRule extends Rule {
             return false;
         }
 
-        int minTankCount = 5;
-        int minMeleeCount = 7;
-        int minSprinterCount = 12;
-
         attacker = null;
 
-        if (mNode.getTankCount() >= minTankCount) {
+        if (mNode.getTankCount() >= Constants.MIN_TANK_ATTACK_COUNT) {
             attacker = new Pair<>(mNode.getTankCount(), EUnitType.TANK);
-        } else if (mNode.getMeleeCount() >= minMeleeCount) {
+        } else if (mNode.getMeleeCount() >= Constants.MIN_MELEE_ATTACK_COUNT) {
             attacker = new Pair<>(mNode.getMeleeCount(), EUnitType.MELEE);
-        } else if (mNode.getSprinterCount() >= minSprinterCount) {
+        } else if (mNode.getSprinterCount() >= Constants.MIN_SPRINTER_ATTACK_COUNT) {
             attacker = new Pair<>(mNode.getSprinterCount(), EUnitType.SPRINTER);
         }
 

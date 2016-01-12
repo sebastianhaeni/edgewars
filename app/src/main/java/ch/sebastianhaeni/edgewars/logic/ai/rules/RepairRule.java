@@ -9,10 +9,12 @@ import ch.sebastianhaeni.edgewars.logic.commands.RepairNodeCommand;
 import ch.sebastianhaeni.edgewars.logic.entities.Player;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
 
-public class RepairRule extends Rule {
+class RepairRule extends Rule {
 
     private long mTimePassed;
     private Node mNode;
+
+    private final float lowHealthLimit = 0.25f;
 
     public RepairRule(Player player) {
         super(player);
@@ -26,8 +28,6 @@ public class RepairRule extends Rule {
         }
         mTimePassed = 0;
         mNode = node;
-
-        float lowHealthLimit = 0.25f;
 
         return node.getHealth() < lowHealthLimit * node.getMaxHealth() && node.getRepairCost() <= getPlayer().getEnergy();
     }
