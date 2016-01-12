@@ -3,6 +3,7 @@ package ch.sebastianhaeni.edgewars.logic.ai.rules;
 import java.util.ArrayList;
 
 import ch.sebastianhaeni.edgewars.EUnitType;
+import ch.sebastianhaeni.edgewars.logic.Constants;
 import ch.sebastianhaeni.edgewars.logic.Game;
 import ch.sebastianhaeni.edgewars.logic.ai.AIAwareness;
 import ch.sebastianhaeni.edgewars.logic.commands.Command;
@@ -23,14 +24,16 @@ public class DefenseRule extends Rule {
     @Override
     public boolean applies(Node node, long millis) {
         mTimePassed += millis;
-        if (mTimePassed < 4000) {
+        if (mTimePassed < Constants.DEFENSE_RULE_UPDATE_INTERVAL) {
             return false;
         }
         mTimePassed = 0;
         mNode = node;
 
         mDefenseTarget = AIAwareness.getDefenseTargetNode(mNode);
-        return mDefenseTarget != null && (mNode.getTankCount() >= 1 || mNode.getSprinterCount() >= 1 || mNode.getMeleeCount() >= 1);
+        int minUnitCount = 1;
+
+        return mDefenseTarget != null && (mNode.getTankCount() >= minUnitCount || mNode.getSprinterCount() >= minUnitCount || mNode.getMeleeCount() >= minUnitCount);
     }
 
     @Override

@@ -9,6 +9,15 @@ public final class Constants {
     public static final long PLAYER_UPDATE_INTERVAL = 1000;
     //endregion
 
+    //region AI rules
+    public static final long ATTACK_RULE_UPDATE_INTERVAL = 4000;
+    public static final long BACKUP_RULE_UPDATE_INTERVAL = 4000;
+    public static final long BUILDUP_RULE_UPDATE_INTERVAL = 4000;
+    public static final long CONQUER_RULE_UPDATE_INTERVAL = 4000;
+    public static final long DEFENSE_RULE_UPDATE_INTERVAL = 4000;
+    public static final long REPAIR_RULE_UPDATE_INTERVAL = 4000;
+    //endregion
+
     //region camera
     public static final float CAMERA_FRICTION = .1f;
     public static final float CAMERA_TOUCH_SCALE_FACTOR = -.006f;

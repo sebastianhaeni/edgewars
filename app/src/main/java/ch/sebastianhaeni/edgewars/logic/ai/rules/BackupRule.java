@@ -3,6 +3,7 @@ package ch.sebastianhaeni.edgewars.logic.ai.rules;
 import java.util.ArrayList;
 
 import ch.sebastianhaeni.edgewars.EUnitType;
+import ch.sebastianhaeni.edgewars.logic.Constants;
 import ch.sebastianhaeni.edgewars.logic.Game;
 import ch.sebastianhaeni.edgewars.logic.ai.AIAwareness;
 import ch.sebastianhaeni.edgewars.logic.commands.Command;
@@ -23,7 +24,7 @@ public class BackupRule extends Rule {
     @Override
     public boolean applies(Node node, long millis) {
         mTimePassed += millis;
-        if (mTimePassed < 4000) {
+        if (mTimePassed < Constants.BACKUP_RULE_UPDATE_INTERVAL) {
             return false;
         }
         mTimePassed = 0;
@@ -31,7 +32,12 @@ public class BackupRule extends Rule {
 
         mBackupTarget = AIAwareness.getBackupTargetNode(mNode);
 
-        return AIAwareness.getDistanceToEnemy(mNode) >= 2 && mBackupTarget != null && (mNode.getTankCount() >= 5 || mNode.getSprinterCount() >= 5 || mNode.getMeleeCount() >= 5);
+        int minDistanceToEnemy = 2;
+        int minTankCount = 5;
+        int minSprinterCount = 5;
+        int minMeleeCount = 5;
+
+        return AIAwareness.getDistanceToEnemy(mNode) >= minDistanceToEnemy && mBackupTarget != null && (mNode.getTankCount() >= minTankCount || mNode.getSprinterCount() >= minSprinterCount || mNode.getMeleeCount() >= minMeleeCount);
     }
 
     @Override
