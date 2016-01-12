@@ -1,6 +1,7 @@
 package ch.sebastianhaeni.edgewars.ui.activities;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -11,6 +12,8 @@ import ch.sebastianhaeni.edgewars.graphics.GameSurfaceView;
 public class GameActivity extends Activity {
 
     private GameSurfaceView mGLView;
+    private int mLevelNr;
+    public static final String LEVEL_ID = "LEVEL_ID";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,11 +27,11 @@ public class GameActivity extends Activity {
 
         setContentView(mGLView);
 
-        int levelNr = 1;
+        mLevelNr = 1;
         if (getIntent().getExtras() != null) {
-            levelNr = getIntent().getExtras().getInt(LevelDetailActivity.LEVEL_ID);
+            mLevelNr = getIntent().getExtras().getInt(LevelDetailActivity.LEVEL_ID);
         }
-        mGLView.startLevel(levelNr);
+        mGLView.startLevel(mLevelNr);
     }
 
     @Override
@@ -58,6 +61,10 @@ public class GameActivity extends Activity {
     }
 
     public void back(View view) {
+        Intent intent = new Intent(GameActivity.this, LevelDetailActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra(LEVEL_ID, mLevelNr);
+        startActivity(intent);
         finish();
     }
 }

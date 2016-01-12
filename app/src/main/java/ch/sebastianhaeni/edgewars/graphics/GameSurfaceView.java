@@ -6,11 +6,13 @@ import android.support.annotation.NonNull;
 import android.view.MotionEvent;
 
 import java.io.Serializable;
+import java.util.List;
 
 import ch.sebastianhaeni.edgewars.logic.Game;
 import ch.sebastianhaeni.edgewars.logic.GameState;
 import ch.sebastianhaeni.edgewars.logic.GameThread;
 import ch.sebastianhaeni.edgewars.logic.LevelLoader;
+import ch.sebastianhaeni.edgewars.model.LevelRecord;
 import ch.sebastianhaeni.edgewars.ui.GameController;
 import ch.sebastianhaeni.edgewars.ui.activities.GameActivity;
 
@@ -25,6 +27,7 @@ public class GameSurfaceView extends GLSurfaceView implements Serializable {
     private GameController mController;
     private final Context mContext;
     private GameState mGameState;
+    private LevelRecord mLevelRecord;
 
     /**
      * Constructor
@@ -69,6 +72,12 @@ public class GameSurfaceView extends GLSurfaceView implements Serializable {
         // Render the view continuously
         setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
 
+        List<LevelRecord> records = LevelRecord.find(LevelRecord.class, "level_nr = ?", Integer.toString(levelNr));
+        if (records.size() > 0) {
+            mLevelRecord = records.get(0);
+        }
+        mLevelRecord.setStartTime(System.currentTimeMillis());
+
         // start Thread only once (onCreate)
         mThread.setRunning(true);
         mThread.start();
@@ -78,6 +87,9 @@ public class GameSurfaceView extends GLSurfaceView implements Serializable {
     }
 
     public void stopLevel() {
+        mLevelRecord.setEndTime(System.currentTimeMillis());
+        mLevelRecord.save();
+
         // report that game has stopped
         mGameState.setGameIsRunning(false);
 
