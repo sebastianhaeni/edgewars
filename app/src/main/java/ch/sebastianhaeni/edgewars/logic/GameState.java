@@ -1,7 +1,5 @@
 package ch.sebastianhaeni.edgewars.logic;
 
-import android.util.Log;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -20,6 +18,8 @@ public class GameState implements Serializable {
     private final Board mBoard;
     private final ArrayList<Player> mPlayers;
     private final Player mHuman;
+
+    private boolean gameIsRunning = false;
 
     /**
      * Constructor
@@ -41,13 +41,27 @@ public class GameState implements Serializable {
 
         ArrayList<Player> computerPlayers = new ArrayList<>();
         for (Player player : mPlayers) {
-            Log.d("debug", "assessing player " + player.toString());
             if (!player.isHuman()) {
-                Log.d("debug", "adding player " + player.toString());
                 computerPlayers.add(player);
             }
         }
         AIAwareness.initialize(this, computerPlayers);
+    }
+
+    /**
+     * This method reports to GameState whether the game is running or not
+     *
+     * @param isRunning true or false, depending if game is running or not
+     */
+    public void setGameIsRunning(boolean isRunning) {
+        gameIsRunning = isRunning;
+    }
+
+    /**
+     * @return true if game is running, false if not
+     */
+    public boolean gameIsRunning() {
+        return gameIsRunning;
     }
 
     /**

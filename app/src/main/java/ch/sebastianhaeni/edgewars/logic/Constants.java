@@ -110,8 +110,4 @@ public final class Constants {
     public static final float UNIT_NODE_ATTACK_DISTANCE = .2f;
     public static final float UNIT_FIGHT_DISTANCE = .5f;
     //endregion
-
-    //region gameloop
-    public static final long DETECT_WIN_INTERVAL = 1000;
-    //endregion
 }

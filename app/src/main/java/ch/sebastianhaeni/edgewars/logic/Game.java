@@ -35,7 +35,6 @@ public class Game {
     private GameState mGameState;
     private GameController mGameController;
     private GameSurfaceView mGLView;
-    private long mTimePassed = 0;
     private boolean gameOver = false;
     private GameRenderer mGameRenderer;
 
@@ -132,10 +131,13 @@ public class Game {
     }
 
     /**
-     * Report game over from outside (e.g. AIAwareness)
+     * Initiate check for game over from outside (e.g. when a Node state is updated)
      */
-    public void reportGameOver() {
-        if (!gameOver && mGLView != null) {
+    public void testGameOver() {
+        if (mGameState == null || !mGameState.gameIsRunning())
+            return;
+
+        if (isGameOver() && mGLView != null) {
             gameOver = true;
             mGLView.stopLevel();
         }
@@ -148,13 +150,6 @@ public class Game {
      */
     public void update(long millis) {
 
-        mTimePassed += millis;
-        if (mTimePassed > Constants.DETECT_WIN_INTERVAL) {
-            if (isGameOver()) {
-                reportGameOver();
-            }
-            mTimePassed = 0;
-        }
         // Executing commands, but not more than 5 per cycle
         int commandCount = mCommandStack.size();
         while (mCommandStack.size() > 0 && mCommandStack.size() - commandCount < 5) {

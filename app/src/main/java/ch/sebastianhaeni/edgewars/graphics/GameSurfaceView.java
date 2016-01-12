@@ -3,7 +3,6 @@ package ch.sebastianhaeni.edgewars.graphics;
 import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.MotionEvent;
 
 import java.io.Serializable;
@@ -47,7 +46,6 @@ public class GameSurfaceView extends GLSurfaceView implements Serializable {
      * @param levelNr level number
      */
     public void startLevel(int levelNr) {
-        Log.d("GameSurfaceView", "Starting level " + levelNr);
         Game.getInstance().reset();
 
         LevelLoader levelLoader = new LevelLoader(mContext);
@@ -74,9 +72,15 @@ public class GameSurfaceView extends GLSurfaceView implements Serializable {
         // start Thread only once (onCreate)
         mThread.setRunning(true);
         mThread.start();
+
+        // report that game has started
+        mGameState.setGameIsRunning(true);
     }
 
     public void stopLevel() {
+        // report that game has stopped
+        mGameState.setGameIsRunning(false);
+
         mThread.setRunning(false);
         Game.getInstance().reset();
         GameActivity gameActivity = (GameActivity) mContext;
