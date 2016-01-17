@@ -3,9 +3,18 @@ package ch.sebastianhaeni.edgewars.ui.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.graphics.Point;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.util.TypedValue;
+import android.view.Display;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import ch.sebastianhaeni.edgewars.R;
 import ch.sebastianhaeni.edgewars.databinding.ActivityLevelSelectionBinding;
@@ -26,17 +35,28 @@ public class LevelSelectionActivity extends Activity {
 
         LevelLoader levelLoader = new LevelLoader(this);
         for (int lvl : levelLoader.getLevelNumbers()) {
+            Display display = getWindowManager().getDefaultDisplay();
+            Point size = new Point();
+            display.getSize(size);
+            int width = size.x;
+            int height = size.y;
 
-            Button lvlButton = new Button(this);
-            lvlButton.setId(lvl);
-            lvlButton.setText("Level " + lvl);
-            lvlButton.setOnClickListener(new View.OnClickListener() {
+            TextView lvlText = new TextView(this);
+            lvlText.setId(lvl);
+            lvlText.setText(String.valueOf(lvl));
+            Typeface typeface = Typeface.createFromAsset(getAssets(), "DISTGRG.ttf");
+            lvlText.setTypeface(typeface);
+            lvlText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 200);
+            lvlText.setWidth(width);
+            lvlText.setHeight(height);
+            lvlText.setGravity(Gravity.CENTER);
+            lvlText.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View view) {
                     selectLevel(view);
                 }
             });
 
-            binding.layoutLevelButtons.addView(lvlButton);
+            binding.layoutLevelButtons.addView(lvlText);
         }
 
         setContentView(binding.getRoot());

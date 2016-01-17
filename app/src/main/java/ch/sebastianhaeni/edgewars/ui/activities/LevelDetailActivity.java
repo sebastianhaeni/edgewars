@@ -3,6 +3,7 @@ package ch.sebastianhaeni.edgewars.ui.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.View;
@@ -38,6 +39,10 @@ public class LevelDetailActivity extends Activity {
         binding.setActivity(this);
         setContentView(binding.getRoot());
 
+        Typeface typeface = Typeface.createFromAsset(getAssets(), "DISTGRG.ttf");
+        TextView lvlName = (TextView) findViewById(R.id.textLevel);
+        lvlName.setTypeface(typeface);
+
         displayScore();
         displayTime();
     }
@@ -69,7 +74,7 @@ public class LevelDetailActivity extends Activity {
         if (records.size() > 0) {
             mLevelRecord = records.get(0);
         } else {
-            LevelRecord record = new LevelRecord(mLevelNr, 0, 0);
+            LevelRecord record = new LevelRecord(mLevelNr, 0, 0, 0);
             record.save();
             mLevelRecord = record;
         }
@@ -89,5 +94,6 @@ public class LevelDetailActivity extends Activity {
         df.setTimeZone(TimeZone.getTimeZone("GMT"));
         return df.format(millis);
     }
+
 }
 
