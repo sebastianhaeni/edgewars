@@ -185,9 +185,9 @@ public class Game {
     }
 
     /**
-     * Checks if Game is over.
+     * Checks if game is over.
      *
-     * @return gameOver true if game is lost or won.
+     * @return true if game is over
      */
     private boolean isGameOver() {
         // check if game is over
@@ -195,16 +195,15 @@ public class Game {
         Player owner = null;
         boolean gameOver = true;
         for (Node node : nodes) {
-            if (node.getState() instanceof OwnedState) {
-                Player currentOwner = ((OwnedState) node.getState()).getOwner();
-                if (owner == null) {
-                    owner = currentOwner;
-                } else {
-                    if (!owner.equals(currentOwner)) {
-                        gameOver = false;
-                        break;
-                    }
-                }
+            if (!(node.getState() instanceof OwnedState)) {
+                continue;
+            }
+            Player currentOwner = ((OwnedState) node.getState()).getOwner();
+            if (owner == null) {
+                owner = currentOwner;
+            } else if (!owner.equals(currentOwner)) {
+                gameOver = false;
+                break;
             }
         }
         return gameOver;
