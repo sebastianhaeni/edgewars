@@ -12,6 +12,8 @@ import ch.sebastianhaeni.edgewars.logic.Game;
 public abstract class Drawable implements Serializable {
 
     private final int mLayer;
+    private final int mId;
+    private static int mCounter;
 
     /**
      * New Drawable on a specific layer. The lower the layer, the lower this
@@ -22,6 +24,7 @@ public abstract class Drawable implements Serializable {
      */
     protected Drawable(int layer) {
         mLayer = layer;
+        mId = mCounter++;
     }
 
     /**
@@ -44,17 +47,10 @@ public abstract class Drawable implements Serializable {
     public abstract Shape getShape();
 
     /**
-     * @return gets the layer
-     */
-    public int getLayer() {
-        return mLayer;
-    }
-
-    /**
      * Registers the drawable to be drawn.
      */
     public void register() {
-        Game.getInstance().register(this, mLayer);
+        Game.getInstance().register(this);
     }
 
     /**
@@ -62,5 +58,32 @@ public abstract class Drawable implements Serializable {
      */
     public void unregister() {
         Game.getInstance().unregister(this);
+    }
+
+    /**
+     * @return gets drawing layer
+     */
+    public int getLayer() {
+        return mLayer;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof Drawable) {
+            return mId == ((Drawable) o).mId;
+        }
+        return super.equals(o);
+    }
+
+    @Override
+    public int hashCode() {
+        return mId;
+    }
+
+    /**
+     * @return gets the unique id
+     */
+    public int getId() {
+        return mId;
     }
 }

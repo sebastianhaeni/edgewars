@@ -110,10 +110,9 @@ public class Game {
      * Registers a new drawable to be drawn.
      *
      * @param drawable drawable to register.
-     * @param layer    layer to draw on
      */
-    public void register(Drawable drawable, int layer) {
-        mDrawables.add(drawable, layer);
+    public void register(Drawable drawable) {
+        mDrawables.add(drawable);
     }
 
     /**
