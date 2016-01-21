@@ -43,7 +43,6 @@ public class LevelDetailActivity extends Activity {
         TextView lvlName = (TextView) findViewById(R.id.textLevel);
         lvlName.setTypeface(typeface);
 
-        displayScore();
         displayTime();
     }
 
