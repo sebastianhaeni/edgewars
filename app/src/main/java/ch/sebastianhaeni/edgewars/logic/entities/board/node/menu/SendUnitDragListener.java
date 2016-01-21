@@ -1,6 +1,7 @@
 package ch.sebastianhaeni.edgewars.logic.entities.board.node.menu;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import ch.sebastianhaeni.edgewars.EUnitType;
 import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Polygon;
@@ -22,6 +23,7 @@ class SendUnitDragListener implements DraggableButton.IDragListener {
     private static Polygon mDropCorona;
     private final EUnitType mUnitType;
     private final Node mNode;
+    private List<Node> mNeighbors = new ArrayList<>();
 
     /**
      * Constructor
@@ -37,16 +39,23 @@ class SendUnitDragListener implements DraggableButton.IDragListener {
     @Override
     public void start() {
         mCoronas.clear();
+        mNeighbors.clear();
 
         for (Node neighbor : Game.getInstance().getConnectedNodes(mNode)) {
             Polygon corona = new Polygon(neighbor.getPosition(), Colors.CORONA, 1, 300, 0, .75f);
             corona.register();
+            mNeighbors.add(neighbor);
             mCoronas.add(corona);
         }
     }
 
     @Override
     public void drop(float x, float y) {
+        for (Shape corona : mCoronas) {
+            corona.unregister();
+        }
+        mCoronas.clear();
+
         Node target = getTarget(x, y);
         if (target == null) {
             return;
@@ -66,23 +75,23 @@ class SendUnitDragListener implements DraggableButton.IDragListener {
                 break;
         }
 
-        for (Shape corona : mCoronas) {
-            corona.destroy();
-        }
-
         if (mDropCorona != null) {
             mDropCorona.unregister();
+            mDropCorona = null;
         }
 
     }
 
     @Override
     public void move(float x, float y) {
-        if (mDropCorona != null) {
-            mDropCorona.unregister();
-        }
         Node target = getTarget(x, y);
         if (target == null) {
+            if (mDropCorona != null) {
+                mDropCorona.unregister();
+                mDropCorona = null;
+            }
+            return;
+        } else if (mDropCorona != null && target.getPosition().equals(mDropCorona.getPosition())) {
             return;
         }
 
@@ -99,7 +108,7 @@ class SendUnitDragListener implements DraggableButton.IDragListener {
      */
     private Node getTarget(float x, float y) {
         IClickable clickable = Game.getInstance().getGameController().isHit(x, y);
-        if (!(clickable instanceof Node)) {
+        if (!(clickable instanceof Node) || !mNeighbors.contains(clickable)) {
             return null;
         }
 

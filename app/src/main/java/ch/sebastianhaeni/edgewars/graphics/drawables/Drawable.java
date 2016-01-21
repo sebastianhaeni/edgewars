@@ -28,13 +28,6 @@ public abstract class Drawable implements Serializable {
     }
 
     /**
-     * Destroys this drawable.
-     */
-    public void destroy() {
-        Game.getInstance().unregister(this);
-    }
-
-    /**
      * Draws this drawable.
      *
      * @param renderer rendering instance

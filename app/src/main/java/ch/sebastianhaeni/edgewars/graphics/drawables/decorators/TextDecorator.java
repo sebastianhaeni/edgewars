@@ -44,9 +44,9 @@ public class TextDecorator extends DrawableDecorator {
     }
 
     @Override
-    public void destroy() {
-        super.destroy();
-        mText.destroy();
+    public void unregister() {
+        super.unregister();
+        mText.unregister();
     }
 
     /**

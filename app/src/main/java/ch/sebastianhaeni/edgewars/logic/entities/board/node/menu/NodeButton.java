@@ -60,9 +60,9 @@ public class NodeButton extends Button implements Observer {
      * Hides the button with it's components.
      */
     public void hide() {
-        mShape.destroy();
-        mText.destroy();
-        mLine.destroy();
+        mShape.unregister();
+        mText.unregister();
+        mLine.unregister();
     }
 
     @Override

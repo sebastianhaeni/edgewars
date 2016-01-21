@@ -32,6 +32,10 @@ public class DraggableButton extends NodeButton implements IDraggable {
     @Override
     public void startDrag(float x, float y) {
         createLine(x, y);
+
+        for (IDragListener handler : mDropHandlers) {
+            handler.start();
+        }
     }
 
     /**
