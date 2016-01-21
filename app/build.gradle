@@ -2,8 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 23
-    //noinspection GradleDependency
-    buildToolsVersion '23.0.1' // as long as Travis has no newer version, we have to use this
+    buildToolsVersion '23.0.2'
 
     defaultConfig {
         applicationId 'ch.sebastianhaeni.edgewars'
