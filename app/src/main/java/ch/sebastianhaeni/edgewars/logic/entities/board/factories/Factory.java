@@ -59,7 +59,9 @@ public abstract class Factory extends Entity {
 
     @Override
     public void update(long millis) {
-        if (!mActive || mBuildStartTime + getProducingDuration() > System.currentTimeMillis()) {
+        if (!mActive
+                || mBuildStartTime + getProducingDuration() > System.currentTimeMillis()
+                || !(getNode().getState() instanceof OwnedState)) {
             return;
         }
         mBuildStartTime = System.currentTimeMillis();
