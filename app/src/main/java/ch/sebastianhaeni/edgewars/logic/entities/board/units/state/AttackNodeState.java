@@ -15,7 +15,6 @@ import ch.sebastianhaeni.edgewars.logic.entities.board.units.Unit;
 public class AttackNodeState extends UnitState {
     private final Node mNode;
     private final Random mRandom = new Random();
-    private boolean mIsStateInvalid;
 
     /**
      * Constructor
@@ -30,16 +29,13 @@ public class AttackNodeState extends UnitState {
 
     @Override
     public void update(long millis) {
-        if (mIsStateInvalid) {
-            return;
-        }
         if (mNode.getState() instanceof NeutralState) {
             mNode.setState(new OwnedState(mNode, getUnit().getPlayer()));
             mNode.addUnit(getUnit());
             if (getUnit().getPlayer().isHuman()) {
                 SoundEngine.getInstance().play(SoundEngine.Sounds.NODE_CAPTURED);
             }
-            mIsStateInvalid = true;
+            getUnit().setState(new IdleState(getUnit()));
             return;
         }
 
