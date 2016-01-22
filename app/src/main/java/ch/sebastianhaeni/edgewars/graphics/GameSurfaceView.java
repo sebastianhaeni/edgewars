@@ -79,8 +79,7 @@ public class GameSurfaceView extends GLSurfaceView implements Serializable {
 
         createPauseButton();
 
-//        List<LevelRecord> records = LevelRecord.find(LevelRecord.class, "level_nr = ?", Integer.toString(levelNr));
-        List<LevelRecord> records = new ArrayList<>();
+        List<LevelRecord> records = LevelRecord.find(LevelRecord.class, "level_nr = ?", Integer.toString(levelNr));
         records.add(new LevelRecord());
         if (records.size() > 0) {
             mLevelRecord = records.get(0);

@@ -70,8 +70,7 @@ public class LevelDetailActivity extends Activity {
     }
 
     private void findOrCreateLevelRecord() {
-//        List<LevelRecord> records = LevelRecord.find(LevelRecord.class, "level_nr = ?", Integer.toString(mLevelNr));
-        List<LevelRecord> records =new ArrayList<>();
+        List<LevelRecord> records = LevelRecord.find(LevelRecord.class, "level_nr = ?", Integer.toString(mLevelNr));
         if (records.size() > 0) {
             mLevelRecord = records.get(0);
         } else {
