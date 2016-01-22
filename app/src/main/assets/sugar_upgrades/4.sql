@@ -1,0 +1,1 @@
+alter table LEVEL_RECORD add WON boolean NOT NULL default 0;

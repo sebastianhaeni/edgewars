@@ -35,7 +35,7 @@ public class Game {
     private GameState mGameState;
     private GameController mGameController;
     private GameSurfaceView mGLView;
-    private boolean gameOver = false;
+    private boolean mGameOver = false;
     private GameRenderer mGameRenderer;
 
     /**
@@ -134,7 +134,7 @@ public class Game {
     }
 
     public boolean isRunning() {
-        return !gameOver && mGameState != null && mGameState.gameIsRunning();
+        return !mGameOver && mGameState != null && mGameState.gameIsRunning();
     }
 
     /**
@@ -145,9 +145,12 @@ public class Game {
             return;
         }
 
-        if (mGLView != null && isGameOver()) {
-            gameOver = true;
-            mGLView.stopLevel();
+        boolean[] result = isGameOver();
+        boolean gameOver = result[0];
+        boolean won = result[1];
+        if (mGLView != null && gameOver) {
+            mGameOver = true;
+            mGLView.stopLevel(won);
         }
     }
 
@@ -162,14 +165,14 @@ public class Game {
         int commandCount = mCommandStack.size();
         while (mCommandStack.size() > 0 && mCommandStack.size() - commandCount < 5) {
             // do not continue execution of commands if game has stopped meanwhile
-            if (gameOver) return;
+            if (mGameOver) return;
 
             mCommandStack.pop().execute();
         }
 
         for (Map.Entry<Entity, Long> pair : mEntities.entrySet()) {
             // do not continue updates if game has stopped meanwhile
-            if (gameOver) return;
+            if (mGameOver) return;
 
             if (pair.getKey().getInterval() < 0) {
                 continue;
@@ -187,13 +190,15 @@ public class Game {
     /**
      * Checks if game is over.
      *
-     * @return true if game is over
+     * @return result Array with two boolean values. First: gameOver?, Second: won?.
      */
-    private boolean isGameOver() {
+    private boolean[] isGameOver() {
+        boolean[] result = new boolean[2];
         // check if game is over
         ArrayList<Node> nodes = mGameState.getBoard().getNodes();
         Player owner = null;
         boolean gameOver = true;
+        boolean won = false;
         for (Node node : nodes) {
             if (!(node.getState() instanceof OwnedState)) {
                 continue;
@@ -206,7 +211,12 @@ public class Game {
                 break;
             }
         }
-        return gameOver;
+        if(gameOver) {
+            won = owner.isHuman();
+        }
+        result[0] = gameOver;
+        result[1] = won;
+        return result;
     }
 
     /**
@@ -321,4 +331,3 @@ public class Game {
         return mGameRenderer;
     }
 }
-

@@ -110,8 +110,9 @@ public class GameSurfaceView extends GLSurfaceView implements Serializable {
         pauseButton.register();
     }
 
-    public void stopLevel() {
+    public void stopLevel(boolean won) {
         mLevelRecord.setEndTime(System.currentTimeMillis());
+        mLevelRecord.setWon(won);
         mLevelRecord.save();
 
         // report that game has stopped
