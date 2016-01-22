@@ -10,6 +10,7 @@ import ch.sebastianhaeni.edgewars.logic.Game;
 import ch.sebastianhaeni.edgewars.logic.commands.ActivateFactoryCommand;
 import ch.sebastianhaeni.edgewars.logic.commands.DeactivateFactoriesCommand;
 import ch.sebastianhaeni.edgewars.logic.commands.RepairNodeCommand;
+import ch.sebastianhaeni.edgewars.logic.commands.UpgradeFactoryCommand;
 import ch.sebastianhaeni.edgewars.logic.commands.UpgradeNodeDamageCommand;
 import ch.sebastianhaeni.edgewars.logic.commands.UpgradeNodeHealthCommand;
 import ch.sebastianhaeni.edgewars.logic.entities.Button;
@@ -156,7 +157,7 @@ public class NodeMenu extends Observable {
         mMeleeFactoryButton.addClickListener(new Button.OnGameClickListener() {
             @Override
             public void onClick() {
-                mNode.getMeleeFactory().upgrade();
+                Game.getInstance().register(new UpgradeFactoryCommand(mNode.getMeleeFactory()));
             }
         });
 
@@ -174,7 +175,7 @@ public class NodeMenu extends Observable {
         mTankFactoryButton.addClickListener(new Button.OnGameClickListener() {
             @Override
             public void onClick() {
-                mNode.getTankFactory().upgrade();
+                Game.getInstance().register(new UpgradeFactoryCommand(mNode.getTankFactory()));
             }
         });
 
@@ -192,7 +193,7 @@ public class NodeMenu extends Observable {
         mSprinterFactoryButton.addClickListener(new Button.OnGameClickListener() {
             @Override
             public void onClick() {
-                mNode.getSprinterFactory().upgrade();
+                Game.getInstance().register(new UpgradeFactoryCommand(mNode.getSprinterFactory()));
             }
         });
 

@@ -33,11 +33,13 @@ public class Player extends Entity {
         mColor = color;
         mIsHuman = isHuman;
 
+        if (isHuman) {
+            addObserver(new EnergyChangeNotifier(this));
+        }
     }
 
     @Override
     public void update(long millis) {
-
         if (mAi != null) {
             mAi.update(millis);
         }
@@ -73,7 +75,7 @@ public class Player extends Entity {
     public void addEnergy(int amount) {
         mEnergy += amount;
         setChanged();
-        notifyObservers(this);
+        notifyObservers(amount);
     }
 
     /**
@@ -96,9 +98,10 @@ public class Player extends Entity {
      * Removes energy from the player. If the subtraction results in an energy amount below zero,
      * the action is not executed and an exception is thrown instead.
      *
-     * @param cost amount to deduct
+     * @param reason the reason for the deduction
+     * @param cost   amount to deduct
      */
-    public void removeEnergy(int cost) {
+    public void removeEnergy(String reason, int cost) {
         if (mEnergy - cost >= 0) {
             mEnergy -= cost;
         } else {
@@ -106,7 +109,7 @@ public class Player extends Entity {
         }
 
         setChanged();
-        notifyObservers(this);
+        notifyObservers(reason + " " + -cost + Text.ENERGY);
     }
 
     /**

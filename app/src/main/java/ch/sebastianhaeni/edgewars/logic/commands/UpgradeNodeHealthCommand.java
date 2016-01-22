@@ -1,5 +1,6 @@
 package ch.sebastianhaeni.edgewars.logic.commands;
 
+import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Text;
 import ch.sebastianhaeni.edgewars.logic.Constants;
 import ch.sebastianhaeni.edgewars.logic.entities.Player;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
@@ -37,7 +38,7 @@ public class UpgradeNodeHealthCommand extends Command {
         if (mNode.maxHealthLevelReached()) {
             return;
         }
-        owner.removeEnergy(Constants.NODE_HEALTH_LEVEL_UPGRADE_COST);
+        owner.removeEnergy(String.valueOf(Text.HEALTH), Constants.NODE_HEALTH_LEVEL_UPGRADE_COST);
 
         mNode.upgradeHealth();
     }

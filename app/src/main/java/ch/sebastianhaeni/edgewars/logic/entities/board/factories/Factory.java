@@ -72,7 +72,7 @@ public abstract class Factory extends Entity {
         if (owner.getEnergy() < getUnitCost()) {
             return;
         }
-        owner.removeEnergy(getUnitCost());
+        owner.removeEnergy("", getUnitCost());
         produceUnit();
 
         setChanged();

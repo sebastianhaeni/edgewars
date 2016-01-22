@@ -1,5 +1,6 @@
 package ch.sebastianhaeni.edgewars.logic.commands;
 
+import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Text;
 import ch.sebastianhaeni.edgewars.logic.entities.Player;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.state.NodeState;
@@ -36,7 +37,7 @@ public class RepairNodeCommand extends Command {
         // deduct repair cost, or if he doesn't have enough money, what he has left
         int energyLeft = owner.getEnergy();
         int repairCost = mNode.getRepairCost();
-        owner.removeEnergy(energyLeft > repairCost ? repairCost : energyLeft);
+        owner.removeEnergy(String.valueOf(Text.WRENCH), energyLeft > repairCost ? repairCost : energyLeft);
         mNode.repair(energyLeft > repairCost ? 1f : (float) energyLeft / (float) repairCost);
     }
 }

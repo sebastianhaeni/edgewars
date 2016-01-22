@@ -38,7 +38,7 @@ public class UpgradeFactoryCommand extends Command {
             return;
         }
 
-        owner.removeEnergy(mFactory.getUpgradeCost());
+        owner.removeEnergy("", mFactory.getUpgradeCost());
         mFactory.upgrade();
     }
 }
