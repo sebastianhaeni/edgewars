@@ -3,6 +3,7 @@ package ch.sebastianhaeni.edgewars.ui.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.Html;
@@ -43,6 +44,13 @@ public class LevelDetailActivity extends Activity {
         TextView lvlName = (TextView) findViewById(R.id.textLevel);
         lvlName.setTypeface(typeface);
 
+        if (mLevelRecord.hasWon()) {
+            lvlName.setTextColor(Color.GREEN);
+        }
+        else if (mLevelRecord.hasPlayed() && !mLevelRecord.hasWon()) {
+            lvlName.setTextColor(Color.RED);
+        }
+
         displayTime();
     }
 
@@ -65,6 +73,9 @@ public class LevelDetailActivity extends Activity {
     }
 
     public void back(View view) {
+        Intent intent = new Intent(this, LevelSelectionActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
         finish();
     }
 
@@ -73,7 +84,7 @@ public class LevelDetailActivity extends Activity {
         if (records.size() > 0) {
             mLevelRecord = records.get(0);
         } else {
-            LevelRecord record = new LevelRecord(mLevelNr, 0, 0, 0);
+            LevelRecord record = new LevelRecord(mLevelNr, 0, 0, 0, 0);
             record.save();
             mLevelRecord = record;
         }
