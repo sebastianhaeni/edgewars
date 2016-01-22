@@ -13,18 +13,8 @@ import ch.sebastianhaeni.edgewars.util.Position;
  */
 public class EnergyChangeNotifier implements Observer {
 
-    private final Player mPlayer;
     private final HashMap<Integer, Text> mTexts = new HashMap<>();
     private int mRow = 0;
-
-    /**
-     * Constructor
-     *
-     * @param player the player object this object gets update from
-     */
-    public EnergyChangeNotifier(Player player) {
-        mPlayer = player;
-    }
 
     @Override
     public void update(Observable observable, Object data) {
