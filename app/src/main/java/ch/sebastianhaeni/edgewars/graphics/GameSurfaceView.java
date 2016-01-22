@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import android.view.MotionEvent;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 import ch.sebastianhaeni.edgewars.logic.Game;
