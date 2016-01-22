@@ -3,6 +3,7 @@ package ch.sebastianhaeni.edgewars.logic.ai;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
+import ch.sebastianhaeni.edgewars.logic.Game;
 import ch.sebastianhaeni.edgewars.logic.ai.rules.NodeRules;
 import ch.sebastianhaeni.edgewars.logic.commands.Command;
 import ch.sebastianhaeni.edgewars.logic.entities.Player;
@@ -35,7 +36,7 @@ public class RuleBasedAI extends AI {
         }
 
         for (Command command : commands) {
-            command.execute();
+            Game.getInstance().register(command);
         }
     }
 

@@ -28,7 +28,7 @@ public class EnergyChangeNotifier implements Observer {
         mTexts.put(mRow, new Text(
                 new Position(1.15f, 1f + (.45f * mRow)),
                 Colors.ENERGY_DEDUCTION,
-                "######".substring(((String) data).length()) + data, // padding left
+                "#######".substring(((String) data).length()) + data, // padding left
                 10,
                 true));
         mTexts.get(mRow).register();
