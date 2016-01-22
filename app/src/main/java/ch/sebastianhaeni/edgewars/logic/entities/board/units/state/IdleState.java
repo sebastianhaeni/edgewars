@@ -16,6 +16,7 @@ public class IdleState extends UnitState {
         super(unit);
 
         unit.hide();
+        unit.unregister();
     }
 
     @Override

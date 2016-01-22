@@ -47,6 +47,9 @@ public abstract class Factory extends Entity {
             return;
         }
         mLevel++;
+
+        setChanged();
+        notifyObservers(this);
         setUpdateInterval(getProducingDuration());
     }
 

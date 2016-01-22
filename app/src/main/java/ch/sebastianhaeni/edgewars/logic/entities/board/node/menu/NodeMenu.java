@@ -1,5 +1,7 @@
 package ch.sebastianhaeni.edgewars.logic.entities.board.node.menu;
 
+import java.util.Observable;
+
 import ch.sebastianhaeni.edgewars.EUnitType;
 import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Polygon;
 import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Text;
@@ -7,7 +9,11 @@ import ch.sebastianhaeni.edgewars.logic.Constants;
 import ch.sebastianhaeni.edgewars.logic.Game;
 import ch.sebastianhaeni.edgewars.logic.commands.ActivateFactoryCommand;
 import ch.sebastianhaeni.edgewars.logic.commands.DeactivateFactoriesCommand;
+import ch.sebastianhaeni.edgewars.logic.commands.RepairNodeCommand;
+import ch.sebastianhaeni.edgewars.logic.commands.UpgradeNodeDamageCommand;
+import ch.sebastianhaeni.edgewars.logic.commands.UpgradeNodeHealthCommand;
 import ch.sebastianhaeni.edgewars.logic.entities.Button;
+import ch.sebastianhaeni.edgewars.logic.entities.Player;
 import ch.sebastianhaeni.edgewars.logic.entities.board.factories.Factory;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.state.OwnedState;
@@ -18,19 +24,13 @@ import ch.sebastianhaeni.edgewars.util.Colors;
  * more or less buttons. This class contains a lot of UI building code, so expect spaghetti code.
  * There's not much one can do to prevent that.
  */
-public class NodeMenu {
+public class NodeMenu extends Observable {
     private final Node mNode;
     private final boolean mIsOwned;
     private boolean mVisible;
     private DraggableButton mMeleeButton;
     private DraggableButton mTankButton;
     private DraggableButton mSprinterButton;
-    private NodeButton mMeleeFactoryButton;
-    private NodeButton mSprinterFactoryButton;
-    private NodeButton mTankFactoryButton;
-    private NodeButton mRepairButton;
-    private NodeButton mHealthButton;
-    private NodeButton mDamageButton;
     private Polygon mUnitCorona;
 
     /**
@@ -42,16 +42,19 @@ public class NodeMenu {
     public NodeMenu(Node node, boolean isOwned) {
         mNode = node;
         mIsOwned = isOwned;
+
+        showUnits();
+        showFactories();
+        showUpgrades();
     }
 
     /**
      * Shows this menu.
      */
     public void show() {
-        showUnits();
-        showFactories();
-        showUpgrades();
         mVisible = true;
+        setChanged();
+        notifyObservers(this);
     }
 
     /**
@@ -62,47 +65,71 @@ public class NodeMenu {
             return;
         }
 
-        mRepairButton = new NodeButton(mNode.getPosition(), -1, 1, new NodeButton.ButtonTextResolver() {
+        final Player owner = ((OwnedState) mNode.getState()).getOwner();
+
+        NodeButton mRepairButton = new NodeButton(mNode.getPosition(), -1, 1, new NodeButton.VisibleResolver() {
+            @Override
+            public boolean isVisible() {
+                return mVisible && mNode.getHealth() < mNode.getMaxHealth() && owner.getEnergy() > 0;
+            }
+        }, new NodeButton.ButtonTextResolver() {
             @Override
             public String getText() {
                 return String.valueOf(Text.WRENCH);
             }
         }, Constants.NODE_CORNERS);
-        mRepairButton.register();
         mRepairButton.addClickListener(new Button.OnGameClickListener() {
             @Override
             public void onClick() {
-                mNode.repair();
+                Game.getInstance().register(new RepairNodeCommand(mNode));
             }
         });
 
-        mHealthButton = new NodeButton(mNode.getPosition(), 0, 1.5f, new NodeButton.ButtonTextResolver() {
+        NodeButton mHealthButton = new NodeButton(mNode.getPosition(), 0, 1.5f, new NodeButton.VisibleResolver() {
+            @Override
+            public boolean isVisible() {
+                return mVisible && !mNode.maxHealthLevelReached() && owner.getEnergy() >= Constants.NODE_HEALTH_LEVEL_UPGRADE_COST;
+            }
+        }, new NodeButton.ButtonTextResolver() {
             @Override
             public String getText() {
                 return String.valueOf(Text.HEALTH);
             }
         }, Constants.NODE_CORNERS);
-        mHealthButton.register();
         mHealthButton.addClickListener(new Button.OnGameClickListener() {
             @Override
             public void onClick() {
-                mNode.upgradeHealth();
+                Game.getInstance().register(new UpgradeNodeHealthCommand(mNode));
             }
         });
 
-        mDamageButton = new NodeButton(mNode.getPosition(), 1, 1, new NodeButton.ButtonTextResolver() {
+        NodeButton mDamageButton = new NodeButton(mNode.getPosition(), 1, 1, new NodeButton.VisibleResolver() {
+            @Override
+            public boolean isVisible() {
+                return mVisible && !mNode.maxDamageLevelReached() && owner.getEnergy() >= Constants.NODE_DAMAGE_LEVEL_UPGRADE_COST;
+            }
+        }, new NodeButton.ButtonTextResolver() {
             @Override
             public String getText() {
                 return String.valueOf(Text.DAMAGE);
             }
         }, Constants.NODE_CORNERS);
-        mDamageButton.register();
         mDamageButton.addClickListener(new Button.OnGameClickListener() {
             @Override
             public void onClick() {
-                mNode.upgradeDamage();
+                Game.getInstance().register(new UpgradeNodeDamageCommand(mNode));
             }
         });
+
+        mNode.addObserver(mRepairButton);
+        mNode.addObserver(mHealthButton);
+        mNode.addObserver(mDamageButton);
+        owner.addObserver(mRepairButton);
+        owner.addObserver(mHealthButton);
+        owner.addObserver(mDamageButton);
+        addObserver(mRepairButton);
+        addObserver(mHealthButton);
+        addObserver(mDamageButton);
     }
 
     /**
@@ -113,65 +140,71 @@ public class NodeMenu {
             return;
         }
 
-        if (!mNode.getMeleeFactory().maxLevelReached()) {
-            mMeleeFactoryButton = new NodeButton(mMeleeButton.getPosition(), -.7f, -.7f, new NodeButton.ButtonTextResolver() {
-                @Override
-                public String getText() {
-                    return String.valueOf(Constants.FACTORY_MELEE_UPGRADE_1) + Text.ENERGY;
-                }
-            }, Constants.NODE_CORNERS);
-            mMeleeFactoryButton.register();
-            mMeleeFactoryButton.addClickListener(new Button.OnGameClickListener() {
-                @Override
-                public void onClick() {
-                    mNode.getMeleeFactory().upgrade();
-                    if (mNode.getMeleeFactory().maxLevelReached()) {
-                        mMeleeFactoryButton.hide();
-                        mMeleeFactoryButton.unregister();
-                    }
-                }
-            });
-        }
+        final Player owner = ((OwnedState) mNode.getState()).getOwner();
 
-        if (!mNode.getTankFactory().maxLevelReached()) {
-            mTankFactoryButton = new NodeButton(mTankButton.getPosition(), 0, -1, new NodeButton.ButtonTextResolver() {
-                @Override
-                public String getText() {
-                    return String.valueOf(Constants.FACTORY_TANK_UPGRADE_1) + Text.ENERGY;
-                }
-            }, Constants.NODE_CORNERS);
-            mTankFactoryButton.register();
-            mTankFactoryButton.addClickListener(new Button.OnGameClickListener() {
-                @Override
-                public void onClick() {
-                    mNode.getTankFactory().upgrade();
-                    if (mNode.getTankFactory().maxLevelReached()) {
-                        mTankFactoryButton.hide();
-                        mTankFactoryButton.unregister();
-                    }
-                }
-            });
-        }
+        NodeButton mMeleeFactoryButton = new NodeButton(mMeleeButton.getPosition(), -.7f, -.7f, new NodeButton.VisibleResolver() {
+            @Override
+            public boolean isVisible() {
+                return mVisible && !mNode.getMeleeFactory().maxLevelReached() && owner.getEnergy() >= mNode.getMeleeFactory().getUpgradeCost();
+            }
+        }, new NodeButton.ButtonTextResolver() {
+            @Override
+            public String getText() {
+                return String.valueOf(Constants.FACTORY_MELEE_UPGRADE_1) + Text.ENERGY;
+            }
+        }, Constants.NODE_CORNERS);
+        mMeleeFactoryButton.addClickListener(new Button.OnGameClickListener() {
+            @Override
+            public void onClick() {
+                mNode.getMeleeFactory().upgrade();
+            }
+        });
 
-        if (!mNode.getSprinterFactory().maxLevelReached()) {
-            mSprinterFactoryButton = new NodeButton(mSprinterButton.getPosition(), .7f, -.7f, new NodeButton.ButtonTextResolver() {
-                @Override
-                public String getText() {
-                    return String.valueOf(Constants.FACTORY_SPRINTER_UPGRADE_1) + Text.ENERGY;
-                }
-            }, Constants.NODE_CORNERS);
-            mSprinterFactoryButton.register();
-            mSprinterFactoryButton.addClickListener(new Button.OnGameClickListener() {
-                @Override
-                public void onClick() {
-                    mNode.getSprinterFactory().upgrade();
-                    if (mNode.getSprinterFactory().maxLevelReached()) {
-                        mSprinterFactoryButton.hide();
-                        mSprinterFactoryButton.unregister();
-                    }
-                }
-            });
-        }
+        NodeButton mTankFactoryButton = new NodeButton(mTankButton.getPosition(), 0, -1, new NodeButton.VisibleResolver() {
+            @Override
+            public boolean isVisible() {
+                return mVisible && !mNode.getTankFactory().maxLevelReached() && owner.getEnergy() >= mNode.getTankFactory().getUpgradeCost();
+            }
+        }, new NodeButton.ButtonTextResolver() {
+            @Override
+            public String getText() {
+                return String.valueOf(Constants.FACTORY_TANK_UPGRADE_1) + Text.ENERGY;
+            }
+        }, Constants.NODE_CORNERS);
+        mTankFactoryButton.addClickListener(new Button.OnGameClickListener() {
+            @Override
+            public void onClick() {
+                mNode.getTankFactory().upgrade();
+            }
+        });
+
+        NodeButton mSprinterFactoryButton = new NodeButton(mSprinterButton.getPosition(), .7f, -.7f, new NodeButton.VisibleResolver() {
+            @Override
+            public boolean isVisible() {
+                return mVisible && !mNode.getSprinterFactory().maxLevelReached() && owner.getEnergy() >= mNode.getSprinterFactory().getUpgradeCost();
+            }
+        }, new NodeButton.ButtonTextResolver() {
+            @Override
+            public String getText() {
+                return String.valueOf(Constants.FACTORY_SPRINTER_UPGRADE_1) + Text.ENERGY;
+            }
+        }, Constants.NODE_CORNERS);
+        mSprinterFactoryButton.addClickListener(new Button.OnGameClickListener() {
+            @Override
+            public void onClick() {
+                mNode.getSprinterFactory().upgrade();
+            }
+        });
+
+        mNode.getMeleeFactory().addObserver(mMeleeFactoryButton);
+        mNode.getTankFactory().addObserver(mTankFactoryButton);
+        mNode.getSprinterFactory().addObserver(mSprinterFactoryButton);
+        owner.addObserver(mMeleeFactoryButton);
+        owner.addObserver(mTankFactoryButton);
+        owner.addObserver(mSprinterFactoryButton);
+        addObserver(mMeleeFactoryButton);
+        addObserver(mTankFactoryButton);
+        addObserver(mSprinterFactoryButton);
     }
 
     /**
@@ -179,33 +212,45 @@ public class NodeMenu {
      */
     private void showUnits() {
         // fetching color of player
-        float[] color = mNode.getState() instanceof OwnedState ? ((OwnedState) mNode.getState()).getOwner().getColor() : Colors.EDGE;
+        Player owner = ((OwnedState) mNode.getState()).getOwner();
+        float[] color = owner.getColor();
 
         // creating buttons
-        mMeleeButton = new DraggableButton(mNode.getPosition(), -1, -1, new NodeButton.ButtonTextResolver() {
+        mMeleeButton = new DraggableButton(mNode.getPosition(), -1, -1, new NodeButton.VisibleResolver() {
+            @Override
+            public boolean isVisible() {
+                return mVisible;
+            }
+        }, new NodeButton.ButtonTextResolver() {
             @Override
             public String getText() {
                 return String.valueOf(mNode.getMeleeCount());
             }
         }, Constants.UNIT_MELEE_CORNERS, color);
 
-        mTankButton = new DraggableButton(mNode.getPosition(), 0, -1.5f, new NodeButton.ButtonTextResolver() {
+        mTankButton = new DraggableButton(mNode.getPosition(), 0, -1.5f, new NodeButton.VisibleResolver() {
+            @Override
+            public boolean isVisible() {
+                return mVisible;
+            }
+        }, new NodeButton.ButtonTextResolver() {
             @Override
             public String getText() {
                 return String.valueOf(mNode.getTankCount());
             }
         }, Constants.UNIT_TANK_CORNERS, color);
 
-        mSprinterButton = new DraggableButton(mNode.getPosition(), 1, -1, new NodeButton.ButtonTextResolver() {
+        mSprinterButton = new DraggableButton(mNode.getPosition(), 1, -1, new NodeButton.VisibleResolver() {
+            @Override
+            public boolean isVisible() {
+                return mVisible;
+            }
+        }, new NodeButton.ButtonTextResolver() {
             @Override
             public String getText() {
                 return String.valueOf(mNode.getSprinterCount());
             }
         }, Constants.UNIT_SPRINTER_CORNERS, color);
-
-        mMeleeButton.register();
-        mTankButton.register();
-        mSprinterButton.register();
 
         mNode.addObserver(mMeleeButton);
         mNode.addObserver(mTankButton);
@@ -213,6 +258,9 @@ public class NodeMenu {
         mNode.getMeleeFactory().addObserver(mMeleeButton);
         mNode.getTankFactory().addObserver(mTankButton);
         mNode.getSprinterFactory().addObserver(mSprinterButton);
+        addObserver(mMeleeButton);
+        addObserver(mTankButton);
+        addObserver(mSprinterButton);
 
         // showing the selected unit that is built
         if (mNode.getMeleeFactory().isActivated()) {
@@ -264,35 +312,13 @@ public class NodeMenu {
      * Hides the node menu by hiding all drawables.
      */
     public void hide() {
-        hide(mMeleeButton);
-        hide(mTankButton);
-        hide(mSprinterButton);
-
-        hide(mMeleeFactoryButton);
-        hide(mTankFactoryButton);
-        hide(mSprinterFactoryButton);
-
-        hide(mRepairButton);
-        hide(mHealthButton);
-        hide(mDamageButton);
-
         if (mUnitCorona != null) {
             mUnitCorona.unregister();
         }
 
         mVisible = false;
-    }
-
-    /**
-     * @param button the button to hide
-     */
-    private static void hide(NodeButton button) {
-        if (button == null) {
-            return;
-        }
-
-        button.hide();
-        button.unregister();
+        setChanged();
+        notifyObservers(this);
     }
 
     /**

@@ -1,5 +1,7 @@
 package ch.sebastianhaeni.edgewars.logic.entities.board.node;
 
+import android.util.Log;
+
 import ch.sebastianhaeni.edgewars.graphics.drawables.decorators.DeathParticleDecorator;
 import ch.sebastianhaeni.edgewars.graphics.drawables.decorators.TextDecorator;
 import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Polygon;
@@ -174,10 +176,16 @@ public class Node extends BoardEntity implements IClickable {
 
     /**
      * Sets the health to full again.
+     *
+     * @param percentage the amount of repairing
      */
-    public void repair() {
-        mHealth = getMaxHealth();
+    public void repair(float percentage) {
+        Log.d("Node", percentage+"");
+        mHealth += (int) ((getMaxHealth() - mHealth) * percentage);
         updateLabel();
+
+        setChanged();
+        notifyObservers(this);
     }
 
     /**
@@ -239,6 +247,8 @@ public class Node extends BoardEntity implements IClickable {
         }
 
         updateLabel();
+        setChanged();
+        notifyObservers(this);
     }
 
     /**
@@ -305,6 +315,8 @@ public class Node extends BoardEntity implements IClickable {
         }
 
         updateLabel();
+        setChanged();
+        notifyObservers(this);
     }
 
     /**

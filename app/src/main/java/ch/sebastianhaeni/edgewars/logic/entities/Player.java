@@ -72,6 +72,8 @@ public class Player extends Entity {
      */
     public void addEnergy(int amount) {
         mEnergy += amount;
+        setChanged();
+        notifyObservers(this);
     }
 
     /**
@@ -102,6 +104,9 @@ public class Player extends Entity {
         } else {
             throw new RuntimeException("Player energy is lower than 0, this should have been checked before calling this");
         }
+
+        setChanged();
+        notifyObservers(this);
     }
 
     /**

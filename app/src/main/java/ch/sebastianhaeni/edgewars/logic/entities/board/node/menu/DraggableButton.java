@@ -18,14 +18,15 @@ public class DraggableButton extends NodeButton implements IDraggable {
     /**
      * Constructor
      *
-     * @param base           the base position of the button
-     * @param offsetX        the x offset of the button to the base position
-     * @param offsetY        the y offset of the button to the base position
-     * @param resolver       resolves the text for this button given the node object
-     * @param polygonCorners corner count of polygon
+     * @param base            the base position of the button
+     * @param offsetX         the x offset of the button to the base position
+     * @param offsetY         the y offset of the button to the base position
+     * @param visibleResolver resolves if the button is visible or not
+     * @param textResolver    resolves the text for this button given the node object
+     * @param polygonCorners  corner count of polygon
      */
-    public DraggableButton(Position base, float offsetX, float offsetY, ButtonTextResolver resolver, int polygonCorners, float[] color) {
-        super(base, offsetX, offsetY, resolver, polygonCorners);
+    public DraggableButton(Position base, float offsetX, float offsetY, VisibleResolver visibleResolver, ButtonTextResolver textResolver, int polygonCorners, float[] color) {
+        super(base, offsetX, offsetY, visibleResolver, textResolver, polygonCorners);
         mColor = color;
     }
 
