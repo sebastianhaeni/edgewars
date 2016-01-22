@@ -29,7 +29,7 @@ public class GameSurfaceView extends GLSurfaceView implements Serializable {
 
     private GameThread mThread;
     private GameController mController;
-    private final Context mContext;
+    private final GameActivity mContext;
     private GameState mGameState;
     private LevelRecord mLevelRecord;
 
@@ -38,7 +38,7 @@ public class GameSurfaceView extends GLSurfaceView implements Serializable {
      *
      * @param context app context
      */
-    public GameSurfaceView(Context context) {
+    public GameSurfaceView(GameActivity context) {
         super(context);
         mContext = context;
         // Create an OpenGL ES 2.0 context.
