@@ -31,5 +31,9 @@ public interface IClickable {
      */
     float getHeight();
 
+    /**
+     * @return true if this clickable does not move with the camera but is static
+     */
+    boolean isStatic();
 
 }

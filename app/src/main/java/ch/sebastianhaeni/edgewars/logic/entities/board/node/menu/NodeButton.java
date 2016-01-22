@@ -106,6 +106,11 @@ public class NodeButton extends Button implements Observer {
         return Constants.MENU_BUTTON_RADIUS * 2;
     }
 
+    @Override
+    public boolean isStatic() {
+        return false;
+    }
+
     /**
      * @return gets polygon corners
      */

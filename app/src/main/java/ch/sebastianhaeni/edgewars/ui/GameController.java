@@ -1,5 +1,6 @@
 package ch.sebastianhaeni.edgewars.ui;
 
+import android.util.Log;
 import android.view.MotionEvent;
 
 import ch.sebastianhaeni.edgewars.graphics.GameRenderer;
@@ -133,6 +134,9 @@ public class GameController {
         float cameraX = mGameState.getCamera().getScreenX() * (2f / 3f);
         float cameraY = mGameState.getCamera().getScreenY() * (2f / 3f);
 
+        Log.d("GameController", "Clicking at: " + touchX + ", " + touchY);
+        Log.d("GameController", "Camera: " + cameraX + ", " + cameraY);
+
         // loop through all nodes and test if one is positioned at the coordinates of the user touch
         for (IClickable clickable : Game.getInstance().getClickables()) {
             float width = mRenderer.getAndroidLengthX(clickable.getWidth() * .5f);
@@ -142,7 +146,12 @@ public class GameController {
             float x = mRenderer.getAndroidCoordinateX(clickable.getPosition().getX());
             float y = mRenderer.getAndroidCoordinateY(clickable.getPosition().getY());
 
-            if (!(Math.abs(x + cameraX - touchX) < width &&
+            Log.d("GameController", "Clickable " + clickable.getClass() + ": " + x + ", " + y);
+
+            // TODO remove this dirty hack that was made for the demo
+            if (clickable.isStatic() && touchX > 2300 && touchY < 100) {
+                return clickable;
+            } else if (!(Math.abs(x + cameraX - touchX) < width &&
                     Math.abs(y + cameraY - touchY) < height)) {
                 continue;
             }

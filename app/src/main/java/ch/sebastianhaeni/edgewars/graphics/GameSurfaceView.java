@@ -6,15 +6,20 @@ import android.support.annotation.NonNull;
 import android.view.MotionEvent;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import ch.sebastianhaeni.edgewars.logic.Game;
 import ch.sebastianhaeni.edgewars.logic.GameState;
 import ch.sebastianhaeni.edgewars.logic.GameThread;
 import ch.sebastianhaeni.edgewars.logic.LevelLoader;
+import ch.sebastianhaeni.edgewars.logic.entities.Button;
+import ch.sebastianhaeni.edgewars.logic.entities.PauseButton;
 import ch.sebastianhaeni.edgewars.model.LevelRecord;
 import ch.sebastianhaeni.edgewars.ui.GameController;
 import ch.sebastianhaeni.edgewars.ui.activities.GameActivity;
+import ch.sebastianhaeni.edgewars.ui.dialogs.PauseDialog;
+import ch.sebastianhaeni.edgewars.util.Position;
 
 /**
  * A view container where OpenGL ES graphics can be drawn on screen.
@@ -72,7 +77,11 @@ public class GameSurfaceView extends GLSurfaceView implements Serializable {
         // Render the view continuously
         setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
 
-        List<LevelRecord> records = LevelRecord.find(LevelRecord.class, "level_nr = ?", Integer.toString(levelNr));
+        createPauseButton();
+
+//        List<LevelRecord> records = LevelRecord.find(LevelRecord.class, "level_nr = ?", Integer.toString(levelNr));
+        List<LevelRecord> records = new ArrayList<>();
+        records.add(new LevelRecord());
         if (records.size() > 0) {
             mLevelRecord = records.get(0);
         }
@@ -84,6 +93,23 @@ public class GameSurfaceView extends GLSurfaceView implements Serializable {
 
         // report that game has started
         mGameState.setGameIsRunning(true);
+    }
+
+    /**
+     * Creates the button to pause the game.
+     */
+    private void createPauseButton() {
+        PauseButton pauseButton = new PauseButton(new Position(16, .5f));
+        pauseButton.register();
+        pauseButton.addClickListener(new Button.OnGameClickListener() {
+            @Override
+            public void onClick() {
+                mThread.onPause();
+                PauseDialog dialog = new PauseDialog(mContext, mThread);
+                dialog.show();
+            }
+        });
+        pauseButton.register();
     }
 
     public void stopLevel() {

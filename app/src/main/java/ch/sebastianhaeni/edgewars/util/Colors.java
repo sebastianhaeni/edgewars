@@ -23,4 +23,5 @@ public interface Colors {
     // Energy label that display the players energy
     float[] ENERGY_TEXT = {1f, 1f, 1f, 1f};
     float[] ENERGY_DEDUCTION = {1f, .1f, .1f, 1f};
+    float[] PAUSE_BUTTON = {1f, 1f, 1f, 1f};
 }

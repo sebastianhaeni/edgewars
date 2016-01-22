@@ -348,6 +348,11 @@ public class Node extends BoardEntity implements IClickable {
         return Constants.NODE_RADIUS * 2;
     }
 
+    @Override
+    public boolean isStatic() {
+        return false;
+    }
+
     /**
      *
      */

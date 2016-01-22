@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -69,7 +70,8 @@ public class LevelDetailActivity extends Activity {
     }
 
     private void findOrCreateLevelRecord() {
-        List<LevelRecord> records = LevelRecord.find(LevelRecord.class, "level_nr = ?", Integer.toString(mLevelNr));
+//        List<LevelRecord> records = LevelRecord.find(LevelRecord.class, "level_nr = ?", Integer.toString(mLevelNr));
+        List<LevelRecord> records =new ArrayList<>();
         if (records.size() > 0) {
             mLevelRecord = records.get(0);
         } else {
