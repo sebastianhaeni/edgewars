@@ -7,15 +7,17 @@ public class LevelRecord extends SugarRecord<LevelRecord> {
     int score;
     long startTime;
     long endTime;
+    int won;
 
     public LevelRecord() {
     }
 
-    public LevelRecord(int level, int score, long startTime, long endTime) {
+    public LevelRecord(int level, int score, long startTime, long endTime, int won) {
         this.levelNr = level;
         this.score = score;
         this.startTime = startTime;
         this.endTime = endTime;
+        this.won = won;
     }
 
     public int getScore() {
@@ -28,4 +30,12 @@ public class LevelRecord extends SugarRecord<LevelRecord> {
         this.startTime = startTime;
     }
     public void setEndTime(long endTime) { this.endTime = endTime; }
+    public boolean hasWon() { return won == 1; }
+    public boolean hasPlayed() { return getTime() > 0; }
+    public void setWon(boolean won) {
+        if (won)
+            this.won = 1;
+        else
+            this.won = 0;
+    }
 }
