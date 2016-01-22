@@ -221,10 +221,10 @@ public abstract class Unit extends BoardEntity {
      */
     public void hide() {
         if (mShape != null) {
-            mShape.destroy();
+            mShape.unregister();
         }
         if (mText != null) {
-            mText.destroy();
+            mText.unregister();
         }
         mIsShowing = false;
     }

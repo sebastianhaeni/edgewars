@@ -15,54 +15,85 @@ import ch.sebastianhaeni.edgewars.util.Position;
  * A button that hangs around a node.
  */
 public class NodeButton extends Button implements Observer {
-    private final Polygon mShape;
-    private final TextDecorator mText;
-    private final Line mLine;
+    private final Position mBase;
     private final int mPolygonCorners;
-    private final ButtonTextResolver mResolver;
+    private final ButtonTextResolver mTextResolver;
+    private final VisibleResolver mVisibleResolver;
+    private Polygon mShape;
+    private TextDecorator mText;
+    private Line mLine;
+    private boolean mIsVisible;
 
     /**
      * Constructor
      *
-     * @param base           the base position of the button
-     * @param offsetX        the x offset of the button to the base position
-     * @param offsetY        the y offset of the button to the base position
-     * @param resolver       resolves the text for this button given the node object
-     * @param polygonCorners corner count of polygon
+     * @param base            the base position of the button
+     * @param offsetX         the x offset of the button to the base position
+     * @param offsetY         the y offset of the button to the base position
+     * @param visibleResolver resolves if the button is visible
+     * @param textResolver    resolves the text for this button given the node object
+     * @param polygonCorners  corner count of polygon
      */
-    public NodeButton(Position base, float offsetX, float offsetY, ButtonTextResolver resolver, int polygonCorners) {
+    public NodeButton(Position base, float offsetX, float offsetY, VisibleResolver visibleResolver, ButtonTextResolver textResolver, int polygonCorners) {
         super(new Position(base.getX() + offsetX, base.getY() + offsetY));
 
+        mBase = base;
         mPolygonCorners = polygonCorners;
-        mResolver = resolver;
+        mTextResolver = textResolver;
+        mVisibleResolver = visibleResolver;
+
+        if (mVisibleResolver.isVisible()) {
+            show();
+        }
+    }
+
+    /**
+     * Shows the button.
+     */
+    private void show() {
+        if (mIsVisible) {
+            return;
+        }
+
+        mIsVisible = true;
 
         mShape = new Polygon(
                 getPosition(),
                 Colors.NODE_NEUTRAL,
                 Constants.MENU_BUTTON_LAYER,
-                polygonCorners,
+                mPolygonCorners,
                 0,
                 Constants.MENU_BUTTON_RADIUS);
 
         mText = new TextDecorator(
                 mShape,
-                resolver.getText(),
+                mTextResolver.getText(),
                 Constants.MENU_BUTTON_TEXT_LAYER);
 
-        mLine = new Line(base, getPosition(), Colors.NODE_NEUTRAL, Constants.MENU_BUTTON_LINE_WIDTH);
+        mLine = new Line(mBase, getPosition(), Colors.NODE_NEUTRAL, Constants.MENU_BUTTON_LINE_WIDTH);
 
         mShape.register();
         mText.register();
         mLine.register();
+
+        register();
     }
 
     /**
-     * Hides the button with it's components.
+     * Hides the button with its components.
      */
     public void hide() {
-        mShape.destroy();
-        mText.destroy();
-        mLine.destroy();
+        if (mShape != null) mShape.unregister();
+        if (mText != null) mText.unregister();
+        if (mLine != null) mLine.unregister();
+
+        mShape = null;
+        mText = null;
+        mLine = null;
+
+        unregister();
+
+        mIsVisible = false;
     }
 
     @Override
@@ -84,10 +115,27 @@ public class NodeButton extends Button implements Observer {
 
     @Override
     public void update(Observable observable, Object data) {
-        mText.setText(mResolver.getText());
+        if (mText != null) {
+            mText.setText(mTextResolver.getText());
+        }
+        if (mVisibleResolver.isVisible()) {
+            show();
+        } else {
+            hide();
+        }
     }
 
+    /**
+     * Resolves the text for the button.
+     */
     public interface ButtonTextResolver {
         String getText();
+    }
+
+    /**
+     * Resolves if this button should be visible or not.
+     */
+    public interface VisibleResolver {
+        boolean isVisible();
     }
 }

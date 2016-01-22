@@ -9,7 +9,6 @@ import ch.sebastianhaeni.edgewars.util.Position;
 abstract public class Shape extends Drawable {
 
     private Position mPosition;
-    private final int mLayer;
     private float mColor[];
 
     /**
@@ -23,12 +22,6 @@ abstract public class Shape extends Drawable {
         super(layer);
         mPosition = position;
         mColor = color;
-        mLayer = layer;
-    }
-
-    @Override
-    public int getLayer() {
-        return mLayer;
     }
 
     /**

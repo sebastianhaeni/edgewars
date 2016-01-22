@@ -29,11 +29,14 @@ public class RepairNodeCommand extends Command {
         }
 
         Player owner = ((OwnedState) state).getOwner();
-        if (owner.getEnergy() - mNode.getRepairCost() < 0) {
+        if (owner.getEnergy() <= 0) {
             return;
         }
 
-        owner.removeEnergy(mNode.getRepairCost());
-        mNode.repair();
+        // deduct repair cost, or if he doesn't have enough money, what he has left
+        int energyLeft = owner.getEnergy();
+        int repairCost = mNode.getRepairCost();
+        owner.removeEnergy(energyLeft > repairCost ? repairCost : energyLeft);
+        mNode.repair(energyLeft > repairCost ? 1f : (float) energyLeft / (float) repairCost);
     }
 }

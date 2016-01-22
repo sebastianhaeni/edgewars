@@ -1,105 +1,44 @@
 package ch.sebastianhaeni.edgewars.graphics.drawables;
 
-import java.util.ArrayList;
+import com.google.common.collect.Ordering;
+
 import java.util.Iterator;
-import java.util.NavigableSet;
-import java.util.TreeMap;
+import java.util.concurrent.ConcurrentSkipListSet;
 
+/**
+ * Provides an interface to order the drawables to their drawing layer.
+ */
 public class RenderQueue implements Iterable<Drawable> {
-    private final TreeMap<Integer, ArrayList<Drawable>> mBuckets = new TreeMap<>();
-
-    public void add(Drawable drawable, int layer) {
-        synchronized (mBuckets) {
-            if (!mBuckets.containsKey(layer)) {
-                mBuckets.put(layer, new ArrayList<Drawable>());
+    int counter = 0;
+    private final ConcurrentSkipListSet<Drawable> mDrawables = new ConcurrentSkipListSet<>(new Ordering<Drawable>() {
+        @Override
+        public int compare(Drawable left, Drawable right) {
+            int diff = left.getLayer() - right.getLayer();
+            if (diff != 0) {
+                return diff;
             }
-            mBuckets.get(layer).add(drawable);
+            return left.equals(right) ? 0 : left.hashCode() - right.hashCode();
         }
+    });
+
+    /**
+     * @param drawable drawable to add
+     */
+    public void add(Drawable drawable) {
+        counter++;
+        mDrawables.add(drawable);
     }
 
-    public synchronized void remove(Drawable drawable) {
-        synchronized (mBuckets) {
-            mBuckets.get(drawable.getLayer()).remove(drawable);
-        }
+    /**
+     * @param drawable drawable to remove
+     */
+    public void remove(Drawable drawable) {
+        counter--;
+        mDrawables.remove(drawable);
     }
 
     @Override
-    public synchronized DrawableIterator iterator() {
-        return new DrawableIterator();
-    }
-
-    class DrawableIterator implements Iterator<Drawable> {
-
-        private final NavigableSet<Integer> mLayers;
-        private int mCurrentLayer;
-        private int mCurrentElement = 0;
-
-        public DrawableIterator() {
-            mLayers = mBuckets.navigableKeySet();
-            if (mLayers.size() <= 0) {
-                return;
-            }
-            mCurrentLayer = mLayers.first();
-
-        }
-
-        @Override
-        public boolean hasNext() {
-            synchronized (mBuckets) {
-                if (mBuckets.size() <= 0) {
-                    return false;
-                }
-
-                if (mCurrentElement < mBuckets.get(mCurrentLayer).size()) {
-                    return true;
-                }
-
-                if (mCurrentLayer == mLayers.last()) {
-                    return false;
-                }
-
-                int layer = mCurrentLayer;
-                while (mLayers.higher(layer) != null) {
-                    layer = mLayers.higher(layer);
-                    if (mBuckets.get(layer).size() > 0) {
-                        return true;
-                    }
-                }
-
-                return mCurrentLayer != layer && mBuckets.get(layer).size() > 0;
-            }
-        }
-
-        @Override
-        public Drawable next() {
-            synchronized (mBuckets) {
-                int lastLayer = mCurrentLayer;
-                int lastElement = mCurrentElement - 1;
-                if (mCurrentElement >= mBuckets.get(mCurrentLayer).size()) {
-                    mCurrentElement = 0;
-                    mCurrentLayer = mLayers.higher(mCurrentLayer);
-
-                    while (mBuckets.get(mCurrentLayer).size() <= 0) {
-                        mCurrentLayer = mLayers.higher(mCurrentLayer);
-                    }
-
-                }
-
-                // preventing exception when the queue has changed in the meantime (yes, dirty hack)
-                if (mBuckets.get(mCurrentLayer).size() <= 0) {
-                    return mBuckets.get(lastLayer).get(lastElement);
-                }
-
-                Drawable next = mBuckets.get(mCurrentLayer).get(mCurrentElement);
-                mCurrentElement++;
-
-                return next;
-            }
-        }
-
-        @Override
-        public void remove() {
-            throw new UnsupportedOperationException("remove is not supported");
-        }
+    public Iterator<Drawable> iterator() {
+        return mDrawables.iterator();
     }
 }
