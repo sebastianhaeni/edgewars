@@ -32,6 +32,7 @@ public class Game {
     private final Stack<Command> mCommandStack = new Stack<>();
     private final ConcurrentHashMap<Entity, Long> mEntities = new ConcurrentHashMap<>();
     private final RenderQueue mDrawables = new RenderQueue();
+    private final int commandsPerCycle = 5;
 
     private GameState mGameState;
     private GameController mGameController;
@@ -168,12 +169,12 @@ public class Game {
         // Stores the Nodes that have sent units already during this cycle
         ArrayList<Node> moveUnitNodes = new ArrayList<>();
 
-        while (mCommandStack.size() > 0 && commandCount < 5) {
+        while (mCommandStack.size() > 0 && commandCount < commandsPerCycle) {
 
             // do not continue execution of commands if game has stopped meanwhile
             if (mGameOver) return;
 
-            // test if it is a MoveUnitCommand and if the node has already sent units in this cycle
+            // test if it is a MoveUnitCommand and ignore if the node has already sent units in this cycle
             Command command = mCommandStack.peek();
             if (command instanceof MoveUnitCommand) {
                 MoveUnitCommand moveCommand = (MoveUnitCommand) command;
