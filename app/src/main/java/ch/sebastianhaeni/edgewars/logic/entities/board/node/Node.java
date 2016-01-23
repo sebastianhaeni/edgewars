@@ -43,7 +43,7 @@ import ch.sebastianhaeni.edgewars.util.Position;
 public class Node extends BoardEntity implements IClickable {
 
     //region members
-    private static NodeMenu mNodeMenu;
+    private NodeMenu mNodeMenu;
 
     private final Polygon mCircle;
     private final TextDecorator mHealthLabel;
