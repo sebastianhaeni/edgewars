@@ -23,6 +23,10 @@ public class OwnedState extends NodeState {
         mOwner = owner;
         node.clearUnitsAndLevels();
         node.setColor(owner.getColor());
+
+        node.getTankFactory().deactivate();
+        node.getMeleeFactory().deactivate();
+        node.getSprinterFactory().deactivate();
     }
 
     @Override
