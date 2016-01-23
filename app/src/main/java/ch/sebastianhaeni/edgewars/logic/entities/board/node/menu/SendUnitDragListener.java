@@ -65,13 +65,19 @@ class SendUnitDragListener implements DraggableButton.IDragListener {
 
         switch (mUnitType) {
             case TANK:
-                Game.getInstance().register(new MoveUnitCommand(mNode.getTankCount(), mUnitType, target, Game.getInstance().getEdgeBetween(mNode, target), player));
+                if (mNode.getTankCount() > 0) {
+                    Game.getInstance().register(new MoveUnitCommand(mNode.getTankCount(), mUnitType, target, Game.getInstance().getEdgeBetween(mNode, target), player));
+                }
                 break;
             case SPRINTER:
-                Game.getInstance().register(new MoveUnitCommand(mNode.getSprinterCount(), mUnitType, target, Game.getInstance().getEdgeBetween(mNode, target), player));
+                if (mNode.getSprinterCount() > 0) {
+                    Game.getInstance().register(new MoveUnitCommand(mNode.getSprinterCount(), mUnitType, target, Game.getInstance().getEdgeBetween(mNode, target), player));
+                }
                 break;
             case MELEE:
-                Game.getInstance().register(new MoveUnitCommand(mNode.getMeleeCount(), mUnitType, target, Game.getInstance().getEdgeBetween(mNode, target), player));
+                if (mNode.getMeleeCount() > 0) {
+                    Game.getInstance().register(new MoveUnitCommand(mNode.getMeleeCount(), mUnitType, target, Game.getInstance().getEdgeBetween(mNode, target), player));
+                }
                 break;
         }
 
