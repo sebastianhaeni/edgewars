@@ -13,12 +13,15 @@ import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
  */
 public class Board extends Entity implements Serializable {
 
-    // position constants to define outer node positions for getOuterNode() method
-    public final static int TOP = 0;
-    public final static int RIGHT = 1;
-    public final static int BOTTOM = 2;
-    public final static int LEFT = 3;
-    private final static transient HashMap<Integer, Node> outerNodes = new HashMap<>();
+    // enum to define outer node positions for getOuterNode() method
+    public enum NodePosition {
+        TOP,
+        RIGHT,
+        BOTTOM,
+        LEFT
+    }
+
+    private final static transient HashMap<NodePosition, Node> outerNodes = new HashMap<>();
 
     private final transient ArrayList<BoardEntity> mEntities = new ArrayList<>();
 
@@ -57,7 +60,7 @@ public class Board extends Entity implements Serializable {
      * @param position specifies which node to return
      * @return gets one of the four outermost nodes on the board
      */
-    public Node getOuterNode(int position) {
+    public Node getOuterNode(NodePosition position) {
         switch (position) {
             case TOP:
                 return getTopMostNode();
@@ -97,9 +100,12 @@ public class Board extends Entity implements Serializable {
         return mEntities;
     }
 
+    /**
+     * @return the Node that is positioned the most at the top (Y axis) among all Nodes of the current game board
+     */
     private Node getTopMostNode() {
-        if (outerNodes.containsKey(TOP))
-            return outerNodes.get(TOP);
+        if (outerNodes.containsKey(NodePosition.TOP))
+            return outerNodes.get(NodePosition.TOP);
 
         Node theNode = getNodes().get(0);
         for (Node node : getNodes()) {
@@ -107,13 +113,16 @@ public class Board extends Entity implements Serializable {
                 theNode = node;
         }
 
-        outerNodes.put(TOP, theNode);
+        outerNodes.put(NodePosition.TOP, theNode);
         return theNode;
     }
 
+    /**
+     * @return the Node that is positioned the most at the bottom (Y axis) among all Nodes of the current game board
+     */
     private Node getBottomMostNode() {
-        if (outerNodes.containsKey(BOTTOM))
-            return outerNodes.get(BOTTOM);
+        if (outerNodes.containsKey(NodePosition.BOTTOM))
+            return outerNodes.get(NodePosition.BOTTOM);
 
         Node theNode = getNodes().get(0);
         for (Node node : getNodes()) {
@@ -121,13 +130,16 @@ public class Board extends Entity implements Serializable {
                 theNode = node;
         }
 
-        outerNodes.put(BOTTOM, theNode);
+        outerNodes.put(NodePosition.BOTTOM, theNode);
         return theNode;
     }
 
+    /**
+     * @return the Node that is positioned the most at right (X axis) among all Nodes of the current game board
+     */
     private Node getRightMostNode() {
-        if (outerNodes.containsKey(RIGHT))
-            return outerNodes.get(RIGHT);
+        if (outerNodes.containsKey(NodePosition.RIGHT))
+            return outerNodes.get(NodePosition.RIGHT);
 
         Node theNode = getNodes().get(0);
         for (Node node : getNodes()) {
@@ -135,13 +147,16 @@ public class Board extends Entity implements Serializable {
                 theNode = node;
         }
 
-        outerNodes.put(RIGHT, theNode);
+        outerNodes.put(NodePosition.RIGHT, theNode);
         return theNode;
     }
 
+    /**
+     * @return the Node that is positioned the most at left (X axis) among all Nodes of the current game board
+     */
     private Node getLeftMostNode() {
-        if (outerNodes.containsKey(LEFT))
-            return outerNodes.get(LEFT);
+        if (outerNodes.containsKey(NodePosition.LEFT))
+            return outerNodes.get(NodePosition.LEFT);
 
         Node theNode = getNodes().get(0);
         for (Node node : getNodes()) {
@@ -149,7 +164,7 @@ public class Board extends Entity implements Serializable {
                 theNode = node;
         }
 
-        outerNodes.put(LEFT, theNode);
+        outerNodes.put(NodePosition.LEFT, theNode);
         return theNode;
     }
 }
