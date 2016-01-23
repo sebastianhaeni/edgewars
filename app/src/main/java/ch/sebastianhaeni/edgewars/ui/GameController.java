@@ -4,10 +4,13 @@ import android.util.Log;
 import android.view.MotionEvent;
 
 import ch.sebastianhaeni.edgewars.graphics.GameRenderer;
+import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.DebugShape;
 import ch.sebastianhaeni.edgewars.logic.Constants;
 import ch.sebastianhaeni.edgewars.logic.Game;
 import ch.sebastianhaeni.edgewars.logic.GameState;
 import ch.sebastianhaeni.edgewars.logic.SoundEngine;
+import ch.sebastianhaeni.edgewars.util.Colors;
+import ch.sebastianhaeni.edgewars.util.Position;
 
 /**
  * The game controller handles inputs from the user and delegates them to the according action.
@@ -73,6 +76,9 @@ public class GameController {
             case MotionEvent.ACTION_MOVE:
                 float dx = x - mPreviousX;
                 float dy = y - mPreviousY;
+
+                DebugShape d = new DebugShape(new Position(mRenderer.getGameCoordinateX(x), mRenderer.getGameCoordinateY(y)), Colors.CORONA, 0);
+                d.register();
 
                 if (_dragging != null) {
                     _dragging.moveDrag(x, y);
@@ -146,15 +152,11 @@ public class GameController {
             float x = mRenderer.getAndroidCoordinateX(clickable.getPosition().getX());
             float y = mRenderer.getAndroidCoordinateY(clickable.getPosition().getY());
 
-            Log.d("GameController", "Clickable " + clickable.getClass() + ": " + x + ", " + y);
-
-            // TODO remove this dirty hack that was made for the demo
-            if (clickable.isStatic() && touchX > 2300 && touchY < 100) {
-                return clickable;
-            } else if (!(Math.abs(x + cameraX - touchX) < width &&
+            if (!(Math.abs(x + cameraX - touchX) < width &&
                     Math.abs(y + cameraY - touchY) < height)) {
                 continue;
             }
+
             return clickable;
         }
 
