@@ -1,16 +1,12 @@
 package ch.sebastianhaeni.edgewars.ui;
 
-import android.util.Log;
 import android.view.MotionEvent;
 
 import ch.sebastianhaeni.edgewars.graphics.GameRenderer;
-import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.DebugShape;
 import ch.sebastianhaeni.edgewars.logic.Constants;
 import ch.sebastianhaeni.edgewars.logic.Game;
 import ch.sebastianhaeni.edgewars.logic.GameState;
 import ch.sebastianhaeni.edgewars.logic.SoundEngine;
-import ch.sebastianhaeni.edgewars.util.Colors;
-import ch.sebastianhaeni.edgewars.util.Position;
 
 /**
  * The game controller handles inputs from the user and delegates them to the according action.
@@ -77,9 +73,6 @@ public class GameController {
                 float dx = x - mPreviousX;
                 float dy = y - mPreviousY;
 
-                DebugShape d = new DebugShape(new Position(mRenderer.getGameCoordinateX(x), mRenderer.getGameCoordinateY(y)), Colors.CORONA, 0);
-                d.register();
-
                 if (_dragging != null) {
                     _dragging.moveDrag(x, y);
                     return;
@@ -136,24 +129,25 @@ public class GameController {
      * @return the clicked clickable, or <code>null</code> if nothing hit
      */
     public IClickable isHit(float touchX, float touchY) {
-        // get camera position and multiply it by factor 2/3 (why? I dunno..)
-        float cameraX = mGameState.getCamera().getScreenX() * (2f / 3f);
-        float cameraY = mGameState.getCamera().getScreenY() * (2f / 3f);
+        // get camera position
+        float cameraX = mGameState.getCamera().getScreenX() * .87f;
+        float cameraY = mGameState.getCamera().getScreenY() * .87f;
 
-        Log.d("GameController", "Clicking at: " + touchX + ", " + touchY);
-        Log.d("GameController", "Camera: " + cameraX + ", " + cameraY);
+        float x = mRenderer.getGameCoordinateX(touchX - cameraX);
+        float y = mRenderer.getGameCoordinateY(touchY - cameraY);
+
+        float staticX = mRenderer.getGameCoordinateX(touchX);
+        float staticY = mRenderer.getGameCoordinateY(touchY);
 
         // loop through all nodes and test if one is positioned at the coordinates of the user touch
         for (IClickable clickable : Game.getInstance().getClickables()) {
-            float width = mRenderer.getAndroidLengthX(clickable.getWidth() * .5f);
-            float height = mRenderer.getAndroidLengthY(clickable.getHeight() * .5f);
+            float glX = clickable.isStatic() ? staticX : x;
+            float glY = clickable.isStatic() ? staticY : y;
+            float width = clickable.getWidth() * .5f;
+            float height = clickable.getHeight() * .5f;
 
-            // convert node coordinates to Android coordinates
-            float x = mRenderer.getAndroidCoordinateX(clickable.getPosition().getX());
-            float y = mRenderer.getAndroidCoordinateY(clickable.getPosition().getY());
-
-            if (!(Math.abs(x + cameraX - touchX) < width &&
-                    Math.abs(y + cameraY - touchY) < height)) {
+            if (!(Math.abs(clickable.getPosition().getX() - glX) < width &&
+                    Math.abs(clickable.getPosition().getY() - glY) < height)) {
                 continue;
             }
 

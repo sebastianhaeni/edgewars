@@ -46,8 +46,8 @@ public class DraggableButton extends NodeButton implements IDraggable {
      * @param y y coordinate
      */
     private void createLine(float x, float y) {
-        x = Game.getInstance().getGameRenderer().getGameCoordinateX(x);
-        y = Game.getInstance().getGameRenderer().getGameCoordinateY(y);
+        x = Game.getInstance().getGameRenderer().getGameCoordinateX(x) + Game.getInstance().getGameState().getCamera().getX();
+        y = Game.getInstance().getGameRenderer().getGameCoordinateY(y) + Game.getInstance().getGameState().getCamera().getY();
         mLine = new Line(getPosition(), new Position(x, y), mColor, .1f);
         mLine.register();
     }

@@ -13,7 +13,6 @@ public class RuleBasedAI extends AI {
 
     private final ConcurrentHashMap<Node, NodeRules> mNodeRules = new ConcurrentHashMap<>();
 
-
     public RuleBasedAI(Player player) {
         super(player);
     }
@@ -53,6 +52,5 @@ public class RuleBasedAI extends AI {
                 mNodeRules.remove(node);
         }
     }
-
 
 }

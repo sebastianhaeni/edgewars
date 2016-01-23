@@ -1,6 +1,7 @@
 package ch.sebastianhaeni.edgewars.logic.entities.board.factories;
 
 import ch.sebastianhaeni.edgewars.logic.Constants;
+import ch.sebastianhaeni.edgewars.logic.Game;
 import ch.sebastianhaeni.edgewars.logic.entities.Entity;
 import ch.sebastianhaeni.edgewars.logic.entities.Player;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
@@ -63,11 +64,11 @@ public abstract class Factory extends Entity {
     @Override
     public void update(long millis) {
         if (!mActive
-                || mBuildStartTime + getProducingDuration() > System.currentTimeMillis()
+                || mBuildStartTime + getProducingDuration() > Game.getInstance().getGameThread().getGameTime()
                 || !(getNode().getState() instanceof OwnedState)) {
             return;
         }
-        mBuildStartTime = System.currentTimeMillis();
+        mBuildStartTime = Game.getInstance().getGameThread().getGameTime();
         Player owner = ((OwnedState) getNode().getState()).getOwner();
         if (owner.getEnergy() < getUnitCost()) {
             return;

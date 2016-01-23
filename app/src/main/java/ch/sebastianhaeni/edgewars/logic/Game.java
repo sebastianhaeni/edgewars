@@ -29,16 +29,17 @@ public class Game {
 
     private static Game mGame;
 
+    private static final int COMMANDS_PER_CYCLE = 5;
     private final Stack<Command> mCommandStack = new Stack<>();
     private final ConcurrentHashMap<Entity, Long> mEntities = new ConcurrentHashMap<>();
     private final RenderQueue mDrawables = new RenderQueue();
-    private final int commandsPerCycle = 5;
 
     private GameState mGameState;
     private GameController mGameController;
     private GameSurfaceView mGLView;
-    private boolean mGameOver = false;
     private GameRenderer mGameRenderer;
+    private boolean mGameOver = false;
+    private GameThread mGameThread;
 
     /**
      * Privatised constructor. Because singleton.
@@ -169,7 +170,7 @@ public class Game {
         // Stores the Nodes that have sent units already during this cycle
         ArrayList<Node> moveUnitNodes = new ArrayList<>();
 
-        while (mCommandStack.size() > 0 && commandCount < commandsPerCycle) {
+        while (mCommandStack.size() > 0 && commandCount < COMMANDS_PER_CYCLE) {
 
             // do not continue execution of commands if game has stopped meanwhile
             if (mGameOver) return;
@@ -233,7 +234,7 @@ public class Game {
                 break;
             }
         }
-        if (gameOver) {
+        if (gameOver && owner != null) {
             won = owner.isHuman();
         }
         result[0] = gameOver;
@@ -369,5 +370,21 @@ public class Game {
      */
     public GameRenderer getGameRenderer() {
         return mGameRenderer;
+    }
+
+    /**
+     * Sets game thread.
+     *
+     * @param thread game thread
+     */
+    public void setGameThread(GameThread thread) {
+        mGameThread = thread;
+    }
+
+    /**
+     * @return gets game thread
+     */
+    public GameThread getGameThread() {
+        return mGameThread;
     }
 }

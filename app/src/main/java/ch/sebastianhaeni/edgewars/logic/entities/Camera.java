@@ -155,4 +155,5 @@ public class Camera extends Entity {
 
         return bottomMostNodeY + delta < (renderer.getMaxScreenY() * minOffset) || topMostNodeY + delta > (renderer.getMaxScreenY() * maxOffset);
     }
+
 }

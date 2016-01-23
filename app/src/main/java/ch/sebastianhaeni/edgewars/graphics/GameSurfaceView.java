@@ -12,13 +12,9 @@ import ch.sebastianhaeni.edgewars.logic.Game;
 import ch.sebastianhaeni.edgewars.logic.GameState;
 import ch.sebastianhaeni.edgewars.logic.GameThread;
 import ch.sebastianhaeni.edgewars.logic.LevelLoader;
-import ch.sebastianhaeni.edgewars.logic.entities.Button;
-import ch.sebastianhaeni.edgewars.logic.entities.PauseButton;
 import ch.sebastianhaeni.edgewars.model.LevelRecord;
 import ch.sebastianhaeni.edgewars.ui.GameController;
 import ch.sebastianhaeni.edgewars.ui.activities.GameActivity;
-import ch.sebastianhaeni.edgewars.ui.dialogs.PauseDialog;
-import ch.sebastianhaeni.edgewars.util.Position;
 
 /**
  * A view container where OpenGL ES graphics can be drawn on screen.
@@ -29,7 +25,7 @@ public class GameSurfaceView extends GLSurfaceView implements Serializable {
 
     private GameThread mThread;
     private GameController mController;
-    private final GameActivity mContext;
+    private final Context mContext;
     private GameState mGameState;
     private LevelRecord mLevelRecord;
 
@@ -38,7 +34,7 @@ public class GameSurfaceView extends GLSurfaceView implements Serializable {
      *
      * @param context app context
      */
-    public GameSurfaceView(GameActivity context) {
+    public GameSurfaceView(Context context) {
         super(context);
         mContext = context;
         // Create an OpenGL ES 2.0 context.
@@ -62,21 +58,20 @@ public class GameSurfaceView extends GLSurfaceView implements Serializable {
         mGameState.init();
 
         mThread = new GameThread();
-        GameRenderer renderer = new GameRenderer(mContext, mGameState);
-        mController = new GameController(renderer, mGameState);
-        Game.getInstance().setGameRenderer(renderer);
+        GameRenderer mRenderer = new GameRenderer(mContext, mGameState, mThread);
+        mController = new GameController(mRenderer, mGameState);
+        Game.getInstance().setGameRenderer(mRenderer);
+        Game.getInstance().setGameThread(mThread);
         Game.getInstance().setGameController(mController);
 
         // set view, to be able to stop Game
         Game.getInstance().setGLView(this);
 
         // Set the Renderer for drawing on the GLSurfaceView
-        setRenderer(renderer);
+        setRenderer(mRenderer);
 
         // Render the view continuously
         setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
-
-        createPauseButton();
 
         List<LevelRecord> records = LevelRecord.find(LevelRecord.class, "level_nr = ?", Integer.toString(levelNr));
         if (records.size() > 0) {
@@ -92,25 +87,8 @@ public class GameSurfaceView extends GLSurfaceView implements Serializable {
         mGameState.setGameIsRunning(true);
     }
 
-    /**
-     * Creates the button to pause the game.
-     */
-    private void createPauseButton() {
-        PauseButton pauseButton = new PauseButton(new Position(16, .5f));
-        pauseButton.register();
-        pauseButton.addClickListener(new Button.OnGameClickListener() {
-            @Override
-            public void onClick() {
-                mThread.onPause();
-                PauseDialog dialog = new PauseDialog(mContext, mThread);
-                dialog.show();
-            }
-        });
-        pauseButton.register();
-    }
-
     public void stopLevel(boolean won) {
-        mLevelRecord.setEndTime(System.currentTimeMillis());
+        mLevelRecord.setEndTime(mThread.getGameTime());
         mLevelRecord.setWon(won);
         mLevelRecord.save();
 
@@ -119,8 +97,7 @@ public class GameSurfaceView extends GLSurfaceView implements Serializable {
 
         mThread.setRunning(false);
         Game.getInstance().reset();
-        GameActivity gameActivity = (GameActivity) mContext;
-        gameActivity.back(this);
+        ((GameActivity) mContext).back(this);
     }
 
     @Override

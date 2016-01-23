@@ -11,10 +11,6 @@ import android.util.TypedValue;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.List;
@@ -66,8 +62,7 @@ public class LevelSelectionActivity extends Activity {
 
             if (mLevelRecord.hasWon()) {
                 lvlText.setTextColor(Color.GREEN);
-            }
-            else if (mLevelRecord.hasPlayed() && !mLevelRecord.hasWon()) {
+            } else if (mLevelRecord.hasPlayed() && !mLevelRecord.hasWon()) {
                 lvlText.setTextColor(Color.RED);
             }
 

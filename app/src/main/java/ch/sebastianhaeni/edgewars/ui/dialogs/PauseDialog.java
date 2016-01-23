@@ -1,6 +1,7 @@
 package ch.sebastianhaeni.edgewars.ui.dialogs;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.databinding.DataBindingUtil;
 import android.view.View;
@@ -12,9 +13,9 @@ import ch.sebastianhaeni.edgewars.ui.activities.GameActivity;
 
 public class PauseDialog extends Dialog {
 
-    private final GameActivity mContext;
+    private final Context mContext;
 
-    public PauseDialog(GameActivity context, final GameThread thread) {
+    public PauseDialog(Context context, final GameThread thread) {
         super(context);
         mContext = context;
         DialogPauseBinding binding = DataBindingUtil.inflate(
@@ -40,7 +41,7 @@ public class PauseDialog extends Dialog {
 
     public void exitGame(View view) {
         hide();
-        mContext.finish();
+        ((GameActivity) mContext).finish();
     }
 
 }

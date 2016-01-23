@@ -24,6 +24,11 @@ public class PauseButton extends Button {
     }
 
     @Override
+    public Position getPosition() {
+        return mText.getPosition();
+    }
+
+    @Override
     public void unregister() {
         mText.unregister();
         super.unregister();

@@ -18,6 +18,11 @@ import ch.sebastianhaeni.edgewars.graphics.programs.ShapeProgram;
 import ch.sebastianhaeni.edgewars.graphics.programs.TextProgram;
 import ch.sebastianhaeni.edgewars.logic.Game;
 import ch.sebastianhaeni.edgewars.logic.GameState;
+import ch.sebastianhaeni.edgewars.logic.GameThread;
+import ch.sebastianhaeni.edgewars.logic.entities.Button;
+import ch.sebastianhaeni.edgewars.logic.entities.PauseButton;
+import ch.sebastianhaeni.edgewars.ui.dialogs.PauseDialog;
+import ch.sebastianhaeni.edgewars.util.Position;
 
 /**
  * Provides drawing instructions for a GLSurfaceView object. This class
@@ -45,6 +50,7 @@ public class GameRenderer implements GLSurfaceView.Renderer {
     private final float[] mStaticMVPMatrix = new float[16];
 
     private final Context mContext;
+    private final GameThread mThread;
 
     private int mScreenWidth;
     private int mScreenHeight;
@@ -58,16 +64,19 @@ public class GameRenderer implements GLSurfaceView.Renderer {
     private ShapeProgram mShapeProgram;
     private ParticleProgram mParticleProgram;
     private TextProgram mTextProgram;
+    private PauseButton mPauseButton;
 
     /**
      * Constructor
      *
      * @param context   app context
      * @param gameState game state containing all information about the game
+     * @param thread    game thread
      */
-    public GameRenderer(Context context, GameState gameState) {
+    public GameRenderer(Context context, GameState gameState, GameThread thread) {
         mContext = context;
         mGameState = gameState;
+        mThread = thread;
     }
 
     @Override
@@ -122,6 +131,27 @@ public class GameRenderer implements GLSurfaceView.Renderer {
         // Calculate the projection and view transformation
         Matrix.multiplyMM(mStaticMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
 
+        createPauseButton();
+    }
+
+    /**
+     * Creates the button to pause the game.
+     */
+    private void createPauseButton() {
+        if (mPauseButton != null) {
+            mPauseButton.unregister();
+        }
+        mPauseButton = new PauseButton(new Position((getGameCoordinateX(getMaxScreenX()) * 2) - 1, .5f));
+        mPauseButton.register();
+        mPauseButton.addClickListener(new Button.OnGameClickListener() {
+            @Override
+            public void onClick() {
+                mThread.onPause();
+                PauseDialog dialog = new PauseDialog(mContext, mThread);
+                dialog.show();
+            }
+        });
+        mPauseButton.register();
     }
 
     @Override
@@ -188,22 +218,6 @@ public class GameRenderer implements GLSurfaceView.Renderer {
 
     public float getGameCoordinateY(float y) {
         return (y / (mScreenHeight / (2 * mMaxY))) - mMaxY;
-    }
-
-    /**
-     * @param objectLengthX length of object in X direction based on OpenGL coordinates
-     * @return the length of object in X direction in screen pixels
-     */
-    public float getAndroidLengthX(float objectLengthX) {
-        return (objectLengthX * (mScreenWidth) / (2 * mMaxX));
-    }
-
-    /**
-     * @param objectLengthY length of object in Y direction based on OpenGL coordinates
-     * @return the length of object in Y direction in screen pixels
-     */
-    public float getAndroidLengthY(float objectLengthY) {
-        return (objectLengthY * (mScreenHeight) / (2 * mMaxY));
     }
 
     /**

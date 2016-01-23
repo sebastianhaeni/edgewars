@@ -48,8 +48,8 @@ public class MovingState extends OnEdgeState {
         OnEdgeState state = (OnEdgeState) ((Unit) entity).getState();
 
         if (state.getPlayer().equals(getPlayer())) {
-            if(!state.getNode().equals(getNode())){
-                // travelling in opposite directions
+            if (!state.getNode().equals(getNode()) || !state.getEdge().equals(getEdge())) {
+                // travelling in opposite directions or not on same edge
                 return;
             }
             getUnit().setState(new WaitState(getUnit(), getNode(), getPlayer(), getEdge(), getTravelledDistance()));

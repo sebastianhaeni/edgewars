@@ -1,6 +1,5 @@
 package ch.sebastianhaeni.edgewars.logic.ai.rules;
 
-
 import java.util.ArrayList;
 
 import ch.sebastianhaeni.edgewars.logic.Constants;
@@ -11,10 +10,10 @@ import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
 
 class RepairRule extends Rule {
 
+    private static final float LOW_HEALTH_LIMIT = 0.25f;
+
     private long mTimePassed;
     private Node mNode;
-
-    private final float lowHealthLimit = 0.25f;
 
     public RepairRule(Player player) {
         super(player);
@@ -29,7 +28,7 @@ class RepairRule extends Rule {
         mTimePassed = 0;
         mNode = node;
 
-        return node.getHealth() < lowHealthLimit * node.getMaxHealth() && node.getRepairCost() <= getPlayer().getEnergy();
+        return node.getHealth() < LOW_HEALTH_LIMIT * node.getMaxHealth() && node.getRepairCost() <= getPlayer().getEnergy();
     }
 
     @Override

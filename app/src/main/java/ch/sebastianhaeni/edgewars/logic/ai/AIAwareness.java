@@ -125,7 +125,6 @@ public class AIAwareness {
         return backupTarget;
     }
 
-
     /**
      * Returns a node's distance to the closest enemy node
      *
@@ -272,7 +271,6 @@ public class AIAwareness {
         mPlayerDistancesToEnemy.put(player, distancesToEnemy);
         mPlayerGatewaysToEnemy.put(player, gatewaysToEnemy);
     }
-
 
     // BFS
     private static Pair<Integer, Node> bfs(Player player, Node node) {

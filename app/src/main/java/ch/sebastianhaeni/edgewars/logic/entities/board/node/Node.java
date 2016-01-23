@@ -180,7 +180,7 @@ public class Node extends BoardEntity implements IClickable {
      * @param percentage the amount of repairing
      */
     public void repair(float percentage) {
-        Log.d("Node", percentage+"");
+        Log.d("Node", percentage + "");
         mHealth += (int) ((getMaxHealth() - mHealth) * percentage);
         updateLabel();
 

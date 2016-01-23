@@ -14,6 +14,7 @@ public class GameThread extends Thread {
 
     private boolean mRunning;
     private boolean mPaused;
+    private long mPausedTime;
 
     /**
      * Constructor
@@ -33,12 +34,12 @@ public class GameThread extends Thread {
 
     @Override
     public void run() {
-        long delta = System.currentTimeMillis();
+        long delta = getGameTime();
         while (mRunning) {
             // update game state
-            Game.getInstance().update(System.currentTimeMillis() - delta);
+            Game.getInstance().update(getGameTime() - delta);
 
-            delta = System.currentTimeMillis();
+            delta = getGameTime();
 
             try {
                 Thread.sleep(12);
@@ -47,14 +48,29 @@ public class GameThread extends Thread {
             }
 
             synchronized (mPauseLock) {
+                long pauseTimeStarted = System.currentTimeMillis();
+                boolean paused = false;
                 while (mPaused) {
+                    paused = true;
                     try {
                         mPauseLock.wait();
                     } catch (InterruptedException ignored) {
                     }
                 }
+                if (paused) {
+                    mPausedTime += System.currentTimeMillis() - pauseTimeStarted;
+                }
             }
         }
+    }
+
+    /**
+     * Returns System.currentTimeMillis() - <time spent in pause>
+     *
+     * @return game time
+     */
+    public long getGameTime() {
+        return System.currentTimeMillis() - mPausedTime;
     }
 
     /**
