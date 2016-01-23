@@ -24,6 +24,8 @@ public class OwnedState extends NodeState {
         node.clearUnitsAndLevels();
         node.setColor(owner.getColor());
 
+        node.hideNodeMenu();
+
         node.getTankFactory().deactivate();
         node.getMeleeFactory().deactivate();
         node.getSprinterFactory().deactivate();

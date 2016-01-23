@@ -17,6 +17,8 @@ public class NeutralState extends NodeState {
         super(node);
         node.setColor(Colors.NODE_NEUTRAL);
 
+        node.hideNodeMenu();
+
         node.getTankFactory().deactivate();
         node.getMeleeFactory().deactivate();
         node.getSprinterFactory().deactivate();

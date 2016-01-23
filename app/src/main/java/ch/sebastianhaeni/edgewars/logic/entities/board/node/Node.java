@@ -333,6 +333,13 @@ public class Node extends BoardEntity implements IClickable {
 
     @Override
     public void onUnhandledClick() {
+        hideNodeMenu();
+    }
+
+    /**
+     * Hides the nodes menu.
+     */
+    public void hideNodeMenu() {
         if (mNodeMenu != null && mNodeMenu.isVisible()) {
             mNodeMenu.hide();
         }
@@ -354,7 +361,7 @@ public class Node extends BoardEntity implements IClickable {
     }
 
     /**
-     *
+     * Shows the menu of this node.
      */
     private void showNodeMenu() {
         if (mNodeMenu != null && mNodeMenu.isVisible()) {
