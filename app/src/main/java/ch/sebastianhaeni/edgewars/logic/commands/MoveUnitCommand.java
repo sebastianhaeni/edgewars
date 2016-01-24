@@ -1,6 +1,7 @@
 package ch.sebastianhaeni.edgewars.logic.commands;
 
 import ch.sebastianhaeni.edgewars.EUnitType;
+import ch.sebastianhaeni.edgewars.logic.Game;
 import ch.sebastianhaeni.edgewars.logic.entities.Player;
 import ch.sebastianhaeni.edgewars.logic.entities.board.Edge;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
@@ -43,6 +44,10 @@ public class MoveUnitCommand extends Command {
 
         mNode = node;
         mEdge = edge;
+    }
+
+    public Node getSourceNode() {
+        return Game.getInstance().getOppositeNode(mNode, mEdge);
     }
 
     @Override

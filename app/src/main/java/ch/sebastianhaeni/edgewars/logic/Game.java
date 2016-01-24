@@ -11,6 +11,7 @@ import ch.sebastianhaeni.edgewars.graphics.GameSurfaceView;
 import ch.sebastianhaeni.edgewars.graphics.drawables.Drawable;
 import ch.sebastianhaeni.edgewars.graphics.drawables.RenderQueue;
 import ch.sebastianhaeni.edgewars.logic.commands.Command;
+import ch.sebastianhaeni.edgewars.logic.commands.MoveUnitCommand;
 import ch.sebastianhaeni.edgewars.logic.entities.Entity;
 import ch.sebastianhaeni.edgewars.logic.entities.Player;
 import ch.sebastianhaeni.edgewars.logic.entities.board.Edge;
@@ -31,6 +32,7 @@ public class Game {
     private final Stack<Command> mCommandStack = new Stack<>();
     private final ConcurrentHashMap<Entity, Long> mEntities = new ConcurrentHashMap<>();
     private final RenderQueue mDrawables = new RenderQueue();
+    private final int commandsPerCycle = 5;
 
     private GameState mGameState;
     private GameController mGameController;
@@ -162,12 +164,32 @@ public class Game {
     public void update(long millis) {
 
         // Executing commands, but not more than 5 per cycle
-        int commandCount = mCommandStack.size();
-        while (mCommandStack.size() > 0 && mCommandStack.size() - commandCount < 5) {
+        int commandCount = 0;
+
+        // Stores the Nodes that have sent units already during this cycle
+        ArrayList<Node> moveUnitNodes = new ArrayList<>();
+
+        while (mCommandStack.size() > 0 && commandCount < commandsPerCycle) {
+
             // do not continue execution of commands if game has stopped meanwhile
             if (mGameOver) return;
 
+            // test if it is a MoveUnitCommand and ignore if the node has already sent units in this cycle
+            Command command = mCommandStack.peek();
+            if (command instanceof MoveUnitCommand) {
+                MoveUnitCommand moveCommand = (MoveUnitCommand) command;
+                Node sourceNode = moveCommand.getSourceNode();
+                if (moveUnitNodes.contains(sourceNode)) {
+                    // skip this command, since the node has sent units already
+                    mCommandStack.pop();
+                    continue;
+                } else {
+                    moveUnitNodes.add(sourceNode);
+                }
+            }
+
             mCommandStack.pop().execute();
+            commandCount++;
         }
 
         for (Map.Entry<Entity, Long> pair : mEntities.entrySet()) {
@@ -211,7 +233,7 @@ public class Game {
                 break;
             }
         }
-        if(gameOver) {
+        if (gameOver) {
             won = owner.isHuman();
         }
         result[0] = gameOver;
@@ -270,6 +292,24 @@ public class Game {
         }
 
         return neighbors;
+    }
+
+    /**
+     * Gets the Node that is connected to the specified Node via specified Edge.
+     *
+     * @param node the node
+     * @param edge the edge
+     * @return the opposite node or <code>null</code>
+     */
+    public Node getOppositeNode(Node node, Edge edge) {
+        List<Node> neighborNodes = this.getConnectedNodes(node);
+        for (Node currentNode : neighborNodes) {
+            Edge currentEdge = this.getEdgeBetween(node, currentNode);
+            if (edge.equals(currentEdge)) {
+                return currentNode;
+            }
+        }
+        throw new RuntimeException("This edge is not connected to the node!");
     }
 
     /**

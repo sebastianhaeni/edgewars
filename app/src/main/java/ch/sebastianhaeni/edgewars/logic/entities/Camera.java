@@ -20,9 +20,9 @@ public class Camera extends Entity {
     private float mCameraScreenY;
 
     private final float cameraFactor = 2f / 3f;
-    // constant indicate to which percentage rightmost / bottommost node can be to the right / bottom of the display
+    // constant indicates to which percentage rightmost / bottommost node can be to the right / bottom of the display
     private final float minOffset = 0.4f;
-    // constant indicate to which percentage leftmost / topmost node can be to the right / bottom of the display
+    // constant indicates to which percentage leftmost / topmost node can be to the right / bottom of the display
     private final float maxOffset = 0.6f;
 
     /**
@@ -126,9 +126,9 @@ public class Camera extends Entity {
         Board board = Game.getInstance().getGameState().getBoard();
         GameRenderer renderer = Game.getInstance().getGameController().getRenderer();
 
-        float rightMostNodeX = renderer.getAndroidCoordinateX(board.getOuterNode(Board.RIGHT).getPosition().getX());
+        float rightMostNodeX = renderer.getAndroidCoordinateX(board.getOuterNode(Board.NodePosition.RIGHT).getPosition().getX());
         rightMostNodeX += mCameraScreenX * cameraFactor;
-        float leftMostNodeX = renderer.getAndroidCoordinateX(board.getOuterNode(Board.LEFT).getPosition().getX());
+        float leftMostNodeX = renderer.getAndroidCoordinateX(board.getOuterNode(Board.NodePosition.LEFT).getPosition().getX());
         leftMostNodeX += mCameraScreenX * cameraFactor;
 
         return leftMostNodeX + delta > (renderer.getMaxScreenX() * maxOffset) || rightMostNodeX + delta < (renderer.getMaxScreenX() * minOffset);
@@ -148,9 +148,9 @@ public class Camera extends Entity {
         Board board = Game.getInstance().getGameState().getBoard();
         GameRenderer renderer = Game.getInstance().getGameController().getRenderer();
 
-        float topMostNodeY = renderer.getAndroidCoordinateY(board.getOuterNode(Board.TOP).getPosition().getY());
+        float topMostNodeY = renderer.getAndroidCoordinateY(board.getOuterNode(Board.NodePosition.TOP).getPosition().getY());
         topMostNodeY += mCameraScreenY * cameraFactor;
-        float bottomMostNodeY = renderer.getAndroidCoordinateY(board.getOuterNode(Board.BOTTOM).getPosition().getY());
+        float bottomMostNodeY = renderer.getAndroidCoordinateY(board.getOuterNode(Board.NodePosition.BOTTOM).getPosition().getY());
         bottomMostNodeY += mCameraScreenY * cameraFactor;
 
         return bottomMostNodeY + delta < (renderer.getMaxScreenY() * minOffset) || topMostNodeY + delta > (renderer.getMaxScreenY() * maxOffset);

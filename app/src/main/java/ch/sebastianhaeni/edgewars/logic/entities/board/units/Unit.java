@@ -90,7 +90,8 @@ public abstract class Unit extends BoardEntity {
     public void setState(UnitState state) {
         // unit is not on edge any more, notify AIAwareness
         if (mState instanceof OnEdgeState && !(state instanceof OnEdgeState)) {
-            AIAwareness.removeUnitOnEdge(this);
+            OnEdgeState onEdgeState = (OnEdgeState) mState;
+            AIAwareness.removeUnitOnEdge(onEdgeState.getEdge(), this);
         }
         // unit is now on an edge, notify AIAwareness
         if (!(mState instanceof OnEdgeState) && state instanceof OnEdgeState) {
@@ -99,8 +100,6 @@ public abstract class Unit extends BoardEntity {
         }
         mState = state;
         setUpdateInterval(state.getUpdateInterval());
-
-
     }
 
     @Override
@@ -136,8 +135,6 @@ public abstract class Unit extends BoardEntity {
                 setState(new DeadState(this));
                 DeathParticleDecorator particles = new DeathParticleDecorator(mShape, Constants.DEATH_PARTICLE_LAYER);
                 particles.register();
-                // inform AI Awareness of death
-                AIAwareness.removeUnitOnEdge(this);
             }
             mHealth = getMaxHealth();
         } else {
