@@ -98,8 +98,8 @@ public class LevelDeserializer implements JsonDeserializer {
 
             // set position of Node
             JsonObject position = nodeObject.get("position").getAsJsonObject();
-            int coordinateX = position.get("coordinate_x").getAsInt();
-            int coordinateY = position.get("coordinate_y").getAsInt();
+            float coordinateX = position.get("coordinate_x").getAsFloat();
+            float coordinateY = position.get("coordinate_y").getAsFloat();
 
             Node node = new Node(new Position(coordinateX, coordinateY));
 

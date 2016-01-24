@@ -13,23 +13,23 @@
     {
       "node_id": 1,
       "position": {
-        "coordinate_x": -5,
-        "coordinate_y": 0
+        "coordinate_x": -6,
+        "coordinate_y": 1
       },
       "initial_values": {
         "state": "owned",
         "owner_id": 1,
         "units": {
-          "melee_count": 0,
-          "sprinter_count": 5,
-          "tank_count": 0
+          "melee_count": 9,
+          "sprinter_count": 6,
+          "tank_count": 9
         },
         "factories": {
           "melee_factory": {
             "level": 1
           },
           "sprinter_factory": {
-            "level": 1
+            "level": 2
           },
           "tank_factory": {
             "level": 1
@@ -40,49 +40,81 @@
     {
       "node_id": 2,
       "position": {
-        "coordinate_x": 0,
-        "coordinate_y": -3
-      },
-      "initial_values": {
-        "state": "neutral"
-      }
-    },
-    {
-      "node_id": 3,
-      "position": {
-        "coordinate_x": 5,
+        "coordinate_x": 6,
         "coordinate_y": 1
       },
       "initial_values": {
         "state": "owned",
         "owner_id": 2,
         "units": {
-          "melee_count": 0,
-          "sprinter_count": 5,
-          "tank_count": 0
+          "melee_count": 9,
+          "sprinter_count": 6,
+          "tank_count": 9
         },
         "factories": {
           "melee_factory": {
             "level": 1
           },
           "sprinter_factory": {
-            "level": 1
+            "level": 2
           },
           "tank_factory": {
             "level": 1
           }
         }
       }
+    },
+    {
+      "node_id": 3,
+      "position": {
+        "coordinate_x": -3,
+        "coordinate_y": -1
+      },
+      "initial_values": {
+        "state": "neutral"
+      }
+    },
+    {
+      "node_id": 4,
+      "position": {
+        "coordinate_x": 3,
+        "coordinate_y": -1
+      },
+      "initial_values": {
+        "state": "neutral"
+      }
+    },
+    {
+      "node_id": 5,
+      "position": {
+        "coordinate_x": 0,
+        "coordinate_y": 1
+      },
+      "initial_values": {
+        "state": "neutral"
+      }
     }
   ],
   "edges": [
     {
       "node1_id": 1,
-      "node2_id": 2
+      "node2_id": 3
     },
     {
       "node1_id": 2,
-      "node2_id": 3
+      "node2_id": 4
+    },
+    {
+      "node1_id": 3,
+      "node2_id": 4
+    },
+    {
+      "node1_id": 3,
+      "node2_id": 5
+    },
+    {
+      "node1_id": 4,
+      "node2_id": 5
     }
   ]
 }
