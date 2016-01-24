@@ -11,7 +11,7 @@ import ch.sebastianhaeni.edgewars.util.Position;
 /**
  * This class shows a small text below the energy that indicates changes in energy.
  */
-public class EnergyChangeNotifier implements Observer {
+class EnergyChangeNotifier implements Observer {
 
     private final HashMap<Integer, Text> mTexts = new HashMap<>();
     private int mRow = 0;

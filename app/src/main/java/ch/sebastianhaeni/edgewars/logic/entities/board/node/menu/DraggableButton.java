@@ -12,8 +12,8 @@ import ch.sebastianhaeni.edgewars.util.Position;
  */
 public class DraggableButton extends NodeButton implements IDraggable {
     private final float[] mColor;
+    private final ArrayList<IDragListener> mDropHandlers = new ArrayList<>();
     private Line mLine;
-    private ArrayList<IDragListener> mDropHandlers = new ArrayList<>();
 
     /**
      * Constructor

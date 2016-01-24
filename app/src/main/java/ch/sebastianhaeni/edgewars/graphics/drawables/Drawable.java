@@ -3,7 +3,6 @@ package ch.sebastianhaeni.edgewars.graphics.drawables;
 import java.io.Serializable;
 
 import ch.sebastianhaeni.edgewars.graphics.GameRenderer;
-import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Shape;
 import ch.sebastianhaeni.edgewars.logic.Game;
 
 /**
@@ -33,11 +32,6 @@ public abstract class Drawable implements Serializable {
      * @param renderer rendering instance
      */
     public abstract void draw(GameRenderer renderer);
-
-    /**
-     * @return the root shape of this sub system of decorated drawables
-     */
-    public abstract Shape getShape();
 
     /**
      * Registers the drawable to be drawn.
@@ -73,10 +67,4 @@ public abstract class Drawable implements Serializable {
         return mId;
     }
 
-    /**
-     * @return gets the unique id
-     */
-    public int getId() {
-        return mId;
-    }
 }

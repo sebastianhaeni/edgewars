@@ -85,7 +85,7 @@ public class Node extends BoardEntity implements IClickable {
 
     @Override
     public void update(long millis) {
-        mState.update(millis);
+        mState.update();
     }
 
     @Override

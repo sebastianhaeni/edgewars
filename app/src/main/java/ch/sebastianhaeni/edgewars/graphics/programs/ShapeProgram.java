@@ -1,6 +1,5 @@
 package ch.sebastianhaeni.edgewars.graphics.programs;
 
-import android.content.Context;
 import android.opengl.GLES20;
 
 import ch.sebastianhaeni.edgewars.R;
@@ -17,10 +16,9 @@ public class ShapeProgram extends ESProgram {
     /**
      * Constructor
      *
-     * @param context app context
      */
-    public ShapeProgram(Context context) {
-        super(context);
+    public ShapeProgram() {
+        super();
 
         // get handle to vertex shader' vPosition member
         mPositionHandle = GLES20.glGetAttribLocation(getProgramHandle(), "a_position");

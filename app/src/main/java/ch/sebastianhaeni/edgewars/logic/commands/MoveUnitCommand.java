@@ -2,6 +2,7 @@ package ch.sebastianhaeni.edgewars.logic.commands;
 
 import ch.sebastianhaeni.edgewars.EUnitType;
 import ch.sebastianhaeni.edgewars.logic.Game;
+import ch.sebastianhaeni.edgewars.logic.SoundEngine;
 import ch.sebastianhaeni.edgewars.logic.entities.Player;
 import ch.sebastianhaeni.edgewars.logic.entities.board.Edge;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
@@ -30,13 +31,13 @@ public class MoveUnitCommand extends Command {
     public MoveUnitCommand(int count, EUnitType type, Node node, Edge edge, Player player) {
         switch (type) {
             case MELEE:
-                mUnit = new MeleeUnit(count, node, player);
+                mUnit = new MeleeUnit(count, player);
                 break;
             case SPRINTER:
-                mUnit = new SprinterUnit(count, node, player);
+                mUnit = new SprinterUnit(count, player);
                 break;
             case TANK:
-                mUnit = new TankUnit(count, node, player);
+                mUnit = new TankUnit(count, player);
                 break;
         }
 
@@ -58,5 +59,6 @@ public class MoveUnitCommand extends Command {
             mEdge.getTargetNode().clearUnit(mUnit);
         }
         mUnit.move(mNode, mEdge);
+        SoundEngine.getInstance().play(SoundEngine.Sounds.UNIT_SENT);
     }
 }

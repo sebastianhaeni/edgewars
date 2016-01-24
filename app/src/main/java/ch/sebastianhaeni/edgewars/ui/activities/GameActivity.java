@@ -13,7 +13,7 @@ public class GameActivity extends Activity {
 
     private GameSurfaceView mGLView;
     private int mLevelNr;
-    public static final String LEVEL_ID = "LEVEL_ID";
+    private static final String LEVEL_ID = "LEVEL_ID";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

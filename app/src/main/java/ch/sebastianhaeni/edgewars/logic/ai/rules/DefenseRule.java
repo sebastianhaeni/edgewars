@@ -13,11 +13,11 @@ import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
 
 class DefenseRule extends Rule {
 
+    private static final int MIN_UNIT_COUNT = 1;
+
     private long mTimePassed;
     private Node mNode;
     private Node mDefenseTarget;
-
-    private final int minUnitCount = 1;
 
     public DefenseRule(Player player) {
         super(player);
@@ -34,7 +34,7 @@ class DefenseRule extends Rule {
 
         mDefenseTarget = AIAwareness.getDefenseTargetNode(mNode);
 
-        return mDefenseTarget != null && (mNode.getTankCount() >= minUnitCount || mNode.getSprinterCount() >= minUnitCount || mNode.getMeleeCount() >= minUnitCount);
+        return mDefenseTarget != null && (mNode.getTankCount() >= MIN_UNIT_COUNT || mNode.getSprinterCount() >= MIN_UNIT_COUNT || mNode.getMeleeCount() >= MIN_UNIT_COUNT);
     }
 
     @Override

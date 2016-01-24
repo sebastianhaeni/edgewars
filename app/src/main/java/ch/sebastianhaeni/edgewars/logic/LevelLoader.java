@@ -97,7 +97,7 @@ public class LevelLoader {
         allPlayers.addAll(computerPlayers);
         allPlayers.add(humanPlayer);
 
-        GameState state = new GameState(camera, board, allPlayers, humanPlayer);
+        GameState state = new GameState(camera, board, allPlayers);
 
         // add AI to computer players
         for (Player computerPlayer : computerPlayers) {

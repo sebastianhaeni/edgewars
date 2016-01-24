@@ -93,7 +93,7 @@ public abstract class Factory extends Entity {
     /**
      * @return gets the cost of building 1 unit
      */
-    public abstract int getUnitCost();
+    protected abstract int getUnitCost();
 
     /**
      * @return gets the duration to produce 1 unit
@@ -103,8 +103,8 @@ public abstract class Factory extends Entity {
     /**
      * @return true if the max level has been reached for this factory
      */
-    public boolean maxLevelReached() {
-        return mLevel >= Constants.FACTORY_MAX_LEVEL;
+    public boolean notFullyUpgraded() {
+        return mLevel < Constants.FACTORY_MAX_LEVEL;
     }
 
     /**

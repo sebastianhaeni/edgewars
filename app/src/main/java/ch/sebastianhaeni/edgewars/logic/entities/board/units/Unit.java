@@ -21,7 +21,6 @@ import ch.sebastianhaeni.edgewars.util.Position;
  */
 public abstract class Unit extends BoardEntity {
 
-    private final Node mNode;
     private final Player mPlayer;
     private UnitState mState;
     private int mCount;
@@ -34,26 +33,19 @@ public abstract class Unit extends BoardEntity {
      * Constructor
      *
      * @param count  count of units in this container
-     * @param node   the node this unit goes to
      * @param player the owning player
      */
-    Unit(int count, Node node, Player player) {
+    Unit(int count, Player player) {
         super(-1); // we don't know the interval yet
         setUpdateInterval(Constants.UNIT_UPDATE_INTERVAL); // now we know it
 
         mHealth = getMaxHealth();
         mCount = count;
-        mNode = node;
         mPlayer = player;
 
         // let the unit idle
         mState = new IdleState(this);
     }
-
-    /**
-     * @return gets the name of this unit type
-     */
-    public abstract String getName();
 
     /**
      * @return gets the attack damage of this unit
@@ -143,13 +135,6 @@ public abstract class Unit extends BoardEntity {
     }
 
     /**
-     * @return gets the node
-     */
-    public Node getNode() {
-        return mNode;
-    }
-
-    /**
      * @return gets unit count
      */
     public int getCount() {
@@ -159,7 +144,7 @@ public abstract class Unit extends BoardEntity {
     /**
      * @return gets the amount of corners the polygon representation for this unit has
      */
-    public abstract int getPolygonCorners();
+    protected abstract int getPolygonCorners();
 
     /**
      * @return gets the owning player
@@ -202,12 +187,8 @@ public abstract class Unit extends BoardEntity {
     }
 
     /**
-     * @return gets text decorator
+     * Updates the unit count on the label.
      */
-    public TextDecorator getText() {
-        return mText;
-    }
-
     public void updateCount() {
         mText.setText(String.valueOf(mCount));
         mText.calculateVertexBuffer();

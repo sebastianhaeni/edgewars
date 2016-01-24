@@ -146,7 +146,7 @@ public class NodeMenu extends Observable {
         NodeButton mMeleeFactoryButton = new NodeButton(mMeleeButton.getPosition(), -.7f, -.7f, new NodeButton.VisibleResolver() {
             @Override
             public boolean isVisible() {
-                return mVisible && !mNode.getMeleeFactory().maxLevelReached() && owner.getEnergy() >= mNode.getMeleeFactory().getUpgradeCost();
+                return mVisible && mNode.getMeleeFactory().notFullyUpgraded() && owner.getEnergy() >= mNode.getMeleeFactory().getUpgradeCost();
             }
         }, new NodeButton.ButtonTextResolver() {
             @Override
@@ -164,7 +164,7 @@ public class NodeMenu extends Observable {
         NodeButton mTankFactoryButton = new NodeButton(mTankButton.getPosition(), 0, -1, new NodeButton.VisibleResolver() {
             @Override
             public boolean isVisible() {
-                return mVisible && !mNode.getTankFactory().maxLevelReached() && owner.getEnergy() >= mNode.getTankFactory().getUpgradeCost();
+                return mVisible && mNode.getTankFactory().notFullyUpgraded() && owner.getEnergy() >= mNode.getTankFactory().getUpgradeCost();
             }
         }, new NodeButton.ButtonTextResolver() {
             @Override
@@ -182,7 +182,7 @@ public class NodeMenu extends Observable {
         NodeButton mSprinterFactoryButton = new NodeButton(mSprinterButton.getPosition(), .7f, -.7f, new NodeButton.VisibleResolver() {
             @Override
             public boolean isVisible() {
-                return mVisible && !mNode.getSprinterFactory().maxLevelReached() && owner.getEnergy() >= mNode.getSprinterFactory().getUpgradeCost();
+                return mVisible && mNode.getSprinterFactory().notFullyUpgraded() && owner.getEnergy() >= mNode.getSprinterFactory().getUpgradeCost();
             }
         }, new NodeButton.ButtonTextResolver() {
             @Override
@@ -326,7 +326,7 @@ public class NodeMenu extends Observable {
      * @param factory    the unit factory to be activated
      * @param nodeButton the button that must be highlighted
      */
-    public void activateFactory(Factory factory, NodeButton nodeButton) {
+    private void activateFactory(Factory factory, NodeButton nodeButton) {
         if (mUnitCorona != null) {
             mUnitCorona.unregister();
         }

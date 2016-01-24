@@ -58,7 +58,7 @@ public class Game {
     }
 
     public GameState getGameState() {
-        if (!isRunning()) {
+        if (isOver()) {
             throw new RuntimeException("The game has not started yet!");
         } else {
             return mGameState;
@@ -136,15 +136,18 @@ public class Game {
         mEntities.remove(entity);
     }
 
-    public boolean isRunning() {
-        return !mGameOver && mGameState != null && mGameState.gameIsRunning();
+    /**
+     * @return true if game is over
+     */
+    public boolean isOver() {
+        return mGameOver || mGameState == null || !mGameState.gameIsRunning();
     }
 
     /**
      * Initiate check for game over from outside (e.g. when a Node state is updated)
      */
     public void checkGameOver() {
-        if (!isRunning()) {
+        if (isOver()) {
             return;
         }
 

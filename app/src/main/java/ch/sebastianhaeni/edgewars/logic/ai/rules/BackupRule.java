@@ -13,6 +13,8 @@ import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
 
 class BackupRule extends Rule {
 
+    private static final int MIN_DISTANCE_TO_ENEMY = 2;
+
     private long mTimePassed;
     private Node mNode;
     private Node mBackupTarget;
@@ -20,8 +22,6 @@ class BackupRule extends Rule {
     private int minTankCount;
     private int minMeleeCount;
     private int minSprinterCount;
-
-    private final int minDistanceToEnemy = 2;
 
     public BackupRule(Player player) {
         super(player);
@@ -39,15 +39,15 @@ class BackupRule extends Rule {
         int distanceToEnemy = AIAwareness.getDistanceToEnemy(mNode);
         mBackupTarget = AIAwareness.getBackupTargetNode(mNode);
 
-        if (distanceToEnemy < minDistanceToEnemy || mBackupTarget == null) {
+        if (distanceToEnemy < MIN_DISTANCE_TO_ENEMY || mBackupTarget == null) {
             return false;
         }
 
-        if (distanceToEnemy > minDistanceToEnemy) {
+        if (distanceToEnemy > MIN_DISTANCE_TO_ENEMY) {
             minTankCount = Constants.MIN_TANK_ATTACK_COUNT;
             minMeleeCount = Constants.MIN_MELEE_ATTACK_COUNT;
             minSprinterCount = Constants.MIN_SPRINTER_ATTACK_COUNT;
-        } else if (distanceToEnemy == minDistanceToEnemy) {
+        } else if (distanceToEnemy == MIN_DISTANCE_TO_ENEMY) {
             minTankCount = Constants.MIN_TANK_ATTACK_COUNT / 2;
             minMeleeCount = Constants.MIN_MELEE_ATTACK_COUNT / 2;
             minSprinterCount = Constants.MIN_SPRINTER_ATTACK_COUNT / 2;

@@ -59,7 +59,7 @@ public class AIAwareness {
      * This method updates the internals of AI Awareness. Should be called, when a node state has changed.
      */
     public static void update() {
-        if (!isInitialized || !Game.getInstance().isRunning()) {
+        if (!isInitialized || Game.getInstance().isOver()) {
             return;
         }
 

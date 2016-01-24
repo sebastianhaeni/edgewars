@@ -87,9 +87,9 @@ public class GameRenderer implements GLSurfaceView.Renderer {
         // Set the background frame color
         GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
-        mShapeProgram = new ShapeProgram(mContext);
-        mParticleProgram = new ParticleProgram(mContext);
-        mTextProgram = new TextProgram(mContext);
+        mShapeProgram = new ShapeProgram();
+        mParticleProgram = new ParticleProgram();
+        mTextProgram = new TextProgram();
 
         // enable texture + alpha blending
         GLES20.glEnable(GLES20.GL_BLEND);

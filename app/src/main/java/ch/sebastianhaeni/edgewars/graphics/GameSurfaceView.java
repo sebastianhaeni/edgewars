@@ -118,12 +118,4 @@ public class GameSurfaceView extends GLSurfaceView implements Serializable {
         super.onResume();
     }
 
-    public GameState getState() {
-        return mGameState;
-    }
-
-    public void setState(GameState state) {
-        mGameState = state;
-    }
-
 }

@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentSkipListSet;
  * Provides an interface to order the drawables to their drawing layer.
  */
 public class RenderQueue implements Iterable<Drawable> {
-    int counter = 0;
+
     private final ConcurrentSkipListSet<Drawable> mDrawables = new ConcurrentSkipListSet<>(new Ordering<Drawable>() {
         @Override
         public int compare(Drawable left, Drawable right) {
@@ -25,7 +25,6 @@ public class RenderQueue implements Iterable<Drawable> {
      * @param drawable drawable to add
      */
     public void add(Drawable drawable) {
-        counter++;
         mDrawables.add(drawable);
     }
 
@@ -33,7 +32,6 @@ public class RenderQueue implements Iterable<Drawable> {
      * @param drawable drawable to remove
      */
     public void remove(Drawable drawable) {
-        counter--;
         mDrawables.remove(drawable);
     }
 

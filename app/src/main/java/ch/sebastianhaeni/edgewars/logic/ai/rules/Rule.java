@@ -6,9 +6,17 @@ import ch.sebastianhaeni.edgewars.logic.commands.Command;
 import ch.sebastianhaeni.edgewars.logic.entities.Player;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
 
-public abstract class Rule {
+/**
+ * This is an abstract rule that can be inherited for a rule based AI.
+ */
+abstract class Rule {
     private final Player mPlayer;
 
+    /**
+     * Constructor
+     *
+     * @param player the owning player
+     */
     Rule(Player player) {
         mPlayer = player;
     }
@@ -30,6 +38,9 @@ public abstract class Rule {
      */
     public abstract ArrayList<Command> getCommands();
 
+    /**
+     * @return gets the player
+     */
     Player getPlayer() {
         return mPlayer;
     }

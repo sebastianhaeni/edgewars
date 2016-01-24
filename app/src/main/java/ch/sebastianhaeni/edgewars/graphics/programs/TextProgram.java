@@ -1,6 +1,5 @@
 package ch.sebastianhaeni.edgewars.graphics.programs;
 
-import android.content.Context;
 import android.opengl.GLES20;
 
 import ch.sebastianhaeni.edgewars.R;
@@ -16,10 +15,9 @@ public class TextProgram extends ESProgram {
     /**
      * Constructor
      *
-     * @param context app context
      */
-    public TextProgram(Context context) {
-        super(context);
+    public TextProgram() {
+        super();
 
         mPositionHandle = GLES20.glGetAttribLocation(getProgramHandle(), "vPosition");
         mTexCoordinateLoc = GLES20.glGetAttribLocation(getProgramHandle(), "a_texCoord");

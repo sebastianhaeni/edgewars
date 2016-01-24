@@ -93,11 +93,11 @@ public class LevelDetailActivity extends Activity {
         return mLevelNr;
     }
 
-    public int getScore() {
+    private int getScore() {
         return mLevelRecord.getScore();
     }
 
-    public String getTime() {
+    private String getTime() {
         long millis = mLevelRecord.getTime();
         SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss", new Locale("de", "CH"));
         df.setTimeZone(TimeZone.getTimeZone("GMT"));

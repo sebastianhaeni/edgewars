@@ -25,7 +25,7 @@ public class NeutralState extends NodeState {
     }
 
     @Override
-    public void update(long millis) {
+    public void update() {
         // no op
     }
 

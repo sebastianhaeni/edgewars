@@ -22,16 +22,14 @@ public abstract class NodeState implements Serializable {
     /**
      * @return gets the node
      */
-    protected Node getNode() {
+    Node getNode() {
         return mNode;
     }
 
     /**
      * Updates the state in the configured interval.
-     *
-     * @param millis time that has passed since the last call to <code>update</code>
      */
-    public abstract void update(long millis);
+    public abstract void update();
 
     /**
      * Defines the desired interval this state is updated. The state will not be updated in less

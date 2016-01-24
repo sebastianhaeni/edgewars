@@ -12,9 +12,9 @@ import ch.sebastianhaeni.edgewars.util.Position;
 public abstract class Button extends Entity implements IClickable {
 
     private final Position mPosition;
-    private List<OnGameClickListener> mListeners = new ArrayList<>();
+    private final List<OnGameClickListener> mListeners = new ArrayList<>();
 
-    public Button(Position position) {
+    protected Button(Position position) {
         mPosition = position;
     }
 

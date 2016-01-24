@@ -1,6 +1,5 @@
 package ch.sebastianhaeni.edgewars.graphics.programs;
 
-import android.content.Context;
 import android.opengl.GLES20;
 
 import ch.sebastianhaeni.edgewars.R;
@@ -23,10 +22,9 @@ public class ParticleProgram extends ESProgram {
     /**
      * Constructor
      *
-     * @param context app context
      */
-    public ParticleProgram(Context context) {
-        super(context);
+    public ParticleProgram() {
+        super();
 
         // Get the attribute locations
         mLifetimeHandle = GLES20.glGetAttribLocation(getProgramHandle(), "a_lifetime");

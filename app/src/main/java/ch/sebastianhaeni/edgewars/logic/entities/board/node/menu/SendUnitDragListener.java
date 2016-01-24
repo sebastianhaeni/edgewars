@@ -23,7 +23,7 @@ class SendUnitDragListener implements DraggableButton.IDragListener {
     private static Polygon mDropCorona;
     private final EUnitType mUnitType;
     private final Node mNode;
-    private List<Node> mNeighbors = new ArrayList<>();
+    private final List<Node> mNeighbors = new ArrayList<>();
 
     /**
      * Constructor

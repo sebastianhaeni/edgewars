@@ -16,7 +16,6 @@ import ch.sebastianhaeni.edgewars.util.Position;
  */
 public class Line extends Shape {
 
-    private static final String TAG = "Line";
     private final FloatBuffer vertexBuffer;
     private final int vertexCount;
 

@@ -1,6 +1,5 @@
 package ch.sebastianhaeni.edgewars.graphics.programs;
 
-import android.content.Context;
 import android.opengl.GLES20;
 import android.util.Log;
 
@@ -17,16 +16,13 @@ import ch.sebastianhaeni.edgewars.GameApplication;
 public abstract class ESProgram {
 
     static final String TAG = "ESProgram";
-    private final Context mContext;
     private final int mProgramHandle;
 
     /**
      * Constructor
      *
-     * @param context app context
      */
-    ESProgram(Context context) {
-        mContext = context;
+    ESProgram() {
         mProgramHandle = loadProgram(getVertexShaderSource(), getFragmentShaderSource());
         linkProgram(mProgramHandle);
     }
@@ -142,17 +138,6 @@ public abstract class ESProgram {
             throw new RuntimeException("Error linking program: "
                     + GLES20.glGetProgramInfoLog(programHandle));
         }
-
-        // Free up no longer needed shader resources
-        //GLES20.glDeleteShader(vertexShader);
-        //GLES20.glDeleteShader(fragmentShader);
-    }
-
-    /**
-     * @return gets the app context
-     */
-    public Context getContext() {
-        return mContext;
     }
 
     /**

@@ -28,7 +28,7 @@ public abstract class DrawableDecorator extends Drawable {
     /**
      * @return gets the base shape
      */
-    public Shape getShape() {
+     Shape getShape() {
         return mShape;
     }
 }

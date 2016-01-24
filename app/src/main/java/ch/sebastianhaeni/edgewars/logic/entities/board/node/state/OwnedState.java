@@ -32,7 +32,7 @@ public class OwnedState extends NodeState {
     }
 
     @Override
-    public void update(long millis) {
+    public void update() {
         mOwner.addEnergy(Constants.OWNED_STATE_ENERGY_GAIN);
         getNode().addHealth(Constants.OWNED_STATE_HEALTH_GAIN);
     }

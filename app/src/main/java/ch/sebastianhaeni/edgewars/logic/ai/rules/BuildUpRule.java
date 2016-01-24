@@ -10,7 +10,6 @@ import ch.sebastianhaeni.edgewars.logic.entities.Player;
 import ch.sebastianhaeni.edgewars.logic.entities.board.node.Node;
 
 class BuildUpRule extends Rule {
-    private Node mNode;
     private long mTimePassed;
     private boolean isInitialized;
     private EUnitType currentProduction;
@@ -29,33 +28,31 @@ class BuildUpRule extends Rule {
         }
         mTimePassed = 0;
 
-        mNode = node;
-
         commands = new ArrayList<>();
 
         if (!isInitialized) {
             currentProduction = EUnitType.TANK;
-            commands.add(new ActivateFactoryCommand(mNode.getTankFactory()));
+            commands.add(new ActivateFactoryCommand(node.getTankFactory()));
             isInitialized = true;
             return true;
         }
 
         switch (currentProduction) {
             case TANK:
-                if (mNode.getTankCount() >= Constants.MIN_TANK_ATTACK_COUNT) {
-                    commands.add(new ActivateFactoryCommand(mNode.getMeleeFactory()));
+                if (node.getTankCount() >= Constants.MIN_TANK_ATTACK_COUNT) {
+                    commands.add(new ActivateFactoryCommand(node.getMeleeFactory()));
                     currentProduction = EUnitType.MELEE;
                 }
                 break;
             case MELEE:
-                if (mNode.getMeleeCount() >= Constants.MIN_MELEE_ATTACK_COUNT) {
-                    commands.add(new ActivateFactoryCommand(mNode.getSprinterFactory()));
+                if (node.getMeleeCount() >= Constants.MIN_MELEE_ATTACK_COUNT) {
+                    commands.add(new ActivateFactoryCommand(node.getSprinterFactory()));
                     currentProduction = EUnitType.SPRINTER;
                 }
                 break;
             case SPRINTER:
-                if (mNode.getSprinterCount() >= Constants.MIN_SPRINTER_ATTACK_COUNT) {
-                    commands.add(new ActivateFactoryCommand(mNode.getTankFactory()));
+                if (node.getSprinterCount() >= Constants.MIN_SPRINTER_ATTACK_COUNT) {
+                    commands.add(new ActivateFactoryCommand(node.getTankFactory()));
                     currentProduction = EUnitType.TANK;
                 }
                 break;

@@ -56,7 +56,7 @@ public abstract class OnEdgeState extends UnitState {
     /**
      * @return gets the position of the unit
      */
-    protected Position getPosition() {
+    Position getPosition() {
         double distance = Math.sqrt(Math.pow(mDx, 2.0) + Math.pow(mDy, 2.0));
 
         mDx /= distance;
@@ -89,7 +89,7 @@ public abstract class OnEdgeState extends UnitState {
     /**
      * Called when the way is free.
      */
-    protected void onFreeWay() {
+    void onFreeWay() {
         // no op
     }
 
@@ -98,7 +98,7 @@ public abstract class OnEdgeState extends UnitState {
      *
      * @param entity reached entity
      */
-    protected void onEntityReached(Entity entity) {
+    void onEntityReached(Entity entity) {
         // no op
     }
 
@@ -123,7 +123,7 @@ public abstract class OnEdgeState extends UnitState {
      *
      * @return an encountered unit or null if nothing encountered
      */
-    public Unit getEncounteredUnit() {
+    private Unit getEncounteredUnit() {
         for (Unit u : Game.getInstance().getUnitsOnEdge(mEdge)) {
             if (u.equals(getUnit())) {
                 continue;
@@ -156,28 +156,28 @@ public abstract class OnEdgeState extends UnitState {
     /**
      * @return gets the owning player
      */
-    protected Player getPlayer() {
+    Player getPlayer() {
         return mPlayer;
     }
 
     /**
      * @return get the target node
      */
-    protected Node getNode() {
+    Node getNode() {
         return mNode;
     }
 
     /**
      * @return gets starting position
      */
-    protected Position getStartingPosition() {
+    private Position getStartingPosition() {
         return mStartingPosition;
     }
 
     /**
      * @return gets travelled distance
      */
-    protected float getTravelledDistance() {
+    float getTravelledDistance() {
         return mTravelledDistance;
     }
 
@@ -186,7 +186,7 @@ public abstract class OnEdgeState extends UnitState {
      *
      * @param travelledDistance the distance travelled
      */
-    protected void setTravelledDistance(float travelledDistance) {
+    void setTravelledDistance(float travelledDistance) {
         mTravelledDistance = travelledDistance;
     }
 

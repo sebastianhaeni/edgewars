@@ -45,7 +45,7 @@ abstract public class Shape extends Drawable {
      *
      * @param position new position
      */
-    protected void setPosition(Position position) {
+    void setPosition(Position position) {
         mPosition = position;
     }
 
@@ -56,10 +56,4 @@ abstract public class Shape extends Drawable {
         return mColor;
     }
 
-    /**
-     * @return gets the shape
-     */
-    public Shape getShape() {
-        return this;
-    }
 }

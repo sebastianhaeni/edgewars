@@ -21,7 +21,7 @@ public class Board extends Entity implements Serializable {
         LEFT
     }
 
-    private final static transient HashMap<NodePosition, Node> outerNodes = new HashMap<>();
+    private final static transient HashMap<NodePosition, Node> OUTER_NODES = new HashMap<>();
 
     private final transient ArrayList<BoardEntity> mEntities = new ArrayList<>();
 
@@ -104,8 +104,8 @@ public class Board extends Entity implements Serializable {
      * @return the Node that is positioned the most at the top (Y axis) among all Nodes of the current game board
      */
     private Node getTopMostNode() {
-        if (outerNodes.containsKey(NodePosition.TOP))
-            return outerNodes.get(NodePosition.TOP);
+        if (OUTER_NODES.containsKey(NodePosition.TOP))
+            return OUTER_NODES.get(NodePosition.TOP);
 
         Node theNode = getNodes().get(0);
         for (Node node : getNodes()) {
@@ -113,7 +113,7 @@ public class Board extends Entity implements Serializable {
                 theNode = node;
         }
 
-        outerNodes.put(NodePosition.TOP, theNode);
+        OUTER_NODES.put(NodePosition.TOP, theNode);
         return theNode;
     }
 
@@ -121,8 +121,8 @@ public class Board extends Entity implements Serializable {
      * @return the Node that is positioned the most at the bottom (Y axis) among all Nodes of the current game board
      */
     private Node getBottomMostNode() {
-        if (outerNodes.containsKey(NodePosition.BOTTOM))
-            return outerNodes.get(NodePosition.BOTTOM);
+        if (OUTER_NODES.containsKey(NodePosition.BOTTOM))
+            return OUTER_NODES.get(NodePosition.BOTTOM);
 
         Node theNode = getNodes().get(0);
         for (Node node : getNodes()) {
@@ -130,7 +130,7 @@ public class Board extends Entity implements Serializable {
                 theNode = node;
         }
 
-        outerNodes.put(NodePosition.BOTTOM, theNode);
+        OUTER_NODES.put(NodePosition.BOTTOM, theNode);
         return theNode;
     }
 
@@ -138,8 +138,8 @@ public class Board extends Entity implements Serializable {
      * @return the Node that is positioned the most at right (X axis) among all Nodes of the current game board
      */
     private Node getRightMostNode() {
-        if (outerNodes.containsKey(NodePosition.RIGHT))
-            return outerNodes.get(NodePosition.RIGHT);
+        if (OUTER_NODES.containsKey(NodePosition.RIGHT))
+            return OUTER_NODES.get(NodePosition.RIGHT);
 
         Node theNode = getNodes().get(0);
         for (Node node : getNodes()) {
@@ -147,7 +147,7 @@ public class Board extends Entity implements Serializable {
                 theNode = node;
         }
 
-        outerNodes.put(NodePosition.RIGHT, theNode);
+        OUTER_NODES.put(NodePosition.RIGHT, theNode);
         return theNode;
     }
 
@@ -155,8 +155,8 @@ public class Board extends Entity implements Serializable {
      * @return the Node that is positioned the most at left (X axis) among all Nodes of the current game board
      */
     private Node getLeftMostNode() {
-        if (outerNodes.containsKey(NodePosition.LEFT))
-            return outerNodes.get(NodePosition.LEFT);
+        if (OUTER_NODES.containsKey(NodePosition.LEFT))
+            return OUTER_NODES.get(NodePosition.LEFT);
 
         Node theNode = getNodes().get(0);
         for (Node node : getNodes()) {
@@ -164,7 +164,7 @@ public class Board extends Entity implements Serializable {
                 theNode = node;
         }
 
-        outerNodes.put(NodePosition.LEFT, theNode);
+        OUTER_NODES.put(NodePosition.LEFT, theNode);
         return theNode;
     }
 }

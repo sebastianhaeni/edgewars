@@ -17,7 +17,6 @@ public class GameState implements Serializable {
     private final Camera mCamera;
     private final Board mBoard;
     private final ArrayList<Player> mPlayers;
-    private final Player mHuman;
 
     private boolean gameIsRunning = false;
 
@@ -27,13 +26,11 @@ public class GameState implements Serializable {
      * @param camera  camera entity
      * @param board   board entity
      * @param players list of players
-     * @param human   the human player (also contained in <code>players</code>)
      */
-    public GameState(Camera camera, Board board, ArrayList<Player> players, Player human) {
+    public GameState(Camera camera, Board board, ArrayList<Player> players) {
         mCamera = camera;
         mBoard = board;
         mPlayers = players;
-        mHuman = human;
 
         Game.getInstance().setGameState(this);
 
@@ -76,13 +73,6 @@ public class GameState implements Serializable {
      */
     public Board getBoard() {
         return mBoard;
-    }
-
-    /**
-     * @return gets the human player
-     */
-    public Player getHuman() {
-        return mHuman;
     }
 
     /**
