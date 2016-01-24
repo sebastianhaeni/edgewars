@@ -87,6 +87,11 @@ public class GameSurfaceView extends GLSurfaceView implements Serializable {
         mGameState.setGameIsRunning(true);
     }
 
+    /**
+     * Stops the level and saves statistics to LevelRecord
+     *
+     * @param won boolean, true if game was won
+     */
     public void stopLevel(boolean won) {
         mLevelRecord.setEndTime(mThread.getGameTime());
         mLevelRecord.setWon(won);

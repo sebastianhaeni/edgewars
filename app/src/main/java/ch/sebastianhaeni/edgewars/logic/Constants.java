@@ -122,4 +122,6 @@ public final class Constants {
     public static final float UNIT_NODE_ATTACK_DISTANCE = .2f;
     public static final float UNIT_FIGHT_DISTANCE = .5f;
     //endregion
+
+    public static final int LEVEL_COUNT_UNINITIALIZED = -1;
 }

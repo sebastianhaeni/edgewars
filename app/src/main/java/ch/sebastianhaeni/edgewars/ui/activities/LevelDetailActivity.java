@@ -59,21 +59,25 @@ public class LevelDetailActivity extends Activity {
         view.setText(Html.fromHtml(text));
     }
 
-    private void displayScore() {
-        TextView view = (TextView) findViewById(R.id.score);
-        String text = "<b>Score</b> " + getScore();
-        view.setText(Html.fromHtml(text));
-    }
-
     public void startLevel(View view) {
         Intent intent = new Intent(LevelDetailActivity.this, GameActivity.class);
         intent.putExtra(LEVEL_ID, mLevelNr);
         startActivity(intent);
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(LevelDetailActivity.this, LevelSelectionActivity.class);
+        intent.putExtra(LEVEL_ID, mLevelNr);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        finish();
+    }
+
     public void back(View view) {
-        Intent intent = new Intent(this, LevelSelectionActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        Intent intent = new Intent(LevelDetailActivity.this, LevelSelectionActivity.class);
+        intent.putExtra(LEVEL_ID, mLevelNr);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         finish();
     }
@@ -91,10 +95,6 @@ public class LevelDetailActivity extends Activity {
 
     public int getLevel() {
         return mLevelNr;
-    }
-
-    private int getScore() {
-        return mLevelRecord.getScore();
     }
 
     private String getTime() {
