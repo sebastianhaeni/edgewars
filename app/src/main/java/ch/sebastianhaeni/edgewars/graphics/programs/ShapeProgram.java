@@ -15,7 +15,6 @@ public class ShapeProgram extends ESProgram {
 
     /**
      * Constructor
-     *
      */
     public ShapeProgram() {
         super();

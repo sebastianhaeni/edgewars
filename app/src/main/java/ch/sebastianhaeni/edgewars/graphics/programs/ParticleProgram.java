@@ -21,7 +21,6 @@ public class ParticleProgram extends ESProgram {
 
     /**
      * Constructor
-     *
      */
     public ParticleProgram() {
         super();

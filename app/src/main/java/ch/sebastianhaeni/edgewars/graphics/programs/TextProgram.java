@@ -14,7 +14,6 @@ public class TextProgram extends ESProgram {
 
     /**
      * Constructor
-     *
      */
     public TextProgram() {
         super();

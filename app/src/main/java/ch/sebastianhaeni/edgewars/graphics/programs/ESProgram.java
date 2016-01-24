@@ -20,7 +20,6 @@ public abstract class ESProgram {
 
     /**
      * Constructor
-     *
      */
     ESProgram() {
         mProgramHandle = loadProgram(getVertexShaderSource(), getFragmentShaderSource());
