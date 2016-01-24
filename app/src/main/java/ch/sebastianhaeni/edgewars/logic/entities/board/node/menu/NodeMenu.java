@@ -1,6 +1,7 @@
 package ch.sebastianhaeni.edgewars.logic.entities.board.node.menu;
 
 import java.util.Observable;
+import java.util.Observer;
 
 import ch.sebastianhaeni.edgewars.EUnitType;
 import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Polygon;
@@ -25,7 +26,7 @@ import ch.sebastianhaeni.edgewars.util.Colors;
  * more or less buttons. This class contains a lot of UI building code, so expect spaghetti code.
  * There's not much one can do to prevent that.
  */
-public class NodeMenu extends Observable {
+public class NodeMenu extends Observable implements Observer {
     private final Node mNode;
     private final boolean mIsOwned;
     private boolean mVisible;
@@ -262,15 +263,10 @@ public class NodeMenu extends Observable {
         addObserver(mMeleeButton);
         addObserver(mTankButton);
         addObserver(mSprinterButton);
+        mNode.addObserver(this);
 
         // showing the selected unit that is built
-        if (mNode.getMeleeFactory().isActivated()) {
-            markFactoryAsActive(mMeleeButton);
-        } else if (mNode.getTankFactory().isActivated()) {
-            markFactoryAsActive(mTankButton);
-        } else if (mNode.getSprinterFactory().isActivated()) {
-            markFactoryAsActive(mSprinterButton);
-        }
+        highlightActiveFactory();
 
         if (!mIsOwned) {
             return;
@@ -285,21 +281,34 @@ public class NodeMenu extends Observable {
         mMeleeButton.addClickListener(new Button.OnGameClickListener() {
             @Override
             public void onClick() {
-                activateFactory(mNode.getMeleeFactory(), mMeleeButton);
+                activateFactory(mNode.getMeleeFactory());
             }
         });
         mTankButton.addClickListener(new Button.OnGameClickListener() {
             @Override
             public void onClick() {
-                activateFactory(mNode.getTankFactory(), mTankButton);
+                activateFactory(mNode.getTankFactory());
             }
         });
         mSprinterButton.addClickListener(new Button.OnGameClickListener() {
             @Override
             public void onClick() {
-                activateFactory(mNode.getSprinterFactory(), mSprinterButton);
+                activateFactory(mNode.getSprinterFactory());
             }
         });
+    }
+
+    /**
+     * Marks the active factory with a highlight corona.
+     */
+    private void highlightActiveFactory() {
+        if (mNode.getMeleeFactory().isActivated()) {
+            markFactoryAsActive(mMeleeButton);
+        } else if (mNode.getTankFactory().isActivated()) {
+            markFactoryAsActive(mTankButton);
+        } else if (mNode.getSprinterFactory().isActivated()) {
+            markFactoryAsActive(mSprinterButton);
+        }
     }
 
     /**
@@ -323,10 +332,9 @@ public class NodeMenu extends Observable {
     }
 
     /**
-     * @param factory    the unit factory to be activated
-     * @param nodeButton the button that must be highlighted
+     * @param factory the unit factory to be activated
      */
-    private void activateFactory(Factory factory, NodeButton nodeButton) {
+    public void activateFactory(Factory factory) {
         if (mUnitCorona != null) {
             mUnitCorona.unregister();
         }
@@ -335,8 +343,6 @@ public class NodeMenu extends Observable {
             Game.getInstance().register(new DeactivateFactoriesCommand(factory.getNode()));
             return;
         }
-
-        markFactoryAsActive(nodeButton);
 
         Game.getInstance().register(new ActivateFactoryCommand(factory));
     }
@@ -347,7 +353,20 @@ public class NodeMenu extends Observable {
      * @param nodeButton the button that must be highlighted
      */
     private void markFactoryAsActive(NodeButton nodeButton) {
+        if (!mVisible) {
+            return;
+        }
+
+        if (mUnitCorona != null) {
+            mUnitCorona.unregister();
+        }
+
         mUnitCorona = new Polygon(nodeButton.getPosition(), Colors.CORONA, 2, nodeButton.getPolygonCorners(), 0, .45f);
         mUnitCorona.register();
+    }
+
+    @Override
+    public void update(Observable observable, Object data) {
+        highlightActiveFactory();
     }
 }
