@@ -23,7 +23,7 @@ public class AIAwareness {
     private static ConcurrentHashMap<Player, ArrayList<Node>> mPlayerNodes;
     private static ConcurrentHashMap<Player, ConcurrentHashMap<Node, Integer>> mPlayerDistancesToEnemy;
     private static ConcurrentHashMap<Player, ConcurrentHashMap<Node, Node>> mPlayerGatewaysToEnemy;
-    private static ConcurrentHashMap<Edge, Unit> mUnitsOnEdges;
+    private static ConcurrentHashMap<Edge, ArrayList<Unit>> mUnitsOnEdges;
 
     // private constructor to avoid instantiation of the class
     private AIAwareness() {
@@ -163,45 +163,61 @@ public class AIAwareness {
      * If yes, it returns the enemy node the units originate from (the first that is found).
      *
      * @param node the node to be assessed
-     * @return the first node found where attacking enemy units originate from, or null
+     * @return the first node found where attacking enemy units originate from, or null if no intervention is required
      */
     public static Node getDefenseTargetNode(Node node) {
-        Node defenseTarget = null;
         Player player = getPlayer(node);
 
         for (Node n : Game.getInstance().getConnectedNodes(node)) {
+            boolean isDefenseTarget = true;
             Edge edge = Game.getInstance().getEdgeBetween(node, n);
-            if (mUnitsOnEdges.containsKey(edge) && !mUnitsOnEdges.get(edge).getPlayer().equals(player)) {
-                defenseTarget = n;
-                break;
+            if (mUnitsOnEdges.containsKey(edge) && mUnitsOnEdges.get(edge).size() > 0) { // units are present on edge
+                for (Unit unit : mUnitsOnEdges.get(edge)) {
+                    if (unit.getPlayer().equals(player)) {  // own units are already on edge, no intervention needed
+                        isDefenseTarget = false;
+                        break;
+                    }
+                }
+                if (isDefenseTarget) {  // only enemy units are present on node, intervention is required
+                    return n;
+                }
             }
         }
 
-        return defenseTarget;
+        return null; // no Edge requires an intervention
     }
 
     /**
      * Updates the AIAwareness with information that a new unit is on an edge
      *
      * @param edge the edge the unit is on
-     * @param unit the unit
+     * @param unit the unit to be added
      */
     public static void addUnitOnEdge(Edge edge, Unit unit) {
-        mUnitsOnEdges.put(edge, unit);
+        if (mUnitsOnEdges.containsKey(edge)) { // edge already present in HashMap
+            if (mUnitsOnEdges.get(edge).contains(unit)) {
+                throw new RuntimeException("I have already added this unit to the edge!");
+            }
+            mUnitsOnEdges.get(edge).add(unit);
+        } else {    // edge not yet present in HashMap
+            ArrayList<Unit> units = new ArrayList<>();
+            units.add(unit);
+            mUnitsOnEdges.put(edge, units);
+        }
     }
 
     /**
      * Updated the AIAwareness with information that a unit is not on an edge any more
      *
-     * @param unit the unit
+     * @param edge the edge the unit was on
+     * @param unit the unit to be removed
      */
-    public static void removeUnitOnEdge(Unit unit) {
-        for (Edge e : mUnitsOnEdges.keySet()) {
-            if (mUnitsOnEdges.get(e).equals(unit)) {
-                mUnitsOnEdges.remove(e);
-                return;
-            }
+    public static void removeUnitOnEdge(Edge edge, Unit unit) {
+        if (!mUnitsOnEdges.containsKey(edge) || !mUnitsOnEdges.get(edge).contains(unit)) {
+            throw new RuntimeException("I had no awareness of units from this player on this edge and hence cannot remove them!");
         }
+
+        mUnitsOnEdges.get(edge).remove(unit);
     }
 
     private static void recalculate() {
