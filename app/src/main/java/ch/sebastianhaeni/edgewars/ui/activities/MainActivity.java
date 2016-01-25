@@ -12,6 +12,7 @@ import ch.sebastianhaeni.edgewars.R;
 import ch.sebastianhaeni.edgewars.databinding.ActivityMainBinding;
 import ch.sebastianhaeni.edgewars.logic.SoundEngine;
 
+@SuppressWarnings({"unused", "UnusedParameters"})
 public class MainActivity extends Activity {
 
     @Override
@@ -26,7 +27,7 @@ public class MainActivity extends Activity {
         binding.setActivity(this);
         setContentView(binding.getRoot());
 
-        Typeface typeface = Typeface.createFromAsset(getAssets(), "DISTGRG.ttf");
+        Typeface typeface = Typeface.createFromAsset(getAssets(), getString(R.string.font));
         TextView appName = (TextView) findViewById(R.id.appName);
         appName.setTypeface(typeface);
     }

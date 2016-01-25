@@ -1,8 +1,15 @@
 <resources>
     <string name="app_name">Edge Wars</string>
 
-    <string name="content_about">Edge Wars is a simple strategy game. The goal is to capture all nodes. Tap on your nodes to build and send units to attack other nodes.\nThis game was developed by Sebastian Häni, Raphael Laubscher and Steven Cardini.\n\n© 2015</string>
+    <string name="content_about">Edge Wars is a simple strategy game. The goal is to capture all nodes. Tap on your nodes to build and send units to attack other nodes.\nThis game was developed by Sebastian Häni, Raphael Laubscher and Steven Cardini.\n\n© 2016</string>
     <string name="back">Back</string>
     <string name="start_level">Start Level</string>
+    <string name="start">Start</string>
+    <string name="about">About</string>
+    <string name="paused">Paused</string>
+    <string name="resume_game">Resume game</string>
+    <string name="exit">Exit</string>
+
+    <string name="font">DISTGRG.ttf</string>
 
 </resources>

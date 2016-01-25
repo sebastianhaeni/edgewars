@@ -5,6 +5,7 @@ import com.orm.SugarRecord;
 /**
  * Used for persisting the statistics of a Level
  */
+@SuppressWarnings({"WeakerAccess", "unused"})
 public class LevelRecord extends SugarRecord<LevelRecord> {
     int levelNr;
     int score;
