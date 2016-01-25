@@ -12,6 +12,7 @@ import ch.sebastianhaeni.edgewars.logic.Game;
 import ch.sebastianhaeni.edgewars.logic.GameState;
 import ch.sebastianhaeni.edgewars.logic.GameThread;
 import ch.sebastianhaeni.edgewars.logic.LevelLoader;
+import ch.sebastianhaeni.edgewars.logic.SoundEngine;
 import ch.sebastianhaeni.edgewars.model.LevelRecord;
 import ch.sebastianhaeni.edgewars.ui.GameController;
 import ch.sebastianhaeni.edgewars.ui.activities.GameActivity;
@@ -93,6 +94,8 @@ public class GameSurfaceView extends GLSurfaceView implements Serializable {
      * @param won boolean, true if game was won
      */
     public void stopLevel(boolean won) {
+        SoundEngine.getInstance().play(won ? SoundEngine.Sounds.GAME_WON : SoundEngine.Sounds.GAME_LOST);
+
         mLevelRecord.setEndTime(mThread.getGameTime());
         mLevelRecord.setWon(won);
         mLevelRecord.save();
