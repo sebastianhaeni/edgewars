@@ -24,17 +24,25 @@ public class LevelRecord extends SugarRecord<LevelRecord> {
         this.won = won;
     }
 
-    public long getTime() { return endTime - startTime; }
+    public long getTime() {
+        return endTime - startTime;
+    }
 
     public void setStartTime(long startTime) {
         this.startTime = startTime;
     }
 
-    public void setEndTime(long endTime) { this.endTime = endTime; }
+    public void setEndTime(long endTime) {
+        this.endTime = endTime;
+    }
 
-    public boolean hasWon() { return won == 1; }
+    public boolean hasWon() {
+        return won == 1;
+    }
 
-    public boolean hasPlayed() { return getTime() > 0; }
+    public boolean hasPlayed() {
+        return getTime() > 0;
+    }
 
     public void setWon(boolean won) {
         if (won)

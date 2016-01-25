@@ -14,7 +14,7 @@ public class OpenGLUtil {
      * <pre>
      * mColorHandle = GLES20.glGetUniformLocation(mProgram, "vColor");
      * GameRenderer.checkGlError("glGetUniformLocation");</pre>
-     *
+     * <p/>
      * If the operation is not successful, the check throws an error.
      *
      * @param glOperation Name of the OpenGL call to check.

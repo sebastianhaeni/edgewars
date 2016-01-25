@@ -100,8 +100,7 @@ public class ScreenSlidePageFragment extends Fragment {
     private void setLevelTextColor(TextView lvlText) {
         if (mLevelRecord.hasWon()) {
             lvlText.setTextColor(Color.GREEN);
-        }
-        else if (mLevelRecord.hasPlayed() && !mLevelRecord.hasWon()) {
+        } else if (mLevelRecord.hasPlayed() && !mLevelRecord.hasWon()) {
             lvlText.setTextColor(Color.RED);
         }
     }

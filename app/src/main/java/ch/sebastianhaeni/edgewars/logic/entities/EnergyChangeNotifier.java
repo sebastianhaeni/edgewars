@@ -11,10 +11,12 @@ import ch.sebastianhaeni.edgewars.util.Position;
 /**
  * This class shows a small text below the energy that indicates changes in energy.
  */
-class EnergyChangeNotifier implements Observer {
+class EnergyChangeNotifier extends Entity implements Observer {
 
+    private static final int SHOW_TIME = 1000;
     private final HashMap<Integer, Text> mTexts = new HashMap<>();
     private int mRow = 0;
+    private final HashMap<Integer, Long> mRowRefreshTime = new HashMap<>();
 
     @Override
     public void update(Observable observable, Object data) {
@@ -32,10 +34,24 @@ class EnergyChangeNotifier implements Observer {
                 10,
                 true));
         mTexts.get(mRow).register();
+        mRowRefreshTime.put(mRow, System.currentTimeMillis());
 
         mRow++;
         if (mRow >= 2) {
             mRow = 0;
         }
     }
+
+    @Override
+    public void update(long millis) {
+        for (int row : mRowRefreshTime.keySet()) {
+            if (mRowRefreshTime.get(row) < System.currentTimeMillis() - SHOW_TIME) {
+                mTexts.get(row).unregister();
+                if (row == 0) {
+                    mRow = 0;
+                }
+            }
+        }
+    }
+
 }

@@ -34,7 +34,9 @@ public class Player extends Entity {
         mIsHuman = isHuman;
 
         if (isHuman) {
-            addObserver(new EnergyChangeNotifier());
+            EnergyChangeNotifier notifier = new EnergyChangeNotifier();
+            addObserver(notifier);
+            notifier.register();
         }
     }
 
