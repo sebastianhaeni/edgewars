@@ -22,7 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Paused"/>
+            android:text="@string/paused"/>
 
         <Button
             android:id="@+id/resumeButton"
@@ -32,7 +32,7 @@
             android:layout_marginTop="60dp"
             android:width="160dp"
             android:onClick="@{dialog.resumeGame}"
-            android:text="Resume game"/>
+            android:text="@string/resume_game"/>
 
         <Button
             android:id="@+id/exitButton"
@@ -41,7 +41,7 @@
             android:layout_gravity="center_horizontal"
             android:width="160dp"
             android:onClick="@{dialog.exitGame}"
-            android:text="Exit"/>
+            android:text="@string/exit"/>
 
 
     </LinearLayout>

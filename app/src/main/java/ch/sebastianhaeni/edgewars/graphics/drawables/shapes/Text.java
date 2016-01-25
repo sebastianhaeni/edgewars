@@ -22,10 +22,12 @@ public class Text extends Shape {
     public static final char ENERGY = '\\';
     public static final char DAMAGE = ']';
     public static final char HEALTH = '^';
-    public static final char ACCURACY = '_';
-    public static final char SPEED = '`';
-    public static final char CANCEL = '{';
     public static final char WRENCH = '|';
+
+    // future use:
+    private static final char ACCURACY = '_';
+    private static final char SPEED = '`';
+    private static final char CANCEL = '{';
 
     /**
      * Width of a box of a single character.

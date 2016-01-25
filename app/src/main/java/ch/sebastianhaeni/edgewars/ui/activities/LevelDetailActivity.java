@@ -19,6 +19,7 @@ import ch.sebastianhaeni.edgewars.R;
 import ch.sebastianhaeni.edgewars.databinding.ActivityLevelDetailBinding;
 import ch.sebastianhaeni.edgewars.model.LevelRecord;
 
+@SuppressWarnings({"unused", "UnusedParameters"})
 public class LevelDetailActivity extends Activity {
 
     public static final String LEVEL_ID = "LEVEL_ID";
@@ -40,7 +41,7 @@ public class LevelDetailActivity extends Activity {
         binding.setActivity(this);
         setContentView(binding.getRoot());
 
-        Typeface typeface = Typeface.createFromAsset(getAssets(), "DISTGRG.ttf");
+        Typeface typeface = Typeface.createFromAsset(getAssets(), getString(R.string.font));
         TextView lvlName = (TextView) findViewById(R.id.textLevel);
         lvlName.setTypeface(typeface);
 

@@ -11,6 +11,7 @@ import ch.sebastianhaeni.edgewars.databinding.DialogPauseBinding;
 import ch.sebastianhaeni.edgewars.logic.GameThread;
 import ch.sebastianhaeni.edgewars.ui.activities.GameActivity;
 
+@SuppressWarnings({"unused", "UnusedParameters"})
 public class PauseDialog extends Dialog {
 
     private final Context mContext;

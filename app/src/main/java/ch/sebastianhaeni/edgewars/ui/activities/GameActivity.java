@@ -9,6 +9,7 @@ import android.view.WindowManager;
 
 import ch.sebastianhaeni.edgewars.graphics.GameSurfaceView;
 
+@SuppressWarnings({"unused", "UnusedParameters"})
 public class GameActivity extends Activity {
 
     private GameSurfaceView mGLView;

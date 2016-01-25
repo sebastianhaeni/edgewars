@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 
@@ -16,12 +15,12 @@ import ch.sebastianhaeni.edgewars.logic.Constants;
 import ch.sebastianhaeni.edgewars.logic.LevelLoader;
 import ch.sebastianhaeni.edgewars.ui.fragments.ScreenSlidePageFragment;
 
+@SuppressWarnings({"unused", "UnusedParameters"})
 public class LevelSelectionActivity extends FragmentActivity {
 
     private ViewPager mPager;
-    private PagerAdapter mPagerAdapter;
     private int mLevelCount = Constants.LEVEL_COUNT_UNINITIALIZED;
-    public static final String LEVEL_ID = "LEVEL_ID";
+    private static final String LEVEL_ID = "LEVEL_ID";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,8 +39,7 @@ public class LevelSelectionActivity extends FragmentActivity {
         }
 
         mPager = (ViewPager) findViewById(R.id.viewPager);
-        mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
-        mPager.setAdapter(mPagerAdapter);
+        mPager.setAdapter(new ScreenSlidePagerAdapter(getSupportFragmentManager()));
 
         // display the fragment which triggered the next Activity
         if (getIntent().hasExtra(LEVEL_ID)) {

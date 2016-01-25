@@ -282,18 +282,21 @@ public class NodeMenu extends Observable implements Observer {
             @Override
             public void onClick() {
                 activateFactory(mNode.getMeleeFactory());
+                markFactoryAsActive(mMeleeButton);
             }
         });
         mTankButton.addClickListener(new Button.OnGameClickListener() {
             @Override
             public void onClick() {
                 activateFactory(mNode.getTankFactory());
+                markFactoryAsActive(mTankButton);
             }
         });
         mSprinterButton.addClickListener(new Button.OnGameClickListener() {
             @Override
             public void onClick() {
                 activateFactory(mNode.getSprinterFactory());
+                markFactoryAsActive(mSprinterButton);
             }
         });
     }
@@ -334,7 +337,7 @@ public class NodeMenu extends Observable implements Observer {
     /**
      * @param factory the unit factory to be activated
      */
-    public void activateFactory(Factory factory) {
+    private void activateFactory(Factory factory) {
         if (mUnitCorona != null) {
             mUnitCorona.unregister();
         }

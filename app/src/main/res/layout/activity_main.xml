@@ -41,14 +41,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="@{activity.start}"
-                android:text="Start"/>
+                android:text="@string/start"/>
 
             <Button
                 android:id="@+id/buttonAbout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="@{activity.showAbout}"
-                android:text="About"/>
+                android:text="@string/about"/>
         </LinearLayout>
     </RelativeLayout>
 </layout>

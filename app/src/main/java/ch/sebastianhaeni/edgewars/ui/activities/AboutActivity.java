@@ -10,6 +10,7 @@ import android.widget.TextView;
 import ch.sebastianhaeni.edgewars.R;
 import ch.sebastianhaeni.edgewars.databinding.ActivityAboutBinding;
 
+@SuppressWarnings({"unused", "UnusedParameters"})
 public class AboutActivity extends Activity {
 
     @Override
@@ -24,7 +25,7 @@ public class AboutActivity extends Activity {
         binding.setActivity(this);
         setContentView(binding.getRoot());
 
-        Typeface typeface = Typeface.createFromAsset(getAssets(), "DISTGRG.ttf");
+        Typeface typeface = Typeface.createFromAsset(getAssets(), getString(R.string.font));
         TextView titleAbout = (TextView) findViewById(R.id.titleAbout);
         titleAbout.setTypeface(typeface);
     }

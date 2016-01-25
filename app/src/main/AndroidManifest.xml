@@ -80,24 +80,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ch.sebastianhaeni.edgewars.ui.activities.LevelSelectionActivity"/>
         </activity>
-        <activity
-            android:name="ch.sebastianhaeni.edgewars.ui.activities.WinActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:parentActivityName="ch.sebastianhaeni.edgewars.ui.activities.LevelDetailActivity"
-            android:screenOrientation="sensorLandscape">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="ch.sebastianhaeni.edgewars.ui.activities.LevelDetailActivity"/>
-        </activity>
-        <activity
-            android:name="ch.sebastianhaeni.edgewars.ui.activities.LoseActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:parentActivityName="ch.sebastianhaeni.edgewars.ui.activities.LevelDetailActivity"
-            android:screenOrientation="sensorLandscape">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="ch.sebastianhaeni.edgewars.ui.activities.LevelDetailActivity"/>
-        </activity>
     </application>
 
 </manifest>

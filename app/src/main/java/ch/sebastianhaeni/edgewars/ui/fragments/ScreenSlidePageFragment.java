@@ -63,7 +63,7 @@ public class ScreenSlidePageFragment extends Fragment {
         TextView lvlText = (TextView) rootView.findViewById(R.id.levelNumber);
         lvlText.setId(lvl);
         lvlText.setText(String.valueOf(lvl));
-        Typeface typeface = Typeface.createFromAsset(getActivity().getAssets(), "DISTGRG.ttf");
+        Typeface typeface = Typeface.createFromAsset(getActivity().getAssets(), getString(R.string.font));
         lvlText.setTypeface(typeface);
         lvlText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 200);
         lvlText.setWidth(width);
@@ -97,7 +97,7 @@ public class ScreenSlidePageFragment extends Fragment {
         }
     }
 
-    public void setLevelTextColor(TextView lvlText) {
+    private void setLevelTextColor(TextView lvlText) {
         if (mLevelRecord.hasWon()) {
             lvlText.setTextColor(Color.GREEN);
         }
