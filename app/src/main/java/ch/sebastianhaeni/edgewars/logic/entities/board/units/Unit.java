@@ -4,6 +4,7 @@ import ch.sebastianhaeni.edgewars.graphics.drawables.decorators.DeathParticleDec
 import ch.sebastianhaeni.edgewars.graphics.drawables.decorators.TextDecorator;
 import ch.sebastianhaeni.edgewars.graphics.drawables.shapes.Polygon;
 import ch.sebastianhaeni.edgewars.logic.Constants;
+import ch.sebastianhaeni.edgewars.logic.SoundEngine;
 import ch.sebastianhaeni.edgewars.logic.ai.AIAwareness;
 import ch.sebastianhaeni.edgewars.logic.entities.Player;
 import ch.sebastianhaeni.edgewars.logic.entities.board.BoardEntity;
@@ -127,6 +128,7 @@ public abstract class Unit extends BoardEntity {
                 setState(new DeadState(this));
                 DeathParticleDecorator particles = new DeathParticleDecorator(mShape, Constants.DEATH_PARTICLE_LAYER);
                 particles.register();
+                SoundEngine.getInstance().play(SoundEngine.Sounds.UNIT_LOST);
             }
             mHealth = getMaxHealth();
         } else {

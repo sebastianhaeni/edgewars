@@ -41,9 +41,12 @@ public class SoundEngine {
 
         Sounds.CLICK = mSoundPool.load(GameApplication.getAppContext(), R.raw.sound_click, 1);
         Sounds.UNIT_SENT = mSoundPool.load(GameApplication.getAppContext(), R.raw.sound_unit_sent, 1);
+        Sounds.UNIT_LOST = mSoundPool.load(GameApplication.getAppContext(), R.raw.sound_unit_lost, 1);
         Sounds.NODE_CAPTURED = mSoundPool.load(GameApplication.getAppContext(), R.raw.sound_node_captured, 1);
         Sounds.NODE_LOST = mSoundPool.load(GameApplication.getAppContext(), R.raw.sound_node_lost, 1);
         Sounds.NODE_ATTACKED = mSoundPool.load(GameApplication.getAppContext(), R.raw.sound_node_attacked, 1);
+        Sounds.GAME_LOST = mSoundPool.load(GameApplication.getAppContext(), R.raw.sound_game_lost, 1);
+        Sounds.GAME_WON = mSoundPool.load(GameApplication.getAppContext(), R.raw.sound_game_won, 1);
     }
 
     /**
@@ -72,8 +75,11 @@ public class SoundEngine {
     public static class Sounds {
         public static int CLICK;
         public static int UNIT_SENT;
+        public static int UNIT_LOST;
         public static int NODE_CAPTURED;
         public static int NODE_LOST;
         public static int NODE_ATTACKED;
+        public static int GAME_WON;
+        public static int GAME_LOST;
     }
 }
